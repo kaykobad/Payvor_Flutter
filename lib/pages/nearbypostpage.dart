@@ -6,12 +6,9 @@ import 'package:payvor/model/places/placeitem.dart';
 import 'package:payvor/shimmers/places_grid_shimmer.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
-import 'package:payvor/utils/themes_styles.dart';
 import 'package:payvor/viewmodel/home_view_model.dart';
-
 import 'package:provider/provider.dart';
 
-import 'mediastore/mediastroepage.dart';
 
 class NearByPostPage extends StatefulWidget {
   @override
@@ -86,10 +83,10 @@ class _NearByPostPageState extends State<NearByPostPage> {
   }
   redirect() async {
 
-    //Navigator.of(context).pushNamed(Routes.nearpost);
+  /*  //Navigator.of(context).pushNamed(Routes.nearpost);
     Navigator.push(context, new MaterialPageRoute(
         builder: (context) => new MediaStorePage())
-    );
+    );*/
   }
 
   Widget _getItem(PlacesItem placesItem) {
@@ -125,7 +122,6 @@ class _NearByPostPageState extends State<NearByPostPage> {
                         width: double.infinity,
                         child: Text(
                           placesItem.title,
-                          style: TextThemes.headline4,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),

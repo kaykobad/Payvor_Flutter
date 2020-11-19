@@ -59,6 +59,8 @@ dev_dependencies:
   flick_video_player: ^0.1.1
   flutter_tindercard: ^0.2.0
   webview_flutter: ^1.0.7
+  country_pickers: ^1.1.0
+  pin_view: ^1.0.1
 
 
 #  photo: ^0.4.8
@@ -97,30 +99,30 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Gilroy-Black
+    - family: CircularStd-Black
       fonts:
-        - asset: assets/fonts/Gilroy-Black.otf
-    - family: Gilroy-BlackItalic
+        - asset: assets/fonts/CircularStd-Black.otf
+    - family: CircularStd-BlackItalic
       fonts:
-        - asset: assets/fonts/Gilroy-BlackItalic.otf
-    - family: Gilroy-Bold
+        - asset: assets/fonts/CircularStd-BlackItalic.otf
+    - family: CircularStd-Bold
       fonts:
-        - asset: assets/fonts/Gilroy-Bold.otf
-    - family: Gilroy-SemiBold
+        - asset: assets/fonts/CircularStd-Bold.otf
+    - family: CircularStd-BoldItalic
       fonts:
-        - asset: assets/fonts/Gilroy-SemiBold.otf
-    - family: Gilroy-medium
+        - asset: assets/fonts/CircularStd-BoldItalic.otf
+    - family: CircularStd-Book
       fonts:
-        - asset: assets/fonts/Gilroy-Medium.otf
-    - family: Gilroy-regular
+        - asset: assets/fonts/CircularStd-Book.otf
+    - family: CircularStd-BookItalic
       fonts:
-        - asset: assets/fonts/Gilroy-Regular.otf
-    - family: Gilroy-ExtraBold
+        - asset: assets/fonts/CircularStd-BookItalic.otf
+    - family: CircularStd-Medium
       fonts:
-        - asset: assets/fonts/Gilroy-ExtraBold.otf
-    - family: Gilroy-Light
+        - asset: assets/fonts/CircularStd-Medium.otf
+    - family: CircularStd-MediumItalic
       fonts:
-        - asset: assets/fonts/Gilroy-Light.otf
+        - asset: assets/fonts/CircularStd-MediumItalic.otf
 
 
 

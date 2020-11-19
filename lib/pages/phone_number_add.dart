@@ -1,0 +1,247 @@
+import 'package:country_pickers/country.dart';
+import 'package:country_pickers/country_pickers.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:payvor/utils/AssetStrings.dart';
+import 'package:payvor/utils/ReusableWidgets.dart';
+import 'package:payvor/utils/themes_styles.dart';
+
+class PhoneNumberAdd extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<PhoneNumberAdd> {
+  TextEditingController _LocationController = new TextEditingController();
+  TextEditingController _PhoneController = new TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
+  FocusNode _LocationField = new FocusNode();
+  FocusNode _PhoneField = new FocusNode();
+  Country _selected;
+
+  Widget space() {
+    return new SizedBox(
+      height: 30.0,
+    );
+  }
+
+  Widget getView() {
+    return new Container(
+      height: 1.0,
+      color: Colors.grey.withOpacity(0.7),
+    );
+  }
+
+  Widget _buildDialogItem(Country country) => Row(
+        children: <Widget>[
+          CountryPickerUtils.getDefaultFlagImage(country),
+          SizedBox(width: 8.0),
+          Text("+${country.phoneCode}"),
+          SizedBox(width: 8.0),
+          Flexible(child: Text(country.name))
+        ],
+      );
+
+  void _openCountryPickerDialog() => showDialog(
+        context: context,
+        builder: (context) => Theme(
+          data: Theme.of(context).copyWith(primaryColor: Colors.pink),
+          child: new CountryPickerDialog(
+            titlePadding: EdgeInsets.all(8.0),
+            searchCursorColor: Colors.pinkAccent,
+            searchInputDecoration: InputDecoration(hintText: "Search" + '...'),
+            isSearchable: true,
+            title: new Text("Select Code"),
+            onValuePicked: (Country country) {
+              setState(() {
+                _selected = country;
+              });
+            },
+            itemBuilder: _buildDialogItem,
+          ),
+        ),
+      );
+
+  Widget getTextFieldPhone(
+    String labelText,
+    TextEditingController controller,
+    FocusNode focusNodeCurrent,
+    FocusNode focusNodeNext,
+    TextInputType textInputType,
+    String svgPicture,
+  ) {
+    return Container(
+      margin: new EdgeInsets.only(left: 20.0, right: 20.0),
+      padding: new EdgeInsets.only(top: 2.0, bottom: 2.0, right: 10.0),
+      decoration: new BoxDecoration(
+          color: Colors.transparent,
+          border: new Border.all(color: Colors.grey.withOpacity(0.5)),
+          borderRadius: new BorderRadius.circular(8.0)),
+      child: new TextField(
+        controller: controller,
+        keyboardType: textInputType,
+        style: TextThemes.blackTextFieldNormal,
+        decoration: new InputDecoration(
+          border: InputBorder.none,
+          contentPadding: new EdgeInsets.only(top: 15.0, left: 2.0),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.only(left: 14.0, right: 5.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                new Image.asset(
+                  svgPicture,
+                  width: 20.0,
+                  height: 20.0,
+                ),
+                new InkWell(
+                  onTap: () {
+                    _openCountryPickerDialog();
+                  },
+                  child: Container(
+                    padding: new EdgeInsets.only(
+                      left: 16,
+                    ),
+                    child: Text("+${_selected.phoneCode}",
+                        style: TextThemes.blackTextFieldNormal),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          hintText: labelText,
+          hintStyle: TextThemes.greyTextFieldHintNormal,
+        ),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    _selected = CountryPickerUtils.getCountryByPhoneCode('1');
+
+    super.initState();
+  }
+
+  Widget getTextField(
+    String labelText,
+    TextEditingController controller,
+    FocusNode focusNodeCurrent,
+    FocusNode focusNodeNext,
+    TextInputType textInputType,
+    String svgPicture,
+  ) {
+    return Container(
+      margin: new EdgeInsets.only(left: 20.0, right: 20.0),
+      padding: new EdgeInsets.only(top: 2.0, bottom: 2.0, right: 10.0),
+      decoration: new BoxDecoration(
+          color: Colors.transparent,
+          border: new Border.all(color: Colors.grey.withOpacity(0.5)),
+          borderRadius: new BorderRadius.circular(8.0)),
+      child: new TextField(
+        controller: controller,
+        style: TextThemes.blackTextFieldNormal,
+        keyboardType: textInputType,
+        decoration: new InputDecoration(
+          border: InputBorder.none,
+          contentPadding: new EdgeInsets.only(top: 15.0),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.all(14.0),
+            child: new Image.asset(
+              svgPicture,
+              width: 20.0,
+              height: 20.0,
+            ),
+          ),
+          hintText: labelText,
+          hintStyle: TextThemes.greyTextFieldHintNormal,
+        ),
+      ),
+    );
+  }
+
+  void showInSnackBar(String value) {
+    _scaffoldKeys.currentState
+        .showSnackBar(new SnackBar(content: new Text(value)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var screensize = MediaQuery.of(context).size;
+    return SafeArea(
+      child: Scaffold(
+        appBar: getAppBarNew(context),
+        key: _scaffoldKeys,
+        backgroundColor: Colors.white,
+        body: new SingleChildScrollView(
+          child: Container(
+            color: Colors.white,
+            width: screensize.width,
+            child: new Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                new SizedBox(
+                  height: 35.0,
+                ),
+                Container(
+                    margin: new EdgeInsets.only(left: 20.0),
+                    child: new Text(
+                      "Phone Number",
+                      style: TextThemes.extraBold,
+                    )),
+                Container(
+                  margin: new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                  child: new Text(
+                    "Enter your location and phone number",
+                    style: TextThemes.grayNormal,
+                  ),
+                ),
+                space(),
+                new SizedBox(
+                  height: 15.0,
+                ),
+                getTextField(
+                  "Location",
+                  _LocationController,
+                  _LocationField,
+                  _PhoneField,
+                  TextInputType.text,
+                  AssetStrings.location,
+                ),
+                new SizedBox(
+                  height: 18.0,
+                ),
+                getTextFieldPhone(
+                  "Phone Number",
+                  _PhoneController,
+                  _PhoneField,
+                  _PhoneField,
+                  TextInputType.phone,
+                  AssetStrings.phone,
+                ),
+                new SizedBox(
+                  height: 25.0,
+                ),
+                Container(
+                    child:
+                        getSetupButtonNew(callback, "Verify Phone Number", 20)),
+                new SizedBox(
+                  height: 25.0,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void callback() {
+    /*Navigator.push(
+      context,
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return new LoginScreen();
+      }),
+    );*/
+  }
+}

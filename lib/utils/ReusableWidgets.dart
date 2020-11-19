@@ -1,0 +1,220 @@
+import 'dart:async';
+
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
+
+import 'AppColors.dart';
+import 'AssetStrings.dart';
+import 'memory_management.dart';
+
+Widget getItemDivider() {
+  return Padding(
+      padding: const EdgeInsets.only(left: 40, top: 3, bottom: 3),
+      child: new Container(
+        height: 1.0,
+        color: AppColors.kGrey,
+      ));
+}
+
+// Returns app bar
+Widget getAppbar(String title) {
+  return new AppBar(
+    centerTitle: true,
+    title: new Text(
+      title,
+      style: const TextStyle(
+        color: Colors.white,
+      ),
+    ),
+  );
+}
+
+getChatWidget({@required int count, @required Function onClick}) {
+  return Stack(
+    children: <Widget>[
+      Center(
+          child: InkWell(
+        onTap: () {
+          onClick();
+        },
+        child: new Icon(Icons.chat, size: 25.0, color: Colors.black87),
+      )),
+      Align(
+        alignment: Alignment.topRight,
+        child: getNotificationCount(count),
+      )
+    ],
+  );
+}
+
+getNotificationCount(int count) {
+  return (count > 0)
+      ? ClipOval(
+          child: Container(
+            color: Colors.red,
+            height: 22.0, // height of the button
+            width: 22.0, // width of the button
+            child: Center(
+              child: Text(
+                (count < 10) ? "$count" : "9+",
+                style: TextStyle(fontSize: 10),
+              ),
+            ),
+          ),
+        )
+      : Container();
+}
+
+Widget appLogo() {
+  return new SvgPicture.asset(
+    AssetStrings.logo,
+    height: 100,
+    width: 100,
+  );
+}
+
+Widget _loader(StreamController<bool> _streamControllerShowLoader) {
+  return new StreamBuilder<bool>(
+      stream: _streamControllerShowLoader.stream,
+      initialData: false,
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        bool status = snapshot.data;
+        return status
+            ? Center(child: CupertinoActivityIndicator(radius: 10))
+            : new Container();
+      });
+}
+
+Widget getSetupButtonNew(VoidCallback callback, String text, double margin,
+    {Color newColor}) {
+  return Container(
+    height: 58.0,
+    margin: new EdgeInsets.only(left: margin, right: margin),
+    decoration: new BoxDecoration(
+      borderRadius: new BorderRadius.circular(8.0),
+    ),
+    child: Material(
+      borderRadius: new BorderRadius.circular(8.0),
+      child: Ink(
+        decoration: new BoxDecoration(
+            borderRadius: new BorderRadius.circular(8.0),
+            color: (newColor == null)
+                ? AppColors.kPrimaryBlue
+                : AppColors.kAppIntroBackgroundColor),
+        child: InkWell(
+          borderRadius: new BorderRadius.circular(8.0),
+          splashColor: (newColor == null)
+              ? AppColors.kPrimaryBlue
+              : AppColors.kAppIntroBackgroundColor,
+          onTap: () {
+            callback();
+          },
+          child: new Container(
+            alignment: Alignment.center,
+            child: new Text(
+              text,
+              style: new TextStyle(
+                fontFamily: AssetStrings.circulerMedium,
+                fontSize: 16,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget getAppBarNew(BuildContext context) {
+  return PreferredSize(
+      preferredSize: Size.fromHeight(80.0),
+      child: Material(
+        color: Colors.white,
+        child: Container(
+          alignment: Alignment.topLeft,
+          margin: new EdgeInsets.only(left: 17.0, top: 47),
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: new Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: new SvgPicture.asset(
+                AssetStrings.back,
+                width: 21.0,
+                height: 21.0,
+              ),
+            ),
+          ),
+        ),
+      ));
+}
+
+Widget getSetupDecoratorButtonNew(
+    VoidCallback callback, String text, double margin,
+    {Color newColor}) {
+  return Container(
+    height: 58.0,
+    margin: new EdgeInsets.only(left: margin, right: margin),
+    decoration: new BoxDecoration(
+      borderRadius: new BorderRadius.circular(8.0),
+    ),
+    child: Material(
+      borderRadius: new BorderRadius.circular(8.0),
+      child: Ink(
+        decoration: new BoxDecoration(
+            borderRadius: new BorderRadius.circular(8.0),
+            border: new Border.all(width: 1, color: AppColors.kPrimaryBlue),
+            color: Colors.white),
+        child: InkWell(
+          borderRadius: new BorderRadius.circular(8.0),
+          onTap: () {
+            callback();
+          },
+          child: new Container(
+            alignment: Alignment.center,
+            child: new Text(
+              text,
+              style: new TextStyle(
+                fontFamily: AssetStrings.circulerMedium,
+                fontSize: 16,
+                color: AppColors.kPrimaryBlue,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+bool isCurrentUser(String userId) {
+  var currentUserId = MemoryManagement.getuserId();
+  return (currentUserId == userId);
+}
+
+Widget getBackButton(String userId, BuildContext context, bool showit) {
+  return (!isCurrentUser(userId) && showit)
+      ? Positioned(
+          top: 6,
+          left: 15,
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+          ),
+        )
+      : Container();
+}
+
+//for youtube auth in native
+TargetPlatform platform;
+const platformType = const MethodChannel('flutter.native/helper');

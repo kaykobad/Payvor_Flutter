@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
-
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewPages extends StatefulWidget {
@@ -52,7 +51,8 @@ class _WebViewPagesState extends State<WebViewPages> {
             Text(
               widget.heading,
               style: TextStyle(
-                  fontSize: 22, fontFamily: AssetStrings.giloryExteraBoldStyle),
+                  fontSize: 22,
+                  fontFamily: AssetStrings.circulerBlackItalicStyle),
             )
           ],
         ),

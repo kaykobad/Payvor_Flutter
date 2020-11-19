@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:payvor/pages/appintro/app_intro.dart';
-import 'package:payvor/pages/dashboard/dashboard.dart';
+import 'package:oktoast/oktoast.dart';
+import 'package:payvor/pages/splash_screen_new.dart';
 import 'package:payvor/provider/language_provider.dart';
 import 'package:payvor/provider/theme_provider.dart';
 import 'package:payvor/viewmodel/auth_view_model.dart';
 import 'package:payvor/viewmodel/home_view_model.dart';
 import 'package:provider/provider.dart';
-import 'enums/flavor.dart';
-import 'package:oktoast/oktoast.dart';
 
+import 'enums/flavor.dart';
 
 void main() {
   //for check life cycle
@@ -46,11 +45,11 @@ class Payvor extends StatelessWidget {
   Widget build(BuildContext context) {
     return OKToast(
         child: MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => Material(child: AppIntroPage()),
-        "/home": (_) => Material(child: DashBoardScreen()),
-      },
-    ));
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            // Define the default brightness and colors
+          ),
+          home: new SplashScreen(),
+        ));
   }
 }
