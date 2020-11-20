@@ -41,7 +41,7 @@ class TextThemes {
     color: Colors.black,
   );
 
-  static final TextStyle blackTextFieldNormal = TextStyle(
+  static const TextStyle blackTextFieldNormal = TextStyle(
     fontFamily: AssetStrings.circulerNormal,
     fontSize: 16,
     color: Colors.black,

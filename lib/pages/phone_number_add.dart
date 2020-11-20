@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_pickers.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +17,10 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
   TextEditingController _LocationController = new TextEditingController();
   TextEditingController _PhoneController = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
+
+  final StreamController<bool> _streamControllerShowLoader =
+      StreamController<bool>();
+
   FocusNode _LocationField = new FocusNode();
   FocusNode _PhoneField = new FocusNode();
   Country _selected;
@@ -32,6 +38,13 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
     );
   }
 
+  @override
+  void dispose() {
+    _streamControllerShowLoader.close(); //close the stream on dispose
+
+    super.dispose();
+  }
+
   Widget _buildDialogItem(Country country) => Row(
         children: <Widget>[
           CountryPickerUtils.getDefaultFlagImage(country),
@@ -43,33 +56,31 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
       );
 
   void _openCountryPickerDialog() => showDialog(
-        context: context,
-        builder: (context) => Theme(
-          data: Theme.of(context).copyWith(primaryColor: Colors.pink),
-          child: new CountryPickerDialog(
-            titlePadding: EdgeInsets.all(8.0),
-            searchCursorColor: Colors.pinkAccent,
-            searchInputDecoration: InputDecoration(hintText: "Search" + '...'),
-            isSearchable: true,
-            title: new Text("Select Code"),
-            onValuePicked: (Country country) {
-              setState(() {
-                _selected = country;
-              });
-            },
-            itemBuilder: _buildDialogItem,
-          ),
-        ),
-      );
+    context: context,
+    builder: (context) => Theme(
+      data: Theme.of(context).copyWith(primaryColor: Colors.pink),
+      child: new CountryPickerDialog(
+        titlePadding: EdgeInsets.all(8.0),
+        searchCursorColor: Colors.pinkAccent,
+        searchInputDecoration: InputDecoration(hintText: "Search" + '...'),
+        isSearchable: true,
+        title: new Text("Select Code"),
+        onValuePicked: (Country country) {
+          setState(() {
+            _selected = country;
+          });
+        },
+        itemBuilder: _buildDialogItem,
+      ),
+    ),
+  );
 
-  Widget getTextFieldPhone(
-    String labelText,
-    TextEditingController controller,
-    FocusNode focusNodeCurrent,
-    FocusNode focusNodeNext,
-    TextInputType textInputType,
-    String svgPicture,
-  ) {
+  Widget getTextFieldPhone(String labelText,
+      TextEditingController controller,
+      FocusNode focusNodeCurrent,
+      FocusNode focusNodeNext,
+      TextInputType textInputType,
+      String svgPicture,) {
     return Container(
       margin: new EdgeInsets.only(left: 20.0, right: 20.0),
       padding: new EdgeInsets.only(top: 2.0, bottom: 2.0, right: 10.0),
@@ -123,14 +134,12 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
     super.initState();
   }
 
-  Widget getTextField(
-    String labelText,
-    TextEditingController controller,
-    FocusNode focusNodeCurrent,
-    FocusNode focusNodeNext,
-    TextInputType textInputType,
-    String svgPicture,
-  ) {
+  Widget getTextField(String labelText,
+      TextEditingController controller,
+      FocusNode focusNodeCurrent,
+      FocusNode focusNodeNext,
+      TextInputType textInputType,
+      String svgPicture,) {
     return Container(
       margin: new EdgeInsets.only(left: 20.0, right: 20.0),
       padding: new EdgeInsets.only(top: 2.0, bottom: 2.0, right: 10.0),
@@ -200,14 +209,19 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
                 new SizedBox(
                   height: 15.0,
                 ),
-                getTextField(
+                /* getTextField(
                   "Location",
                   _LocationController,
                   _LocationField,
                   _PhoneField,
                   TextInputType.text,
                   AssetStrings.location,
+                ),*/
+                getLocation(_LocationController, context,
+                    _streamControllerShowLoader,
+                    iconData: AssetStrings.location
                 ),
+
                 new SizedBox(
                   height: 18.0,
                 ),
@@ -224,7 +238,7 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
                 ),
                 Container(
                     child:
-                        getSetupButtonNew(callback, "Verify Phone Number", 20)),
+                    getSetupButtonNew(callback, "Verify Phone Number", 20)),
                 new SizedBox(
                   height: 25.0,
                 ),

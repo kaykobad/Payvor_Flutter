@@ -5,6 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payvor/model/places/suggestion.dart';
+import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/autocomplete_text_field.dart';
 
 import 'AppColors.dart';
 import 'AssetStrings.dart';
@@ -190,6 +193,81 @@ Widget getSetupDecoratorButtonNew(
       ),
     ),
   );
+}
+
+Widget getLocation(TextEditingController controller, BuildContext context,
+    StreamController<bool> _streamControllerShowLoader,
+    {String iconData, double iconPadding = 0}) {
+  return Container(
+    margin: new EdgeInsets.only(left: 20, right: 20),
+    child: Stack(
+      children: <Widget>[
+        AutoCompleteTextView(
+          isLocation: true,
+          defaultPadding: iconPadding,
+          svgicon: iconData,
+          hintText: "Location",
+          suggestionsApiFetchDelay: 100,
+          focusGained: () {},
+          onTapCallback: (String text) async {
+            // addData(text);
+            print(text);
+          },
+          focusLost: () {
+            print("focust lost");
+          },
+          onValueChanged: (String text) {
+            print("called $text");
+          },
+          controller: controller,
+          suggestionStyle: Theme.of(context).textTheme.body1,
+          getSuggestionsMethod: getLocationSuggestionsList,
+          tfTextAlign: TextAlign.left,
+          tfTextDecoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: "Location",
+          ),
+        ),
+        Positioned(
+            right: 8,
+            top: 0,
+            bottom: 0,
+            child: _loader(_streamControllerShowLoader))
+      ],
+    ),
+  );
+}
+
+Future<List<String>> getLocationSuggestionsList(String locationText) async {
+  Dio dio = Dio();
+  CancelToken _requestToken;
+
+  //if search text length is greater than 0 than return blank array
+  if (locationText.length == 0) return List();
+
+  List<String> suggestionList = List();
+
+  try {
+    if (_requestToken != null)
+      _requestToken.cancel(); //cancel the previous on going request
+    _requestToken = CancelToken(); //generate new token for new request
+    //call the apoi
+    var response = await dio
+        .get(
+            "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$locationText&key=AIzaSyDZ-dGhsAHzvrFfdpFkk5cpJpZfJ6mbR9I",
+            cancelToken: _requestToken)
+        .timeout(timeoutDuration);
+    //get the suggestion list
+    var locationList = SuggestedLocation.fromJson(response.data);
+    print("ress $response");
+
+    //get description list and add to string list
+    for (var data in locationList.predictions) {
+      suggestionList.add(data.description);
+    }
+  } on DioError catch (e) {} catch (e) {}
+
+  return suggestionList;
 }
 
 bool isCurrentUser(String userId) {
