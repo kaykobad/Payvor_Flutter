@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/pages/splash_intro_new.dart';
+import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/memory_management.dart';
+import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -38,18 +40,17 @@ class FadeIn extends State<SplashScreen> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        backgroundColor: AppColors.kPrimaryBlue,
         body: Center(
           child: Container(
             child: new Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  new SvgPicture.asset(
-                    AssetStrings.logo,
-                    height: 100,
-                    width: 100,
-                  ),
-                  SizedBox(
-                    height: 10,
+                  Lottie.asset(
+                    'assets/payvor.json',
+                    repeat: true,
+                    reverse: false,
+                    animate: true,
                   ),
                 ]),
           ),

@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payvor/pages/forgot_password.dart';
+import 'package:payvor/pages/google_login.dart';
 import 'package:payvor/pages/phone_number_add.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
@@ -77,26 +78,26 @@ class _LoginScreenState extends State<LoginScreenNew> {
           ),
           suffixIcon: obsectextType
               ? Offstage(
-                  offstage: !obsectextType,
-                  child: InkWell(
-                    onTap: () {
-                      obsecureText = !obsecureText;
-                      setState(() {});
-                    },
-                    child: Container(
-                      width: 30.0,
-                      alignment: Alignment.centerRight,
-                      child: new Text(
-                        obsecureText ? "show" : "hide",
-                        style: TextThemes.blackTextSmallNormal,
-                      ),
-                    ),
-                  ),
-                )
-              : Container(
-                  width: 1.0,
-                  height: 1.0,
+            offstage: !obsectextType,
+            child: InkWell(
+              onTap: () {
+                obsecureText = !obsecureText;
+                setState(() {});
+              },
+              child: Container(
+                width: 30.0,
+                alignment: Alignment.centerRight,
+                child: new Text(
+                  obsecureText ? "show" : "hide",
+                  style: TextThemes.blackTextSmallNormal,
                 ),
+              ),
+            ),
+          )
+              : Container(
+            width: 1.0,
+            height: 1.0,
+          ),
           hintText: labelText,
           hintStyle: TextThemes.greyTextFieldHintNormal,
         ),
@@ -111,7 +112,9 @@ class _LoginScreenState extends State<LoginScreenNew> {
 
   @override
   Widget build(BuildContext context) {
-    var screensize = MediaQuery.of(context).size;
+    var screensize = MediaQuery
+        .of(context)
+        .size;
     return SafeArea(
       child: Scaffold(
         appBar: getAppBarNew(context),
@@ -175,15 +178,15 @@ class _LoginScreenState extends State<LoginScreenNew> {
                             padding: const EdgeInsets.all(1.0),
                             child: boolCheckBox
                                 ? Icon(
-                                    Icons.check_box,
-                                    size: 22.0,
-                                    color: Colors.lightBlueAccent,
-                                  )
+                              Icons.check_box,
+                              size: 22.0,
+                              color: Colors.lightBlueAccent,
+                            )
                                 : Icon(
-                                    Icons.check_box_outline_blank,
-                                    size: 22.0,
-                                    color: Colors.grey,
-                                  ),
+                              Icons.check_box_outline_blank,
+                              size: 22.0,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ),
@@ -204,8 +207,8 @@ class _LoginScreenState extends State<LoginScreenNew> {
                             context,
                             new CupertinoPageRoute(
                                 builder: (BuildContext context) {
-                              return new ForgotPassword();
-                            }),
+                                  return new ForgotPassword();
+                                }),
                           );
                         },
                         child: new Text(
@@ -233,10 +236,15 @@ class _LoginScreenState extends State<LoginScreenNew> {
                   child: new Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      new SvgPicture.asset(
-                        AssetStrings.facebook,
-                        height: 48,
-                        width: 48,
+                      InkWell(
+                        onTap: () {
+                          getFacebookUserInfo();
+                        },
+                        child: new SvgPicture.asset(
+                          AssetStrings.facebook,
+                          height: 48,
+                          width: 48,
+                        ),
                       ),
                       new SizedBox(
                         width: 16.0,
@@ -249,10 +257,15 @@ class _LoginScreenState extends State<LoginScreenNew> {
                       new SizedBox(
                         width: 16.0,
                       ),
-                      new Image.asset(
-                        AssetStrings.insta,
-                        height: 48,
-                        width: 48,
+                      InkWell(
+                        onTap: () {
+                          getInstaUserInfo();
+                        },
+                        child: new Image.asset(
+                          AssetStrings.insta,
+                          height: 48,
+                          width: 48,
+                        ),
                       ),
                     ],
                   ),
@@ -296,5 +309,49 @@ class _LoginScreenState extends State<LoginScreenNew> {
         return new PhoneNumberAdd();
       }),
     );
+  }
+
+
+  void getInstaUserInfo() async {
+    var googleSignInAccount = await new SocialLogin().getToken(
+        "360739950981", "2ii2_UFr8L5t5RKSs9QNSYcD");
+  }
+
+  void getFacebookUserInfo() async {
+    var googleSignInAccount = await new SocialLogin().initiateFacebookLogin();
+
+
+    if (googleSignInAccount != null && googleSignInAccount is Map) {
+      var nameUser = googleSignInAccount["name"];
+      var id = googleSignInAccount["id"];
+      var email = googleSignInAccount["email"];
+      var photodata = googleSignInAccount["picture"];
+      var photourl = photodata["data"];
+      // MemoryManagement.setuserName(username: nameUser);
+
+      var photo = photourl["url"];
+
+      print("$nameUser");
+      print("$email");
+      print("$photodata");
+      print("$photourl");
+      print("$photo");
+      /*  MemoryManagement.setImage(image:photo);
+      _EmailController.text=email;
+      loginSocial(email,id);*/
+
+    }
+    else {
+      /*showAlert(
+        context: context,
+        titleText: "ERROR",
+        message: "There are some authenticate issues.Please try again later.",
+        actionCallbacks: {
+          "OK": () {
+
+          }
+        },
+      );*/
+    }
   }
 }
