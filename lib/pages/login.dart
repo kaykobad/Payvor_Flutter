@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_twitter/flutter_twitter.dart';
 import 'package:payvor/pages/forgot_password.dart';
 import 'package:payvor/pages/google_login.dart';
 import 'package:payvor/pages/phone_number_add.dart';
@@ -23,6 +24,11 @@ class _LoginScreenState extends State<LoginScreenNew> {
   IconData icon = Icons.visibility_off;
   bool obsecureText = true;
   bool boolCheckBox = false;
+
+  var twitterLogin = new TwitterLogin(
+    consumerKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
+    consumerSecret: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
+  );
 
   Widget space() {
     return new SizedBox(
@@ -249,10 +255,15 @@ class _LoginScreenState extends State<LoginScreenNew> {
                       new SizedBox(
                         width: 16.0,
                       ),
-                      new SvgPicture.asset(
-                        AssetStrings.twitter,
-                        height: 48,
-                        width: 48,
+                      InkWell(
+                        onTap: () {
+                          getTwitterInfo();
+                        },
+                        child: new SvgPicture.asset(
+                          AssetStrings.twitter,
+                          height: 48,
+                          width: 48,
+                        ),
                       ),
                       new SizedBox(
                         width: 16.0,
@@ -313,13 +324,35 @@ class _LoginScreenState extends State<LoginScreenNew> {
 
 
   void getInstaUserInfo() async {
-    var googleSignInAccount = await new SocialLogin().getToken(
-        "360739950981", "2ii2_UFr8L5t5RKSs9QNSYcD");
+    var googleSignInAccount = await new SocialLogin()
+        .getToken("671655060202677", "015b739c9f1a115c79f0b7c7288c9cd2");
+
+    if (googleSignInAccount != null) {
+      print("tokenss + $googleSignInAccount");
+    }
+  }
+
+  void getTwitterInfo() async {
+    final TwitterLoginResult result = await twitterLogin.authorize();
+
+    switch (result.status) {
+      case TwitterLoginStatus.loggedIn:
+        var session = result.session;
+        print(session.token);
+        print(session.username);
+        print(session.userId);
+        break;
+      case TwitterLoginStatus.cancelledByUser:
+        //    _showCancelMessage();
+        break;
+      case TwitterLoginStatus.error:
+        // _showErrorMessage(result.error);
+        break;
+    }
   }
 
   void getFacebookUserInfo() async {
     var googleSignInAccount = await new SocialLogin().initiateFacebookLogin();
-
 
     if (googleSignInAccount != null && googleSignInAccount is Map) {
       var nameUser = googleSignInAccount["name"];

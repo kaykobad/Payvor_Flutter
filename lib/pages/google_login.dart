@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_twitter/flutter_twitter.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:http/http.dart' as http;
 
@@ -47,54 +48,71 @@ class SocialLogin extends StatelessWidget {
   }
 
   Future<dynamic> twitterLogin() async {
-    /*  var twitterLogin = new TwitterLogin(
-     consumerKey: '<your consumer key>',
-     consumerSecret: '<your consumer secret>',
-   );
+    var twitterLogin = new TwitterLogin(
+      consumerKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
+      consumerSecret: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
+    );
 
-   final TwitterLoginResult result = await twitterLogin.authorize();
+    final TwitterLoginResult result = await twitterLogin.authorize();
 
-   switch (result.status) {
-     case TwitterLoginStatus.loggedIn:
-       var session = result.session;
-       _sendTokenAndSecretToServer(session.token, session.secret);
-       break;
+    switch (result.status) {
+      case TwitterLoginStatus.loggedIn:
+        var session = result.session;
+        print(session.token);
+        print(session.username);
+        print(session.userId);
+        break;
      case TwitterLoginStatus.cancelledByUser:
    //    _showCancelMessage();
        break;
      case TwitterLoginStatus.error:
       // _showErrorMessage(result.error);
        break;
-   }*/
+    }
   }
 
+
   Future<Token> getToken(String appId, String appSecret) async {
-    Stream<String> onCode = await _server();
+    // Stream<String> onCode = await _server();
     String url =
-        "https://api.instagram.com/oauth/authorize?client_id=$appId&redirect_uri=http://localhost&response_type=code";
+        "https://api.instagram.com/oauth/authorize?client_id=$appId&redirect_uri=https://github.com/login&scope=user_profile,user_media&response_type=code";
     final flutterWebviewPlugin = new FlutterWebviewPlugin();
     flutterWebviewPlugin.launch(url);
-    final String code = await onCode.first;
-    print("code getting");
-    print("code + $code");
-    final http.Response response =
-        await http.post("https://api.instagram.com/oauth/access_token", body: {
-      "client_id": appId,
-      "redirect_uri": "http://localhost",
-      "client_secret": appSecret,
-      "code": code,
-      "grant_type": "authorization_code"
+    // LISTEN CHANGES
+    flutterWebviewPlugin.onUrlChanged.listen((String url) async {
+      print("url + $url"); // IF SUCCESS LOGIN
+      if (url.contains("https://github.com/login?code=")) {
+        var codes = await url.replaceAll("https://github.com/login?code=", '')
+            .replaceAll('#_', "");
+        print("urll + $codes"); // IF SUCCESS LOGIN
+
+        final http.Response response = await http.post(
+            "https://api.instagram.com/oauth/access_token", body: {
+          "client_id": appId,
+          "redirect_uri": "https://github.com/login",
+          "client_secret": appSecret,
+          "code": codes,
+          "grant_type": "authorization_code"
+        });
+
+
+        var token = new Token.fromMap(json.decode(response.body));
+
+        if (token.access != null) {
+          print("token not null");
+          flutterWebviewPlugin.close();
+          return new Token.fromMap(json.decode(response.body));
+        }
+      }
     });
-    flutterWebviewPlugin.close();
-    return new Token.fromMap(json.decode(response.body));
+
   }
 
   @Deprecated("Use loopbackIPv4 instead")
   Future<Stream<String>> _server() async {
     final StreamController<String> onCode = new StreamController();
     HttpServer server = await HttpServer.bind(
-        InternetAddress.LOOPBACK_IP_V4, 8585,
-        shared: true);
+        InternetAddress.LOOPBACK_IP_V4, 8585, shared: true);
     server.listen((HttpRequest request) async {
       final String code = request.uri.queryParameters["code"];
       request.response
@@ -115,16 +133,11 @@ class SocialLogin extends StatelessWidget {
 
 class Token {
   String access;
-  String id;
-  String username;
-  String full_name;
-  String profile_picture;
+  int id;
+
 
   Token.fromMap(Map json) {
     access = json['access_token'];
-    id = json['user']['id'];
-    username = json['user']['username'];
-    full_name = json['user']['full_name'];
-    profile_picture = json['user']['profile_picture'];
+    id = json['user_id'];
   }
 }
