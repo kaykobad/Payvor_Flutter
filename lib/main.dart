@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oktoast/oktoast.dart';
+
 import 'package:payvor/pages/splash_screen_new.dart';
 import 'package:payvor/provider/language_provider.dart';
 import 'package:payvor/provider/theme_provider.dart';
@@ -43,13 +43,12 @@ class Payvor extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return OKToast(
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            // Define the default brightness and colors
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+          // Define the default brightness and colors
           ),
-          home: new SplashScreen(),
-        ));
+      home: new SplashScreen(),
+    );
   }
 }
