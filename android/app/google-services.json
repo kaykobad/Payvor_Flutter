@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "360739950981",
+    "firebase_url": "https://payvor.firebaseio.com",
+    "project_id": "payvor",
+    "storage_bucket": "payvor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360739950981:android:9387d30c9c7d91bc9534ec",
+        "android_client_info": {
+          "package_name": "com.app.payvor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "360739950981-g2taidf70gpblsnhhdj5rbmh13s3ddld.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQt28MsLpF2YfXwWzi7IjctrTbbeJOP0M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "360739950981-g2taidf70gpblsnhhdj5rbmh13s3ddld.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
