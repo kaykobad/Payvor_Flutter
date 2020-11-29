@@ -14,6 +14,7 @@ import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/ValidatorFunctions.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
@@ -385,6 +386,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       try {
         if (response.isnew == null || response.isnew) {
           showInSnackBar("Success");
+          MemoryManagement.setAccessToken(accessToken: response.data);
 
           Navigator.push(
             context,

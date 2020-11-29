@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
-
 import 'package:meta/meta.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/memory_management.dart';
+
 enum MethodType { POST, GET, PUT, DELETE }
 const Duration timeoutDuration = const Duration(seconds: 60);
 class APIHandler {
@@ -97,6 +96,12 @@ class APIHandler {
       Map<String, String> headers = {};
       headers.addAll(defaultHeaders);
       headers.addAll(additionalHeaders);
+
+
+      if (MemoryManagement.getAccessToken() != null) {
+        headers["Authorization"] =
+            "Token " + MemoryManagement.getAccessToken();
+      }
 
 
 //      if (MemoryManagement.getAccessToken() != null) {

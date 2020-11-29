@@ -18,6 +18,7 @@ class OtoVerification extends StatefulWidget {
   final String phoneNumber;
   final int type;
 
+
   OtoVerification({this.phoneNumber, this.type});
 
   @override
@@ -43,11 +44,13 @@ class _LoginScreenState extends State<OtoVerification> {
     );
   }
 
+
   @override
   void initState() {
     super.initState();
     startTimer();
   }
+
 
   Widget getView() {
     return new Container(
@@ -93,10 +96,11 @@ class _LoginScreenState extends State<OtoVerification> {
     });
   }
 
+
   hitApi() async {
     provider.setLoading();
-    OtpRequest loginRequest =
-        new OtpRequest(otp: pinText, phone: widget.phoneNumber ?? "");
+    OtpRequest loginRequest = new OtpRequest(
+        otp: pinText, phone: widget.phoneNumber ?? "");
     var response = await provider.otp(loginRequest, context);
 
     if (response is OtoVerification) {
@@ -109,9 +113,12 @@ class _LoginScreenState extends State<OtoVerification> {
             return new CreateCredential();
           }),
         );
-      } catch (ex) {}
+      } catch (ex) {
+
+      }
 
       provider.hideLoader();
+
     } else {
       provider.hideLoader();
       APIError apiError = response;
@@ -121,6 +128,7 @@ class _LoginScreenState extends State<OtoVerification> {
     }
   }
 
+
   hitGetApi() async {
     provider.setLoading();
     var response = await provider.getotp(widget.phoneNumber ?? "", context);
@@ -128,7 +136,9 @@ class _LoginScreenState extends State<OtoVerification> {
     if (response is SignupResponse) {
       try {
         showInSnackBar("Your otp code is ${response.user.otp}");
-      } catch (ex) {}
+      } catch (ex) {
+
+      }
 
       provider.hideLoader();
     } else {
@@ -181,21 +191,19 @@ class _LoginScreenState extends State<OtoVerification> {
                           style: TextThemes.extraBold,
                         )),
                     Container(
-                      margin:
-                          new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                      margin: new EdgeInsets.only(
+                          left: 20.0, right: 20.0, top: 6),
                       child: new RichText(
                           text: new TextSpan(
-                        text:
-                            "Please enter the code that is sent to your phone ",
-                        style: TextThemes.grayNormal,
-                        children: <TextSpan>[
-                          new TextSpan(
-                            text: widget.phoneNumber != null
-                                ? widget.phoneNumber
-                                : "",
-                            style: TextThemes.blackTextFieldNormal,
-                          ),
-                        ],
+                            text: "Please enter the code that is sent to your phone ",
+                            style: TextThemes.grayNormal,
+                            children: <TextSpan>[
+                              new TextSpan(
+                                text: widget.phoneNumber != null ? widget
+                                    .phoneNumber : "",
+                                style: TextThemes.blackTextFieldNormal,
+                              ),
+                            ],
                       )),
                     ),
                     space(),
@@ -230,8 +238,8 @@ class _LoginScreenState extends State<OtoVerification> {
                           submit: (String pin) {
                             // when all the fields are filled
                             // submit function runs with the pin
-                            FocusScope.of(context)
-                                .requestFocus(new FocusNode());
+                            FocusScope.of(context).requestFocus(
+                                new FocusNode());
                             pinText = pin;
                             print(pin);
 
@@ -277,6 +285,7 @@ class _LoginScreenState extends State<OtoVerification> {
               ),
             ),
           ),
+
           new Center(
             child: getHalfScreenLoader(
               status: provider.getLoading(),
@@ -285,6 +294,7 @@ class _LoginScreenState extends State<OtoVerification> {
           ),
         ],
       ),
+
     );
   }
 
