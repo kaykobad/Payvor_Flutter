@@ -9,6 +9,7 @@ import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signupresponse.dart';
 import 'package:payvor/pages/forgot_password/forgot_password.dart';
 import 'package:payvor/pages/google_login.dart';
+import 'package:payvor/pages/join_community/join_community.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
@@ -384,7 +385,15 @@ class _LoginScreenState extends State<LoginScreenNew> {
                                 text: "SIGN UP",
                                 style: TextThemes.redTextSmallMedium,
                                 recognizer: new TapGestureRecognizer()
-                                  ..onTap = () {},
+                                  ..onTap = () {
+                                    Navigator.push(
+                                      context,
+                                      new CupertinoPageRoute(
+                                          builder: (BuildContext context) {
+                                        return new JoinCommunityNew();
+                                      }),
+                                    );
+                                  },
                               ),
                             ],
                           )),

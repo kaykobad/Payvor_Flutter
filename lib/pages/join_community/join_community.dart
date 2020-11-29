@@ -8,6 +8,7 @@ import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signuprequest.dart';
 import 'package:payvor/model/signup/signupresponse.dart';
 import 'package:payvor/pages/google_login.dart';
+import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -236,7 +237,15 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                                   text: "LOGIN",
                                   style: TextThemes.redTextSmallMedium,
                                   recognizer: new TapGestureRecognizer()
-                                    ..onTap = () {},
+                                    ..onTap = () {
+                                      Navigator.push(
+                                        context,
+                                        new CupertinoPageRoute(
+                                            builder: (BuildContext context) {
+                                              return new LoginScreenNew();
+                                            }),
+                                      );
+                                    },
                                 ),
                               ],
                             )),
@@ -414,7 +423,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       APIError apiError = response;
       print(apiError.error);
 
-      showInSnackBar("Authentication Failed");
+      showInSnackBar(apiError.error);
     }
   }
 

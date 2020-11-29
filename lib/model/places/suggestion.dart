@@ -27,21 +27,21 @@ class SuggestedLocation {
 class Predictions {
   String description;
   int distanceMeters;
-  String id;
+  String place_id;
 
-  Predictions({this.description, this.distanceMeters, this.id});
+  Predictions({this.description, this.distanceMeters, this.place_id});
 
   Predictions.fromJson(Map<String, dynamic> json) {
     description = json['description'];
     distanceMeters = json['distance_meters'];
-    id = json['id'];
+    place_id = json['place_id'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['description'] = this.description;
     data['distance_meters'] = this.distanceMeters;
-    data['id'] = this.id;
+    data['place_id'] = this.place_id;
     return data;
   }
 }

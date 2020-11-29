@@ -6,12 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/places/suggestion.dart';
+import 'package:payvor/pages/location_response/location_response.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/autocomplete_text_field.dart';
 
 import 'AppColors.dart';
 import 'AssetStrings.dart';
 import 'memory_management.dart';
+
+List<Predictions> list = new List();
 
 Widget getItemDivider() {
   return Padding(
@@ -197,6 +200,7 @@ Widget getSetupDecoratorButtonNew(
 
 Widget getLocation(TextEditingController controller, BuildContext context,
     StreamController<bool> _streamControllerShowLoader,
+    TextEditingController controllers,
     {String iconData, double iconPadding = 0}) {
   return Container(
     margin: new EdgeInsets.only(left: 20, right: 20),
@@ -210,6 +214,38 @@ Widget getLocation(TextEditingController controller, BuildContext context,
           suggestionsApiFetchDelay: 100,
           focusGained: () {},
           onTapCallback: (String text) async {
+            var id = "";
+
+            for (var data in list) {
+              if (text == data.description) {
+                id = data.place_id;
+                print("select ${data.description}");
+                print("selectid ${data.place_id}");
+                break;
+              }
+            }
+            Dio dio = Dio();
+
+
+            if (id.length > 0) {
+              var response = await dio.get(
+                  "https://maps.googleapis.com/maps/api/geocode/json?place_id=$id&key=AIzaSyDZ-dGhsAHzvrFfdpFkk5cpJpZfJ6mbR9I")
+                  .timeout(timeoutDuration);
+
+              LatLongResponse locationList = LatLongResponse.fromJson(
+                  response.data);
+
+              if (locationList.results != null &&
+                  locationList.results.length > 0) {
+                var data = locationList.results[0];
+
+                controllers.text =
+                    data?.geometry?.bounds?.northeast?.lat?.toString() + "," +
+                        data?.geometry?.bounds?.northeast?.lng?.toString();
+              }
+            }
+
+
             // addData(text);
             print(text);
           },
@@ -246,16 +282,16 @@ Future<List<String>> getLocationSuggestionsList(String locationText) async {
   if (locationText.length == 0) return List();
 
   List<String> suggestionList = List();
+  list.clear();
 
   try {
     if (_requestToken != null)
       _requestToken.cancel(); //cancel the previous on going request
     _requestToken = CancelToken(); //generate new token for new request
     //call the apoi
-    var response = await dio
-        .get(
-            "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$locationText&key=AIzaSyDZ-dGhsAHzvrFfdpFkk5cpJpZfJ6mbR9I",
-            cancelToken: _requestToken)
+    var response = await dio.get(
+        "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$locationText&key=AIzaSyDZ-dGhsAHzvrFfdpFkk5cpJpZfJ6mbR9I",
+        cancelToken: _requestToken)
         .timeout(timeoutDuration);
     //get the suggestion list
     var locationList = SuggestedLocation.fromJson(response.data);
@@ -263,6 +299,7 @@ Future<List<String>> getLocationSuggestionsList(String locationText) async {
 
     //get description list and add to string list
     for (var data in locationList.predictions) {
+      list.addAll(locationList.predictions);
       suggestionList.add(data.description);
     }
   } on DioError catch (e) {} catch (e) {}

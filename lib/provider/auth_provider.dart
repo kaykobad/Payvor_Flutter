@@ -47,15 +47,31 @@ class AuthProvider with ChangeNotifier {
     var response = await APIHandler.post(
         context: context, url: APIs.signUpUrl, requestBody: requests.toJson());
     print(APIs.signUpUrl);
-    //hideLoader();
-    if (response is APIError) {
-      completer.complete(response);
+
+    var status = response["status"];
+
+    if (status == false) {
+      var data = response["data"]["email"][0];
+
+      APIError apiError = new APIError(
+        error: data,
+        messag: data,
+        status: 400,
+        onAlertPop: () {},
+      );
+      completer.complete(apiError);
       return completer.future;
     } else {
-      SignupResponse loginResponseData = new SignupResponse.fromJson(response);
-      completer.complete(loginResponseData);
-      notifyListeners();
-      return completer.future;
+      if (response is APIError) {
+        completer.complete(response);
+        return completer.future;
+      } else {
+        SignupResponse loginResponseData =
+            new SignupResponse.fromJson(response);
+        completer.complete(loginResponseData);
+        notifyListeners();
+        return completer.future;
+      }
     }
   }
 

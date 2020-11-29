@@ -22,11 +22,12 @@ class PhoneNumberAdd extends StatefulWidget {
 
 class _LoginScreenState extends State<PhoneNumberAdd> {
   TextEditingController _LocationController = new TextEditingController();
+  TextEditingController _LatLongController = new TextEditingController();
   TextEditingController _PhoneController = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
 
   final StreamController<bool> _streamControllerShowLoader =
-  StreamController<bool>();
+      StreamController<bool>();
 
   FocusNode _LocationField = new FocusNode();
   FocusNode _PhoneField = new FocusNode();
@@ -186,12 +187,28 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
 
   hitApi() async {
     provider.setLoading();
+    var lat = "0.0";
+    var long = "0.0";
+
+    if (_LatLongController.text.length > 0) {
+      var data = _LatLongController.text.trim().toString().split(",");
+
+      try {
+        lat = data[0];
+        long = data[1];
+      }
+      catch (e) {
+
+      }
+    }
+
+
     UpdateProfileRequest loginRequest = new UpdateProfileRequest(
         phone: _PhoneController.text,
         location: _LocationController.text,
         country_code: _selected.phoneCode,
-        lat: "30.14",
-        long: "78.0");
+        lat: lat,
+        long: long);
     var response = await provider.updateProfile(loginRequest, context);
 
     if (response is UpdateProfileResponse) {
@@ -270,8 +287,9 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
                       AssetStrings.location,
                     ),*/
                     getLocation(_LocationController, context,
-                        _streamControllerShowLoader,
-                        iconData: AssetStrings.location
+                      _streamControllerShowLoader,
+                      _LatLongController,
+                      iconData: AssetStrings.location,
                     ),
 
                     new SizedBox(
@@ -313,6 +331,7 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
   void callback() {
     var location = _LocationController.text;
     var phonenumber = _PhoneController.text;
+
     if (location.isEmpty || location
         .trim()
         .length == 0) {
