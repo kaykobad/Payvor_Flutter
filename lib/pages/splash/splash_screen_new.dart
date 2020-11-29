@@ -3,12 +3,10 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:payvor/pages/splash_intro_new.dart';
-import 'package:payvor/utils/AppColors.dart';
-import 'package:payvor/utils/AssetStrings.dart';
-import 'package:payvor/utils/memory_management.dart';
 import 'package:lottie/lottie.dart';
+import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
+import 'package:payvor/utils/AppColors.dart';
+import 'package:payvor/utils/memory_management.dart';
 
 class SplashScreen extends StatefulWidget {
   @override

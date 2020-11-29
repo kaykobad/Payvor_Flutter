@@ -1,13 +1,13 @@
-class LoginResponse {
+class UserLoggedInResponse {
   Status status;
-  Data data;
+  UserData data;
 
-  LoginResponse({this.status, this.data});
+  UserLoggedInResponse({this.status, this.data});
 
-  LoginResponse.fromJson(Map<String, dynamic> json) {
+  UserLoggedInResponse.fromJson(Map<String, dynamic> json) {
     status =
         json['status'] != null ? new Status.fromJson(json['status']) : null;
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new UserData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -44,24 +44,39 @@ class Status {
   }
 }
 
-class Data {
-  String accessToken;
-  String tokenType;
-  int expiresIn;
+class UserData {
+  int id;
+  String name;
+  String email;
+  Status emailVerifiedAt;
+  String createdAt;
+  String updatedAt;
 
-  Data({this.accessToken, this.tokenType, this.expiresIn});
+  UserData(
+      {this.id,
+      this.name,
+      this.email,
+      this.emailVerifiedAt,
+      this.createdAt,
+      this.updatedAt});
 
-  Data.fromJson(Map<String, dynamic> json) {
-    accessToken = json['access_token'];
-    tokenType = json['token_type'];
-    expiresIn = json['expires_in'];
+  UserData.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    email = json['email'];
+    emailVerifiedAt = json['email_verified_at'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['access_token'] = this.accessToken;
-    data['token_type'] = this.tokenType;
-    data['expires_in'] = this.expiresIn;
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['email'] = this.email;
+    data['email_verified_at'] = this.emailVerifiedAt;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     return data;
   }
 }

@@ -1,24 +1,24 @@
 class SignUpRequest {
-  String fullName;
+  String name;
   String email;
   String password;
-  String location;
+  String type;
 
-  SignUpRequest({this.fullName, this.email, this.password, this.location});
+  SignUpRequest({this.name, this.email, this.password, this.type});
 
   SignUpRequest.fromJson(Map<String, dynamic> json) {
-    fullName = json['full_name'];
+    name = json['name'];
     email = json['email'];
     password = json['password'];
-    location = json['location'];
+    type = json['type'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['full_name'] = this.fullName;
+    data['name'] = this.name;
     data['email'] = this.email;
     data['password'] = this.password;
-    data['location'] = this.location;
+    data['type'] = this.type;
     return data;
   }
 }

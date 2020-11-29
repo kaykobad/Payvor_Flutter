@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
-import 'package:payvor/pages/splash_screen_new.dart';
+import 'package:oktoast/oktoast.dart';
+import 'package:payvor/pages/splash/splash_screen_new.dart';
+import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/language_provider.dart';
 import 'package:payvor/provider/theme_provider.dart';
 import 'package:payvor/viewmodel/auth_view_model.dart';
@@ -31,6 +32,9 @@ void main() {
       ChangeNotifierProvider<LanguageProvider>(
         create: (context) => LanguageProvider(),
       ),
+      ChangeNotifierProvider<AuthProvider>(
+        create: (context) => AuthProvider(),
+      ),
       ChangeNotifierProvider<ThemeProvider>(
         create: (context) => ThemeProvider(),
       ),
@@ -43,12 +47,13 @@ class Payvor extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          // Define the default brightness and colors
+    return OKToast(
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            // Define the default brightness and colors
           ),
-      home: new SplashScreen(),
-    );
+          home: new SplashScreen(),
+        ));
   }
 }

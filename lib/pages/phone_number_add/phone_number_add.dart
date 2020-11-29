@@ -4,9 +4,16 @@ import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_pickers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/update_profile/update_profile_request.dart';
+import 'package:payvor/model/update_profile/update_profile_response.dart';
+import 'package:payvor/pages/otp/enter_otp.dart';
+import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
+import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/themes_styles.dart';
+import 'package:provider/provider.dart';
 
 class PhoneNumberAdd extends StatefulWidget {
   @override
@@ -19,11 +26,12 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
 
   final StreamController<bool> _streamControllerShowLoader =
-      StreamController<bool>();
+  StreamController<bool>();
 
   FocusNode _LocationField = new FocusNode();
   FocusNode _PhoneField = new FocusNode();
   Country _selected;
+  AuthProvider provider;
 
   Widget space() {
     return new SizedBox(
@@ -37,6 +45,7 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
       color: Colors.grey.withOpacity(0.7),
     );
   }
+
 
   @override
   void dispose() {
@@ -174,88 +183,147 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
         .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
+
+  hitApi() async {
+    provider.setLoading();
+    UpdateProfileRequest loginRequest = new UpdateProfileRequest(
+        phone: _PhoneController.text,
+        location: _LocationController.text,
+        country_code: _selected.phoneCode,
+        lat: "30.14",
+        long: "78.0");
+    var response = await provider.updateProfile(loginRequest, context);
+
+    if (response is UpdateProfileResponse) {
+      provider.hideLoader();
+      try {
+        Navigator.push(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return new OtoVerification(
+              phoneNumber: "+" + _selected.phoneCode + _PhoneController.text,
+              type: 0,);
+          }),
+        );
+        /*  showInSnackBar(response.data);
+        Navigator.pop(context);
+        Navigator.pop(context);*/
+      } catch (ex) {
+
+      }
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    var screensize = MediaQuery.of(context).size;
+    var screensize = MediaQuery
+        .of(context)
+        .size;
+    provider = Provider.of<AuthProvider>(context);
     return SafeArea(
-      child: Scaffold(
-        appBar: getAppBarNew(context),
-        key: _scaffoldKeys,
-        backgroundColor: Colors.white,
-        body: new SingleChildScrollView(
-          child: Container(
-            color: Colors.white,
-            width: screensize.width,
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                new SizedBox(
-                  height: 35.0,
-                ),
-                Container(
-                    margin: new EdgeInsets.only(left: 20.0),
-                    child: new Text(
-                      "Phone Number",
-                      style: TextThemes.extraBold,
-                    )),
-                Container(
-                  margin: new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
-                  child: new Text(
-                    "Enter your location and phone number",
-                    style: TextThemes.grayNormal,
-                  ),
-                ),
-                space(),
-                new SizedBox(
-                  height: 15.0,
-                ),
-                /* getTextField(
-                  "Location",
-                  _LocationController,
-                  _LocationField,
-                  _PhoneField,
-                  TextInputType.text,
-                  AssetStrings.location,
-                ),*/
-                getLocation(_LocationController, context,
-                    _streamControllerShowLoader,
-                    iconData: AssetStrings.location
-                ),
+      child: Stack(
+        children: [
+          Scaffold(
+            appBar: getAppBarNew(context),
+            key: _scaffoldKeys,
+            backgroundColor: Colors.white,
+            body: new SingleChildScrollView(
+              child: Container(
+                color: Colors.white,
+                width: screensize.width,
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new SizedBox(
+                      height: 35.0,
+                    ),
+                    Container(
+                        margin: new EdgeInsets.only(left: 20.0),
+                        child: new Text(
+                          "Phone Number",
+                          style: TextThemes.extraBold,
+                        )),
+                    Container(
+                      margin: new EdgeInsets.only(
+                          left: 20.0, right: 20.0, top: 6),
+                      child: new Text(
+                        "Enter your location and phone number",
+                        style: TextThemes.grayNormal,
+                      ),
+                    ),
+                    space(),
+                    new SizedBox(
+                      height: 15.0,
+                    ),
+                    /* getTextField(
+                      "Location",
+                      _LocationController,
+                      _LocationField,
+                      _PhoneField,
+                      TextInputType.text,
+                      AssetStrings.location,
+                    ),*/
+                    getLocation(_LocationController, context,
+                        _streamControllerShowLoader,
+                        iconData: AssetStrings.location
+                    ),
 
-                new SizedBox(
-                  height: 18.0,
+                    new SizedBox(
+                      height: 18.0,
+                    ),
+                    getTextFieldPhone(
+                      "Phone Number",
+                      _PhoneController,
+                      _PhoneField,
+                      _PhoneField,
+                      TextInputType.phone,
+                      AssetStrings.phone,
+                    ),
+                    new SizedBox(
+                      height: 25.0,
+                    ),
+                    Container(
+                        child:
+                        getSetupButtonNew(callback, "Verify Phone Number", 20)),
+                    new SizedBox(
+                      height: 25.0,
+                    ),
+                  ],
                 ),
-                getTextFieldPhone(
-                  "Phone Number",
-                  _PhoneController,
-                  _PhoneField,
-                  _PhoneField,
-                  TextInputType.phone,
-                  AssetStrings.phone,
-                ),
-                new SizedBox(
-                  height: 25.0,
-                ),
-                Container(
-                    child:
-                    getSetupButtonNew(callback, "Verify Phone Number", 20)),
-                new SizedBox(
-                  height: 25.0,
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          new Center(
+            child: getHalfScreenLoader(
+              status: provider.getLoading(),
+              context: context,
+            ),
+          ),
+        ],
       ),
     );
   }
 
   void callback() {
-    /*Navigator.push(
-      context,
-      new CupertinoPageRoute(builder: (BuildContext context) {
-        return new LoginScreen();
-      }),
-    );*/
+    var location = _LocationController.text;
+    var phonenumber = _PhoneController.text;
+    if (location.isEmpty || location
+        .trim()
+        .length == 0) {
+      showInSnackBar("Please enter location.");
+      return;
+    }
+    else if (phonenumber.isEmpty || phonenumber.length == 0) {
+      showInSnackBar('Please enter phone number.');
+      return;
+    }
+
+    hitApi();
   }
 }

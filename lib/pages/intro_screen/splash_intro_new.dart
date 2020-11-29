@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:payvor/pages/join_community.dart';
-import 'package:payvor/pages/login.dart';
+import 'package:payvor/pages/join_community/join_community.dart';
+import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 
@@ -60,7 +60,7 @@ class FadeIn extends State<SplashIntroScreenNew> {
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),

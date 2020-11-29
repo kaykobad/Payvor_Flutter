@@ -72,7 +72,8 @@ class SocialLogin extends StatelessWidget {
   }
 
 
-  Future<Token> getToken(String appId, String appSecret) async {
+  Future<Token> getToken(String appId, String appSecret,
+      ValueChanged<Token> callbackLikeUnlikeProject) async {
     // Stream<String> onCode = await _server();
     String url =
         "https://api.instagram.com/oauth/authorize?client_id=$appId&redirect_uri=https://github.com/login&scope=user_profile,user_media&response_type=code";
@@ -82,7 +83,8 @@ class SocialLogin extends StatelessWidget {
     flutterWebviewPlugin.onUrlChanged.listen((String url) async {
       print("url + $url"); // IF SUCCESS LOGIN
       if (url.contains("https://github.com/login?code=")) {
-        var codes = await url.replaceAll("https://github.com/login?code=", '')
+        var codes = await url
+            .replaceAll("https://github.com/login?code=", '')
             .replaceAll('#_', "");
         print("urll + $codes"); // IF SUCCESS LOGIN
 
@@ -99,9 +101,13 @@ class SocialLogin extends StatelessWidget {
         var token = new Token.fromMap(json.decode(response.body));
 
         if (token.access != null) {
+          /*   final http.Response response = await http.post(
+              "https://i.instagram.com/api/v1/users/${token.id}/info/?access_token=${token.access}");
+*/
           print("token not null");
+          print(json.decode(response.body));
           flutterWebviewPlugin.close();
-          return new Token.fromMap(json.decode(response.body));
+          callbackLikeUnlikeProject(token);
         }
       }
     });

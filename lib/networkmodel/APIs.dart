@@ -2,16 +2,24 @@ class APIs {
   APIs._();
 
   // Base url
-   static const String baseUrl = "http://35.226.88.58/api";
-   //load image url
-   static const String imageBaseUrl = "http://35.226.88.58";
+  static const String baseUrl = "http://167.172.40.120/api/v1";
+
+  //load image url
+  static const String imageBaseUrl = "http://35.226.88.58";
 
   //new App Url
-  static const String signUpUrl = "$baseUrl/auth/register/";
-  static const String loginUrl = "$baseUrl/auth/token/";
+  static const String signUpUrl = "$baseUrl/auth/register";
+  static const String authSocialUrl = "$baseUrl/auth/socialLogin";
+
+  static const String loginUrl = "$baseUrl/auth/login";
   static const String homeUrl = "$baseUrl/home/";
-
-
-
-
+  static const String refresh = "$baseUrl/auth/refresh";
+  static const String looggedinUser = "$baseUrl/auth/me";
+  static const String logoutUser = "$baseUrl/auth/logout";
+  static const String otpVerifyUrl = "$baseUrl/auth/verify-otp-ph";
+  static const String update_profile = "$baseUrl/auth/update-profile";
+  static const String resetPassword = "$baseUrl/auth/change-password";
+  static const String forgotPassword = "$baseUrl/auth/forgot-password";
+  static const String createPassword = "$baseUrl/auth/create-password";
+  static const String getOtpUrl = "$baseUrl/auth/send-otp-ph/";
 }
