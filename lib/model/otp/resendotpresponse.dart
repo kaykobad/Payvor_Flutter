@@ -1,19 +1,13 @@
-class SignupResponse {
+class ResendOtpResponse {
   Status status;
+  Data data;
 
-  User user;
-  bool isnew;
+  ResendOtpResponse({this.status, this.data});
 
-  SignupResponse({this.status,  this.user, this.isnew});
-
-  SignupResponse.fromJson(Map<String, dynamic> json) {
+  ResendOtpResponse.fromJson(Map<String, dynamic> json) {
     status =
-        json['status'] != null ? new Status.fromJson(json
-        ['status']) : null;
-
-    //data = json['data'];
-    user = json['data'] != null ? new User.fromJson(json['data']) : null;
-    isnew = json['isnew'];
+    json['status'] != null ? new Status.fromJson(json['status']) : null;
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -21,11 +15,9 @@ class SignupResponse {
     if (this.status != null) {
       data['status'] = this.status.toJson();
     }
-
-    if (this.user != null) {
-      data['user'] = this.user.toJson();
+    if (this.data != null) {
+      data['data'] = this.data.toJson();
     }
-    data['isnew'] = this.isnew;
     return data;
   }
 }
@@ -52,7 +44,7 @@ class Status {
   }
 }
 
-class User {
+class Data {
   int id;
   String name;
   String email;
@@ -60,31 +52,35 @@ class User {
   int otp;
   String type;
   String countryCode;
-  num lat;
-  num long;
+  dynamic lat;
+  dynamic long;
   int userType;
   int isActive;
+  String snsId;
+  String profilePic;
   String location;
   String createdAt;
   String updatedAt;
 
-  User(
+  Data(
       {this.id,
-      this.name,
-      this.email,
-      this.phone,
-      this.otp,
-      this.type,
-      this.countryCode,
-      this.lat,
-      this.long,
-      this.userType,
-      this.isActive,
-      this.location,
-      this.createdAt,
-      this.updatedAt});
+        this.name,
+        this.email,
+        this.phone,
+        this.otp,
+        this.type,
+        this.countryCode,
+        this.lat,
+        this.long,
+        this.userType,
+        this.isActive,
+        this.snsId,
+        this.profilePic,
+        this.location,
+        this.createdAt,
+        this.updatedAt});
 
-  User.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     email = json['email'];
@@ -96,6 +92,8 @@ class User {
     long = json['long'];
     userType = json['user_type'];
     isActive = json['is_active'];
+    snsId = json['snsId'];
+    profilePic = json['profile_pic'];
     location = json['location'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -114,6 +112,8 @@ class User {
     data['long'] = this.long;
     data['user_type'] = this.userType;
     data['is_active'] = this.isActive;
+    data['snsId'] = this.snsId;
+    data['profile_pic'] = this.profilePic;
     data['location'] = this.location;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;

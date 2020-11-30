@@ -218,8 +218,10 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
             return new OtoVerification(
-              phoneNumber: "+" + _selected.phoneCode + _PhoneController.text,
-              type: 0,);
+              phoneNumber:  _PhoneController.text,
+              type: 0,
+              countryCode:_selected.phoneCode ,
+            );
           }),
         );
         /*  showInSnackBar(response.data);

@@ -20,6 +20,6 @@ class APIs {
   static const String update_profile = "$baseUrl/auth/update-profile";
   static const String resetPassword = "$baseUrl/auth/change-password";
   static const String forgotPassword = "$baseUrl/auth/forgot-password";
-  static const String createPassword = "$baseUrl/auth/create-password";
+  static const String createPassword = "$baseUrl/auth/update-profile";
   static const String getOtpUrl = "$baseUrl/auth/send-otp-ph/";
 }

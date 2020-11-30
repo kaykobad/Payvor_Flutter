@@ -4,9 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/otp/otp_request.dart';
+import 'package:payvor/model/otp/otp_verification_response.dart';
+import 'package:payvor/model/otp/resendotpresponse.dart';
 import 'package:payvor/model/signup/signupresponse.dart';
 import 'package:payvor/pages/create_credential/create_credential.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/themes_styles.dart';
@@ -17,9 +20,9 @@ import 'package:quiver/async.dart';
 class OtoVerification extends StatefulWidget {
   final String phoneNumber;
   final int type;
+  final String countryCode;
 
-
-  OtoVerification({this.phoneNumber, this.type});
+  OtoVerification({this.phoneNumber, this.type, this.countryCode});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -44,13 +47,15 @@ class _LoginScreenState extends State<OtoVerification> {
     );
   }
 
-
   @override
   void initState() {
     super.initState();
-    startTimer();
-  }
 
+    startTimer();
+    Future.delayed(Duration(milliseconds: 300), () {
+    hitResendApi();
+    });
+  }
 
   Widget getView() {
     return new Container(
@@ -96,31 +101,20 @@ class _LoginScreenState extends State<OtoVerification> {
     });
   }
 
-
   hitApi() async {
     provider.setLoading();
-    OtpRequest loginRequest = new OtpRequest(
-        otp: pinText, phone: widget.phoneNumber ?? "");
-    var response = await provider.otp(loginRequest, context);
-
-    if (response is OtoVerification) {
-      try {
-        showInSnackBar("Otp verify successfully");
-
-        Navigator.push(
-          context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
-            return new CreateCredential();
-          }),
-        );
-      } catch (ex) {
-
-      }
-
-      provider.hideLoader();
-
+    OtpRequest loginRequest =
+        new OtpRequest(otp: pinText, phone: widget.phoneNumber ?? "");
+    var response = await provider.verifyOtp(loginRequest, context);
+    provider.hideLoader();
+    if (response is OtpVerification) {
+      Navigator.push(
+        context,
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return new CreateCredential();
+        }),
+      );
     } else {
-      provider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
 
@@ -128,25 +122,16 @@ class _LoginScreenState extends State<OtoVerification> {
     }
   }
 
-
-  hitGetApi() async {
+  hitResendApi() async {
     provider.setLoading();
     var response = await provider.getotp(widget.phoneNumber ?? "", context);
-
-    if (response is SignupResponse) {
-      try {
-        showInSnackBar("Your otp code is ${response.user.otp}");
-      } catch (ex) {
-
-      }
-
-      provider.hideLoader();
+    provider.hideLoader();
+    if (response is ResendOtpResponse) {
+      showInSnackBar("Your otp code is ${response.data.otp}");
     } else {
-      provider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
-
-      showInSnackBar("Authentication Failed");
+      showInSnackBar(Messages.genericError);
     }
   }
 
@@ -191,19 +176,21 @@ class _LoginScreenState extends State<OtoVerification> {
                           style: TextThemes.extraBold,
                         )),
                     Container(
-                      margin: new EdgeInsets.only(
-                          left: 20.0, right: 20.0, top: 6),
+                      margin:
+                          new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
                       child: new RichText(
                           text: new TextSpan(
-                            text: "Please enter the code that is sent to your phone ",
-                            style: TextThemes.grayNormal,
-                            children: <TextSpan>[
-                              new TextSpan(
-                                text: widget.phoneNumber != null ? widget
-                                    .phoneNumber : "",
-                                style: TextThemes.blackTextFieldNormal,
-                              ),
-                            ],
+                        text:
+                            "Please enter the code that is sent to your phone ",
+                        style: TextThemes.grayNormal,
+                        children: <TextSpan>[
+                          new TextSpan(
+                            text: widget.phoneNumber != null
+                                ? widget.phoneNumber
+                                : "",
+                            style: TextThemes.blackTextFieldNormal,
+                          ),
+                        ],
                       )),
                     ),
                     space(),
@@ -238,8 +225,8 @@ class _LoginScreenState extends State<OtoVerification> {
                           submit: (String pin) {
                             // when all the fields are filled
                             // submit function runs with the pin
-                            FocusScope.of(context).requestFocus(
-                                new FocusNode());
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
                             pinText = pin;
                             print(pin);
 
@@ -265,7 +252,7 @@ class _LoginScreenState extends State<OtoVerification> {
                         onTap: () {
                           if (offstage == 1.0) {
                             startTimer();
-                            hitGetApi();
+                            hitResendApi();
                           }
                         },
                         child: Container(
@@ -285,16 +272,14 @@ class _LoginScreenState extends State<OtoVerification> {
               ),
             ),
           ),
-
           new Center(
-            child: getHalfScreenLoader(
+            child: getFullScreenProviderLoader(
               status: provider.getLoading(),
               context: context,
             ),
           ),
         ],
       ),
-
     );
   }
 

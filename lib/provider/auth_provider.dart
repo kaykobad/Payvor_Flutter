@@ -5,10 +5,11 @@ import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/common_response/common_success_response.dart';
 import 'package:payvor/model/forgot_password/forgot_password_request.dart';
 import 'package:payvor/model/logged_in_user/logged_in_user_response.dart';
-import 'package:payvor/model/login/loginreponse.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/login/loginrequest.dart';
 import 'package:payvor/model/otp/otp_request.dart';
 import 'package:payvor/model/otp/otp_verification_response.dart';
+import 'package:payvor/model/otp/resendotpresponse.dart';
 import 'package:payvor/model/reset_password/reset_pass_request.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signuprequest.dart';
@@ -33,8 +34,8 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      SignupResponse loginResponseData = new SignupResponse.fromJson(response);
-      completer.complete(loginResponseData);
+      LoginSignupResponse loginSignupResponse = new LoginSignupResponse.fromJson(response);
+      completer.complete(loginSignupResponse);
       notifyListeners();
       return completer.future;
     }
@@ -66,8 +67,8 @@ class AuthProvider with ChangeNotifier {
         completer.complete(response);
         return completer.future;
       } else {
-        SignupResponse loginResponseData =
-            new SignupResponse.fromJson(response);
+        LoginSignupResponse loginResponseData =
+            new LoginSignupResponse.fromJson(response);
         completer.complete(loginResponseData);
         notifyListeners();
         return completer.future;
@@ -90,7 +91,7 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      SignupResponse loginResponseData = new SignupResponse.fromJson(response);
+      LoginSignupResponse loginResponseData = new LoginSignupResponse.fromJson(response);
       completer.complete(loginResponseData);
       notifyListeners();
       return completer.future;
@@ -106,7 +107,7 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      LoginResponse loginResponseData = new LoginResponse.fromJson(response);
+      LoginSignupResponse loginResponseData = new LoginSignupResponse.fromJson(response);
       completer.complete(loginResponseData);
       notifyListeners();
       return completer.future;
@@ -188,7 +189,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<dynamic> createCredential(
-      ResetPasswordRequest request, BuildContext context) async {
+      UpdateProfileRequest request, BuildContext context) async {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.post(
         context: context,
@@ -229,7 +230,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<dynamic> otp(OtpRequest request, BuildContext context) async {
+  Future<dynamic> verifyOtp(OtpRequest request, BuildContext context) async {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.post(
         context: context,
@@ -240,9 +241,9 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      OtpVerification loginResponseData =
+      OtpVerification otpVerification =
           new OtpVerification.fromJson(response);
-      completer.complete(loginResponseData);
+      completer.complete(otpVerification);
       notifyListeners();
       return completer.future;
     }
@@ -257,8 +258,8 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      SignupResponse loginResponseData = new SignupResponse.fromJson(response);
-      completer.complete(loginResponseData);
+      ResendOtpResponse resendOtpResponse = new ResendOtpResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;
     }

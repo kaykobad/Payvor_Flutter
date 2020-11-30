@@ -1,18 +1,16 @@
-class SignupResponse {
+class LoginSignupResponse {
   Status status;
-
+  String data;
   User user;
   bool isnew;
 
-  SignupResponse({this.status,  this.user, this.isnew});
+  LoginSignupResponse({this.status, this.data, this.user, this.isnew});
 
-  SignupResponse.fromJson(Map<String, dynamic> json) {
+  LoginSignupResponse.fromJson(Map<String, dynamic> json) {
     status =
-        json['status'] != null ? new Status.fromJson(json
-        ['status']) : null;
-
-    //data = json['data'];
-    user = json['data'] != null ? new User.fromJson(json['data']) : null;
+    json['status'] != null ? new Status.fromJson(json['status']) : null;
+    data = json['data'];
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
     isnew = json['isnew'];
   }
 
@@ -21,7 +19,7 @@ class SignupResponse {
     if (this.status != null) {
       data['status'] = this.status.toJson();
     }
-
+    data['data'] = this.data;
     if (this.user != null) {
       data['user'] = this.user.toJson();
     }
@@ -57,32 +55,36 @@ class User {
   String name;
   String email;
   String phone;
-  int otp;
+  dynamic otp;
   String type;
   String countryCode;
-  num lat;
-  num long;
+  String lat;
+  String long;
   int userType;
   int isActive;
+  String snsId;
+  String profilePic;
   String location;
   String createdAt;
   String updatedAt;
 
   User(
       {this.id,
-      this.name,
-      this.email,
-      this.phone,
-      this.otp,
-      this.type,
-      this.countryCode,
-      this.lat,
-      this.long,
-      this.userType,
-      this.isActive,
-      this.location,
-      this.createdAt,
-      this.updatedAt});
+        this.name,
+        this.email,
+        this.phone,
+        this.otp,
+        this.type,
+        this.countryCode,
+        this.lat,
+        this.long,
+        this.userType,
+        this.isActive,
+        this.snsId,
+        this.profilePic,
+        this.location,
+        this.createdAt,
+        this.updatedAt});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -96,6 +98,8 @@ class User {
     long = json['long'];
     userType = json['user_type'];
     isActive = json['is_active'];
+    snsId = json['snsId'];
+    profilePic = json['profile_pic'];
     location = json['location'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -114,6 +118,8 @@ class User {
     data['long'] = this.long;
     data['user_type'] = this.userType;
     data['is_active'] = this.isActive;
+    data['snsId'] = this.snsId;
+    data['profile_pic'] = this.profilePic;
     data['location'] = this.location;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;

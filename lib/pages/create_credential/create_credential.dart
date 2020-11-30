@@ -3,8 +3,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/common_response/common_success_response.dart';
 import 'package:payvor/model/home/homeresponse.dart';
 import 'package:payvor/model/reset_password/reset_pass_request.dart';
+import 'package:payvor/model/update_profile/update_profile_request.dart';
+import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
@@ -54,20 +57,21 @@ class _LoginScreenState extends State<CreateCredential> {
 
   hitApi() async {
     provider.setLoading();
-    ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest(
-        new_pas: _PasswordController.text,
-        cnf_pas: _ConfirmPasswordController.text);
+    UpdateProfileRequest updateProfileRequest = new UpdateProfileRequest();
+    updateProfileRequest.password = _PasswordController.text;
+
     var response =
-        await provider.createCredential(resetPasswordRequest, context);
-
-    if (response is SignupResponse) {
-      try {
-        showInSnackBar("Successfully Created");
-      } catch (ex) {}
-
-      provider.hideLoader();
+        await provider.createCredential(updateProfileRequest, context);
+    provider.hideLoader();
+    if (response is CommonSuccessResponse) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return DashBoardScreen();
+        }),
+        (route) => false,
+      );
     } else {
-      provider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
 
@@ -302,7 +306,7 @@ class _LoginScreenState extends State<CreateCredential> {
             ),
           ),
           new Center(
-            child: getHalfScreenLoader(
+            child: getFullScreenProviderLoader(
               status: provider.getLoading(),
               context: context,
             ),
@@ -321,8 +325,8 @@ class _LoginScreenState extends State<CreateCredential> {
     } else if (confirmPassword.isEmpty || confirmPassword.length == 0) {
       showInSnackBar('Please enter confirmPassword.');
       return;
-    } else if (password != confirmPassword) {
-      showInSnackBar('Password and Confirm Pssword does not match');
+    } else if (password.compareTo(confirmPassword)!=0) {
+      showInSnackBar('Password and Confirm Password does not match');
       return;
     }
 

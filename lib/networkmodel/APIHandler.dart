@@ -100,7 +100,7 @@ class APIHandler {
 
       if (MemoryManagement.getAccessToken() != null) {
         headers["Authorization"] =
-            "Token " + MemoryManagement.getAccessToken();
+            "Bearer " + MemoryManagement.getAccessToken();
       }
 
 

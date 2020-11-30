@@ -4,9 +4,15 @@ class UpdateProfileRequest {
   String location;
   String lat;
   String long;
+  String password;
 
   UpdateProfileRequest(
-      {this.phone, this.country_code, this.location, this.lat, this.long});
+      {this.phone,
+      this.country_code,
+      this.location,
+      this.lat,
+      this.long,
+      this.password});
 
   UpdateProfileRequest.fromJson(Map<String, dynamic> json) {
     phone = json['phone'];
@@ -18,11 +24,12 @@ class UpdateProfileRequest {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['phone'] = this.phone;
-    data['country_code'] = this.country_code;
-    data['location'] = this.location;
-    data['lat'] = this.lat;
-    data['long'] = this.long;
+    if (this.phone != null) data['phone'] = this.phone;
+    if (this.country_code != null) data['country_code'] = this.country_code;
+    if (this.location != null) data['location'] = this.location;
+    if (this.lat != null) data['lat'] = this.lat;
+    if (this.long != null) data['long'] = this.long;
+    if (this.password != null) data['password'] = this.password;
     return data;
   }
 }

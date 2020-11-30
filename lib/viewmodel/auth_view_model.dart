@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:payvor/model/apierror.dart';
-import 'package:payvor/model/login/loginreponse.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/login/loginrequest.dart';
 import 'package:payvor/networkmodel/APIHandler.dart';
 import 'package:payvor/networkmodel/APIs.dart';
@@ -32,7 +32,7 @@ class AuthViewModel with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      LoginResponse loginResponseData = new LoginResponse.fromJson(response);
+      LoginSignupResponse loginResponseData = new LoginSignupResponse.fromJson(response);
       completer.complete(loginResponseData);
       notifyListeners();
       return completer.future;
@@ -49,7 +49,7 @@ class AuthViewModel with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      LoginResponse loginResponseData = new LoginResponse.fromJson(response);
+      LoginSignupResponse loginResponseData = new LoginSignupResponse.fromJson(response);
       completer.complete(loginResponseData);
       notifyListeners();
       return completer.future;

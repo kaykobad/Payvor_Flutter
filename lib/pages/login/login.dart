@@ -5,8 +5,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_twitter/flutter_twitter.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/login/loginrequest.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signupresponse.dart';
+import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/forgot_password/forgot_password.dart';
 import 'package:payvor/pages/google_login.dart';
 import 'package:payvor/pages/join_community/join_community.dart';
@@ -15,6 +17,7 @@ import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/ValidatorFunctions.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
@@ -171,19 +174,20 @@ class _LoginScreenState extends State<LoginScreenNew> {
 
       response = await provider.socialSignup(loginRequest, context);
     }
+    provider.hideLoader();
+    if (response is LoginSignupResponse) {
+      LoginSignupResponse loginSignupResponse=response;
+      MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
+      MemoryManagement.setAccessToken(accessToken: loginSignupResponse.data);
 
-    if (response is SignupResponse) {
-      try {
-        if (response.isnew) {
-          showInSnackBar("User Not Exist");
-        } else {
-          showInSnackBar("Successfully Login");
-        }
-      } catch (ex) {}
-
-      provider.hideLoader();
+      Navigator.pushAndRemoveUntil(
+        context,
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return DashBoardScreen();
+        }),
+        (route) => false,
+      );
     } else {
-      provider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
 
@@ -407,7 +411,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
             ),
           ),
           new Center(
-            child: getHalfScreenLoader(
+            child: getFullScreenProviderLoader(
               status: provider.getLoading(),
               context: context,
             ),
@@ -461,11 +465,9 @@ class _LoginScreenState extends State<LoginScreenNew> {
     switch (result.status) {
       case TwitterLoginStatus.loggedIn:
         var session = result.session;
-        print(session.token);
-        print(session.username);
-        print(session.userId);
 
-        email = "";
+
+        email = session.email;
         name = session.username;
         type = "2";
         snsId = session.userId;

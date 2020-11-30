@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_twitter/flutter_twitter.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signuprequest.dart';
 import 'package:payvor/model/signup/signupresponse.dart';
@@ -260,7 +261,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
             ),
           ),
           new Center(
-            child: getHalfScreenLoader(
+            child: getFullScreenProviderLoader(
               status: provider.getLoading(),
               context: context,
             ),
@@ -390,11 +391,11 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       response = await provider.socialSignup(loginRequest, context);
     }
 
-    if (response is SignupResponse) {
+    if (response is LoginSignupResponse) {
       provider.hideLoader();
       try {
         if (response.isnew == null || response.isnew) {
-          showInSnackBar("Success");
+
           MemoryManagement.setAccessToken(accessToken: response.data);
 
           Navigator.push(
@@ -404,16 +405,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
             }),
           );
 
-          /* showAlert(
-            context: context,
-            titleText: "Otp",
-            message: "Your OTP is " + response.user.otp.toString(),
-            actionCallbacks: {
-              "OK": () {
 
-              }
-            },
-          );*/
         } else {
           showInSnackBar("Already Exist");
         }
