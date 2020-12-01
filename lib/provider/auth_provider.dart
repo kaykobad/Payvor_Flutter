@@ -85,23 +85,26 @@ class AuthProvider with ChangeNotifier {
         context: context,
         url: APIs.authSocialUrl,
         requestBody: requests.toJson());
-    print(APIs.signUpUrl);
 
-    var status = response["status"];
+    try {
+      var status = response["status"];
+      if (status == false) {
+        var data = response["data"]["email"][0];
 
-    if (status == false) {
-      var data = response["data"]["email"][0];
-
-      APIError apiError = new APIError(
-        error: data,
-        messag: data,
-        status: 400,
-        onAlertPop: () {},
-      );
-      completer.complete(apiError);
-      return completer.future;
+        APIError apiError = new APIError(
+          error: data,
+          messag: data,
+          status: 400,
+          onAlertPop: () {},
+        );
+        completer.complete(apiError);
+        return completer.future;
+      }
     }
-
+    catch(ex)
+    {
+      print("social error ${ex.toString()}");
+    }
     //hideLoader();
     if (response is APIError) {
       completer.complete(response);

@@ -25,6 +25,7 @@ class CreateCredential extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<CreateCredential> {
+
   TextEditingController _PasswordController = new TextEditingController();
   TextEditingController _ConfirmPasswordController =
       new TextEditingController();
@@ -50,7 +51,6 @@ class _LoginScreenState extends State<CreateCredential> {
     var names = MemoryManagement.getuserName();
     name = names;
     email = emails;
-
     super.initState();
   }
 
@@ -76,6 +76,7 @@ class _LoginScreenState extends State<CreateCredential> {
         await provider.createCredential(updateProfileRequest, context);
     provider.hideLoader();
     if (response is CommonSuccessResponse) {
+      MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
       Navigator.pushAndRemoveUntil(
         context,
         new CupertinoPageRoute(builder: (BuildContext context) {
@@ -190,8 +191,8 @@ class _LoginScreenState extends State<CreateCredential> {
               children: [
                 Container(
                     child: new Text(
-                      name,
-                      style: TextThemes.smallBold,
+                  name,
+                  style: TextThemes.smallBold,
                 )),
                 Container(
                   margin: new EdgeInsets.only(top: 1),
@@ -289,17 +290,16 @@ class _LoginScreenState extends State<CreateCredential> {
                                 style: TextThemes.blueMediumSmall,
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () {
-                                   print("called");
+                                    print("called");
                                     _redirect(
-                                        heading: ResString().get('term_of_uses'),
+                                        heading:
+                                            ResString().get('term_of_uses'),
                                         url: Constants.TermOfUses);
-
                                   },
                               ),
                               new TextSpan(
                                 text: " and confirm that you have read the ",
                                 style: TextThemes.grayNormalSmall,
-
                               ),
                               new TextSpan(
                                 text: "Privacy Policy",
@@ -307,9 +307,9 @@ class _LoginScreenState extends State<CreateCredential> {
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () {
                                     _redirect(
-                                        heading: ResString().get('privacy_policy'),
+                                        heading:
+                                            ResString().get('privacy_policy'),
                                         url: Constants.privacyPolicy);
-
                                   },
                               ),
                             ],
@@ -337,16 +337,18 @@ class _LoginScreenState extends State<CreateCredential> {
       ),
     );
   }
-  _redirect({@required String heading, @required String url}) async {
-    //Navigator.of(context).pushNamed(Routes.nearpost);
+
+  _redirect({@required String heading, @required String url}) async
+    {
     Navigator.push(
         context,
         new MaterialPageRoute(
             builder: (context) => new WebViewPages(
-              heading: heading,
-              url: url,
-            )));
-  }
+                  heading: heading,
+                  url: url,
+                )));
+   }
+
   void callback() {
     var password = _PasswordController.text;
     var confirmPassword = _ConfirmPasswordController.text;
@@ -356,7 +358,7 @@ class _LoginScreenState extends State<CreateCredential> {
     } else if (confirmPassword.isEmpty || confirmPassword.length == 0) {
       showInSnackBar('Please enter confirm Password.');
       return;
-    } else if (password.compareTo(confirmPassword)!=0) {
+    } else if (password.compareTo(confirmPassword) != 0) {
       showInSnackBar('Password and Confirm Password does not match');
       return;
     }

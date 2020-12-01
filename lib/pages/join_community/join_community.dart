@@ -8,6 +8,7 @@ import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signuprequest.dart';
 import 'package:payvor/model/signup/signupresponse.dart';
+import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/google_login.dart';
 import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
@@ -243,8 +244,8 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                                         context,
                                         new CupertinoPageRoute(
                                             builder: (BuildContext context) {
-                                              return new LoginScreenNew();
-                                            }),
+                                          return new LoginScreenNew();
+                                        }),
                                       );
                                     },
                                 ),
@@ -396,26 +397,27 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       response = await provider.socialSignup(loginRequest, context);
       MemoryManagement.socialMediaStatus("1");
     }
-
+    provider.hideLoader();
     if (response is LoginSignupResponse) {
-      provider.hideLoader();
-      try {
-        if (response.isnew == null || response.isnew) {
+      if (response.isnew == null || response.isnew) {
+        MemoryManagement.setAccessToken(accessToken: response.data);
 
-          MemoryManagement.setAccessToken(accessToken: response.data);
-
-          Navigator.push(
-            context,
-            new CupertinoPageRoute(builder: (BuildContext context) {
-              return new PhoneNumberAdd();
-            }),
-          );
-
-
-        } else {
-          showInSnackBar("Already Exist");
-        }
-      } catch (ex) {}
+        Navigator.push(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return new PhoneNumberAdd();
+          }),
+        );
+      } else {
+        MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
+        Navigator.pushAndRemoveUntil(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return DashBoardScreen();
+          }),
+          (route) => false,
+        );
+      }
     } else {
       provider.hideLoader();
       APIError apiError = response;

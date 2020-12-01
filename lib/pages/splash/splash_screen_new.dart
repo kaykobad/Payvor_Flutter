@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
+import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/memory_management.dart';
@@ -65,14 +66,14 @@ class FadeIn extends State<SplashScreen> {
     await MemoryManagement.init();
     //show tutorial on home screen
     //  MemoryManagement.setToolTipState(state:TUTORIALSTATE.HOME.index);
-
+   var status= MemoryManagement.getUserLoggedIn();
     Timer _timer = new Timer(const Duration(seconds: 2), () {
-      var token = MemoryManagement.getAccessToken();
+
       Navigator.pushAndRemoveUntil(
         context,
         new CupertinoPageRoute(builder: (BuildContext context) {
-          return (token == null)
-              ? new SplashIntroScreenNew()
+          return (status)
+              ? new DashBoardScreen()
               : new SplashIntroScreenNew();
         }),
         (route) => false,

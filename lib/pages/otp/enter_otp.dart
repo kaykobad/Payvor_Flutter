@@ -119,6 +119,7 @@ class _LoginScreenState extends State<OtoVerification> {
           }),
         );
       } else {
+        MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
         Navigator.pushAndRemoveUntil(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {

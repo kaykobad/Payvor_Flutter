@@ -12,6 +12,7 @@ import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/forgot_password/forgot_password.dart';
 import 'package:payvor/pages/google_login.dart';
 import 'package:payvor/pages/join_community/join_community.dart';
+import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
@@ -156,7 +157,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
 
         case "2":
           {
-            types = "Tw";
+            types = "go";
           }
           break;
 
@@ -176,21 +177,31 @@ class _LoginScreenState extends State<LoginScreenNew> {
     }
     provider.hideLoader();
     if (response is LoginSignupResponse) {
-      LoginSignupResponse loginSignupResponse=response;
+      LoginSignupResponse loginSignupResponse = response;
       MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
       MemoryManagement.setAccessToken(accessToken: loginSignupResponse.data);
 
-      Navigator.pushAndRemoveUntil(
-        context,
-        new CupertinoPageRoute(builder: (BuildContext context) {
-          return DashBoardScreen();
-        }),
-        (route) => false,
-      );
+      if (response.isnew == null || response.isnew) {
+
+        Navigator.push(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return new PhoneNumberAdd();
+          }),
+        );
+      } else {
+        MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
+        Navigator.pushAndRemoveUntil(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return DashBoardScreen();
+          }),
+          (route) => false,
+        );
+      }
     } else {
       APIError apiError = response;
       print(apiError.error);
-
       showInSnackBar("Authentication Failed");
     }
   }
@@ -466,8 +477,10 @@ class _LoginScreenState extends State<LoginScreenNew> {
       case TwitterLoginStatus.loggedIn:
         var session = result.session;
 
-
-        email = (session.email==null)?"${session.username}_${session.userId}@twitter.com":session.email;
+//        email = (session.email == null)
+//            ? "${session.username}_${session.userId}@twitter.com"
+//            : session.email;
+        email=session.email;
         name = session.username;
         type = "2";
         snsId = session.userId;
@@ -501,7 +514,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       print("$photodata");
       print("$photourl");
       print("$photo");
-      email = (emails==null)?"${nameUser}_$id@facebook.com":emails;
+      email = (emails == null) ? "${nameUser}_$id@facebook.com" : emails;
       name = nameUser;
       type = "1";
       snsId = id;
