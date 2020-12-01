@@ -467,7 +467,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
         var session = result.session;
 
 
-        email = session.email;
+        email = (session.email==null)?"${session.username}_${session.userId}@twitter.com":session.email;
         name = session.username;
         type = "2";
         snsId = session.userId;
@@ -501,7 +501,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       print("$photodata");
       print("$photourl");
       print("$photo");
-      email = emails;
+      email = (emails==null)?"${nameUser}_$id@facebook.com":emails;
       name = nameUser;
       type = "1";
       snsId = id;

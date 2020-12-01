@@ -8,10 +8,13 @@ import 'package:payvor/model/home/homeresponse.dart';
 import 'package:payvor/model/reset_password/reset_pass_request.dart';
 import 'package:payvor/model/update_profile/update_profile_request.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
+import 'package:payvor/pages/privacypolicy/webview_page.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
@@ -276,19 +279,29 @@ class _LoginScreenState extends State<CreateCredential> {
                                 text: "Terms of Use",
                                 style: TextThemes.blueMediumSmall,
                                 recognizer: new TapGestureRecognizer()
-                                  ..onTap = () {},
+                                  ..onTap = () {
+                                   print("called");
+                                    _redirect(
+                                        heading: ResString().get('term_of_uses'),
+                                        url: Constants.TermOfUses);
+
+                                  },
                               ),
                               new TextSpan(
                                 text: " and confirm that you have read the ",
                                 style: TextThemes.grayNormalSmall,
-                                recognizer: new TapGestureRecognizer()
-                                  ..onTap = () {},
+
                               ),
                               new TextSpan(
                                 text: "Privacy Policy",
                                 style: TextThemes.blueMediumSmall,
                                 recognizer: new TapGestureRecognizer()
-                                  ..onTap = () {},
+                                  ..onTap = () {
+                                    _redirect(
+                                        heading: ResString().get('privacy_policy'),
+                                        url: Constants.privacyPolicy);
+
+                                  },
                               ),
                             ],
                           )),
@@ -315,15 +328,24 @@ class _LoginScreenState extends State<CreateCredential> {
       ),
     );
   }
-
+  _redirect({@required String heading, @required String url}) async {
+    //Navigator.of(context).pushNamed(Routes.nearpost);
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => new WebViewPages(
+              heading: heading,
+              url: url,
+            )));
+  }
   void callback() {
     var password = _PasswordController.text;
-    var confirmPassword = _PasswordController.text;
+    var confirmPassword = _ConfirmPasswordController.text;
     if (password.isEmpty || password.trim().length == 0) {
       showInSnackBar("Please enter password.");
       return;
     } else if (confirmPassword.isEmpty || confirmPassword.length == 0) {
-      showInSnackBar('Please enter confirmPassword.');
+      showInSnackBar('Please enter confirm Password.');
       return;
     } else if (password.compareTo(confirmPassword)!=0) {
       showInSnackBar('Password and Confirm Password does not match');

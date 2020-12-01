@@ -111,7 +111,7 @@ class _LoginScreenState extends State<OtoVerification> {
       Navigator.push(
         context,
         new CupertinoPageRoute(builder: (BuildContext context) {
-          return new CreateCredential();
+          return Material(child: new CreateCredential());
         }),
       );
     } else {

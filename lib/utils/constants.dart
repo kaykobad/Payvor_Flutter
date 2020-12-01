@@ -7,7 +7,7 @@ class Constants{
   static const double bottomIconSize=30;
 
   //privacy policy and term of users links
-  static const String privacyPolicy ="https://godach.co/privacy-policy.html";
-  static const String TermOfUses ="https://godach.co/terms-service.html";
+  static const String privacyPolicy ="https://www.freeprivacypolicy.com/blog/privacy-policy-url/";
+  static const String TermOfUses ="https://www.freeprivacypolicy.com/blog/privacy-policy-url/";
 
 }
