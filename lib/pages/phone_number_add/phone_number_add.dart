@@ -320,7 +320,7 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
             ),
           ),
           new Center(
-            child: getHalfScreenLoader(
+            child: getFullScreenProviderLoader(
               status: provider.getLoading(),
               context: context,
             ),

@@ -132,7 +132,7 @@ class _LoginScreenState extends State<OtoVerification> {
       APIError apiError = response;
       print(apiError.error);
 
-      showInSnackBar("Authentication Failed");
+      showInSnackBar(apiError.messag);
     }
   }
 

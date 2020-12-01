@@ -66,7 +66,7 @@ class FadeIn extends State<SplashScreen> {
     await MemoryManagement.init();
     //show tutorial on home screen
     //  MemoryManagement.setToolTipState(state:TUTORIALSTATE.HOME.index);
-   var status= MemoryManagement.getUserLoggedIn();
+   var status= MemoryManagement.getUserLoggedIn()??false;
     Timer _timer = new Timer(const Duration(seconds: 2), () {
 
       Navigator.pushAndRemoveUntil(

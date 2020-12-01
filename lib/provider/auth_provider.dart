@@ -263,7 +263,17 @@ class AuthProvider with ChangeNotifier {
     } else {
       OtpVerification otpVerification =
           new OtpVerification.fromJson(response);
-      completer.complete(otpVerification);
+      //if wrong otp
+      if(!otpVerification.status.status)
+        {
+          var apiError=APIError(messag: "Wrong OTP",status: 400);
+          completer.complete(apiError);
+        }
+      else
+        {
+          completer.complete(otpVerification);
+        }
+
       notifyListeners();
       return completer.future;
     }

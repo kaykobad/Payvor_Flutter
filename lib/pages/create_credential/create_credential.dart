@@ -362,7 +362,10 @@ class _LoginScreenState extends State<CreateCredential> {
       showInSnackBar('Password and Confirm Password does not match');
       return;
     }
-
+    else if (password.length<6 || password.length>20) {
+      showInSnackBar('Password length should be 6-20 characters.');
+      return;
+    }
     hitApi();
   }
 }
