@@ -7,7 +7,6 @@ import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signuprequest.dart';
-import 'package:payvor/model/signup/signupresponse.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/google_login.dart';
 import 'package:payvor/pages/login/login.dart';
@@ -277,11 +276,13 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       print("tokenss get ${tokem.access}");
       print("id get ${tokem.id}");
       print("name get ${tokem.username}");
+      print("url get ${tokem.image}");
 
       email = "";
-      name = "";
+      name = tokem.username ?? "";
       type = "3";
       snsId = tokem.id.toString();
+      profilePic = tokem.image ?? "";
       hitApi();
     }
   }

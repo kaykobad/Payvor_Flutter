@@ -7,6 +7,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_twitter/flutter_twitter.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:http/http.dart' as http;
+import 'package:payvor/model/login/media_request.dart';
 
 class SocialLogin extends StatelessWidget {
   bool isLoggedIn = false;
@@ -102,17 +103,38 @@ class SocialLogin extends StatelessWidget {
 
         if (token.access != null) {
           final http.Response response = await http.get(
-              "https://graph.instagram.com/${token.id}?fields=id,username&access_token=${token.access}");
+              "https://graph.instagram.com/${token.id}?fields=id,username,media&access_token=${token.access}");
 
           var url =
-              "https://graph.instagram.com/${token.id}?fields=id,username&access_token=${token.access}";
+              "https://graph.instagram.com/${token.id}?fields=id,username,media&access_token=${token.access}";
           print(url);
+          print(response.statusCode);
 
-          if (response.statusCode == 200) {
-            var tokenName = new Token.fromMap(json.decode(response.body));
+          try {
+            if (response.statusCode == 200) {
+              var tokenName =
+                  new MediaResponse.fromJson(json.decode(response.body));
+              token.username = tokenName.username;
 
-            token.username = tokenName.username;
-          }
+              if (tokenName.media != null && tokenName.media.data.length > 0) {
+                var mediaId = tokenName.media.data[0].id;
+
+                final http.Response response = await http.get(
+                    "https://graph.instagram.com/$mediaId?fields=media_type,media_url&access_token=${token.access}");
+
+                if (response.statusCode == 200) {
+                  var media = new Media.fromMap(json.decode(response.body));
+
+                  token.image = media.media_url;
+                }
+              }
+            }
+          } catch (e) {}
+
+          /*   https://graph.instagram.com/17870837731992331?fields=media_type,media_url&
+
+          final http.Response response = await http.get("https://graph.instagram.com/${token.id}?fields=id,username&access_token=${token.access}");
+*/
 
           print("token not null");
           print(json.decode(response.body));
@@ -151,11 +173,26 @@ class Token {
   String access;
   int id;
   String username;
+  String image;
 
 
   Token.fromMap(Map json) {
     access = json['access_token'];
     id = json['user_id'];
     username = json['username'];
+    image = json['image'];
+  }
+}
+
+class Media {
+  String media_url;
+  int id;
+  String media_type;
+
+
+  Media.fromMap(Map json) {
+    media_url = json['media_url'];
+    id = json['user_id'];
+    media_type = json['media_type'];
   }
 }
