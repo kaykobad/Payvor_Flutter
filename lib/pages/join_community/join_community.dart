@@ -275,6 +275,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     {
       print("tokenss get ${tokem.access}");
       print("id get ${tokem.id}");
+      print("name get ${tokem.username}");
 
       email = "";
       name = "";
@@ -367,7 +368,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
 
       case "2":
         {
-          types = "Tw";
+          types = "Go";
         }
         break;
 
@@ -381,6 +382,10 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       SignUpRequest loginRequest = new SignUpRequest(
           name: name, password: "123", email: email, type: types);
       response = await provider.signup(loginRequest, context);
+
+      MemoryManagement.socialMediaStatus("0");
+      MemoryManagement.setUserEmail(email);
+      MemoryManagement.setuserName(username: name);
     } else {
       SignUpSocialRequest loginRequest = new SignUpSocialRequest(
           name: name,
@@ -389,6 +394,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
           type: types,
           snsId: snsId);
       response = await provider.socialSignup(loginRequest, context);
+      MemoryManagement.socialMediaStatus("1");
     }
 
     if (response is LoginSignupResponse) {

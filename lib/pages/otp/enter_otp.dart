@@ -8,10 +8,12 @@ import 'package:payvor/model/otp/otp_verification_response.dart';
 import 'package:payvor/model/otp/resendotpresponse.dart';
 import 'package:payvor/model/signup/signupresponse.dart';
 import 'package:payvor/pages/create_credential/create_credential.dart';
+import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:pin_view/pin_view.dart';
 import 'package:provider/provider.dart';
@@ -108,12 +110,23 @@ class _LoginScreenState extends State<OtoVerification> {
     var response = await provider.verifyOtp(loginRequest, context);
     provider.hideLoader();
     if (response is OtpVerification) {
-      Navigator.push(
-        context,
-        new CupertinoPageRoute(builder: (BuildContext context) {
-          return Material(child: new CreateCredential());
-        }),
-      );
+      var data = MemoryManagement.getSocialMediaStatus();
+      if (data == "0") {
+        Navigator.push(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return Material(child: new CreateCredential());
+          }),
+        );
+      } else {
+        Navigator.pushAndRemoveUntil(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return DashBoardScreen();
+          }),
+          (route) => false,
+        );
+      }
     } else {
       APIError apiError = response;
       print(apiError.error);

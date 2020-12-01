@@ -15,6 +15,7 @@ import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
@@ -34,6 +35,9 @@ class _LoginScreenState extends State<CreateCredential> {
   bool obsecureText = true;
   bool obsecureTextConfirm = true;
 
+  String name = "";
+  String email = "";
+
   AuthProvider provider;
 
   List<TextInputFormatter> listPassword = new List<TextInputFormatter>();
@@ -41,6 +45,11 @@ class _LoginScreenState extends State<CreateCredential> {
   @override
   void initState() {
     listPassword.addAll([new LengthLimitingTextInputFormatter(20)]);
+
+    var emails = MemoryManagement.getUserEmail();
+    var names = MemoryManagement.getuserName();
+    name = names;
+    email = emails;
 
     super.initState();
   }
@@ -181,13 +190,13 @@ class _LoginScreenState extends State<CreateCredential> {
               children: [
                 Container(
                     child: new Text(
-                  "Dibbendo Pranto",
-                  style: TextThemes.smallBold,
+                      name,
+                      style: TextThemes.smallBold,
                 )),
                 Container(
                   margin: new EdgeInsets.only(top: 1),
                   child: new Text(
-                    "dibu.official@gmail.com",
+                    email,
                     style: TextThemes.greyTextFieldNormal,
                   ),
                 ),

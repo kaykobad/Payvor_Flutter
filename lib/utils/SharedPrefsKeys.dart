@@ -50,4 +50,7 @@ class SharedPrefsKeys {
   static const String is_dark_mode = "is_dark_mode";
   static const String language_code = "language_code";
 
+  static const String USER_SOCIAL_STATUS = "user_social_status";
+  static const String USER_EMAIL = "user_email";
+  static const String USER_NAME = "user_name";
 }

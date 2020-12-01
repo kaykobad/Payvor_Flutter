@@ -88,22 +88,32 @@ class SocialLogin extends StatelessWidget {
             .replaceAll('#_', "");
         print("urll + $codes"); // IF SUCCESS LOGIN
 
-        final http.Response response = await http.post(
-            "https://api.instagram.com/oauth/access_token", body: {
+        final http.Response response = await http
+            .post("https://api.instagram.com/oauth/access_token", body: {
           "client_id": appId,
           "redirect_uri": "https://github.com/login",
           "client_secret": appSecret,
           "code": codes,
           "grant_type": "authorization_code"
         });
-
+        https: //api.instagram.com/v1/users/{user-id}/?access_token=ACCESS-TOKEN
 
         var token = new Token.fromMap(json.decode(response.body));
 
         if (token.access != null) {
-          /*   final http.Response response = await http.post(
-              "https://i.instagram.com/api/v1/users/${token.id}/info/?access_token=${token.access}");
-*/
+          final http.Response response = await http.get(
+              "https://graph.instagram.com/${token.id}?fields=id,username&access_token=${token.access}");
+
+          var url =
+              "https://graph.instagram.com/${token.id}?fields=id,username&access_token=${token.access}";
+          print(url);
+
+          if (response.statusCode == 200) {
+            var tokenName = new Token.fromMap(json.decode(response.body));
+
+            token.username = tokenName.username;
+          }
+
           print("token not null");
           print(json.decode(response.body));
           flutterWebviewPlugin.close();
@@ -140,10 +150,12 @@ class SocialLogin extends StatelessWidget {
 class Token {
   String access;
   int id;
+  String username;
 
 
   Token.fromMap(Map json) {
     access = json['access_token'];
     id = json['user_id'];
+    username = json['username'];
   }
 }

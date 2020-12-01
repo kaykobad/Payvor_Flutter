@@ -372,7 +372,22 @@ class MemoryManagement {
   }
 
   static void changeLanguage(String value) {
-     prefs.setString(SharedPrefsKeys.language_code, value);
+    prefs.setString(SharedPrefsKeys.language_code, value);
   }
-  
+
+  static void socialMediaStatus(String value) {
+    prefs.setString(SharedPrefsKeys.USER_SOCIAL_STATUS, value);
+  }
+
+  static String getSocialMediaStatus() {
+    return prefs?.getString(SharedPrefsKeys.USER_SOCIAL_STATUS);
+  }
+
+  static void setUserEmail(String value) {
+    prefs.setString(SharedPrefsKeys.USER_EMAIL, value);
+  }
+
+  static String getUserEmail() {
+    return prefs?.getString(SharedPrefsKeys.USER_EMAIL);
+  }
 }
