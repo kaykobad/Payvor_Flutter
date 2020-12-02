@@ -239,9 +239,11 @@ Widget getLocation(TextEditingController controller, BuildContext context,
                   locationList.results.length > 0) {
                 var data = locationList.results[0];
 
-                controllers.text =
-                    data?.geometry?.bounds?.northeast?.lat?.toString() + "," +
-                        data?.geometry?.bounds?.northeast?.lng?.toString();
+                print("data ${data.geometry?.location?.lat}");
+
+                controllers.text = data?.geometry?.location?.lat?.toString() +
+                    "," +
+                    data?.geometry?.location?.lng?.toString();
               }
             }
 

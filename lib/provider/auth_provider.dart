@@ -5,15 +5,14 @@ import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/common_response/common_success_response.dart';
 import 'package:payvor/model/forgot_password/forgot_password_request.dart';
 import 'package:payvor/model/logged_in_user/logged_in_user_response.dart';
-import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/login/loginrequest.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/otp/otp_request.dart';
 import 'package:payvor/model/otp/otp_verification_response.dart';
 import 'package:payvor/model/otp/resendotpresponse.dart';
 import 'package:payvor/model/reset_password/reset_pass_request.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signuprequest.dart';
-import 'package:payvor/model/signup/signupresponse.dart';
 import 'package:payvor/model/update_profile/update_profile_request.dart';
 import 'package:payvor/model/update_profile/update_profile_response.dart';
 import 'package:payvor/networkmodel/APIHandler.dart';
@@ -242,8 +241,30 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
+      try {
+        var status = response["status"]["status"];
+
+        print(response["error"]);
+        if (status == false) {
+          APIError apiError = new APIError(
+            error: response["error"],
+            messag: response["error"],
+            status: 400,
+            onAlertPop: () {},
+          );
+          completer.complete(apiError);
+          return completer.future;
+        }
+        print(status);
+      }
+      catch (e) {
+
+
+      }
+
+
       UpdateProfileResponse loginResponseData =
-          new UpdateProfileResponse.fromJson(response);
+      new UpdateProfileResponse.fromJson(response);
       completer.complete(loginResponseData);
       notifyListeners();
       return completer.future;

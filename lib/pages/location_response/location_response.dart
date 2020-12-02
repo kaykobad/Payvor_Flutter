@@ -154,8 +154,8 @@ class Bounds {
 }
 
 class Northeast {
-  double lat;
-  double lng;
+  num lat;
+  num lng;
 
   Northeast({this.lat, this.lng});
 

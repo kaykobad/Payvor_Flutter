@@ -213,14 +213,16 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
 
     if (response is UpdateProfileResponse) {
       provider.hideLoader();
+
+      print(response);
       try {
         Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
             return new OtoVerification(
-              phoneNumber:  _PhoneController.text,
+              phoneNumber: _PhoneController.text,
               type: 0,
-              countryCode:_selected.phoneCode ,
+              countryCode: _selected.phoneCode,
             );
           }),
         );
