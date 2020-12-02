@@ -157,7 +157,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
 
         case "2":
           {
-            types = "go";
+            types = "tw";
           }
           break;
 
@@ -477,9 +477,6 @@ class _LoginScreenState extends State<LoginScreenNew> {
       case TwitterLoginStatus.loggedIn:
         var session = result.session;
 
-//        email = (session.email == null)
-//            ? "${session.username}_${session.userId}@twitter.com"
-//            : session.email;
         email=session.email;
         name = session.username;
         type = "2";
@@ -514,7 +511,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       print("$photodata");
       print("$photourl");
       print("$photo");
-      email = (emails == null) ? "${nameUser}_$id@facebook.com" : emails;
+      email = emails;
       name = nameUser;
       type = "1";
       snsId = id;
