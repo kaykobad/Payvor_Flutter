@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payvor/model/apierror.dart';
-import 'package:payvor/model/common_response/common_success_response.dart';
 import 'package:payvor/model/forgot_password/forgot_password_request.dart';
+import 'package:payvor/model/forgot_password/forgot_password_response.dart';
 import 'package:payvor/pages/reset_password/reset_password.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -40,13 +40,13 @@ class _LoginScreenState extends State<ForgotPassword> {
 
   hitApi() async {
     provider.setLoading();
-    ForgotPasswordRequest loginRequest =
+    ForgotPasswordRequest forgotrequest =
         new ForgotPasswordRequest(email: _EmailController.text);
-    var response = await provider.forgotPassword(loginRequest, context);
+    var response = await provider.forgotPassword(forgotrequest, context);
 
-    if (response is CommonSuccessResponse) {
+    if (response is ForgotPasswordResponse) {
       try {
-        showInSnackBar(response.success);
+        showInSnackBar(response.status.message);
 
         Navigator.push(
           context,

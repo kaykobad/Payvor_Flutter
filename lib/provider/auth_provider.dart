@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/common_response/common_success_response.dart';
 import 'package:payvor/model/forgot_password/forgot_password_request.dart';
+import 'package:payvor/model/forgot_password/forgot_password_response.dart';
 import 'package:payvor/model/logged_in_user/logged_in_user_response.dart';
 import 'package:payvor/model/login/loginrequest.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
@@ -175,12 +176,14 @@ class AuthProvider with ChangeNotifier {
         url: APIs.forgotPassword,
         requestBody: request.toJson());
 
+    print(APIs.forgotPassword);
+
     if (response is APIError) {
       completer.complete(response);
       return completer.future;
     } else {
-      CommonSuccessResponse loginResponseData =
-          new CommonSuccessResponse.fromJson(response);
+      ForgotPasswordResponse loginResponseData =
+          new ForgotPasswordResponse.fromJson(response);
       completer.complete(loginResponseData);
       notifyListeners();
       return completer.future;

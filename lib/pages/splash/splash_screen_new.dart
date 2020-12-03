@@ -14,6 +14,8 @@ class SplashScreen extends StatefulWidget {
   State<StatefulWidget> createState() => FadeIn();
 }
 
+enum UniLinksType { string, uri }
+
 class FadeIn extends State<SplashScreen> {
   @override
   void initState() {
