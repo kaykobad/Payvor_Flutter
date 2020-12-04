@@ -51,7 +51,7 @@
                 <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
                 <data
                     android:host="example.com"
-                    android:scheme="unilinks" />
+                    android:scheme="reset your Password" />
             </intent-filter>
 
             <!-- App Links -->
@@ -61,10 +61,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts URIs that begin with https://YOUR_HOST -->
+
+                <!-- android:pathPrefix="/path/subpath"-->
                 <data
                     android:host="host"
-                    android:pathPrefix="/path/subpath"
-                    android:scheme="unilinks" />
+                    android:scheme="reset your Password" />
+
             </intent-filter>
 
         </activity>

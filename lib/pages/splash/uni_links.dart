@@ -24,6 +24,7 @@ class _MyAppState extends State<MyAppUni> with SingleTickerProviderStateMixin {
   UniLinksType _type = UniLinksType.string;
 
   final List<String> _cmds = getCmds();
+
   final TextStyle _cmdStyle = const TextStyle(
       fontFamily: 'Courier', fontSize: 12.0, fontWeight: FontWeight.w700);
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
