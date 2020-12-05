@@ -48,14 +48,18 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
                 <data
-                    android:host="example.com"
-                    android:scheme="reset your Password" />
+                    android:host="http"
+                    android:scheme="167.172.40.120" />
+
+
             </intent-filter>
 
             <!-- App Links -->
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
+
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -64,8 +68,9 @@
 
                 <!-- android:pathPrefix="/path/subpath"-->
                 <data
-                    android:host="host"
-                    android:scheme="reset your Password" />
+                    android:host="http"
+                    android:pathPrefix="/api/v1/auth"
+                    android:scheme="167.172.40.120" />
 
             </intent-filter>
 

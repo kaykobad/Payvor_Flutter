@@ -48,6 +48,8 @@ class FadeIn extends State<SplashScreen> {
   Future<void> initPlatformStateForStringUniLinks() async {
     // Attach a listener to the links stream
     _sub = getLinksStream().listen((String link) {
+      print("avinashhh");
+
       if (!mounted) return;
       setState(() {
         _latestLink = link ?? 'Unknown';
@@ -57,6 +59,7 @@ class FadeIn extends State<SplashScreen> {
         } on FormatException {}
       });
     }, onError: (Object err) {
+      print("avinashhht");
       if (!mounted) return;
       setState(() {
         _latestLink = 'Failed to get latest link: $err.';
@@ -66,6 +69,7 @@ class FadeIn extends State<SplashScreen> {
 
     // Attach a second listener to the stream
     getLinksStream().listen((String link) {
+      print("avinashhh");
       print('got link: $link');
     }, onError: (Object err) {
       print('got err: $err');
@@ -75,6 +79,7 @@ class FadeIn extends State<SplashScreen> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       _initialLink = await getInitialLink();
+      print("aviinashhh");
       print('initial link: $_initialLink');
       if (_initialLink != null) _initialUri = Uri.parse(_initialLink);
     } on PlatformException {
