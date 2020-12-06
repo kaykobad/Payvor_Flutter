@@ -4,10 +4,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:flutter_twitter/flutter_twitter.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:http/http.dart' as http;
 import 'package:payvor/model/login/media_request.dart';
+import 'package:twitter_login/twitter_login.dart';
 
 class SocialLogin extends StatelessWidget {
   bool isLoggedIn = false;
@@ -22,7 +22,7 @@ class SocialLogin extends StatelessWidget {
     var data;
     var facebookLogin = FacebookLogin();
     var facebookLoginResult =
-        await facebookLogin.logInWithReadPermissions(['email']);
+        await facebookLogin.logIn(['email']);
     print(facebookLoginResult.errorMessage);
     switch (facebookLoginResult.status) {
       case FacebookLoginStatus.error:
@@ -50,18 +50,18 @@ class SocialLogin extends StatelessWidget {
 
   Future<dynamic> twitterLogin() async {
     var twitterLogin = new TwitterLogin(
-      consumerKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
-      consumerSecret: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
+      apiKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
+      apiSecretKey: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
     );
 
-    final TwitterLoginResult result = await twitterLogin.authorize();
+    final authResult = await twitterLogin.login();
 
-    switch (result.status) {
+    switch (authResult.status) {
       case TwitterLoginStatus.loggedIn:
-        var session = result.session;
-        print(session.token);
-        print(session.username);
-        print(session.userId);
+      //  var session = authResult.session;
+        print(authResult.authToken);
+        print(authResult.user.screenName);
+        print(authResult.user.);
         break;
      case TwitterLoginStatus.cancelledByUser:
    //    _showCancelMessage();

@@ -477,7 +477,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       case TwitterLoginStatus.loggedIn:
         var session = result.session;
 
-        email=session.email;
+        email="";//session.email;
         name = session.username;
         type = "2";
         snsId = session.userId;
