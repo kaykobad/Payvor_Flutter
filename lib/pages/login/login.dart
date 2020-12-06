@@ -10,7 +10,7 @@ import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signupresponse.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/forgot_password/forgot_password.dart';
-import 'package:payvor/pages/google_login.dart';
+import 'package:payvor/pages/social_login.dart';
 import 'package:payvor/pages/join_community/join_community.dart';
 import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
 import 'package:payvor/provider/auth_provider.dart';
