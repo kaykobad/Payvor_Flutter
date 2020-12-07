@@ -481,7 +481,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
   void getTwitterInfo() async {
     var result = await new SocialLogin().twitterLogin();
 
-    if (result.login) {
+    if (result!=null&&result.login) {
       email = result.email;
       name = result.username;
       type = "2";
@@ -507,11 +507,11 @@ class _LoginScreenState extends State<LoginScreenNew> {
 
       var photo = photourl["url"];
 
-      print("$nameUser");
-      print("$email");
-      print("$photodata");
-      print("$photourl");
-      print("$photo");
+//      print("$nameUser");
+//      print("$email");
+//      print("$photodata");
+//      print("$photourl");
+//      print("$photo");
       email = emails;
       name = nameUser;
       type = "1";

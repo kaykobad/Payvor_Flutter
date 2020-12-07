@@ -8,17 +8,17 @@
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:usesCleartextTraffic="true"
-        android:label="Payvor"
+        cleartextTrafficPermitted="true"
         android:icon="@mipmap/ic_launcher"
+        android:label="Payvor"
         android:requestLegacyExternalStorage="true"
-        cleartextTrafficPermitted="true">
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme"
             android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
@@ -43,53 +43,19 @@
 
 
             <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts URIs that begin with "example://gizmos” -->
                 <!-- Registered Callback URLs in TwitterApp -->
-                <data
-                    android:host="gizmos"
-                    android:scheme="example" /> <!-- host is option -->
+                <data android:scheme="twittersdk://"
+                    android:host="http://" />
             </intent-filter>
 
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
-                <data
-                    android:host="http"
-                    android:scheme="167.172.40.120" />
-
-
-            </intent-filter>
-
-            <!-- App Links -->
-            <intent-filter android:autoVerify="true">
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with https://YOUR_HOST -->
-
-                <!-- android:pathPrefix="/path/subpath"-->
-                <data
-                    android:host="http"
-                    android:pathPrefix="/api/v1/auth"
-                    android:scheme="167.172.40.120" />
-
-            </intent-filter>
 
         </activity>
 

@@ -16,76 +16,87 @@ class SocialLogin extends StatelessWidget {
   }
 
   Future<dynamic> initiateFacebookLogin() async {
-    var data;
-    var facebookLogin = FacebookLogin();
-    var facebookLoginResult =
-        await facebookLogin.logIn(['email']);
-    print(facebookLoginResult.errorMessage);
-    switch (facebookLoginResult.status) {
-      case FacebookLoginStatus.error:
-        print("Error");
-        data = null;
-        break;
-      case FacebookLoginStatus.cancelledByUser:
-        print("CancelledByUser");
-        data = null;
-        break;
-      case FacebookLoginStatus.loggedIn:
-        print("LoggedIn");
+    try {
+      var data;
+      var facebookLogin = FacebookLogin();
+      var facebookLoginResult = await facebookLogin.logIn(['email']);
+      print(facebookLoginResult.errorMessage);
+      switch (facebookLoginResult.status) {
+        case FacebookLoginStatus.error:
+          print("Error");
+          data = null;
+          break;
+        case FacebookLoginStatus.cancelledByUser:
+          print("CancelledByUser");
+          data = null;
+          break;
+        case FacebookLoginStatus.loggedIn:
+          print("LoggedIn");
 
-        var graphResponse = await http.get(
-            'https://graph.facebook.com/v2.12/me?fields=name,first_name,picture.height(200),birthday,gender,last_name,email&access_token=${facebookLoginResult.accessToken.token}');
+          var graphResponse = await http.get(
+              'https://graph.facebook.com/v2.12/me?fields=name,first_name,picture.height(200),birthday,gender,last_name,email&access_token=${facebookLoginResult
+                  .accessToken.token}');
 
-        Map profile = json.decode(graphResponse.body);
+          Map profile = json.decode(graphResponse.body);
 
-        print(profile.toString());
-        data = profile;
-        break;
+          print(profile.toString());
+          data = profile;
+          break;
+      }
+      return data;
+    }catch(ex)
+    {
+      print("fb error");
     }
-    return data;
   }
 
   Future<AuthResult> twitterLogin() async {
-    var twitterLogin = new TwitterLogin(
-        apiKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
-        apiSecretKey: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
-        redirectURI: "twitterkit-NjhbcYuBWb8RZAOnbd2nlbYD0://");
+    try {
+      var twitterLogin = new TwitterLogin(
+          apiKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
+          apiSecretKey: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
+          redirectURI: "twitterkit-NjhbcYuBWb8RZAOnbd2nlbYD0://");
 
-    final authResult = await twitterLogin.login();
+      print("called");
+      final authResult = await twitterLogin.login();
 
-    AuthResult authResults = new AuthResult();
+      AuthResult authResults = new AuthResult();
 
-    print(authResult.errorMessage);
+      print(authResult.errorMessage);
 
-    switch (authResult.status) {
-      case TwitterLoginStatus.loggedIn:
+      switch (authResult.status) {
+        case TwitterLoginStatus.loggedIn:
         //  var session = authResult.session;
 //        print(authResult.authToken);
 //        print(authResult.user.screenName);
 //        print(authResult.user);
 
-        authResults.image = authResult.user.thumbnailImage;
-        authResults.username = authResult.user.name;
-        authResults.email = authResult.user.email;
-        authResults.authToken = authResult.authToken;
-        authResults.authSecToken = authResult.authTokenSecret;
-        authResults.login = true;
-        authResults.id=authResult.user.id;
-        authResults.msg = "Login Successfully";
-        break;
-      case TwitterLoginStatus.cancelledByUser:
-        authResults.login = false;
-        authResults.msg = authResult.errorMessage;
-        //    _showCancelMessage();
-        break;
-      case TwitterLoginStatus.error:
-        authResults.login = false;
-        authResults.msg = authResult.errorMessage;
-        // _showErrorMessage(result.error);
-        break;
-    }
+          authResults.image = authResult.user.thumbnailImage;
+          authResults.username = authResult.user.name;
+          authResults.email = authResult.user.email;
+          authResults.authToken = authResult.authToken;
+          authResults.authSecToken = authResult.authTokenSecret;
+          authResults.login = true;
+          authResults.id = authResult.user.id;
+          authResults.msg = "Login Successfully";
+          break;
+        case TwitterLoginStatus.cancelledByUser:
+          authResults.login = false;
+          authResults.msg = authResult.errorMessage;
+          //    _showCancelMessage();
+          break;
+        case TwitterLoginStatus.error:
+          authResults.login = false;
+          authResults.msg = authResult.errorMessage;
+          // _showErrorMessage(result.error);
+          break;
+      }
 
-    return authResults;
+      return authResults;
+    }catch(ex)
+    {
+      print("twitter_error ${ex.toString()}");
+    }
   }
 
 /*
@@ -191,7 +202,6 @@ class Token {
   String username;
   String image;
 
-
   Token.fromMap(Map json) {
     access = json['access_token'];
     id = json['user_id'];
@@ -199,7 +209,6 @@ class Token {
     image = json['image'];
   }
 }
-
 
 class AuthResult {
   String authToken;
@@ -211,16 +220,15 @@ class AuthResult {
   String msg;
   String email;
 
-  AuthResult({this.authToken,
-    this.authSecToken,
-    this.id,
-    this.username,
-    this.image,
-    this.login,
-    this.msg,
-    this.email
-
-  });
+  AuthResult(
+      {this.authToken,
+      this.authSecToken,
+      this.id,
+      this.username,
+      this.image,
+      this.login,
+      this.msg,
+      this.email});
 
   AuthResult.fromMap(Map json) {
     authToken = json['authToken'];
@@ -238,7 +246,6 @@ class Media {
   String media_url;
   int id;
   String media_type;
-
 
   Media.fromMap(Map json) {
     media_url = json['media_url'];
