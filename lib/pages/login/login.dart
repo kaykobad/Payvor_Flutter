@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -115,9 +117,9 @@ class _LoginScreenState extends State<LoginScreenNew> {
             ),
           )
               : Container(
-                  width: 1.0,
-                  height: 1.0,
-                ),
+            width: 1.0,
+            height: 1.0,
+          ),
           hintText: labelText,
           hintStyle: TextThemes.greyTextFieldHintNormal,
         ),
@@ -208,7 +210,6 @@ class _LoginScreenState extends State<LoginScreenNew> {
       MemoryManagement.setAccessToken(accessToken: loginSignupResponse.data);
 
       if ((loginSignupResponse.isnew == null || loginSignupResponse.isnew)&&typse!=0) {
-
         Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
@@ -222,7 +223,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
           new CupertinoPageRoute(builder: (BuildContext context) {
             return DashBoardScreen();
           }),
-          (route) => false,
+              (route) => false,
         );
       }
     } else {
@@ -341,8 +342,8 @@ class _LoginScreenState extends State<LoginScreenNew> {
                                 context,
                                 new CupertinoPageRoute(
                                     builder: (BuildContext context) {
-                                  return new ForgotPassword();
-                                }),
+                                      return new ForgotPassword();
+                                    }),
                               );
                             },
                             child: new Text(
