@@ -145,7 +145,14 @@ packages:
       name: flutter_facebook_login
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "3.0.0"
+  flutter_inappwebview:
+    dependency: transitive
+    description:
+      name: flutter_inappwebview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.0+4"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -153,20 +160,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.8.1"
-  flutter_page_indicator:
-    dependency: transitive
-    description:
-      name: flutter_page_indicator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.3"
-  flutter_plugin_android_lifecycle:
-    dependency: transitive
-    description:
-      name: flutter_plugin_android_lifecycle
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.11"
   flutter_svg:
     dependency: "direct dev"
     description:
@@ -174,25 +167,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.19.1"
-  flutter_swiper:
-    dependency: "direct dev"
-    description:
-      name: flutter_swiper
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.6"
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_twitter:
-    dependency: "direct dev"
-    description:
-      name: flutter_twitter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.3"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -226,20 +205,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.18"
-  image_picker:
-    dependency: "direct dev"
-    description:
-      name: image_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.6.7+12"
-  image_picker_platform_interface:
-    dependency: transitive
-    description:
-      name: image_picker_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.1"
   intl:
     dependency: transitive
     description:
@@ -275,6 +240,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0-nullsafety.3"
+  mime:
+    dependency: transitive
+    description:
+      name: mime
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.7"
   nested:
     dependency: transitive
     description:
@@ -532,13 +504,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.19-nullsafety.2"
-  transformer_page_view:
-    dependency: transitive
+  twitter_login:
+    dependency: "direct dev"
     description:
-      name: transformer_page_view
+      name: twitter_login
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.6"
+    version: "2.1.0"
   typed_data:
     dependency: transitive
     description:

@@ -2,17 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_twitter/flutter_twitter.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/login/loginrequest.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
+import 'package:payvor/model/otp/sample_webview.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
-import 'package:payvor/model/signup/signupresponse.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/forgot_password/forgot_password.dart';
-import 'package:payvor/pages/social_login.dart';
 import 'package:payvor/pages/join_community/join_community.dart';
 import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
+import 'package:payvor/pages/social_login.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
@@ -44,11 +43,6 @@ class _LoginScreenState extends State<LoginScreenNew> {
   String snsId = "";
   String type = "";
   String profilePic = "";
-
-  var twitterLogin = new TwitterLogin(
-    consumerKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
-    consumerSecret: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
-  );
 
   Widget space() {
     return new SizedBox(
@@ -464,16 +458,30 @@ class _LoginScreenState extends State<LoginScreenNew> {
   }
 
   void getInstaUserInfo() async {
-    var googleSignInAccount = await new SocialLogin().getToken(
+    /* var googleSignInAccount = await new SocialLogin().getToken(
         "671655060202677",
         "015b739c9f1a115c79f0b7c7288c9cd2",
-        voidCallBackLike);
+        voidCallBackLike);*/
+
+    try {
+      Navigator.push(
+        context,
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return new WebviewInsta(
+            callback: voidCallBackLike,
+          );
+        }),
+      );
+      /*  showInSnackBar(response.data);
+        Navigator.pop(context);
+        Navigator.pop(context);*/
+    } catch (ex) {}
   }
 
   void getTwitterInfo() async {
-    final TwitterLoginResult result = await twitterLogin.authorize();
+    var result = await new SocialLogin().twitterLogin();
 
-    switch (result.status) {
+    /*   switch (result.status) {
       case TwitterLoginStatus.loggedIn:
         var session = result.session;
 
@@ -490,7 +498,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       case TwitterLoginStatus.error:
         // _showErrorMessage(result.error);
         break;
-    }
+    }*/
   }
 
   void getFacebookUserInfo() async {

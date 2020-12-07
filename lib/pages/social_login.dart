@@ -50,27 +50,32 @@ class SocialLogin extends StatelessWidget {
 
   Future<dynamic> twitterLogin() async {
     var twitterLogin = new TwitterLogin(
-      apiKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
-      apiSecretKey: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
-      redirectURI: "twitterkit-NjhbcYuBWb8RZAOnbd2nlbYD0://"
-    );
+        apiKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
+        apiSecretKey: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
+        redirectURI: "twitterkit-NjhbcYuBWb8RZAOnbd2nlbYD0://");
+
+    print(twitterLogin.apiKey);
 
     final authResult = await twitterLogin.login();
 
+    print(authResult.errorMessage);
+
     switch (authResult.status) {
       case TwitterLoginStatus.loggedIn:
-      //  var session = authResult.session;
+        //  var session = authResult.session;
         print(authResult.authToken);
         print(authResult.user.screenName);
         print(authResult.user);
         break;
-     case TwitterLoginStatus.cancelledByUser:
-   //    _showCancelMessage();
-       break;
-     case TwitterLoginStatus.error:
-      // _showErrorMessage(result.error);
-       break;
+      case TwitterLoginStatus.cancelledByUser:
+        //    _showCancelMessage();
+        break;
+      case TwitterLoginStatus.error:
+        // _showErrorMessage(result.error);
+        break;
     }
+
+    return authResult;
   }
 
 
