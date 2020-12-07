@@ -175,7 +175,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
       MemoryManagement.setAccessToken(accessToken: loginSignupResponse.data);
 
-      if (response.isnew == null || response.isnew) {
+      if ((loginSignupResponse.isnew == null || loginSignupResponse.isnew)&&typse!=0) {
 
         Navigator.push(
           context,
