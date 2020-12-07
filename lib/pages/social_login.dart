@@ -1,12 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:http/http.dart' as http;
-import 'package:payvor/model/login/media_request.dart';
 import 'package:twitter_login/twitter_login.dart';
 
 class SocialLogin extends StatelessWidget {
@@ -91,7 +88,7 @@ class SocialLogin extends StatelessWidget {
     return authResults;
   }
 
-
+/*
   Future<Token> getToken(String appId, String appSecret,
       ValueChanged<Token> callbackLikeUnlikeProject) async {
     // Stream<String> onCode = await _server();
@@ -150,10 +147,10 @@ class SocialLogin extends StatelessWidget {
             }
           } catch (e) {}
 
-          /*   https://graph.instagram.com/17870837731992331?fields=media_type,media_url&
+          */ /*   https://graph.instagram.com/17870837731992331?fields=media_type,media_url&
 
           final http.Response response = await http.get("https://graph.instagram.com/${token.id}?fields=id,username&access_token=${token.access}");
-*/
+*/ /*
 
           print("token not null");
           print(json.decode(response.body));
@@ -163,9 +160,9 @@ class SocialLogin extends StatelessWidget {
       }
     });
 
-  }
+  }*/
 
-  @Deprecated("Use loopbackIPv4 instead")
+/*  @Deprecated("Use loopbackIPv4 instead")
   Future<Stream<String>> _server() async {
     final StreamController<String> onCode = new StreamController();
     HttpServer server = await HttpServer.bind(
@@ -185,7 +182,7 @@ class SocialLogin extends StatelessWidget {
       await onCode.close();
     });
     return onCode.stream;
-  }
+  }*/
 }
 
 class Token {
