@@ -63,9 +63,9 @@ class SocialLogin extends StatelessWidget {
     switch (authResult.status) {
       case TwitterLoginStatus.loggedIn:
         //  var session = authResult.session;
-        print(authResult.authToken);
-        print(authResult.user.screenName);
-        print(authResult.user);
+//        print(authResult.authToken);
+//        print(authResult.user.screenName);
+//        print(authResult.user);
 
         authResults.image = authResult.user.thumbnailImage;
         authResults.username = authResult.user.name;
@@ -73,6 +73,7 @@ class SocialLogin extends StatelessWidget {
         authResults.authToken = authResult.authToken;
         authResults.authSecToken = authResult.authTokenSecret;
         authResults.login = true;
+        authResults.id=authResult.user.id;
         authResults.msg = "Login Successfully";
         break;
       case TwitterLoginStatus.cancelledByUser:
@@ -206,7 +207,7 @@ class Token {
 class AuthResult {
   String authToken;
   String authSecToken;
-  int id;
+  String id;
   String username;
   String image;
   bool login;

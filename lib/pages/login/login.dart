@@ -485,7 +485,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       email = result.email;
       name = result.username;
       type = "2";
-      snsId = "123";
+      snsId = result.id;
       profilePic = result.image;
       hitApi(1);
     } else {
