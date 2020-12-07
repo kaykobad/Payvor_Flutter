@@ -198,6 +198,8 @@ class AuthProvider with ChangeNotifier {
         url: APIs.resetPassword,
         requestBody: request.toJson());
 
+    print(APIs.resetPassword);
+
     if (response is APIError) {
       completer.complete(response);
       return completer.future;

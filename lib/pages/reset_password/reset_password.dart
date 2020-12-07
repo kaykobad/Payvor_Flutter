@@ -227,7 +227,7 @@ class _LoginScreenState extends State<ResetPassword> {
 
   void callback() {
     var password = _PasswordController.text;
-    var confirmPassword = _PasswordController.text;
+    var confirmPassword = _ConfirmPasswordController.text;
     if (password.isEmpty || password.trim().length == 0) {
       showInSnackBar("Please enter password.");
       return;
