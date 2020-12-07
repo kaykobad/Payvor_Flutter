@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_twitter/flutter_twitter.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/login/loginrequest.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
@@ -57,8 +60,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
     );
   }
 
-  Widget getTextField(
-      String labelText,
+  Widget getTextField(String labelText,
       TextEditingController controller,
       FocusNode focusNodeCurrent,
       FocusNode focusNodeNext,
@@ -98,22 +100,22 @@ class _LoginScreenState extends State<LoginScreenNew> {
           ),
           suffixIcon: obsectextType
               ? Offstage(
-                  offstage: !obsectextType,
-                  child: InkWell(
-                    onTap: () {
-                      obsecureText = !obsecureText;
-                      setState(() {});
-                    },
-                    child: Container(
-                      width: 30.0,
-                      alignment: Alignment.centerRight,
-                      child: new Text(
-                        obsecureText ? "show" : "hide",
-                        style: TextThemes.blackTextSmallNormal,
-                      ),
-                    ),
-                  ),
-                )
+            offstage: !obsectextType,
+            child: InkWell(
+              onTap: () {
+                obsecureText = !obsecureText;
+                setState(() {});
+              },
+              child: Container(
+                width: 30.0,
+                alignment: Alignment.centerRight,
+                child: new Text(
+                  obsecureText ? "show" : "hide",
+                  style: TextThemes.blackTextSmallNormal,
+                ),
+              ),
+            ),
+          )
               : Container(
                   width: 1.0,
                   height: 1.0,
@@ -123,6 +125,38 @@ class _LoginScreenState extends State<LoginScreenNew> {
         ),
       ),
     );
+  }
+
+  Future<dynamic> twitterLoginAndroid() async {
+    var twitterLogin = new TwitterLogin(
+      consumerKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
+      consumerSecret: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
+    );
+
+    final TwitterLoginResult result = await twitterLogin.authorize();
+
+    switch (result.status) {
+      case TwitterLoginStatus.loggedIn:
+        var session = result.session;
+
+        email = session.email;
+        name = session.username;
+        type = "2";
+        snsId = session.userId;
+        profilePic = "";
+        hitApi(1);
+
+        break;
+      case TwitterLoginStatus.cancelledByUser:
+        showInSnackBar(
+            "There are some authenticate issues.Please try again later.");
+
+        break;
+      case TwitterLoginStatus.error:
+        showInSnackBar(
+            "There are some authenticate issues.Please try again later.");
+        break;
+    }
   }
 
   hitApi(int typse) async {
@@ -176,7 +210,6 @@ class _LoginScreenState extends State<LoginScreenNew> {
       MemoryManagement.setAccessToken(accessToken: loginSignupResponse.data);
 
       if (response.isnew == null || response.isnew) {
-
         Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
@@ -190,7 +223,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
           new CupertinoPageRoute(builder: (BuildContext context) {
             return DashBoardScreen();
           }),
-          (route) => false,
+              (route) => false,
         );
       }
     } else {
@@ -234,7 +267,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
                         )),
                     Container(
                       margin:
-                          new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                      new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
                       child: new Text(
                         "To continue, please verify your information",
                         style: TextThemes.grayNormal,
@@ -280,15 +313,15 @@ class _LoginScreenState extends State<LoginScreenNew> {
                                 padding: const EdgeInsets.all(1.0),
                                 child: boolCheckBox
                                     ? Icon(
-                                        Icons.check_box,
-                                        size: 22.0,
-                                        color: Colors.lightBlueAccent,
-                                      )
+                                  Icons.check_box,
+                                  size: 22.0,
+                                  color: Colors.lightBlueAccent,
+                                )
                                     : Icon(
-                                        Icons.check_box_outline_blank,
-                                        size: 22.0,
-                                        color: Colors.grey,
-                                      ),
+                                  Icons.check_box_outline_blank,
+                                  size: 22.0,
+                                  color: Colors.grey,
+                                ),
                               ),
                             ),
                           ),
@@ -309,8 +342,8 @@ class _LoginScreenState extends State<LoginScreenNew> {
                                 context,
                                 new CupertinoPageRoute(
                                     builder: (BuildContext context) {
-                                  return new ForgotPassword();
-                                }),
+                                      return new ForgotPassword();
+                                    }),
                               );
                             },
                             child: new Text(
@@ -328,7 +361,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
                     Container(
                       alignment: Alignment.center,
                       margin:
-                          new EdgeInsets.only(left: 20.0, right: 20.0, top: 51),
+                      new EdgeInsets.only(left: 20.0, right: 20.0, top: 51),
                       child: new Text(" or login with",
                           style: TextThemes.greyTextFieldMedium),
                     ),
@@ -354,7 +387,12 @@ class _LoginScreenState extends State<LoginScreenNew> {
                           ),
                           InkWell(
                             onTap: () {
-                              getTwitterInfo();
+                              if (Platform.isAndroid) {
+                                twitterLoginAndroid();
+                              }
+                              else {
+                                getTwitterInfo();
+                              }
                             },
                             child: new SvgPicture.asset(
                               AssetStrings.twitter,
@@ -399,8 +437,8 @@ class _LoginScreenState extends State<LoginScreenNew> {
                                       context,
                                       new CupertinoPageRoute(
                                           builder: (BuildContext context) {
-                                        return new JoinCommunityNew();
-                                      }),
+                                            return new JoinCommunityNew();
+                                          }),
                                     );
                                   },
                               ),
