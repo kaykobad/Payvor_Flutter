@@ -48,15 +48,15 @@ class SocialLogin extends StatelessWidget {
     return data;
   }
 
-  Future<dynamic> twitterLogin() async {
+  Future<AuthResult> twitterLogin() async {
     var twitterLogin = new TwitterLogin(
         apiKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
         apiSecretKey: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
         redirectURI: "twitterkit-NjhbcYuBWb8RZAOnbd2nlbYD0://");
 
-    print(twitterLogin.apiKey);
-
     final authResult = await twitterLogin.login();
+
+    AuthResult authResults = new AuthResult();
 
     print(authResult.errorMessage);
 
@@ -66,16 +66,28 @@ class SocialLogin extends StatelessWidget {
         print(authResult.authToken);
         print(authResult.user.screenName);
         print(authResult.user);
+
+        authResults.image = authResult.user.thumbnailImage;
+        authResults.username = authResult.user.name;
+        authResults.email = authResult.user.email;
+        authResults.authToken = authResult.authToken;
+        authResults.authSecToken = authResult.authTokenSecret;
+        authResults.login = true;
+        authResults.msg = "Login Successfully";
         break;
       case TwitterLoginStatus.cancelledByUser:
+        authResults.login = false;
+        authResults.msg = authResult.errorMessage;
         //    _showCancelMessage();
         break;
       case TwitterLoginStatus.error:
+        authResults.login = false;
+        authResults.msg = authResult.errorMessage;
         // _showErrorMessage(result.error);
         break;
     }
 
-    return authResult;
+    return authResults;
   }
 
 
@@ -187,6 +199,40 @@ class Token {
     id = json['user_id'];
     username = json['username'];
     image = json['image'];
+  }
+}
+
+
+class AuthResult {
+  String authToken;
+  String authSecToken;
+  int id;
+  String username;
+  String image;
+  bool login;
+  String msg;
+  String email;
+
+  AuthResult({this.authToken,
+    this.authSecToken,
+    this.id,
+    this.username,
+    this.image,
+    this.login,
+    this.msg,
+    this.email
+
+  });
+
+  AuthResult.fromMap(Map json) {
+    authToken = json['authToken'];
+    authSecToken = json['authSecToken'];
+    id = json['user_id'];
+    username = json['username'];
+    image = json['image'];
+    login = json['login'];
+    msg = json['msg'];
+    email = json['email'];
   }
 }
 

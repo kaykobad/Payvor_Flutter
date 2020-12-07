@@ -304,26 +304,17 @@ class _LoginScreenState extends State<JoinCommunityNew> {
   void getTwitterInfo() async {
     var result = await new SocialLogin().twitterLogin();
 
-    /*  switch (result.status) {
-      case TwitterLoginStatus.loggedIn:
-        var session = result.session;
-        print(session.token);
-        print(session.username);
-        print(session.userId);
-        email = "";
-        name = session.username;
-        type = "2";
-        snsId = session.userId;
-        hitApi();
-
-        break;
-      case TwitterLoginStatus.cancelledByUser:
-        //    _showCancelMessage();
-        break;
-      case TwitterLoginStatus.error:
-        // _showErrorMessage(result.error);
-        break;
-    }*/
+    if (result.login) {
+      email = result.email;
+      name = result.username;
+      type = "2";
+      snsId = "123";
+      profilePic = result.image;
+      hitApi();
+    } else {
+      showInSnackBar(
+          "There are some authenticate issues.Please try again later.");
+    }
   }
 
   void getFacebookUserInfo() async {
