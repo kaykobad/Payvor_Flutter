@@ -16,6 +16,7 @@ import 'package:payvor/pages/join_community/join_community.dart';
 import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
 import 'package:payvor/pages/social_login.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
@@ -69,11 +70,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       {bool obsectextType}) {
     return Container(
       margin: new EdgeInsets.only(left: 20.0, right: 20.0),
-      padding: new EdgeInsets.only(top: 2.0, bottom: 2.0, right: 10.0),
-      decoration: new BoxDecoration(
-          color: Colors.transparent,
-          border: new Border.all(color: Colors.grey.withOpacity(0.5)),
-          borderRadius: new BorderRadius.circular(8.0)),
+      height: 54,
       child: new TextField(
         controller: controller,
         keyboardType: textInputType,
@@ -88,10 +85,27 @@ class _LoginScreenState extends State<LoginScreenNew> {
           }
         },
         decoration: new InputDecoration(
-          border: InputBorder.none,
-          contentPadding: new EdgeInsets.only(top: 15.0),
+
+          enabledBorder: new OutlineInputBorder(
+              borderSide: new BorderSide(
+                color: Colors.grey.withOpacity(0.5),
+              ),
+              borderRadius: new BorderRadius.circular(8)
+
+          ),
+          focusedBorder: new OutlineInputBorder(
+              borderSide: new BorderSide(
+                color: AppColors.colorCyanPrimary,
+
+              ),
+              borderRadius: new BorderRadius.circular(8)
+
+
+          ),
+          contentPadding: new EdgeInsets.only(top: 10.0),
           prefixIcon: Padding(
-            padding: const EdgeInsets.all(14.0),
+            padding: const EdgeInsets.only(
+                left: 14.0, right: 14.0, bottom: 14, top: 14.0),
             child: new Image.asset(
               svgPicture,
               width: 20.0,
@@ -108,6 +122,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
               },
               child: Container(
                 width: 30.0,
+                margin: new EdgeInsets.only(right: 10.0, bottom: 4),
                 alignment: Alignment.centerRight,
                 child: new Text(
                   obsecureText ? "show" : "hide",
@@ -118,7 +133,6 @@ class _LoginScreenState extends State<LoginScreenNew> {
           )
               : Container(
             width: 1.0,
-            height: 1.0,
           ),
           hintText: labelText,
           hintStyle: TextThemes.greyTextFieldHintNormal,
@@ -243,223 +257,228 @@ class _LoginScreenState extends State<LoginScreenNew> {
     provider = Provider.of<AuthProvider>(context);
     var screensize = MediaQuery.of(context).size;
     return SafeArea(
-      child: Stack(
-        children: [
-          Scaffold(
-            appBar: getAppBarNew(context),
-            backgroundColor: Colors.white,
-            key: _scaffoldKeys,
-            body: new SingleChildScrollView(
-              child: Container(
-                color: Colors.white,
-                width: screensize.width,
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    new SizedBox(
-                      height: 36.0,
-                    ),
-                    Container(
-                        margin: new EdgeInsets.only(left: 20.0),
-                        child: new Text(
-                          "Welcome back!",
-                          style: TextThemes.extraBold,
-                        )),
-                    Container(
-                      margin:
-                      new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
-                      child: new Text(
-                        "To continue, please verify your information",
-                        style: TextThemes.grayNormal,
+      child: Container(
+        color: Colors.white,
+        child: Stack(
+          children: [
+            Scaffold(
+              appBar: getAppBarNew(context),
+              backgroundColor: Colors.white,
+              key: _scaffoldKeys,
+              body: new SingleChildScrollView(
+                child: Container(
+                  color: Colors.white,
+                  width: screensize.width,
+                  child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      new SizedBox(
+                        height: 36.0,
                       ),
-                    ),
-                    space(),
-                    new SizedBox(
-                      height: 15.0,
-                    ),
-                    getTextField(
-                        "Email Address",
-                        _EmailController,
-                        _EmailField,
-                        _PasswordField,
-                        TextInputType.emailAddress,
-                        AssetStrings.emailPng,
-                        obsectextType: false),
-                    new SizedBox(
-                      height: 18.0,
-                    ),
-                    getTextField(
-                        "Password",
-                        _PasswordController,
-                        _PasswordField,
-                        _PasswordField,
-                        TextInputType.text,
-                        AssetStrings.passPng,
-                        obsectextType: true),
-                    new SizedBox(
-                      height: 51.0,
-                    ),
-                    new Container(
-                      margin: new EdgeInsets.only(left: 20.0, right: 20.0),
-                      child: Row(
-                        children: <Widget>[
-                          InkWell(
-                            onTap: () {
-                              boolCheckBox = !boolCheckBox;
-                              setState(() {});
-                            },
-                            child: Container(
-                              child: Padding(
-                                padding: const EdgeInsets.all(1.0),
-                                child: boolCheckBox
-                                    ? Icon(
-                                  Icons.check_box,
-                                  size: 22.0,
-                                  color: Colors.lightBlueAccent,
-                                )
-                                    : Icon(
-                                  Icons.check_box_outline_blank,
-                                  size: 22.0,
-                                  color: Colors.grey,
+                      Container(
+                          margin: new EdgeInsets.only(left: 20.0),
+                          child: new Text(
+                            "Welcome back!",
+                            style: TextThemes.extraBold,
+                          )),
+                      Container(
+                        margin:
+                        new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                        child: new Text(
+                          "To continue, please verify your information",
+                          style: TextThemes.grayNormal,
+                        ),
+                      ),
+                      space(),
+                      new SizedBox(
+                        height: 15.0,
+                      ),
+                      getTextField(
+                          "Email Address",
+                          _EmailController,
+                          _EmailField,
+                          _PasswordField,
+                          TextInputType.emailAddress,
+                          AssetStrings.emailPng,
+                          obsectextType: false),
+                      new SizedBox(
+                        height: 18.0,
+                      ),
+                      getTextField(
+                          "Password",
+                          _PasswordController,
+                          _PasswordField,
+                          _PasswordField,
+                          TextInputType.text,
+                          AssetStrings.passPng,
+                          obsectextType: true),
+                      new SizedBox(
+                        height: 51.0,
+                      ),
+                      new Container(
+                        margin: new EdgeInsets.only(left: 20.0, right: 20.0),
+                        child: Row(
+                          children: <Widget>[
+                            InkWell(
+                              onTap: () {
+                                boolCheckBox = !boolCheckBox;
+                                setState(() {});
+                              },
+                              child: Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(1.0),
+                                  child: boolCheckBox
+                                      ? Icon(
+                                    Icons.check_box,
+                                    size: 22.0,
+                                    color: Colors.lightBlueAccent,
+                                  )
+                                      : Icon(
+                                    Icons.check_box_outline_blank,
+                                    size: 22.0,
+                                    color: Colors.grey,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          new SizedBox(
-                            width: 5.0,
-                          ),
-                          Expanded(
-                              child: InkWell(
-                                  onTap: () {
-                                    boolCheckBox = !boolCheckBox;
-                                    setState(() {});
-                                  },
-                                  child: new Text("Remember me",
-                                      style: TextThemes.blackTextSmallMedium))),
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                new CupertinoPageRoute(
-                                    builder: (BuildContext context) {
-                                      return new ForgotPassword();
-                                    }),
-                              );
-                            },
-                            child: new Text(
-                              "FORGOT PASSWORD?",
-                              style: TextThemes.redTextSmallMedium,
+                            new SizedBox(
+                              width: 5.0,
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    new SizedBox(
-                      height: 32.0,
-                    ),
-                    Container(child: getSetupButtonNew(callback, "Login", 20)),
-                    Container(
-                      alignment: Alignment.center,
-                      margin:
-                      new EdgeInsets.only(left: 20.0, right: 20.0, top: 51),
-                      child: new Text(" or login with",
-                          style: TextThemes.greyTextFieldMedium),
-                    ),
-                    space(),
-                    Container(
-                      alignment: Alignment.center,
-                      margin: new EdgeInsets.only(left: 20.0, right: 20.0),
-                      child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          InkWell(
-                            onTap: () {
-                              getFacebookUserInfo();
-                            },
-                            child: new SvgPicture.asset(
-                              AssetStrings.facebook,
-                              height: 48,
-                              width: 48,
-                            ),
-                          ),
-                          new SizedBox(
-                            width: 16.0,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              if (Platform.isAndroid) {
-                                twitterLoginAndroid();
-                              }
-                              else {
-                                getTwitterInfo();
-                              }
-                            },
-                            child: new SvgPicture.asset(
-                              AssetStrings.twitter,
-                              height: 48,
-                              width: 48,
-                            ),
-                          ),
-                          new SizedBox(
-                            width: 16.0,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              getInstaUserInfo();
-                            },
-                            child: new Image.asset(
-                              AssetStrings.insta,
-                              height: 48,
-                              width: 48,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    space(),
-                    new SizedBox(
-                      height: 17.0,
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      child: new RichText(
-                          textAlign: TextAlign.center,
-                          text: new TextSpan(
-                            text: "Don't have an account? ",
-                            style: TextThemes.greyDarkTextFieldMedium,
-                            children: <TextSpan>[
-                              new TextSpan(
-                                text: "SIGN UP",
+                            Expanded(
+                                child: InkWell(
+                                    onTap: () {
+                                      boolCheckBox = !boolCheckBox;
+                                      setState(() {});
+                                    },
+                                    child: new Text("Remember me",
+                                        style: TextThemes
+                                            .blackTextSmallMedium))),
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  new CupertinoPageRoute(
+                                      builder: (BuildContext context) {
+                                        return new ForgotPassword();
+                                      }),
+                                );
+                              },
+                              child: new Text(
+                                "FORGOT PASSWORD?",
                                 style: TextThemes.redTextSmallMedium,
-                                recognizer: new TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.push(
-                                      context,
-                                      new CupertinoPageRoute(
-                                          builder: (BuildContext context) {
-                                            return new JoinCommunityNew();
-                                          }),
-                                    );
-                                  },
                               ),
-                            ],
-                          )),
-                    ),
-                    new SizedBox(
-                      height: 17.0,
-                    ),
-                  ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      new SizedBox(
+                        height: 32.0,
+                      ),
+                      Container(
+                          child: getSetupButtonNew(callback, "Login", 20)),
+                      Container(
+                        alignment: Alignment.center,
+                        margin:
+                        new EdgeInsets.only(left: 20.0, right: 20.0, top: 51),
+                        child: new Text(" or login with",
+                            style: TextThemes.greyTextFieldMedium),
+                      ),
+                      space(),
+                      Container(
+                        alignment: Alignment.center,
+                        margin: new EdgeInsets.only(left: 20.0, right: 20.0),
+                        child: new Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            InkWell(
+                              onTap: () {
+                                getFacebookUserInfo();
+                              },
+                              child: new SvgPicture.asset(
+                                AssetStrings.facebook,
+                                height: 48,
+                                width: 48,
+                              ),
+                            ),
+                            new SizedBox(
+                              width: 16.0,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                if (Platform.isAndroid) {
+                                  twitterLoginAndroid();
+                                }
+                                else {
+                                  getTwitterInfo();
+                                }
+                              },
+                              child: new SvgPicture.asset(
+                                AssetStrings.twitter,
+                                height: 48,
+                                width: 48,
+                              ),
+                            ),
+                            new SizedBox(
+                              width: 16.0,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                getInstaUserInfo();
+                              },
+                              child: new Image.asset(
+                                AssetStrings.insta,
+                                height: 48,
+                                width: 48,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      space(),
+                      new SizedBox(
+                        height: 17.0,
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        child: new RichText(
+                            textAlign: TextAlign.center,
+                            text: new TextSpan(
+                              text: "Don't have an account? ",
+                              style: TextThemes.greyDarkTextFieldMedium,
+                              children: <TextSpan>[
+                                new TextSpan(
+                                  text: "SIGN UP",
+                                  style: TextThemes.redTextSmallMedium,
+                                  recognizer: new TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.push(
+                                        context,
+                                        new CupertinoPageRoute(
+                                            builder: (BuildContext context) {
+                                              return new JoinCommunityNew();
+                                            }),
+                                      );
+                                    },
+                                ),
+                              ],
+                            )),
+                      ),
+                      new SizedBox(
+                        height: 17.0,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          new Center(
-            child: getFullScreenProviderLoader(
-              status: provider.getLoading(),
-              context: context,
+            new Center(
+              child: getFullScreenProviderLoader(
+                status: provider.getLoading(),
+                context: context,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

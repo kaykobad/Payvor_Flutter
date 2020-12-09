@@ -9,6 +9,7 @@ import 'package:payvor/model/update_profile/update_profile_request.dart';
 import 'package:payvor/model/update_profile/update_profile_response.dart';
 import 'package:payvor/pages/otp/enter_otp.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
@@ -85,7 +86,7 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
     ),
   );
 
-  Widget getTextFieldPhone(String labelText,
+  /*Widget getTextFieldPhone(String labelText,
       TextEditingController controller,
       FocusNode focusNodeCurrent,
       FocusNode focusNodeNext,
@@ -135,6 +136,68 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
         ),
       ),
     );
+  }*/
+
+  Widget getTextFieldPhone(
+    String labelText,
+    TextEditingController controller,
+    FocusNode focusNodeCurrent,
+    FocusNode focusNodeNext,
+    TextInputType textInputType,
+    String svgPicture,
+  ) {
+    return Container(
+      margin: new EdgeInsets.only(left: 20.0, right: 20.0),
+      height: 54,
+      child: new TextField(
+        controller: controller,
+        keyboardType: textInputType,
+        style: TextThemes.blackTextFieldNormal,
+        decoration: new InputDecoration(
+          enabledBorder: new OutlineInputBorder(
+              borderSide: new BorderSide(
+                color: Colors.grey.withOpacity(0.5),
+              ),
+              borderRadius: new BorderRadius.circular(8)),
+          focusedBorder: new OutlineInputBorder(
+              borderSide: new BorderSide(
+                color: AppColors.colorCyanPrimary,
+              ),
+              borderRadius: new BorderRadius.circular(8)),
+          contentPadding: new EdgeInsets.only(top: 10.0, left: 2.0),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.only(left: 14.0, right: 5.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                new Image.asset(
+                  svgPicture,
+                  width: 20.0,
+                  height: 20.0,
+                ),
+                new InkWell(
+                  onTap: () {
+                    _openCountryPickerDialog();
+                  },
+                  child: Container(
+                    padding: new EdgeInsets.only(
+                      left: 16,
+                    ),
+                    child: Text("+${_selected.phoneCode}",
+                        style: TextThemes.blackTextFieldNormal),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          suffixIcon: new Container(
+            width: 1,
+          ),
+          hintText: labelText,
+          hintStyle: TextThemes.greyTextFieldHintNormal,
+        ),
+      ),
+    );
   }
 
   @override
@@ -144,7 +207,7 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
     super.initState();
   }
 
-  Widget getTextField(String labelText,
+  /*Widget getTextField(String labelText,
       TextEditingController controller,
       FocusNode focusNodeCurrent,
       FocusNode focusNodeNext,
@@ -172,6 +235,54 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
               height: 20.0,
             ),
           ),
+          hintText: labelText,
+          hintStyle: TextThemes.greyTextFieldHintNormal,
+        ),
+      ),
+    );
+  }*/
+
+
+  Widget getTextField(String labelText,
+      TextEditingController controller,
+      FocusNode focusNodeCurrent,
+      FocusNode focusNodeNext,
+      TextInputType textInputType,
+      String svgPicture,) {
+    return Container(
+      margin: new EdgeInsets.only(left: 20.0, right: 20.0),
+      height: 54,
+      child: new TextField(
+        controller: controller,
+        style: TextThemes.blackTextFieldNormal,
+        keyboardType: textInputType,
+        decoration: new InputDecoration(
+          enabledBorder: new OutlineInputBorder(
+              borderSide: new BorderSide(
+                color: Colors.grey.withOpacity(0.5),
+              ),
+              borderRadius: new BorderRadius.circular(8)
+
+          ),
+          focusedBorder: new OutlineInputBorder(
+              borderSide: new BorderSide(
+                color: AppColors.colorCyanPrimary,
+
+              ),
+              borderRadius: new BorderRadius.circular(8)
+
+
+          ),
+          contentPadding: new EdgeInsets.only(top: 10.0),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.all(14.0),
+            child: new Image.asset(
+              svgPicture,
+              width: 20.0,
+              height: 20.0,
+            ),
+          ),
+          suffixIcon: new Container(width: 1,),
           hintText: labelText,
           hintStyle: TextThemes.greyTextFieldHintNormal,
         ),
@@ -248,86 +359,90 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
         .size;
     provider = Provider.of<AuthProvider>(context);
     return SafeArea(
-      child: Stack(
-        children: [
-          Scaffold(
-            appBar: getAppBarNew(context),
-            key: _scaffoldKeys,
-            backgroundColor: Colors.white,
-            body: new SingleChildScrollView(
-              child: Container(
-                color: Colors.white,
-                width: screensize.width,
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    new SizedBox(
-                      height: 35.0,
-                    ),
-                    Container(
-                        margin: new EdgeInsets.only(left: 20.0),
-                        child: new Text(
-                          "Phone Number",
-                          style: TextThemes.extraBold,
-                        )),
-                    Container(
-                      margin: new EdgeInsets.only(
-                          left: 20.0, right: 20.0, top: 6),
-                      child: new Text(
-                        "Enter your location and phone number",
-                        style: TextThemes.grayNormal,
+      child: Container(
+        color: Colors.white,
+        child: Stack(
+          children: [
+            Scaffold(
+              appBar: getAppBarNew(context),
+              key: _scaffoldKeys,
+              backgroundColor: Colors.white,
+              body: new SingleChildScrollView(
+                child: Container(
+                  color: Colors.white,
+                  width: screensize.width,
+                  child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      new SizedBox(
+                        height: 35.0,
                       ),
-                    ),
-                    space(),
-                    new SizedBox(
-                      height: 15.0,
-                    ),
-                    /* getTextField(
-                      "Location",
-                      _LocationController,
-                      _LocationField,
-                      _PhoneField,
-                      TextInputType.text,
-                      AssetStrings.location,
-                    ),*/
-                    getLocation(_LocationController, context,
-                      _streamControllerShowLoader,
-                      _LatLongController,
-                      iconData: AssetStrings.location,
-                    ),
+                      Container(
+                          margin: new EdgeInsets.only(left: 20.0),
+                          child: new Text(
+                            "Phone Number",
+                            style: TextThemes.extraBold,
+                          )),
+                      Container(
+                        margin: new EdgeInsets.only(
+                            left: 20.0, right: 20.0, top: 6),
+                        child: new Text(
+                          "Enter your location and phone number",
+                          style: TextThemes.grayNormal,
+                        ),
+                      ),
+                      space(),
+                      new SizedBox(
+                        height: 15.0,
+                      ),
+                      /* getTextField(
+                        "Location",
+                        _LocationController,
+                        _LocationField,
+                        _PhoneField,
+                        TextInputType.text,
+                        AssetStrings.location,
+                      ),*/
+                      getLocation(_LocationController, context,
+                        _streamControllerShowLoader,
+                        _LatLongController,
+                        iconData: AssetStrings.location,
+                      ),
 
-                    new SizedBox(
-                      height: 18.0,
-                    ),
-                    getTextFieldPhone(
-                      "Phone Number",
-                      _PhoneController,
-                      _PhoneField,
-                      _PhoneField,
-                      TextInputType.phone,
-                      AssetStrings.phone,
-                    ),
-                    new SizedBox(
-                      height: 25.0,
-                    ),
-                    Container(
-                        child:
-                        getSetupButtonNew(callback, "Verify Phone Number", 20)),
-                    new SizedBox(
-                      height: 25.0,
-                    ),
-                  ],
+                      new SizedBox(
+                        height: 18.0,
+                      ),
+                      getTextFieldPhone(
+                        "Phone Number",
+                        _PhoneController,
+                        _PhoneField,
+                        _PhoneField,
+                        TextInputType.phone,
+                        AssetStrings.phone,
+                      ),
+                      new SizedBox(
+                        height: 25.0,
+                      ),
+                      Container(
+                          child:
+                          getSetupButtonNew(
+                              callback, "Verify Phone Number", 20)),
+                      new SizedBox(
+                        height: 25.0,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          new Center(
-            child: getFullScreenProviderLoader(
-              status: provider.getLoading(),
-              context: context,
+            new Center(
+              child: getFullScreenProviderLoader(
+                status: provider.getLoading(),
+                context: context,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

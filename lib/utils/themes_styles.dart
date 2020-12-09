@@ -61,7 +61,7 @@ class TextThemes {
   static final TextStyle redTextSmallMedium = TextStyle(
       fontFamily: AssetStrings.circulerBoldStyle,
       fontSize: 12,
-      color: Color.fromRGBO(205, 107, 102, 1.0));
+      color: Color.fromRGBO(255, 107, 102, 1.0));
 
   static final TextStyle greyTextFieldMedium = TextStyle(
     fontFamily: AssetStrings.circulerMedium,

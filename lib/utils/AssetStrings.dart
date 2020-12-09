@@ -34,6 +34,7 @@ class AssetStrings {
   static const String emailPng = 'assets/png/email_new.png';
   static const String pass = 'assets/svg/pass.svg';
   static const String passPng = 'assets/png/pass_new.png';
+  static const String logopng = 'assets/png/logo.png';
   static const String location = 'assets/png/location.png';
   static const String phone = 'assets/png/phone.png';
   static const String fullname = 'assets/png/fullname.png';

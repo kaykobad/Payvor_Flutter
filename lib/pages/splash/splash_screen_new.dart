@@ -116,19 +116,17 @@ class FadeIn extends State<SplashScreen> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: AppColors.kPrimaryBlue,
-        body: Center(
-          child: Container(
-            child: new Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Lottie.asset(
-                    'assets/payvor.json',
-                    repeat: true,
-                    reverse: false,
-                    animate: true,
-                  ),
-                ]),
-          ),
+        body: Container(
+          margin: new EdgeInsets.only(top: 80.0),
+          alignment: Alignment.center,
+          child: new Column(children: <Widget>[
+            Lottie.asset('assets/payvor.json',
+                repeat: true,
+                reverse: false,
+                animate: true,
+                width: 240,
+                height: 240),
+          ]),
         ),
       ),
     );

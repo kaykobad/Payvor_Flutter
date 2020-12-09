@@ -6,7 +6,6 @@ import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/otp/otp_request.dart';
 import 'package:payvor/model/otp/otp_verification_response.dart';
 import 'package:payvor/model/otp/resendotpresponse.dart';
-import 'package:payvor/model/signup/signupresponse.dart';
 import 'package:payvor/pages/create_credential/create_credential.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/provider/auth_provider.dart';
@@ -167,132 +166,135 @@ class _LoginScreenState extends State<OtoVerification> {
     provider = Provider.of<AuthProvider>(context);
 
     return SafeArea(
-      child: Stack(
-        children: [
-          Scaffold(
-            appBar: getAppBarNew(context),
-            key: _scaffoldKeys,
-            backgroundColor: Colors.white,
-            body: new SingleChildScrollView(
-              child: Container(
-                color: Colors.white,
-                width: screensize.width,
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    new SizedBox(
-                      height: 36.0,
-                    ),
-                    Container(
-                        margin: new EdgeInsets.only(left: 20.0),
-                        child: new Text(
-                          "Verify Phone Number",
-                          style: TextThemes.extraBold,
-                        )),
-                    Container(
-                      margin:
-                          new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
-                      child: new RichText(
-                          text: new TextSpan(
-                        text:
-                            "Please enter the code that is sent to your phone ",
-                        style: TextThemes.grayNormal,
-                        children: <TextSpan>[
-                          new TextSpan(
-                            text: widget.phoneNumber != null
-                                ? widget.phoneNumber
-                                : "",
-                            style: TextThemes.blackTextFieldNormal,
-                          ),
-                        ],
-                      )),
-                    ),
-                    space(),
-                    new SizedBox(
-                      height: 15.0,
-                    ),
-                    Container(
-                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
-                      child: PinView(
-                          count: 4,
-                          // describes the field number
-                          autoFocusFirstField: false,
-                          obscureText: true,
-                          // defaults to true
-                          inputDecoration: new InputDecoration(
-                            border: new OutlineInputBorder(
-                                borderSide: new BorderSide(
-                                    color: Colors.grey.withOpacity(0.5)),
-                                borderRadius: new BorderRadius.circular(8.0)),
-                            focusedBorder: new OutlineInputBorder(
-                                borderSide: new BorderSide(
-                                    color: Colors.grey.withOpacity(0.5)),
-                                borderRadius: new BorderRadius.circular(8.0)),
-                            enabledBorder: new OutlineInputBorder(
-                                borderSide: new BorderSide(
-                                    color: Colors.grey.withOpacity(0.5)),
-                                borderRadius: new BorderRadius.circular(8.0)),
-                          ),
-                          margin: EdgeInsets.all(10),
-                          // margin between the fields// describes whether the text fields should be obscure or not, defaults to false
-                          style: TextThemes.blackTextSmallMedium,
-                          submit: (String pin) {
-                            // when all the fields are filled
-                            // submit function runs with the pin
-                            FocusScope.of(context)
-                                .requestFocus(new FocusNode());
-                            pinText = pin;
-                            print(pin);
-
-                            hitApi();
-                          }),
-                    ),
-                    new SizedBox(
-                      height: 85.0,
-                    ),
-                    offstage == 1.0
-                        ? Container()
-                        : Container(
-                            alignment: Alignment.center,
-                            margin: new EdgeInsets.only(left: 20.0),
-                            child: new Text(
-                              "The verification code will expire in " +
-                                  "$_current",
-                              style: TextThemes.greyDarkTextFieldItalic,
-                            )),
-                    Opacity(
-                      opacity: offstage,
-                      child: InkWell(
-                        onTap: () {
-                          if (offstage == 1.0) {
-                            startTimer();
-                            hitResendApi();
-                          }
-                        },
-                        child: Container(
-                            alignment: Alignment.center,
-                            margin: new EdgeInsets.only(left: 20.0, top: 18),
-                            child: new Text(
-                              "RESEND CODE",
-                              style: TextThemes.redTextSmallMedium,
-                            )),
+      child: Container(
+        color: Colors.white,
+        child: Stack(
+          children: [
+            Scaffold(
+              appBar: getAppBarNew(context),
+              key: _scaffoldKeys,
+              backgroundColor: Colors.white,
+              body: new SingleChildScrollView(
+                child: Container(
+                  color: Colors.white,
+                  width: screensize.width,
+                  child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      new SizedBox(
+                        height: 36.0,
                       ),
-                    ),
-                    new SizedBox(
-                      height: 25.0,
-                    ),
-                  ],
+                      Container(
+                          margin: new EdgeInsets.only(left: 20.0),
+                          child: new Text(
+                            "Verify Phone Number",
+                            style: TextThemes.extraBold,
+                          )),
+                      Container(
+                        margin: new EdgeInsets.only(
+                            left: 20.0, right: 20.0, top: 6),
+                        child: new RichText(
+                            text: new TextSpan(
+                          text:
+                              "Please enter the code that is sent to your phone ",
+                          style: TextThemes.grayNormal,
+                          children: <TextSpan>[
+                            new TextSpan(
+                              text: widget.phoneNumber != null
+                                  ? widget.phoneNumber
+                                  : "",
+                              style: TextThemes.blackTextFieldNormal,
+                            ),
+                          ],
+                        )),
+                      ),
+                      space(),
+                      new SizedBox(
+                        height: 15.0,
+                      ),
+                      Container(
+                        margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                        child: PinView(
+                            count: 4,
+                            // describes the field number
+                            autoFocusFirstField: false,
+                            obscureText: true,
+                            // defaults to true
+                            inputDecoration: new InputDecoration(
+                              border: new OutlineInputBorder(
+                                  borderSide: new BorderSide(
+                                      color: Colors.grey.withOpacity(0.5)),
+                                  borderRadius: new BorderRadius.circular(8.0)),
+                              focusedBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(
+                                      color: Colors.grey.withOpacity(0.5)),
+                                  borderRadius: new BorderRadius.circular(8.0)),
+                              enabledBorder: new OutlineInputBorder(
+                                  borderSide: new BorderSide(
+                                      color: Colors.grey.withOpacity(0.5)),
+                                  borderRadius: new BorderRadius.circular(8.0)),
+                            ),
+                            margin: EdgeInsets.all(10),
+                            // margin between the fields// describes whether the text fields should be obscure or not, defaults to false
+                            style: TextThemes.blackTextSmallMedium,
+                            submit: (String pin) {
+                              // when all the fields are filled
+                              // submit function runs with the pin
+                              FocusScope.of(context)
+                                  .requestFocus(new FocusNode());
+                              pinText = pin;
+                              print(pin);
+
+                              hitApi();
+                            }),
+                      ),
+                      new SizedBox(
+                        height: 85.0,
+                      ),
+                      offstage == 1.0
+                          ? Container()
+                          : Container(
+                              alignment: Alignment.center,
+                              margin: new EdgeInsets.only(left: 20.0),
+                              child: new Text(
+                                "The verification code will expire in " +
+                                    "$_current",
+                                style: TextThemes.greyDarkTextFieldItalic,
+                              )),
+                      Opacity(
+                        opacity: offstage,
+                        child: InkWell(
+                          onTap: () {
+                            if (offstage == 1.0) {
+                              startTimer();
+                              hitResendApi();
+                            }
+                          },
+                          child: Container(
+                              alignment: Alignment.center,
+                              margin: new EdgeInsets.only(left: 20.0, top: 18),
+                              child: new Text(
+                                "RESEND CODE",
+                                style: TextThemes.redTextSmallMedium,
+                              )),
+                        ),
+                      ),
+                      new SizedBox(
+                        height: 25.0,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          new Center(
-            child: getFullScreenProviderLoader(
-              status: provider.getLoading(),
-              context: context,
+            new Center(
+              child: getFullScreenProviderLoader(
+                status: provider.getLoading(),
+                context: context,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

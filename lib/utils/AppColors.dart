@@ -20,14 +20,16 @@ class AppColors {
 
   //for app intro
 
-  static const Color kAppIntroBackgroundColor=const Color(0xFFF4F3F6);
-static const Color kAppIntroPreferenceColor=const Color(0xFF23C8D2);
-static const Color kAppIntroLeftRightStand=const Color(0xFFC2E9EF);
-static const Color kAppIntroImageGradientColor=const Color(0xFFF4F5F7);
+  static const Color kAppIntroBackgroundColor = const Color(0xFFF4F3F6);
+  static const Color kAppIntroPreferenceColor = const Color(0xFF23C8D2);
+  static const Color kAppIntroLeftRightStand = const Color(0xFFC2E9EF);
+  static const Color kAppIntroImageGradientColor = const Color(0xFFF4F5F7);
+  static const Color colorCyanPrimary = const Color(0xFF32C5FF);
+  static const Color colorGray = const Color(0xFFE7E7E7);
 
 //intro screen gradient button color
-  static const Color kFirstGradientColor=const Color(0xFF259BB5);
-  static const Color kSecondGradientColor=const Color(0xFF40A087);
-  static const Color kAppIntroSubHeadingColor=const Color(0xFF8392A5);
-  static const Color kAppIntroHeadingColor=const Color(0xFF3C4858);
+  static const Color kFirstGradientColor = const Color(0xFF259BB5);
+  static const Color kSecondGradientColor = const Color(0xFF40A087);
+  static const Color kAppIntroSubHeadingColor = const Color(0xFF8392A5);
+  static const Color kAppIntroHeadingColor = const Color(0xFF3C4858);
 }

@@ -4,6 +4,7 @@ import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/common_response/common_success_response.dart';
 import 'package:payvor/model/reset_password/reset_pass_request.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
@@ -40,6 +41,7 @@ class _LoginScreenState extends State<ResetPassword> {
     );
   }
 
+/*
   Widget getTextField(
       String labelText,
       TextEditingController controller,
@@ -109,6 +111,90 @@ class _LoginScreenState extends State<ResetPassword> {
         ),
       ),
     );
+  }*/
+
+
+  Widget getTextField(String labelText,
+      TextEditingController controller,
+      FocusNode focusNodeCurrent,
+      FocusNode focusNodeNext,
+      TextInputType textInputType,
+      String svgPicture,
+      int type,
+      bool obsecure) {
+    return Container(
+      margin: new EdgeInsets.only(left: 20.0, right: 20.0),
+      height: 54,
+      child: new TextField(
+        controller: controller,
+        style: TextThemes.blackTextFieldNormal,
+        obscureText: obsecure,
+        keyboardType: textInputType,
+        onSubmitted: (String value) {
+          if (focusNodeCurrent == _ConfirmPasswordField) {
+            _ConfirmPasswordField.unfocus();
+          } else {
+            FocusScope.of(context).autofocus(focusNodeNext);
+          }
+        },
+        decoration: new InputDecoration(
+
+          enabledBorder: new OutlineInputBorder(
+              borderSide: new BorderSide(
+                color: Colors.grey.withOpacity(0.5),
+              ),
+              borderRadius: new BorderRadius.circular(8)
+
+          ),
+          focusedBorder: new OutlineInputBorder(
+              borderSide: new BorderSide(
+                color: AppColors.colorCyanPrimary,
+
+              ),
+              borderRadius: new BorderRadius.circular(8)
+
+
+          ),
+          contentPadding: new EdgeInsets.only(top: 10.0),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.all(14.0),
+            child: new Image.asset(
+              svgPicture,
+              width: 20.0,
+              height: 20.0,
+            ),
+          ),
+          suffixIcon: InkWell(
+            onTap: () {
+              if (type == 1) {
+                obsecureText = !obsecureText;
+              } else {
+                obsecureTextConfirm = !obsecureTextConfirm;
+              }
+
+              setState(() {});
+            },
+            child: Container(
+              width: 30.0,
+              margin: new EdgeInsets.only(right: 10.0, bottom: 4),
+              alignment: Alignment.centerRight,
+              child: new Text(
+                type == 1
+                    ? obsecureText
+                    ? "show"
+                    : "hide"
+                    : obsecureTextConfirm
+                    ? "show"
+                    : "hide",
+                style: TextThemes.blackTextSmallNormal,
+              ),
+            ),
+          ),
+          hintText: labelText,
+          hintStyle: TextThemes.greyTextFieldHintNormal,
+        ),
+      ),
+    );
   }
 
   hitApi() async {
@@ -145,82 +231,85 @@ class _LoginScreenState extends State<ResetPassword> {
     var screensize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
     return SafeArea(
-      child: Stack(
-        children: [
-          Scaffold(
-            appBar: getAppBarNew(context),
-            key: _scaffoldKeys,
-            backgroundColor: Colors.white,
-            body: new SingleChildScrollView(
-              child: Container(
-                color: Colors.white,
-                width: screensize.width,
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    new SizedBox(
-                      height: 36.0,
-                    ),
-                    Container(
-                        margin: new EdgeInsets.only(left: 20.0),
-                        child: new Text(
-                          "New Password",
-                          style: TextThemes.extraBold,
-                        )),
-                    Container(
-                      margin:
-                          new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
-                      child: new Text(
-                        "Enter the new password ",
-                        style: TextThemes.grayNormal,
+      child: Container(
+        color: Colors.white,
+        child: Stack(
+          children: [
+            Scaffold(
+              appBar: getAppBarNew(context),
+              key: _scaffoldKeys,
+              backgroundColor: Colors.white,
+              body: new SingleChildScrollView(
+                child: Container(
+                  color: Colors.white,
+                  width: screensize.width,
+                  child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      new SizedBox(
+                        height: 36.0,
                       ),
-                    ),
-                    space(),
-                    new SizedBox(
-                      height: 15.0,
-                    ),
-                    getTextField(
-                        "Password",
-                        _PasswordController,
-                        _PasswordField,
-                        _ConfirmPasswordField,
-                        TextInputType.text,
-                        AssetStrings.passPng,
-                        1,
-                        obsecureText),
-                    new SizedBox(
-                      height: 18.0,
-                    ),
-                    getTextField(
-                        "Repeat Password",
-                        _ConfirmPasswordController,
-                        _ConfirmPasswordField,
-                        _ConfirmPasswordField,
-                        TextInputType.text,
-                        AssetStrings.passPng,
-                        2,
-                        obsecureTextConfirm),
-                    new SizedBox(
-                      height: 25.0,
-                    ),
-                    Container(
-                        child: getSetupButtonNew(
-                            callback, "Set New Password", 20)),
-                    new SizedBox(
-                      height: 25.0,
-                    ),
-                  ],
+                      Container(
+                          margin: new EdgeInsets.only(left: 20.0),
+                          child: new Text(
+                            "New Password",
+                            style: TextThemes.extraBold,
+                          )),
+                      Container(
+                        margin:
+                        new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                        child: new Text(
+                          "Enter the new password ",
+                          style: TextThemes.grayNormal,
+                        ),
+                      ),
+                      space(),
+                      new SizedBox(
+                        height: 15.0,
+                      ),
+                      getTextField(
+                          "Password",
+                          _PasswordController,
+                          _PasswordField,
+                          _ConfirmPasswordField,
+                          TextInputType.text,
+                          AssetStrings.passPng,
+                          1,
+                          obsecureText),
+                      new SizedBox(
+                        height: 18.0,
+                      ),
+                      getTextField(
+                          "Repeat Password",
+                          _ConfirmPasswordController,
+                          _ConfirmPasswordField,
+                          _ConfirmPasswordField,
+                          TextInputType.text,
+                          AssetStrings.passPng,
+                          2,
+                          obsecureTextConfirm),
+                      new SizedBox(
+                        height: 25.0,
+                      ),
+                      Container(
+                          child: getSetupButtonNew(
+                              callback, "Set New Password", 20)),
+                      new SizedBox(
+                        height: 25.0,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          new Center(
-            child: getHalfScreenLoader(
-              status: provider.getLoading(),
-              context: context,
+            new Center(
+              child: getHalfScreenLoader(
+                status: provider.getLoading(),
+                context: context,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

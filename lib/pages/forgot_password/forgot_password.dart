@@ -5,6 +5,7 @@ import 'package:payvor/model/forgot_password/forgot_password_request.dart';
 import 'package:payvor/model/forgot_password/forgot_password_response.dart';
 import 'package:payvor/pages/reset_password/reset_password.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
@@ -76,18 +77,29 @@ class _LoginScreenState extends State<ForgotPassword> {
       {bool obsectextType}) {
     return Container(
       margin: new EdgeInsets.only(left: 20.0, right: 20.0),
-      padding: new EdgeInsets.only(top: 2.0, bottom: 2.0, right: 10.0),
-      decoration: new BoxDecoration(
-          color: Colors.transparent,
-          border: new Border.all(color: Colors.grey.withOpacity(0.5)),
-          borderRadius: new BorderRadius.circular(8.0)),
+      height: 54,
       child: new TextField(
         controller: controller,
         keyboardType: textInputType,
         style: TextThemes.blackTextFieldNormal,
         decoration: new InputDecoration(
-          border: InputBorder.none,
-          contentPadding: new EdgeInsets.only(top: 15.0),
+          enabledBorder: new OutlineInputBorder(
+              borderSide: new BorderSide(
+                color: Colors.grey.withOpacity(0.5),
+              ),
+              borderRadius: new BorderRadius.circular(8)
+
+          ),
+          focusedBorder: new OutlineInputBorder(
+              borderSide: new BorderSide(
+                color: AppColors.colorCyanPrimary,
+
+              ),
+              borderRadius: new BorderRadius.circular(8)
+
+
+          ),
+          contentPadding: new EdgeInsets.only(top: 10.0),
           prefixIcon: Padding(
             padding: const EdgeInsets.all(14.0),
             child: new Image.asset(
@@ -96,6 +108,7 @@ class _LoginScreenState extends State<ForgotPassword> {
               height: 20.0,
             ),
           ),
+          suffixIcon: new Container(width: 1,),
           hintText: labelText,
           hintStyle: TextThemes.greyTextFieldHintNormal,
         ),
@@ -114,67 +127,70 @@ class _LoginScreenState extends State<ForgotPassword> {
     provider = Provider.of<AuthProvider>(context);
 
     return SafeArea(
-      child: Stack(
-        children: [
-          Scaffold(
-            key: _scaffoldKeys,
-            appBar: getAppBarNew(context),
-            backgroundColor: Colors.white,
-            body: new SingleChildScrollView(
-              child: Container(
-                color: Colors.white,
-                width: screensize.width,
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    new SizedBox(
-                      height: 36.0,
-                    ),
-                    Container(
-                        margin: new EdgeInsets.only(left: 20.0),
-                        child: new Text(
-                          "Forgot Password",
-                          style: TextThemes.extraBold,
-                        )),
-                    Container(
-                      margin:
-                          new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
-                      child: new Text(
-                        "Enter your email and receive a link to reset your password",
-                        style: TextThemes.grayNormal,
+      child: Container(
+        color: Colors.white,
+        child: Stack(
+          children: [
+            Scaffold(
+              key: _scaffoldKeys,
+              appBar: getAppBarNew(context),
+              backgroundColor: Colors.white,
+              body: new SingleChildScrollView(
+                child: Container(
+                  color: Colors.white,
+                  width: screensize.width,
+                  child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      new SizedBox(
+                        height: 36.0,
                       ),
-                    ),
-                    new SizedBox(
-                      height: 26.0,
-                    ),
-                    getTextField(
-                        "Email Address",
-                        _EmailController,
-                        _EmailField,
-                        _EmailField,
-                        TextInputType.emailAddress,
-                        AssetStrings.emailPng),
-                    new SizedBox(
-                      height: 101.0,
-                    ),
-                    Container(
-                        child:
-                            getSetupButtonNew(callback, "Send reset link", 20)),
-                    new SizedBox(
-                      height: 20.0,
-                    ),
-                  ],
+                      Container(
+                          margin: new EdgeInsets.only(left: 20.0),
+                          child: new Text(
+                            "Forgot Password",
+                            style: TextThemes.extraBold,
+                          )),
+                      Container(
+                        margin:
+                        new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                        child: new Text(
+                          "Enter your email and receive a link to reset your password",
+                          style: TextThemes.grayNormal,
+                        ),
+                      ),
+                      new SizedBox(
+                        height: 26.0,
+                      ),
+                      getTextField(
+                          "Email Address",
+                          _EmailController,
+                          _EmailField,
+                          _EmailField,
+                          TextInputType.emailAddress,
+                          AssetStrings.emailPng),
+                      new SizedBox(
+                        height: 101.0,
+                      ),
+                      Container(
+                          child:
+                          getSetupButtonNew(callback, "Send reset link", 20)),
+                      new SizedBox(
+                        height: 20.0,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          new Center(
-            child: getFullScreenProviderLoader(
-              status: provider.getLoading(),
-              context: context,
+            new Center(
+              child: getFullScreenProviderLoader(
+                status: provider.getLoading(),
+                context: context,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

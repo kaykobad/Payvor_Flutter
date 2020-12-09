@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:payvor/pages/join_community/join_community.dart';
 import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -22,6 +21,7 @@ class FadeIn extends State<SplashIntroScreenNew> {
     var size = MediaQuery.of(context).size;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      color: Colors.white,
       home: Scaffold(
         backgroundColor: Colors.white,
         body: Container(
@@ -34,10 +34,10 @@ class FadeIn extends State<SplashIntroScreenNew> {
                 Container(
                   alignment: Alignment.center,
                   margin: new EdgeInsets.only(top: 124),
-                  child: new SvgPicture.asset(
-                    AssetStrings.logo,
-                    height: 117,
+                  child: new Image.asset(
+                    AssetStrings.logopng,
                     width: 140,
+                    height: 123,
                   ),
                 ),
               ]),
