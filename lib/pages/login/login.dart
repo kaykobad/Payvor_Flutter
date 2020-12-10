@@ -319,7 +319,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
                         margin: new EdgeInsets.only(left: 20.0, right: 20.0),
                         child: Row(
                           children: <Widget>[
-                            InkWell(
+                           /* InkWell(
                               onTap: () {
                                 boolCheckBox = !boolCheckBox;
                                 setState(() {});
@@ -340,9 +340,41 @@ class _LoginScreenState extends State<LoginScreenNew> {
                                   ),
                                 ),
                               ),
+                            ),*/
+
+                            Container(
+                              child: InkWell(
+                                onTap: () {
+                                  boolCheckBox = !boolCheckBox;
+                                  setState(() {});
+                                },
+                                child: Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: boolCheckBox
+                                        ? new SvgPicture.asset(
+                                            AssetStrings.tick,
+                                          )
+                                        : new Container(),
+                                  ),
+                                ),
+                              ),
+                              decoration: boolCheckBox
+                                  ? new BoxDecoration(
+                                      borderRadius:
+                                          new BorderRadius.circular(4.0),
+                                      color: AppColors.colorCyanPrimary)
+                                  : new BoxDecoration(
+                                      borderRadius:
+                                          new BorderRadius.circular(4.0),
+                                      border: new Border.all(
+                                          color: Colors.grey.withOpacity(0.6),
+                                          width: 1.6)),
+                              width: 20,
+                              height: 20,
                             ),
                             new SizedBox(
-                              width: 5.0,
+                              width: 8.0,
                             ),
                             Expanded(
                                 child: InkWell(

@@ -31,6 +31,7 @@ class AssetStrings {
 
   static const String logo = 'assets/svg/logo.svg';
   static const String email = 'assets/svg/email.svg';
+  static const String tick = 'assets/svg/tick.svg';
   static const String emailPng = 'assets/png/email_new.png';
   static const String pass = 'assets/svg/pass.svg';
   static const String passPng = 'assets/png/pass_new.png';
