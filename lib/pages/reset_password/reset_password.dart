@@ -303,7 +303,7 @@ class _LoginScreenState extends State<ResetPassword> {
               ),
             ),
             new Center(
-              child: getHalfScreenLoader(
+              child: getFullScreenProviderLoader(
                 status: provider.getLoading(),
                 context: context,
               ),
