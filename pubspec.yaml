@@ -49,7 +49,7 @@ dev_dependencies:
   flutter_webview_plugin: ^0.3.11
   quiver: ^2.1.5
 #  uni_links: ^0.4.0
-  flutter_twitter: ^1.1.3
+#  flutter_twitter: ^1.1.3
 
 
 

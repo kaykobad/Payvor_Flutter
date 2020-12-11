@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_twitter/flutter_twitter.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/otp/sample_webview.dart';
@@ -254,12 +253,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                               ),
                               InkWell(
                                   onTap: () {
-                                    if (Platform.isAndroid) {
-                                      twitterLoginAndroid();
-                                    }
-                                    else {
-                                      getTwitterInfo();
-                                    }
+                                    getTwitterInfo();
                                   },
                                   child: new SvgPicture.asset(
                                     AssetStrings.twitter,
@@ -365,42 +359,10 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     } catch (ex) {}
   }
 
-  Future<dynamic> twitterLoginAndroid() async {
-    var twitterLogin = new TwitterLogin(
-      consumerKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
-      consumerSecret: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
-    );
-
-    final TwitterLoginResult result = await twitterLogin.authorize();
-
-    switch (result.status) {
-      case TwitterLoginStatus.loggedIn:
-        var session = result.session;
-
-
-        email = session.email;
-        name = session.username;
-        type = "2";
-        snsId = session.userId;
-        profilePic = "";
-        hitApi();
-
-        break;
-      case TwitterLoginStatus.cancelledByUser:
-        showInSnackBar(
-            "There are some authenticate issues.Please try again later.");
-
-        break;
-      case TwitterLoginStatus.error:
-        showInSnackBar(
-            "There are some authenticate issues.Please try again later.");
-        break;
-    }
-  }
-
 
   void getTwitterInfo() async {
-    var result = await new SocialLogin().twitterLogin();
+   var socialLogin=new SocialLogin();
+    var result = (Platform.isIOS)?await socialLogin.twitterLogin():await socialLogin.twitterLoginAndroid();
 
     if (result.login) {
       email = result.email;
@@ -411,7 +373,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       hitApi();
     } else {
       showInSnackBar(
-          "There are some authenticate issues.Please try again later.");
+          result.msg??"There are some authenticate issues.Please try again later.");
     }
   }
 

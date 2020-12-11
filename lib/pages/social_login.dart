@@ -50,53 +50,82 @@ class SocialLogin extends StatelessWidget {
     }
   }
 
-  Future<AuthResult> twitterLogin() async {
+  Future<TwitterAuthResult> twitterLogin() async {
+    TwitterAuthResult twitterAuthResult = new TwitterAuthResult();
+
     try {
       var twitterLogin = new TwitterLogin(
           apiKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
           apiSecretKey: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
           redirectURI: "twitterkit-NjhbcYuBWb8RZAOnbd2nlbYD0://");
 
-      print("called");
       final authResult = await twitterLogin.login();
-
-      AuthResult authResults = new AuthResult();
 
       print(authResult.errorMessage);
 
       switch (authResult.status) {
         case TwitterLoginStatus.loggedIn:
-        //  var session = authResult.session;
-//        print(authResult.authToken);
-//        print(authResult.user.screenName);
-//        print(authResult.user);
-
-          authResults.image = authResult.user.thumbnailImage;
-          authResults.username = authResult.user.name;
-          authResults.email = authResult.user.email;
-          authResults.authToken = authResult.authToken;
-          authResults.authSecToken = authResult.authTokenSecret;
-          authResults.login = true;
-          authResults.id = authResult.user.id;
-          authResults.msg = "Login Successfully";
+          twitterAuthResult.image = authResult.user.thumbnailImage;
+          twitterAuthResult.username = authResult.user.name;
+          twitterAuthResult.email = authResult.user.email;
+          twitterAuthResult.authToken = authResult.authToken;
+          twitterAuthResult.authSecToken = authResult.authTokenSecret;
+          twitterAuthResult.login = true;
+          twitterAuthResult.id = authResult.user.id;
+          twitterAuthResult.msg = "Login Successfully";
           break;
         case TwitterLoginStatus.cancelledByUser:
-          authResults.login = false;
-          authResults.msg = authResult.errorMessage;
+          twitterAuthResult.login = false;
+          twitterAuthResult.msg = authResult.errorMessage;
           //    _showCancelMessage();
           break;
         case TwitterLoginStatus.error:
-          authResults.login = false;
-          authResults.msg = authResult.errorMessage;
+          twitterAuthResult.login = false;
+          twitterAuthResult.msg = authResult.errorMessage;
           // _showErrorMessage(result.error);
           break;
       }
 
-      return authResults;
+      return twitterAuthResult;
     }catch(ex)
     {
+      twitterAuthResult.login = false;
+      twitterAuthResult.msg = ex.toString();
       print("twitter_error ${ex.toString()}");
+      return twitterAuthResult;
     }
+  }
+
+  Future<dynamic> twitterLoginAndroid() async {
+//    var twitterLogin = new TwitterLogin(
+//      consumerKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
+//      consumerSecret: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
+//    );
+//
+//    TwitterAuthResult twitterAuthResult = new TwitterAuthResult();
+//
+//    final TwitterLoginResult result = await twitterLogin.authorize();
+//
+//    switch (result.status) {
+//      case TwitterLoginStatus.loggedIn:
+//        var session = result.session;
+//        twitterAuthResult.email = session.email;
+//        twitterAuthResult.username = session.username;
+//        twitterAuthResult.id = session.userId;
+//        twitterAuthResult.image = "";
+//        twitterAuthResult.login = true;
+//        twitterAuthResult.msg = "Login Successfully";
+//
+//        break;
+//      case TwitterLoginStatus.cancelledByUser:
+//        twitterAuthResult.login = false;
+//        twitterAuthResult.msg = "There are some authenticate issues.Please try again later.";
+//        break;
+//      case TwitterLoginStatus.error:
+//        twitterAuthResult.login = false;
+//        twitterAuthResult.msg = "There are some authenticate issues.Please try again later.";
+//        break;
+//    }
   }
 
 /*
@@ -210,7 +239,7 @@ class Token {
   }
 }
 
-class AuthResult {
+class TwitterAuthResult {
   String authToken;
   String authSecToken;
   String id;
@@ -220,7 +249,7 @@ class AuthResult {
   String msg;
   String email;
 
-  AuthResult(
+  TwitterAuthResult(
       {this.authToken,
       this.authSecToken,
       this.id,
@@ -230,7 +259,7 @@ class AuthResult {
       this.msg,
       this.email});
 
-  AuthResult.fromMap(Map json) {
+  TwitterAuthResult.fromMap(Map json) {
     authToken = json['authToken'];
     authSecToken = json['authSecToken'];
     id = json['user_id'];
