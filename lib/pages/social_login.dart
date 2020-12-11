@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
 import 'package:twitter_login/twitter_login.dart';
-
+import 'package:flutter_twitter/flutter_twitter.dart' as androidTwitter;
 class SocialLogin extends StatelessWidget {
   bool isLoggedIn = false;
   static final FacebookLogin facebookSignIn = new FacebookLogin();
@@ -97,35 +97,37 @@ class SocialLogin extends StatelessWidget {
   }
 
   Future<dynamic> twitterLoginAndroid() async {
-//    var twitterLogin = new TwitterLogin(
-//      consumerKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
-//      consumerSecret: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
-//    );
-//
-//    TwitterAuthResult twitterAuthResult = new TwitterAuthResult();
-//
-//    final TwitterLoginResult result = await twitterLogin.authorize();
-//
-//    switch (result.status) {
-//      case TwitterLoginStatus.loggedIn:
-//        var session = result.session;
-//        twitterAuthResult.email = session.email;
-//        twitterAuthResult.username = session.username;
-//        twitterAuthResult.id = session.userId;
-//        twitterAuthResult.image = "";
-//        twitterAuthResult.login = true;
-//        twitterAuthResult.msg = "Login Successfully";
-//
-//        break;
-//      case TwitterLoginStatus.cancelledByUser:
-//        twitterAuthResult.login = false;
-//        twitterAuthResult.msg = "There are some authenticate issues.Please try again later.";
-//        break;
-//      case TwitterLoginStatus.error:
-//        twitterAuthResult.login = false;
-//        twitterAuthResult.msg = "There are some authenticate issues.Please try again later.";
-//        break;
-//    }
+    var twitterLogin = new androidTwitter.TwitterLogin(
+      consumerKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
+      consumerSecret: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
+    );
+
+    TwitterAuthResult twitterAuthResult = new TwitterAuthResult();
+
+    final androidTwitter.TwitterLoginResult result = await twitterLogin.authorize();
+
+    print("status ${result.status}");
+    switch (result.status) {
+      case androidTwitter.TwitterLoginStatus.loggedIn:
+        var session = result.session;
+        twitterAuthResult.email = session.email;
+        twitterAuthResult.username = session.username;
+        twitterAuthResult.id = session.userId;
+        twitterAuthResult.image = "";
+        twitterAuthResult.login = true;
+        twitterAuthResult.msg = "Login Successfully";
+
+        break;
+      case androidTwitter.TwitterLoginStatus.cancelledByUser:
+        twitterAuthResult.login = false;
+        twitterAuthResult.msg = "There are some authenticate issues.Please try again later.";
+        break;
+      case androidTwitter.TwitterLoginStatus.error:
+        twitterAuthResult.login = false;
+        twitterAuthResult.msg = "There are some authenticate issues.Please try again later.";
+        break;
+    }
+      return twitterAuthResult;
   }
 
 /*
