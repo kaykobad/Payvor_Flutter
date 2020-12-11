@@ -30,6 +30,7 @@ class AuthProvider with ChangeNotifier {
     var response = await APIHandler.post(
         context: context, url: APIs.loginUrl, requestBody: request.toJson());
 
+    hideLoader();
     if (response is APIError) {
       completer.complete(response);
       return completer.future;
@@ -78,7 +79,6 @@ class AuthProvider with ChangeNotifier {
 
   Future<dynamic> socialSignup(
       SignUpSocialRequest requests, BuildContext context) async {
-    //  var request="?name=$name&email=$email&password=$password&type=$type";
 
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.post(
@@ -86,28 +86,31 @@ class AuthProvider with ChangeNotifier {
         url: APIs.authSocialUrl,
         requestBody: requests.toJson());
 
-    try {
-      var status = response["status"];
-      if (status == false) {
-        var data = response["data"]["email"][0];
+    hideLoader();
 
-        APIError apiError = new APIError(
-          error: data,
-          messag: data,
-          status: 400,
-          onAlertPop: () {},
-        );
-        completer.complete(apiError);
-        return completer.future;
-      }
-    }
-    catch(ex)
-    {
-      print("social error ${ex.toString()}");
-    }
-    //hideLoader();
+//    try {
+//      var status = response["status"];
+//      if (status == false) {
+//        var data = response["data"]["email"][0];
+//
+//        APIError apiError = new APIError(
+//          error: data,
+//          messag: data,
+//          status: 400,
+//          onAlertPop: () {},
+//        );
+//        completer.complete(apiError);
+//        return completer.future;
+//      }
+//    }
+//    catch(ex)
+//    {
+//      print("social error ${ex.toString()}");
+//    }
+
     if (response is APIError) {
       completer.complete(response);
+      notifyListeners();
       return completer.future;
     } else {
       LoginSignupResponse loginResponseData =

@@ -184,7 +184,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
 
       response = await provider.socialSignup(loginRequest, context);
     }
-    provider.hideLoader();
+
     if (response is LoginSignupResponse) {
       LoginSignupResponse loginSignupResponse = response;
       MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
