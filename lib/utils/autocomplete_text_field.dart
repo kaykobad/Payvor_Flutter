@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -172,11 +173,7 @@ class _AutoCompleteTextViewState extends State<AutoCompleteTextView> {
     return CompositedTransformTarget(
       link: this._layerLink,
       child: Container(
-        padding: new EdgeInsets.only(top: 2.0, bottom: 2.0, right: 10.0),
-        decoration: new BoxDecoration(
-            color: Colors.transparent,
-            border: new Border.all(color: Colors.grey.withOpacity(0.5)),
-            borderRadius: new BorderRadius.circular(8.0)),
+        height: 54,
         child: TextField(
           controller: widget.controller,
           style: widget.tfStyle,
@@ -201,8 +198,17 @@ class _AutoCompleteTextViewState extends State<AutoCompleteTextView> {
             }
           },
           decoration: new InputDecoration(
-            border: InputBorder.none,
-            contentPadding: new EdgeInsets.only(top: 15.0),
+            enabledBorder: new OutlineInputBorder(
+                borderSide: new BorderSide(
+                  color: Colors.grey.withOpacity(0.5),
+                ),
+                borderRadius: new BorderRadius.circular(8)),
+            focusedBorder: new OutlineInputBorder(
+                borderSide: new BorderSide(
+                  color: AppColors.colorCyanPrimary,
+                ),
+                borderRadius: new BorderRadius.circular(8)),
+            contentPadding: new EdgeInsets.only(top: 10.0),
             prefixIcon: Padding(
               padding: const EdgeInsets.all(14.0),
               child: new Image.asset(
@@ -211,6 +217,7 @@ class _AutoCompleteTextViewState extends State<AutoCompleteTextView> {
                 height: 20.0,
               ),
             ),
+            suffixIcon: new Container(width: 1,),
             hintText: widget.hintText,
             hintStyle: TextThemes.greyTextFieldHintNormal,
           ),

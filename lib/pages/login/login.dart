@@ -15,8 +15,10 @@ import 'package:payvor/pages/join_community/join_community.dart';
 import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
 import 'package:payvor/pages/social_login.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
+import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/ValidatorFunctions.dart';
@@ -145,6 +147,20 @@ class _LoginScreenState extends State<LoginScreenNew> {
 
     var response;
 
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
     if (typse == 0) {
       LoginRequest loginRequest = new LoginRequest(
           password: _PasswordController.text, email: _EmailController.text);
@@ -223,7 +239,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
   Widget build(BuildContext context) {
     provider = Provider.of<AuthProvider>(context);
     var screensize = MediaQuery.of(context).size;
-    return SafeArea(
+    return Material(
       child: Container(
         color: Colors.white,
         child: Stack(
@@ -245,14 +261,14 @@ class _LoginScreenState extends State<LoginScreenNew> {
                       Container(
                           margin: new EdgeInsets.only(left: 20.0),
                           child: new Text(
-                            "Welcome back!",
+                            ResString().get('welcome_back'),
                             style: TextThemes.extraBold,
                           )),
                       Container(
                         margin:
                         new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
                         child: new Text(
-                          "To continue, please verify your information",
+                          ResString().get('to_continuew_plz'),
                           style: TextThemes.grayNormal,
                         ),
                       ),
@@ -261,7 +277,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
                         height: 15.0,
                       ),
                       getTextField(
-                          "Email Address",
+                          ResString().get('email_address'),
                           _EmailController,
                           _EmailField,
                           _PasswordField,
@@ -272,7 +288,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
                         height: 18.0,
                       ),
                       getTextField(
-                          "Password",
+                          ResString().get('password'),
                           _PasswordController,
                           _PasswordField,
                           _PasswordField,
@@ -349,7 +365,8 @@ class _LoginScreenState extends State<LoginScreenNew> {
                                       boolCheckBox = !boolCheckBox;
                                       setState(() {});
                                     },
-                                    child: new Text("Remember me",
+                                    child: new Text(
+                                        ResString().get('remember_me'),
                                         style: TextThemes
                                             .blackTextSmallMedium))),
                             InkWell(
@@ -363,7 +380,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
                                 );
                               },
                               child: new Text(
-                                "FORGOT PASSWORD?",
+                                ResString().get('forgot_pass'),
                                 style: TextThemes.redTextSmallMedium,
                               ),
                             ),
@@ -374,12 +391,13 @@ class _LoginScreenState extends State<LoginScreenNew> {
                         height: 32.0,
                       ),
                       Container(
-                          child: getSetupButtonNew(callback, "Login", 20)),
+                          child: getSetupButtonNew(
+                              callback, ResString().get('login'), 20)),
                       Container(
                         alignment: Alignment.center,
                         margin:
                         new EdgeInsets.only(left: 20.0, right: 20.0, top: 51),
-                        child: new Text(" or login with",
+                        child: new Text(ResString().get('or_login_with'),
                             style: TextThemes.greyTextFieldMedium),
                       ),
                       space(),
@@ -437,11 +455,11 @@ class _LoginScreenState extends State<LoginScreenNew> {
                         child: new RichText(
                             textAlign: TextAlign.center,
                             text: new TextSpan(
-                              text: "Don't have an account? ",
+                              text: ResString().get('dont_have_account'),
                               style: TextThemes.greyDarkTextFieldMedium,
                               children: <TextSpan>[
                                 new TextSpan(
-                                  text: "SIGN UP",
+                                  text: ResString().get('signup_cap_button'),
                                   style: TextThemes.redTextSmallMedium,
                                   recognizer: new TapGestureRecognizer()
                                     ..onTap = () {
@@ -482,13 +500,13 @@ class _LoginScreenState extends State<LoginScreenNew> {
     var password = _PasswordController.text;
     if (_EmailController.text.isEmpty ||
         _EmailController.text.trim().length == 0) {
-      showInSnackBar("Please enter email address.");
+      showInSnackBar(ResString().get('enter_email'));
       return;
     } else if (!isEmailFormatValid(email.trim())) {
-      showInSnackBar('Please enter a valid email address.');
+      showInSnackBar(ResString().get('enter_valid_email'));
       return;
     } else if (password.isEmpty || password.length == 0) {
-      showInSnackBar('Please enter password.');
+      showInSnackBar(ResString().get('enter_password'));
       return;
     }
 
@@ -543,8 +561,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       profilePic = result.image;
       hitApi(1);
     } else {
-      showInSnackBar(
-          "There are some authenticate issues.Please try again later.");
+      showInSnackBar(Messages.someAuthIssue);
     }
   }
 

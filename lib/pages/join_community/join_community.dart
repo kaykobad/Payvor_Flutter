@@ -14,8 +14,10 @@ import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
 import 'package:payvor/pages/social_login.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
+import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/ValidatorFunctions.dart';
@@ -163,7 +165,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
   Widget build(BuildContext context) {
     var screensize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
-    return SafeArea(
+    return Material(
       child: Container(
         color: Colors.white,
         child: Stack(
@@ -194,7 +196,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                           margin: new EdgeInsets.only(
                               left: 20.0, right: 20.0, top: 6),
                           child: new Text(
-                            "Enter your details to create an account",
+                            ResString().get('enter_your_details'),
                             style: TextThemes.grayNormal,
                           ),
                         ),
@@ -203,7 +205,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                           height: 15.0,
                         ),
                         getTextField(
-                            "Email Address",
+                            ResString().get('email_address'),
                             _EmailController,
                             _EmailField,
                             __FullNameField,
@@ -213,7 +215,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                           height: 18.0,
                         ),
                         getTextField(
-                            "Full Name",
+                            ResString().get('full_name'),
                             _FullNameController,
                             __FullNameField,
                             __FullNameField,
@@ -223,12 +225,13 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                           height: 54.0,
                         ),
                         Container(
-                            child: getSetupButtonNew(callback, "Sign Up", 20)),
+                            child: getSetupButtonNew(callback,
+                                ResString().get('sign_up_button'), 20)),
                         Container(
                           alignment: Alignment.center,
                           margin: new EdgeInsets.only(
                               left: 20.0, right: 20.0, top: 98),
-                          child: new Text("or signup with",
+                          child: new Text(ResString().get('or_signup_with'),
                               style: TextThemes.greyTextFieldMedium),
                         ),
                         space(),
@@ -284,11 +287,11 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                           child: new RichText(
                               textAlign: TextAlign.center,
                               text: new TextSpan(
-                                text: "Already have an account? ",
+                                text: ResString().get('already_have_Account'),
                                 style: TextThemes.greyDarkTextFieldMedium,
                                 children: <TextSpan>[
                                   new TextSpan(
-                                    text: "LOGIN",
+                                    text: ResString().get('login_button'),
                                     style: TextThemes.redTextSmallMedium,
                                     recognizer: new TapGestureRecognizer()
                                       ..onTap = () {
@@ -296,8 +299,8 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                                           context,
                                           new CupertinoPageRoute(
                                               builder: (BuildContext context) {
-                                                return new LoginScreenNew();
-                                              }),
+                                            return new LoginScreenNew();
+                                          }),
                                         );
                                       },
                                   ),
@@ -372,8 +375,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       profilePic = result.image;
       hitApi();
     } else {
-      showInSnackBar(
-          result.msg??"There are some authenticate issues.Please try again later.");
+      showInSnackBar(Messages.someAuthIssue);
     }
   }
 
@@ -403,8 +405,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       profilePic = photo;
       hitApi();
     } else {
-      showInSnackBar(
-          "There are some authenticate issues.Please try again later.");
+      showInSnackBar(Messages.someAuthIssue);
     }
   }
 
@@ -413,6 +414,20 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     var response;
 
     var types = "";
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
 
     switch (type) {
       case "0":
@@ -507,13 +522,13 @@ class _LoginScreenState extends State<JoinCommunityNew> {
 
     if (_EmailController.text.isEmpty ||
         _EmailController.text.trim().length == 0) {
-      showInSnackBar("Please enter email address.");
+      showInSnackBar(ResString().get('enter_email'));
       return;
     } else if (!isEmailFormatValid(email.trim())) {
-      showInSnackBar('Please enter a valid email address.');
+      showInSnackBar(ResString().get('enter_valid_email'));
       return;
     } else if (name.isEmpty || name.length == 0) {
-      showInSnackBar('Please enter full name.');
+      showInSnackBar(ResString().get('enter_full_name'));
       return;
     }
 

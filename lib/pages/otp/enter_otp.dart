@@ -9,6 +9,7 @@ import 'package:payvor/model/otp/resendotpresponse.dart';
 import 'package:payvor/pages/create_credential/create_credential.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
@@ -104,6 +105,21 @@ class _LoginScreenState extends State<OtoVerification> {
 
   hitApi() async {
     provider.setLoading();
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
     OtpRequest loginRequest =
         new OtpRequest(otp: pinText, phone: widget.phoneNumber ?? "");
     var response = await provider.verifyOtp(loginRequest, context);
@@ -137,6 +153,21 @@ class _LoginScreenState extends State<OtoVerification> {
 
   hitResendApi() async {
     provider.setLoading();
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
     var response = await provider.getotp(widget.phoneNumber ?? "", context);
     provider.hideLoader();
     if (response is ResendOtpResponse) {
@@ -165,7 +196,7 @@ class _LoginScreenState extends State<OtoVerification> {
     var screensize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
 
-    return SafeArea(
+    return Material(
       child: Container(
         color: Colors.white,
         child: Stack(
@@ -187,7 +218,7 @@ class _LoginScreenState extends State<OtoVerification> {
                       Container(
                           margin: new EdgeInsets.only(left: 20.0),
                           child: new Text(
-                            "Verify Phone Number",
+                            ResString().get('verify_number'),
                             style: TextThemes.extraBold,
                           )),
                       Container(
@@ -195,17 +226,17 @@ class _LoginScreenState extends State<OtoVerification> {
                             left: 20.0, right: 20.0, top: 6),
                         child: new RichText(
                             text: new TextSpan(
-                          text:
-                              "Please enter the code that is sent to your phone ",
-                          style: TextThemes.grayNormal,
-                          children: <TextSpan>[
-                            new TextSpan(
-                              text: widget.phoneNumber != null
-                                  ? widget.phoneNumber
-                                  : "",
-                              style: TextThemes.blackTextFieldNormal,
-                            ),
-                          ],
+                              text:
+                              ResString().get('enter_code_that'),
+                              style: TextThemes.grayNormal,
+                              children: <TextSpan>[
+                                new TextSpan(
+                                  text: widget.phoneNumber != null
+                                      ? widget.phoneNumber
+                                      : "",
+                                  style: TextThemes.blackTextFieldNormal,
+                                ),
+                              ],
                         )),
                       ),
                       space(),
@@ -257,7 +288,7 @@ class _LoginScreenState extends State<OtoVerification> {
                               alignment: Alignment.center,
                               margin: new EdgeInsets.only(left: 20.0),
                               child: new Text(
-                                "The verification code will expire in " +
+                                ResString().get('verify_code') +
                                     "$_current",
                                 style: TextThemes.greyDarkTextFieldItalic,
                               )),
@@ -274,7 +305,7 @@ class _LoginScreenState extends State<OtoVerification> {
                               alignment: Alignment.center,
                               margin: new EdgeInsets.only(left: 20.0, top: 18),
                               child: new Text(
-                                "RESEND CODE",
+                                ResString().get('resend_code'),
                                 style: TextThemes.redTextSmallMedium,
                               )),
                         ),

@@ -9,6 +9,7 @@ import 'package:payvor/model/update_profile/update_profile_request.dart';
 import 'package:payvor/model/update_profile/update_profile_response.dart';
 import 'package:payvor/pages/otp/enter_otp.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
@@ -182,7 +183,7 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
                   child: Container(
                     padding: new EdgeInsets.only(
                       left: 16,
-                    ),
+                        bottom: 2),
                     child: Text("+${_selected.phoneCode}",
                         style: TextThemes.blackTextFieldNormal),
                   ),
@@ -301,6 +302,20 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
     var lat = "0.0";
     var long = "0.0";
 
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
     if (_LatLongController.text.length > 0) {
       var data = _LatLongController.text.trim().toString().split(",");
 
@@ -358,7 +373,7 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
         .of(context)
         .size;
     provider = Provider.of<AuthProvider>(context);
-    return SafeArea(
+    return Material(
       child: Container(
         color: Colors.white,
         child: Stack(
@@ -380,14 +395,14 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
                       Container(
                           margin: new EdgeInsets.only(left: 20.0),
                           child: new Text(
-                            "Phone Number",
+                            ResString().get('phone_number'),
                             style: TextThemes.extraBold,
                           )),
                       Container(
                         margin: new EdgeInsets.only(
                             left: 20.0, right: 20.0, top: 6),
                         child: new Text(
-                          "Enter your location and phone number",
+                          ResString().get('enter_ur_location'),
                           style: TextThemes.grayNormal,
                         ),
                       ),
@@ -413,7 +428,7 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
                         height: 18.0,
                       ),
                       getTextFieldPhone(
-                        "Phone Number",
+                        ResString().get('phone_number'),
                         _PhoneController,
                         _PhoneField,
                         _PhoneField,
@@ -426,7 +441,7 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
                       Container(
                           child:
                           getSetupButtonNew(
-                              callback, "Verify Phone Number", 20)),
+                              callback, ResString().get('verify_number'), 20)),
                       new SizedBox(
                         height: 25.0,
                       ),
@@ -454,11 +469,11 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
     if (location.isEmpty || location
         .trim()
         .length == 0) {
-      showInSnackBar("Please enter location.");
+      showInSnackBar(ResString().get('enter_location'));
       return;
     }
     else if (phonenumber.isEmpty || phonenumber.length == 0) {
-      showInSnackBar('Please enter phone number.');
+      showInSnackBar(ResString().get('enter_phone_number'));
       return;
     }
 

@@ -71,6 +71,20 @@ class _LoginScreenState extends State<CreateCredential> {
     UpdateProfileRequest updateProfileRequest = new UpdateProfileRequest();
     updateProfileRequest.password = _PasswordController.text;
 
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
     var response =
         await provider.createCredential(updateProfileRequest, context);
     provider.hideLoader();
@@ -294,7 +308,7 @@ class _LoginScreenState extends State<CreateCredential> {
   Widget build(BuildContext context) {
     var screensize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
-    return SafeArea(
+    return Material(
       child: Stack(
         children: [
           Scaffold(
@@ -314,14 +328,14 @@ class _LoginScreenState extends State<CreateCredential> {
                     Container(
                         margin: new EdgeInsets.only(left: 20.0),
                         child: new Text(
-                          "Enter Credential",
+                          ResString().get('enter_credential'),
                           style: TextThemes.extraBold,
                         )),
                     Container(
                       margin:
                           new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
                       child: new Text(
-                        "Set your 6-20 characters password",
+                        ResString().get('set_password'),
                         style: TextThemes.grayNormal,
                       ),
                     ),
@@ -329,8 +343,10 @@ class _LoginScreenState extends State<CreateCredential> {
                     new SizedBox(
                       height: 38.0,
                     ),
+
+
                     getTextField(
-                        "Password",
+                        ResString().get('password'),
                         _PasswordController,
                         _PasswordField,
                         _ConfirmPasswordField,
@@ -342,7 +358,7 @@ class _LoginScreenState extends State<CreateCredential> {
                       height: 18.0,
                     ),
                     getTextField(
-                        "Repeat Password",
+                        ResString().get('repeat_password'),
                         _ConfirmPasswordController,
                         _ConfirmPasswordField,
                         _ConfirmPasswordField,
@@ -358,33 +374,33 @@ class _LoginScreenState extends State<CreateCredential> {
                       child: new RichText(
 
                           text: new TextSpan(
-                            text: "By continuing, you agree to Payvor’s ",
+                            text: ResString().get('by_continue'),
                             style: TextThemes.grayNormalSmall,
                             children: <TextSpan>[
                               new TextSpan(
-                                text: "Terms of Use",
+                                text: ResString().get('term_of_uses'),
                                 style: TextThemes.blueMediumSmall,
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () {
                                     print("called");
                                     _redirect(
                                         heading:
-                                            ResString().get('term_of_uses'),
+                                        ResString().get('term_of_uses'),
                                         url: Constants.TermOfUses);
                                   },
                               ),
                               new TextSpan(
-                                text: " and confirm that you have read the ",
+                                text: ResString().get('confirm_that'),
                                 style: TextThemes.grayNormalSmall,
                               ),
                               new TextSpan(
-                                text: "Privacy Policy",
+                                text: ResString().get('privacy_policy'),
                                 style: TextThemes.blueMediumSmall,
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () {
                                     _redirect(
                                         heading:
-                                            ResString().get('privacy_policy'),
+                                        ResString().get('privacy_policy'),
                                         url: Constants.privacyPolicy);
                                   },
                               ),
@@ -394,7 +410,7 @@ class _LoginScreenState extends State<CreateCredential> {
                     Container(
                         margin: new EdgeInsets.only(top: 170),
                         child: getSetupButtonNew(
-                            callback, "Create an Account", 20)),
+                            callback, ResString().get('create_account'), 20)),
                     new SizedBox(
                       height: 35.0,
                     ),
@@ -429,17 +445,17 @@ class _LoginScreenState extends State<CreateCredential> {
     var password = _PasswordController.text;
     var confirmPassword = _ConfirmPasswordController.text;
     if (password.isEmpty || password.trim().length == 0) {
-      showInSnackBar("Please enter password.");
+      showInSnackBar(ResString().get('enter_password'));
       return;
     } else if (confirmPassword.isEmpty || confirmPassword.length == 0) {
-      showInSnackBar('Please enter confirm Password.');
+      showInSnackBar(ResString().get('confirm_password'));
       return;
     } else if (password.compareTo(confirmPassword) != 0) {
-      showInSnackBar('Password and Confirm Password does not match');
+      showInSnackBar(ResString().get('password_not_match'));
       return;
     }
     else if (password.length<6 || password.length>20) {
-      showInSnackBar('Password length should be 6-20 characters.');
+      showInSnackBar(ResString().get('password_should_6_20_char'));
       return;
     }
     hitApi();

@@ -62,14 +62,14 @@ class _WebViewPagesState extends State<WebViewPages> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Material(
       child: Scaffold(
-        backgroundColor: AppColors.kWhite,
+          backgroundColor: AppColors.kWhite,
           appBar: _customAppBar(),
           body: Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left:8.0,right:8,bottom: 8),
+                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
                 child: WebView(
                   initialUrl: widget.url,
                   javascriptMode: JavascriptMode.unrestricted,

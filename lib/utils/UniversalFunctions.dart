@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:payvor/utils/Messages.dart';
 
 import 'AppColors.dart';
 
@@ -19,6 +20,7 @@ Size getScreenSize({@required BuildContext context}) {
 const Color dialogContentColor = AppColors.kBlack;
 
 bool alertAlreadyActive = false;
+const String OK = "OK";
 
 const Duration timeoutDuration = const Duration(seconds: 60);
 
@@ -229,6 +231,50 @@ Widget getHalfAppThemedLoader({
   );
 }
 
+
+Future<bool> hasInternetConnection({
+  @required BuildContext context,
+  bool mounted,
+  @required Function onSuccess,
+  @required Function onFail,
+  bool canShowAlert = true,
+}) async {
+  try {
+    final result = await InternetAddress.lookup('google.com')
+        .timeout(const Duration(seconds: 5));
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      onSuccess();
+      return true;
+    } else {
+      if (canShowAlert) {
+        onFail();
+        showAlert(
+          context: context,
+          titleText: "Error",
+          message: Messages.noInternetError,
+          actionCallbacks: {
+            OK: () {
+              return false;
+            }
+          },
+        );
+      }
+    }
+  } catch (_) {
+    onFail();
+    showAlert(
+        context: context,
+        titleText: "Error",
+        message: Messages.noInternetError,
+        actionCallbacks: {
+          OK: () {
+            return false;
+          }
+        });
+  }
+  return false;
+}
+
 // Returns app themed loader
 Widget getAppThemedLoader({
   @required BuildContext context,
@@ -261,50 +307,6 @@ Widget getChildLoader({
       strokeWidth: strokeWidth ?? 6.0,
     ),
   );
-}
-
-// Checks Internet connection
-Future<bool> hasInternetConnection({
-  @required BuildContext context,
-  bool mounted,
-  @required Function onSuccess,
-  @required Function onFail,
-  bool canShowAlert = true,
-}) async {
-  try {
-    final result = await InternetAddress.lookup('google.com')
-        .timeout(const Duration(seconds: 5));
-    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-      onSuccess();
-      return true;
-    } else {
-      if (canShowAlert) {
-        onFail();
-        /* showAlert(
-          context: context,
-          titleText: Localization.of(context).trans(LocalizationValues.error),
-          message: Messages.noInternetError,
-          actionCallbacks: {
-            Localization.of(context).trans(LocalizationValues.ok): () {
-              return false;
-            }
-          },
-        );*/
-      }
-    }
-  } catch (_) {
-    onFail();
-    /*  showAlert(
-        context: context,
-        titleText: Localization.of(context).trans(LocalizationValues.error),
-        message: Messages.noInternetError,
-        actionCallbacks: {
-          Localization.of(context).trans(LocalizationValues.ok): () {
-            return false;
-          }
-        });*/
-  }
-  return false;
 }
 
 

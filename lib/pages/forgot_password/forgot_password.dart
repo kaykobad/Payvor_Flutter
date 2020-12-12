@@ -5,6 +5,7 @@ import 'package:payvor/model/forgot_password/forgot_password_request.dart';
 import 'package:payvor/model/forgot_password/forgot_password_response.dart';
 import 'package:payvor/pages/reset_password/reset_password.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
@@ -41,6 +42,21 @@ class _LoginScreenState extends State<ForgotPassword> {
 
   hitApi() async {
     provider.setLoading();
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
     ForgotPasswordRequest forgotrequest =
         new ForgotPasswordRequest(email: _EmailController.text);
     var response = await provider.forgotPassword(forgotrequest, context);
@@ -126,7 +142,7 @@ class _LoginScreenState extends State<ForgotPassword> {
     var screensize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
 
-    return SafeArea(
+    return Material(
       child: Container(
         color: Colors.white,
         child: Stack(
@@ -148,14 +164,14 @@ class _LoginScreenState extends State<ForgotPassword> {
                       Container(
                           margin: new EdgeInsets.only(left: 20.0),
                           child: new Text(
-                            "Forgot Password",
+                            ResString().get('forgot_password'),
                             style: TextThemes.extraBold,
                           )),
                       Container(
                         margin:
                         new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
                         child: new Text(
-                          "Enter your email and receive a link to reset your password",
+                          ResString().get('enter_your_email'),
                           style: TextThemes.grayNormal,
                         ),
                       ),
@@ -163,7 +179,7 @@ class _LoginScreenState extends State<ForgotPassword> {
                         height: 26.0,
                       ),
                       getTextField(
-                          "Email Address",
+                          ResString().get('email_address'),
                           _EmailController,
                           _EmailField,
                           _EmailField,
@@ -174,7 +190,8 @@ class _LoginScreenState extends State<ForgotPassword> {
                       ),
                       Container(
                           child:
-                          getSetupButtonNew(callback, "Send reset link", 20)),
+                          getSetupButtonNew(
+                              callback, ResString().get('reset_link'), 20)),
                       new SizedBox(
                         height: 20.0,
                       ),
@@ -199,10 +216,10 @@ class _LoginScreenState extends State<ForgotPassword> {
     var email = _EmailController.text;
     if (_EmailController.text.isEmpty ||
         _EmailController.text.trim().length == 0) {
-      showInSnackBar("Please enter email address.");
+      showInSnackBar(ResString().get('enter_email'));
       return;
     } else if (!isEmailFormatValid(email.trim())) {
-      showInSnackBar('Please enter a valid email address.');
+      showInSnackBar(ResString().get('enter_valid_email'));
       return;
     }
 

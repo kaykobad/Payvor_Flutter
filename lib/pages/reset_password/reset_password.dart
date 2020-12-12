@@ -4,6 +4,7 @@ import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/common_response/common_success_response.dart';
 import 'package:payvor/model/reset_password/reset_pass_request.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
@@ -199,6 +200,21 @@ class _LoginScreenState extends State<ResetPassword> {
 
   hitApi() async {
     provider.setLoading();
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
     ResetPasswordRequest loginRequest = new ResetPasswordRequest(
         new_pas: _PasswordController.text,
         cnf_pas: _ConfirmPasswordController.text);
@@ -230,7 +246,7 @@ class _LoginScreenState extends State<ResetPassword> {
   Widget build(BuildContext context) {
     var screensize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
-    return SafeArea(
+    return Material(
       child: Container(
         color: Colors.white,
         child: Stack(
@@ -252,14 +268,14 @@ class _LoginScreenState extends State<ResetPassword> {
                       Container(
                           margin: new EdgeInsets.only(left: 20.0),
                           child: new Text(
-                            "New Password",
+                            ResString().get('new_password'),
                             style: TextThemes.extraBold,
                           )),
                       Container(
                         margin:
                         new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
                         child: new Text(
-                          "Enter the new password ",
+                          ResString().get('enter_new_pass'),
                           style: TextThemes.grayNormal,
                         ),
                       ),
@@ -268,7 +284,7 @@ class _LoginScreenState extends State<ResetPassword> {
                         height: 15.0,
                       ),
                       getTextField(
-                          "Password",
+                          ResString().get('password'),
                           _PasswordController,
                           _PasswordField,
                           _ConfirmPasswordField,
@@ -280,7 +296,7 @@ class _LoginScreenState extends State<ResetPassword> {
                         height: 18.0,
                       ),
                       getTextField(
-                          "Repeat Password",
+                          ResString().get('repeat_password'),
                           _ConfirmPasswordController,
                           _ConfirmPasswordField,
                           _ConfirmPasswordField,
@@ -293,7 +309,7 @@ class _LoginScreenState extends State<ResetPassword> {
                       ),
                       Container(
                           child: getSetupButtonNew(
-                              callback, "Set New Password", 20)),
+                              callback, ResString().get('set_new_pass'), 20)),
                       new SizedBox(
                         height: 25.0,
                       ),
@@ -318,13 +334,13 @@ class _LoginScreenState extends State<ResetPassword> {
     var password = _PasswordController.text;
     var confirmPassword = _ConfirmPasswordController.text;
     if (password.isEmpty || password.trim().length == 0) {
-      showInSnackBar("Please enter password.");
+      showInSnackBar(ResString().get('enter_password'));
       return;
     } else if (confirmPassword.isEmpty || confirmPassword.length == 0) {
-      showInSnackBar('Please enter confirmPassword.');
+      showInSnackBar(ResString().get('confirm_password'));
       return;
     } else if (password != confirmPassword) {
-      showInSnackBar('Password and Confirm Pssword does not match');
+      showInSnackBar(ResString().get('pass_and_confirm_not_match'));
       return;
     }
 

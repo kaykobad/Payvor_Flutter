@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payvor/pages/join_community/join_community.dart';
 import 'package:payvor/pages/login/login.dart';
+import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 
@@ -49,12 +50,13 @@ class FadeIn extends State<SplashIntroScreenNew> {
                   children: <Widget>[
                     Container(
                         child: getSetupDecoratorButtonNew(
-                            callbackSignin, "Login", 20)),
+                            callbackSignin, ResString().get('login'), 20)),
                     new SizedBox(
                       height: 16.0,
                     ),
                     Container(
-                        child: getSetupButtonNew(callback, "Sign up", 20)),
+                        child: getSetupButtonNew(
+                            callback, ResString().get('sign_up'), 20)),
                     new SizedBox(
                       height: 20.0,
                     ),

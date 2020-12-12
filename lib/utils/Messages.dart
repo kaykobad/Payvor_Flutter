@@ -12,6 +12,8 @@ class Messages {
 
   // Success messages
   static const String profileUpdateSuccess = "Profile updated successfully";
+  static const String someAuthIssue =
+      "There are some authenticate issues.Please try again later.";
 
   // Question messages
   static const String foundQuoteFormDataQuestion =

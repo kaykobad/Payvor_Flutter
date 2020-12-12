@@ -49,6 +49,7 @@ class Payvor extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+
           // Define the default brightness and colors
           ),
       home: new SplashScreen(),
