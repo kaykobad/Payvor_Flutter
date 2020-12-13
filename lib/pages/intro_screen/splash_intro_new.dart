@@ -58,7 +58,7 @@ class FadeIn extends State<SplashIntroScreenNew> {
                         child: getSetupButtonNew(
                             callback, ResString().get('sign_up'), 20)),
                     new SizedBox(
-                      height: 20.0,
+                      height: 90.0,
                     ),
                   ],
                 ),

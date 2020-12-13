@@ -189,7 +189,7 @@ class _LoginScreenState extends State<CreateCredential> {
       bool obsecure) {
     return Container(
       margin: new EdgeInsets.only(left: 20.0, right: 20.0),
-      height: 54,
+      height: Constants.textFieldHeight,
       child: new TextField(
         controller: controller,
         style: TextThemes.blackTextFieldNormal,
@@ -323,7 +323,7 @@ class _LoginScreenState extends State<CreateCredential> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     new SizedBox(
-                      height: 35.0,
+                      height: Constants.backIconsSpace,
                     ),
                     Container(
                         margin: new EdgeInsets.only(left: 20.0),

@@ -22,6 +22,7 @@ import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/ValidatorFunctions.dart';
+import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
@@ -71,7 +72,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       {bool obsectextType}) {
     return Container(
       margin: new EdgeInsets.only(left: 20.0, right: 20.0),
-      height: 54,
+      height: Constants.textFieldHeight,
       child: new TextField(
         controller: controller,
         keyboardType: textInputType,
@@ -256,7 +257,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       new SizedBox(
-                        height: 36.0,
+                        height: Constants.backIconsSpace,
                       ),
                       Container(
                           margin: new EdgeInsets.only(left: 20.0),

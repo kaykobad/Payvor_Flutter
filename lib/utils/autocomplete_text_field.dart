@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:payvor/utils/AppColors.dart';
+import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -173,7 +174,7 @@ class _AutoCompleteTextViewState extends State<AutoCompleteTextView> {
     return CompositedTransformTarget(
       link: this._layerLink,
       child: Container(
-        height: 54,
+        height: Constants.textFieldHeight,
         child: TextField(
           controller: widget.controller,
           style: widget.tfStyle,

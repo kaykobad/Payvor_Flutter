@@ -13,6 +13,7 @@ import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:pin_view/pin_view.dart';
@@ -213,7 +214,7 @@ class _LoginScreenState extends State<OtoVerification> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       new SizedBox(
-                        height: 36.0,
+                        height: Constants.backIconsSpace,
                       ),
                       Container(
                           margin: new EdgeInsets.only(left: 20.0),
@@ -232,8 +233,10 @@ class _LoginScreenState extends State<OtoVerification> {
                               children: <TextSpan>[
                                 new TextSpan(
                                   text: widget.phoneNumber != null
-                                      ? widget.phoneNumber
-                                      : "",
+                                  ? "+" +
+                                      widget.countryCode +
+                                      widget.phoneNumber
+                                  : "",
                                   style: TextThemes.blackTextFieldNormal,
                                 ),
                               ],

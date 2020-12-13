@@ -29,9 +29,12 @@ class ResString {
     'appIntroHeadng1': 'Discover Experiences',
     'appIntroHeadng2': 'Trace your travels',
     'appIntroHeadng3': 'Share and Earn',
-    'appIntroSubHeading1': 'Swipe and Discover novel travel experiences through the eyes of your fellow wanderers.',
-    'appIntroSubHeading2': 'Store all your travel memories and never miss a chance to relive them.',
-    'appIntroSubHeading3': 'Share your travel stories and earn amazing rewards.',
+    'appIntroSubHeading1':
+        'Swipe and Discover novel travel experiences through the eyes of your fellow wanderers.',
+    'appIntroSubHeading2':
+        'Store all your travel memories and never miss a chance to relive them.',
+    'appIntroSubHeading3':
+        'Share your travel stories and earn amazing rewards.',
     'privacy_policy': 'Privacy Policy',
     'term_of_uses': 'Term of use',
     'password': 'Password',
@@ -39,7 +42,7 @@ class ResString {
     'set_new_pass': 'Set New Password',
     'set_password': 'Set your 6-20 characters password',
     'enter_credential': 'Enter Credential',
-    'confirm_that': ' and confirm that you have read the ',
+    'confirm_that': ' and \nconfirm that you have read the ',
     'by_continue': 'By continuing, you agree to Payvor’s ',
     'enter_password': 'Please enter password.',
     'password_not_match': 'Password and Confirm Password does not match',
