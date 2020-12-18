@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:payvor/pages/splash/splash_screen_new.dart';
+import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/language_provider.dart';
 import 'package:payvor/provider/theme_provider.dart';
@@ -52,7 +52,7 @@ class Payvor extends StatelessWidget {
 
           // Define the default brightness and colors
           ),
-      home: new SplashScreen(),
+      home: new DashBoardScreen(),
     );
   }
 }

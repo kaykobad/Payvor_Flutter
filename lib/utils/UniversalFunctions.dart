@@ -231,6 +231,38 @@ Widget getHalfAppThemedLoader({
   );
 }
 
+Widget getCachedNetworkImageWithurl(
+    {@required String url, BoxFit fit, double size}) {
+  return new CachedNetworkImage(
+    width: size,
+    height: size,
+    imageUrl: "$url",
+    matchTextDirection: true,
+    fit: fit != null ? fit : BoxFit.cover,
+    placeholder: (context, String val) {
+      return new Center(
+        child: new CupertinoActivityIndicator(),
+      );
+    },
+    errorWidget: (BuildContext context, String error, Object obj) {
+      print("errro $error");
+      return new Center(
+        child: Container(
+          width: size,
+          height: size,
+          decoration: new BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.kGrey,
+          ),
+        ),
+//          child: new SvgPicture.asset(
+//        AssetStrings.imageFirst,
+//        fit: BoxFit.fill,
+//      )
+      );
+    },
+  );
+}
 
 Future<bool> hasInternetConnection({
   @required BuildContext context,

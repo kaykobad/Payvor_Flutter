@@ -109,12 +109,12 @@ Widget getSetupButtonNew(VoidCallback callback, String text, double margin,
             borderRadius: new BorderRadius.circular(8.0),
             color: (newColor == null)
                 ? AppColors.kPrimaryBlue
-                : AppColors.kAppIntroBackgroundColor),
+                : AppColors.colorDarkCyan),
         child: InkWell(
           borderRadius: new BorderRadius.circular(8.0),
           splashColor: (newColor == null)
               ? AppColors.kPrimaryBlue
-              : AppColors.kAppIntroBackgroundColor,
+              : AppColors.colorDarkCyan,
           onTap: () {
             callback();
           },
@@ -126,6 +126,46 @@ Widget getSetupButtonNew(VoidCallback callback, String text, double margin,
                 fontFamily: AssetStrings.circulerMedium,
                 fontSize: 16,
                 color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget getSetupButtonBorderNew(
+    VoidCallback callback, String text, double margin,
+    {Color newColor, Color textColor, Color border}) {
+  return Container(
+    height: 58.0,
+    margin: new EdgeInsets.only(left: margin, right: margin),
+    decoration: new BoxDecoration(
+      borderRadius: new BorderRadius.circular(8.0),
+    ),
+    child: Material(
+      borderRadius: new BorderRadius.circular(8.0),
+      child: Ink(
+        decoration: new BoxDecoration(
+            borderRadius: new BorderRadius.circular(8.0),
+            border:
+                new Border.all(color: border != null ? border : Colors.black),
+            color: (newColor == null) ? AppColors.kPrimaryBlue : newColor),
+        child: InkWell(
+          borderRadius: new BorderRadius.circular(8.0),
+          splashColor: (newColor == null) ? AppColors.kPrimaryBlue : newColor,
+          onTap: () {
+            callback();
+          },
+          child: new Container(
+            alignment: Alignment.center,
+            child: new Text(
+              text,
+              style: new TextStyle(
+                fontFamily: AssetStrings.circulerMedium,
+                fontSize: 16,
+                color: textColor != null ? textColor : Colors.white,
               ),
             ),
           ),
@@ -159,6 +199,7 @@ Widget getAppBarNew(BuildContext context) {
         ),
       ));
 }
+
 
 Widget getSetupDecoratorButtonNew(
     VoidCallback callback, String text, double margin,

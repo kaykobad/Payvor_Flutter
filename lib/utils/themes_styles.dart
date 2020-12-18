@@ -35,6 +35,12 @@ class TextThemes {
     color: Color.fromRGBO(9, 165, 255, 1.0),
   );
 
+  static final TextStyle blueMediumSmallNew = TextStyle(
+    fontFamily: AssetStrings.circulerMedium,
+    fontSize: 12,
+    color: Color.fromRGBO(9, 165, 255, 1.0),
+  );
+
   static final TextStyle blackTextSmallNormal = TextStyle(
     fontFamily: AssetStrings.circulerNormal,
     fontSize: 14,
@@ -45,6 +51,18 @@ class TextThemes {
     fontFamily: AssetStrings.circulerNormal,
     fontSize: 16,
     color: Colors.black,
+  );
+
+  static const TextStyle greyTextNormal = TextStyle(
+    fontFamily: AssetStrings.circulerNormal,
+    fontSize: 14,
+    color: Color.fromRGBO(183, 183, 183, 1.0),
+  );
+
+  static const TextStyle whiteMedium = TextStyle(
+    fontFamily: AssetStrings.circulerMedium,
+    fontSize: 22,
+    color: Color.fromRGBO(255, 255, 255, 1.0),
   );
 
   static final TextStyle greyTextFieldHintNormal = TextStyle(
@@ -75,10 +93,68 @@ class TextThemes {
     color: Color.fromRGBO(114, 117, 122, 1.0),
   );
 
+  static final TextStyle greyTextFieldNormalNw = TextStyle(
+    fontFamily: AssetStrings.circulerNormal,
+    fontSize: 13,
+    color: Color.fromRGBO(114, 117, 122, 1.0),
+  );
+
+  static final TextStyle greyTextFielMedium = TextStyle(
+    fontFamily: AssetStrings.circulerMedium,
+    fontSize: 16,
+    color: Color.fromRGBO(23, 23, 23, 1.0),
+  );
+
+
   static final TextStyle greyDarkTextFieldMedium = TextStyle(
     fontFamily: AssetStrings.circulerMedium,
     fontSize: 14,
     color: Color.fromRGBO(103, 99, 99, 1.0),
+  );
+
+  static final TextStyle greyDarkTextHomeLocation = TextStyle(
+    fontFamily: AssetStrings.circulerNormal,
+    fontSize: 13,
+    color: Color.fromRGBO(103, 99, 99, 1.0),
+  );
+
+  static final TextStyle blackPreview = TextStyle(
+      fontFamily: AssetStrings.circulerNormal,
+      fontSize: 13,
+      color: Colors.black
+  );
+
+
+  static final TextStyle lightGrey = TextStyle(
+    fontFamily: AssetStrings.circulerNormal,
+    fontSize: 12,
+    color: Color.fromRGBO(128, 128, 128, 1.0),
+  );
+
+
+  static final TextStyle blackDarkHeaderSub = TextStyle(
+    fontFamily: AssetStrings.circulerMedium,
+    fontSize: 18,
+    color: Color.fromRGBO(37, 26, 101, 1.0),
+  );
+
+  static final TextStyle darkBlackMedium = TextStyle(
+    fontFamily: AssetStrings.circulerMedium,
+    fontSize: 18,
+    color: Colors.black,
+  );
+  static final TextStyle blackCirculerMedium = TextStyle(
+    fontFamily: AssetStrings.circulerMedium,
+    fontSize: 16,
+    color: Colors.black,
+  );
+
+
+  static final TextStyle blackCirculerMediumHeight = TextStyle(
+    fontFamily: AssetStrings.circulerMedium,
+    fontSize: 17,
+    color: Colors.black,
+
   );
 
   static final TextStyle greyDarkTextFieldItalic = TextStyle(

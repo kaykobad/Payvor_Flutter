@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:payvor/pages/search/search_home.dart';
 import 'package:payvor/utils/AppColors.dart';
+import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/constants.dart';
 
 import '../dummy.dart';
-
 
 class DashBoardScreen extends StatefulWidget {
   @override
@@ -26,9 +28,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   final PageStorageBucket bucket = PageStorageBucket();
 
-  Color selectedColor = AppColors.kFirstGradientColor;
-  Color unselectedColor = Colors.grey[400];
-  double selectedDotSize = 20;
+  Color selectedColor = AppColors.bluePrimary;
+  Color unselectedColor = AppColors.moreText;
+
+  // double selectedDotSize = 20;
+  double selectedDotSize = 0;
 
   Future<bool> _onBackPressed() async {
     bool canPop = false;
@@ -107,13 +111,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 //      ),
         body: IndexedStack(
           index: currentTab,
+          sizing: StackFit.loose,
           children: <Widget>[
             Navigator(
               key: _homeScreen,
               onGenerateRoute: (route) =>
                   MaterialPageRoute(
                     settings: route,
-                    builder: (context) => Dummy(),
+                    builder: (context) => SearchCompany(),
                   ),
             ),
             Navigator(
@@ -143,11 +148,18 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           ],
         ),
         floatingActionButton: Container(
-          height: MediaQuery.of(context).size.width * 0.2,
-          width: MediaQuery.of(context).size.width * 0.2,
+          height: MediaQuery
+              .of(context)
+              .size
+              .width * 0.22,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width * 0.2,
+          margin: new EdgeInsets.only(top: 20.0),
           child: FloatingActionButton(
 
-            child:CustomFloatingButton(),
+            child: CustomFloatingButton(),
             onPressed: () {
               redirect();
             },
@@ -169,8 +181,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      _bottomTabWidget(Icons.home, currentTab == 0, 0),
-                      _bottomTabWidget(Icons.explore, currentTab == 1, 1),
+                      _bottomTabWidget(AssetStrings.home, currentTab == 0, 0),
+                      _bottomTabWidget(AssetStrings.job, currentTab == 1, 1),
                     ],
                   ),
                 ),
@@ -185,8 +197,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       _bottomTabWidget(
-                          Icons.notifications_none, currentTab == 2, 2),
-                      _bottomTabWidget(Icons.account_circle, currentTab == 3, 3)
+                          AssetStrings.group, currentTab == 2, 2),
+                      _bottomTabWidget(AssetStrings.profile, currentTab == 3, 3)
                     ],
                   ),
                 )
@@ -198,7 +210,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     );
   }
 
-  Widget _bottomTabWidget(IconData icon, bool isChecked, int pos) {
+  Widget _bottomTabWidget(String icon, bool isChecked, int pos) {
     return MaterialButton(
       minWidth: 40,
       onPressed: () {
@@ -209,15 +221,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Icon(
+          new SvgPicture.asset(
             icon,
-            size: Constants.bottomIconSize,
+            width: Constants.bottomIconSize,
+            height: Constants.bottomIconSize,
             color: isChecked ? selectedColor : unselectedColor,
           ),
           SizedBox(
-            height: 6,
+            height: 3,
           ),
-          Visibility(
+          /* Visibility(
               visible: isChecked,
               child: Container(
                 height: 5,
@@ -226,7 +239,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   color: isChecked ? selectedColor : unselectedColor,
                   shape: BoxShape.circle,
                 ),
-              ))
+              ))*/
         ],
       ),
     );
@@ -242,13 +255,13 @@ class CustomFloatingButton extends StatelessWidget {
       height: 85,
       child: Icon(
         Icons.add,
-        size: 24,
+        size: 40,
       ),
       decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: LinearGradient(colors: [
-            AppColors.kFirstGradientColor,
-            AppColors.kSecondGradientColor
+            AppColors.colorCyanPrimary,
+            AppColors.colorCyanPrimary
           ])),
     );
   }

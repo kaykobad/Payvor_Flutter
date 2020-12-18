@@ -25,7 +25,17 @@ class AppColors {
   static const Color kAppIntroLeftRightStand = const Color(0xFFC2E9EF);
   static const Color kAppIntroImageGradientColor = const Color(0xFFF4F5F7);
   static const Color colorCyanPrimary = const Color(0xFF32C5FF);
+  static const Color colorDarkCyan = const Color(0xFF09A5FF); //9.165,255
   static const Color colorGray = const Color(0xFFE7E7E7);
+  static const Color bluePrimary = const Color(0xFF251A65);
+  static const Color whiteGray = const Color(0xFFF8F8FA);
+  static const Color dividerColor = const Color(0xFF979797);
+  static const Color lightCyan = const Color(0xFFEFF9FF);
+  static const Color moreText = const Color(0xFF72757A); //114,117,122
+  static const Color lightWhite = const Color(0xFFF3F3F3);
+  static const Color darkgrey = const Color(0xFF676363);
+  static const Color lightGrey = const Color(0xFFB7B7B7);
+  static const Color redLight = const Color(0xFFFF6B66); //255,107,102
 
 //intro screen gradient button color
   static const Color kFirstGradientColor = const Color(0xFF259BB5);
