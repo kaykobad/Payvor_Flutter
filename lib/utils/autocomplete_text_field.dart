@@ -34,6 +34,7 @@ class AutoCompleteTextView extends StatefulWidget
   final bool isLocation;
   final double defaultPadding;
   final String svgicon;
+  final bool backgroundShow;
 
   AutoCompleteTextView(
       {this.isLocation,
@@ -55,7 +56,8 @@ class AutoCompleteTextView extends StatefulWidget
       this.onValueChanged,
       this.icon,
       this.svgicon,
-      this.defaultPadding});
+      this.defaultPadding,
+      this.backgroundShow});
 
   @override
   _AutoCompleteTextViewState createState() => _AutoCompleteTextViewState();
@@ -198,7 +200,7 @@ class _AutoCompleteTextViewState extends State<AutoCompleteTextView> {
               suggestionsStreamController.sink.add([]);
             }
           },
-          decoration: new InputDecoration(
+          decoration: !widget.backgroundShow ? new InputDecoration(
             enabledBorder: new OutlineInputBorder(
                 borderSide: new BorderSide(
                   color: Colors.grey.withOpacity(0.5),
@@ -219,6 +221,12 @@ class _AutoCompleteTextViewState extends State<AutoCompleteTextView> {
               ),
             ),
             suffixIcon: new Container(width: 1,),
+            hintText: widget.hintText,
+            hintStyle: TextThemes.greyTextFieldHintNormal,
+          ) : new InputDecoration(
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            contentPadding: new EdgeInsets.only(top: 10.0),
             hintText: widget.hintText,
             hintStyle: TextThemes.greyTextFieldHintNormal,
           ),

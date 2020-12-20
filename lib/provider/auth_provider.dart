@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/common_response/common_success_response.dart';
+import 'package:payvor/model/create_payvor/create_payvor_response.dart';
+import 'package:payvor/model/create_payvor/payvorcreate.dart';
+import 'package:payvor/model/favour_details_response/favour_details_response.dart';
 import 'package:payvor/model/forgot_password/forgot_password_request.dart';
 import 'package:payvor/model/forgot_password/forgot_password_response.dart';
 import 'package:payvor/model/logged_in_user/logged_in_user_response.dart';
@@ -18,6 +21,7 @@ import 'package:payvor/model/update_profile/update_profile_request.dart';
 import 'package:payvor/model/update_profile/update_profile_response.dart';
 import 'package:payvor/networkmodel/APIHandler.dart';
 import 'package:payvor/networkmodel/APIs.dart';
+import 'package:payvor/pages/get_favor_list/favor_list_response.dart';
 
 class AuthProvider with ChangeNotifier {
   var _isLoading = false;
@@ -264,15 +268,49 @@ class AuthProvider with ChangeNotifier {
           return completer.future;
         }
         print(status);
-      }
-      catch (e) {
-
-
-      }
-
+      } catch (e) {}
 
       UpdateProfileResponse loginResponseData =
-      new UpdateProfileResponse.fromJson(response);
+          new UpdateProfileResponse.fromJson(response);
+      completer.complete(loginResponseData);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> createPayvor(
+      PayvorCreateRequest request, BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.post(
+        context: context,
+        url: APIs.createPayvor,
+        requestBody: request.toJson());
+
+    print(APIs.createPayvor);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      try {
+        var status = response["status"]["status"];
+
+        print(response["error"]);
+        if (status == false) {
+          APIError apiError = new APIError(
+            error: response["error"],
+            messag: response["error"],
+            status: 400,
+            onAlertPop: () {},
+          );
+          completer.complete(apiError);
+          return completer.future;
+        }
+        print(status);
+      } catch (e) {}
+
+      FavourCreateResponse loginResponseData =
+          new FavourCreateResponse.fromJson(response);
       completer.complete(loginResponseData);
       notifyListeners();
       return completer.future;
@@ -317,7 +355,46 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      ResendOtpResponse resendOtpResponse = new ResendOtpResponse.fromJson(response);
+      ResendOtpResponse resendOtpResponse = new ResendOtpResponse.fromJson(
+          response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> getFavorPostDetails(BuildContext context, String id) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(
+        context: context, url: APIs.favoeDetails + id);
+
+
+    print(APIs.favoeDetails + id);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      FavourDetailsResponse resendOtpResponse = new FavourDetailsResponse
+          .fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+
+  Future<dynamic> getFavorList(BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(
+        context: context, url: APIs.getFavorList);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      GetFavorListResponse resendOtpResponse = new GetFavorListResponse
+          .fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;

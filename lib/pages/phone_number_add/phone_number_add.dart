@@ -417,12 +417,14 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
                         TextInputType.text,
                         AssetStrings.location,
                       ),*/
-                      getLocation(_LocationController, context,
+                      getLocation(
+                        _LocationController,
+                        context,
                         _streamControllerShowLoader,
+                        false,
                         _LatLongController,
                         iconData: AssetStrings.location,
                       ),
-
                       new SizedBox(
                         height: 18.0,
                       ),

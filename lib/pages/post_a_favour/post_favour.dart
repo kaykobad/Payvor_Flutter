@@ -1,14 +1,24 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/create_payvor/create_payvor_response.dart';
+import 'package:payvor/model/create_payvor/payvorcreate.dart';
+import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
+import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
+import 'package:provider/provider.dart';
 
 class PostFavour extends StatefulWidget {
   @override
@@ -28,11 +38,21 @@ class _HomeState extends State<PostFavour>
   TextEditingController _TitleController = new TextEditingController();
   TextEditingController _PriceController = new TextEditingController();
   TextEditingController _DescriptionController = new TextEditingController();
+  TextEditingController _LocationController = new TextEditingController();
+  TextEditingController _LatLongController = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
   FocusNode _TitleField = new FocusNode();
   FocusNode _PriceField = new FocusNode();
   FocusNode _DescriptionField = new FocusNode();
+  FocusNode _LocationField = new FocusNode();
 
+  File _image; //to store profile image
+  String profile;
+
+  final StreamController<bool> _streamControllerShowLoader =
+      StreamController<bool>();
+
+  AuthProvider provider;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
@@ -46,6 +66,181 @@ class _HomeState extends State<PostFavour>
     _setScrollListener();
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _streamControllerShowLoader.close(); //close the stream on dispose
+
+    super.dispose();
+  }
+
+  hitApi() async {
+    provider.setLoading();
+    var lat = "0.0";
+    var long = "0.0";
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    if (_LatLongController.text.length > 0) {
+      var data = _LatLongController.text.trim().toString().split(",");
+
+      try {
+        lat = data[0];
+        long = data[1];
+      } catch (e) {}
+    }
+
+    PayvorCreateRequest loginRequest = new PayvorCreateRequest(
+        title: _TitleController.text,
+        location: _LocationController.text,
+        description: _DescriptionController.text,
+        price: _PriceController.text,
+        lat: lat,
+        long: long);
+    var response = await provider.createPayvor(loginRequest, context);
+
+    if (response is FavourCreateResponse) {
+      provider.hideLoader();
+
+      print(response);
+      try {
+        showInSnackBar(response.success);
+        /*   Navigator.pop(context);
+        Navigator.pop(context);*/
+      } catch (ex) {}
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
+  }
+
+  void containerForSheet<T>({BuildContext context, Widget child}) {
+    showCupertinoModalPopup<T>(
+      context: context,
+      builder: (BuildContext context) => child,
+    );
+  }
+
+  Future _getGalleryImage() async {
+    var imageFileSelect = await ImagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: Constants.maxWidth,
+        maxHeight: Constants.maxHeight);
+    var imageFile = await ImageCropper.cropImage(
+        sourcePath: imageFileSelect.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          minimumAspectRatio: 1.0,
+        ));
+
+    _image = imageFile;
+    setState(() {});
+  }
+
+  Future _getCameraImage() async {
+    var imageFileSelect = await ImagePicker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: Constants.maxWidth,
+        maxHeight: Constants.maxHeight);
+
+    var imageFile = await ImageCropper.cropImage(
+        sourcePath: imageFileSelect.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          minimumAspectRatio: 1.0,
+        ));
+    _image = null;
+
+    _image = imageFile;
+
+    setState(() {});
+  }
+
+  _crupitinoActionSheet() {
+    return containerForSheet<String>(
+      context: context,
+      child: CupertinoActionSheet(
+          actions: <Widget>[
+            //to show delete image option
+            _image != null
+                ? CupertinoActionSheetAction(
+                    child: Text(
+                      Constants.DELETE_PHOTO,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    onPressed: () {
+                      _image = null;
+                      Navigator.pop(context);
+                      setState(() {});
+                    },
+                  )
+                : Container(),
+
+            CupertinoActionSheetAction(
+              child: Text(Constants.CAMERA),
+              onPressed: () {
+                _getCameraImage();
+                Navigator.pop(context);
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: Text(Constants.GALLARY),
+              onPressed: () {
+                _getGalleryImage();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            child: Text(Constants.CANCEL),
+            isDefaultAction: true,
+            onPressed: () {
+              Navigator.pop(
+                context,
+              );
+            },
+          )),
+    );
   }
 
   @override
@@ -69,6 +264,7 @@ class _HomeState extends State<PostFavour>
         style: TextThemes.blackTextFieldNormal,
         focusNode: focusNodeCurrent,
         maxLines: lines,
+
         onSubmitted: (String value) {
           if (focusNodeCurrent == _DescriptionField) {
             _DescriptionField.unfocus();
@@ -80,17 +276,23 @@ class _HomeState extends State<PostFavour>
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           hintText: labelText,
+          prefixText: focusNodeCurrent == _PriceField ? "€ " : "",
           hintStyle: TextThemes.greyTextFieldHintNormal,
         ),
       ),
     );
   }
 
-  void callback() {}
+  void callback() {
+    hitApi();
+  }
 
   @override
   Widget build(BuildContext context) {
-    screenSize = MediaQuery.of(context).size;
+    screenSize = MediaQuery
+        .of(context)
+        .size;
+    provider = Provider.of<AuthProvider>(context);
     return Scaffold(
       key: _scaffoldKey,
       body: Stack(
@@ -152,7 +354,7 @@ class _HomeState extends State<PostFavour>
                     color: Colors.white,
                     height: 16.0,
                   ),
-                  new Container(
+                  _image == null ? new Container(
                     color: Colors.white,
                     width: double.infinity,
                     margin: new EdgeInsets.only(top: 9.0),
@@ -162,22 +364,29 @@ class _HomeState extends State<PostFavour>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            _crupitinoActionSheet();
+                          },
                           child: new Image.asset(
                             AssetStrings.camera,
                             width: 34.0,
                             height: 30.0,
                           ),
                         ),
-                        Container(
-                          padding: new EdgeInsets.only(top: 10),
-                          child: new Text(
-                            ResString().get('upload_photo'),
-                            style: new TextStyle(
-                                fontFamily: AssetStrings.circulerMedium,
-                                color: AppColors.bluePrimary,
-                                fontSize: 16),
-                            textAlign: TextAlign.center,
+                        InkWell(
+                          onTap: () {
+                            _crupitinoActionSheet();
+                          },
+                          child: Container(
+                            padding: new EdgeInsets.only(top: 10),
+                            child: new Text(
+                              ResString().get('upload_photo'),
+                              style: new TextStyle(
+                                  fontFamily: AssetStrings.circulerMedium,
+                                  color: AppColors.bluePrimary,
+                                  fontSize: 16),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                         new Text(
@@ -190,6 +399,49 @@ class _HomeState extends State<PostFavour>
                         ),
                       ],
                     ),
+                  ) : Stack(
+                    children: [
+                      new Container(
+                          width: double.infinity,
+                          padding: new EdgeInsets.only(left: 16, right: 16),
+                          height: 147.0,
+                          child: ClipRect(
+                            child: new Image.file(
+                              _image,
+                              fit: BoxFit.fill,
+                            ),
+                          )),
+
+                      Container(
+                        alignment: Alignment.center,
+                        height: 147,
+
+
+                        child: Positioned(
+                          top: 0.0,
+                          bottom: 0.0,
+                          child: InkWell(
+                              onTap: () {
+                                _image = null;
+                                setState(() {
+
+                                });
+                              },
+                              child: new Container(
+                                  width: 46,
+                                  height: 46,
+
+                                  decoration: new BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white
+                                  ),
+                                  child: new Icon(
+                                      Icons.delete, color: Colors.red)
+                              )
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   new SizedBox(
                     height: 8.0,
@@ -208,7 +460,7 @@ class _HomeState extends State<PostFavour>
                       _PriceController,
                       _PriceField,
                       _DescriptionField,
-                      TextInputType.emailAddress,
+                      TextInputType.number,
                       1),
                   Opacity(
                     opacity: 0.12,
@@ -222,7 +474,7 @@ class _HomeState extends State<PostFavour>
                       _DescriptionController,
                       _DescriptionField,
                       _DescriptionField,
-                      TextInputType.emailAddress,
+                      TextInputType.text,
                       8),
                   new SizedBox(
                     height: 9.0,
@@ -231,11 +483,10 @@ class _HomeState extends State<PostFavour>
                     color: Colors.white,
                     height: 64.0,
                     margin: new EdgeInsets.only(top: 9.0),
-                    padding: new EdgeInsets.only(left: 16, right: 16),
+                    padding: new EdgeInsets.only(right: 16),
                     child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        new Text(
+                        /*   new Text(
                           ResString().get('location'),
                           style: new TextStyle(
                               fontFamily: AssetStrings.circulerNormal,
@@ -243,6 +494,20 @@ class _HomeState extends State<PostFavour>
                               fontSize: 16),
                           textAlign: TextAlign.center,
                         ),
+*/
+                        Expanded(
+                          child: Container(
+                            padding: new EdgeInsets.only(left: 16, right: 5.0),
+                            alignment: Alignment.centerLeft,
+                            child: getLocation(_LocationController, context,
+                              _streamControllerShowLoader,
+                              true,
+                              _LatLongController,
+                              iconData: AssetStrings.location,
+                            ),
+                          ),
+                        ),
+
                         new Text(
                           ">",
                           style: new TextStyle(
@@ -302,6 +567,13 @@ class _HomeState extends State<PostFavour>
                       ),
                     ],
                   )),
+            ),
+          ),
+
+          new Center(
+            child: getFullScreenProviderLoader(
+              status: provider.getLoading(),
+              context: context,
             ),
           ),
           /* new Center(

@@ -4,12 +4,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:payvor/filter/filter.dart';
+import 'package:payvor/model/apierror.dart';
+import 'package:payvor/pages/get_favor_list/favor_list_response.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
+import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/themes_styles.dart';
+import 'package:provider/provider.dart';
 
 class SearchCompany extends StatefulWidget {
   @override
@@ -22,12 +26,17 @@ class _HomeState extends State<SearchCompany>
 
   String searchkey = null;
 
+  List<Data> list = List<Data>();
+
   final StreamController<bool> _loaderStreamController =
       new StreamController<bool>();
   TextEditingController _controller = new TextEditingController();
   ScrollController scrollController = new ScrollController();
   bool _loadMore = false;
+  AuthProvider provider;
   bool isPullToRefresh = false;
+
+  int currentPage = 0;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -42,17 +51,64 @@ class _HomeState extends State<SearchCompany>
   @override
   void initState() {
     _setScrollListener();
+
+    Future.delayed(const Duration(milliseconds: 300), () {
+      hitApi();
+    });
+
     super.initState();
+  }
+
+
+  hitApi() async {
+    provider.setLoading();
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    var response = await provider.getFavorList(context);
+
+    if (response is GetFavorListResponse) {
+      provider.hideLoader();
+
+      if (response != null && response.data != null) {
+        list.addAll(response.data);
+      }
+
+      print(response);
+      try {
+
+      } catch (ex) {
+
+      }
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
   }
 
   void _setScrollListener() {
     //scrollController.position.isScrollingNotifier.addListener(() { print("called");});
-/*
+
     scrollController = new ScrollController();
-    scrollController.addListener(() {
+    /* scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
-        if (_listGame.length >= (PAGINATION_SIZE * _currentPageNumber)) {
+        if (list.length >= (PAGINATION_SIZE * _currentPageNumber)) {
           isPullToRefresh=true;
           _loadHomeData();
           showInSnackBar("Loading data...");
@@ -63,7 +119,10 @@ class _HomeState extends State<SearchCompany>
 
   @override
   Widget build(BuildContext context) {
-    screenSize = MediaQuery.of(context).size;
+    provider = Provider.of<AuthProvider>(context);
+    screenSize = MediaQuery
+        .of(context)
+        .size;
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: AppColors.bluePrimary,
@@ -106,9 +165,12 @@ class _HomeState extends State<SearchCompany>
               ),
             ),
           ),
-          /* new Center(
-            child: _getLoader,
-          ),*/
+          new Center(
+            child: getFullScreenProviderLoader(
+              status: provider.getLoading(),
+              context: context,
+            ),
+          ),
         ],
       ),
     );
@@ -186,15 +248,23 @@ class _HomeState extends State<SearchCompany>
 
   _buildContestList() {
     return Expanded(
-      child: Container(
-        color: AppColors.whiteGray,
-        child: new ListView.builder(
-          padding: new EdgeInsets.all(0.0),
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) {
-            return buildItemMain(index);
-          },
-          itemCount: 30,
+      child: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: () async {
+          isPullToRefresh = true;
+          _loadMore = false;
+          await hitApi();
+        },
+        child: Container(
+          color: AppColors.whiteGray,
+          child: new ListView.builder(
+            padding: new EdgeInsets.all(0.0),
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return buildItemMain(index, list[index]);
+            },
+            itemCount: list.length,
+          ),
         ),
       ),
     );
@@ -203,7 +273,7 @@ class _HomeState extends State<SearchCompany>
   @override
   bool get wantKeepAlive => true;
 
-  Widget buildItemMain(int pos) {
+  Widget buildItemMain(int pos, Data data) {
     var index = pos % 2 == 0 ? true : false;
 
     return InkWell(
@@ -211,7 +281,9 @@ class _HomeState extends State<SearchCompany>
         Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
-            return Material(child: new PostFavorDetails());
+            return Material(child: new PostFavorDetails(
+              id: data.id.toString(),
+            ));
           }),
         );
       },
@@ -225,7 +297,7 @@ class _HomeState extends State<SearchCompany>
             new SizedBox(
               height: 16.0,
             ),
-            buildItem(),
+            buildItem(data),
             Opacity(
               opacity: 0.12,
               child: new Container(
@@ -289,7 +361,7 @@ class _HomeState extends State<SearchCompany>
   }
 }
 
-Widget buildItem() {
+Widget buildItem(Data data) {
   return Container(
     margin: new EdgeInsets.only(left: 16.0, right: 16.0),
     child: Row(
@@ -297,13 +369,19 @@ Widget buildItem() {
         new Container(
           width: 40.0,
           height: 40.0,
+          decoration: BoxDecoration(
+
+              shape: BoxShape.circle
+          ),
           alignment: Alignment.center,
-          decoration: new BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-              colors: [const Color(0xFF177FBE), const Color(0xFF00BBA6)],
-              end: Alignment.centerRight,
-              begin: Alignment.centerLeft,
+          child: ClipOval(
+            // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+
+            child: getCachedNetworkImageWithurl(
+                url:
+                data.image,
+                fit: BoxFit.fill,
+                size: 40
             ),
           ),
         ),
@@ -316,7 +394,7 @@ Widget buildItem() {
                   child: Row(
                     children: [
                       new Text(
-                        "Jonathan Dore",
+                        data?.title,
                         style: TextThemes.blackCirculerMedium,
                       ),
                       new SizedBox(
@@ -343,9 +421,9 @@ Widget buildItem() {
                     ),
                     Container(
                         child: new Text(
-                      "Grand Cnal Duke, Dublin",
-                      style: TextThemes.greyDarkTextHomeLocation,
-                    )),
+                          data?.location ?? "",
+                          style: TextThemes.greyDarkTextHomeLocation,
+                        )),
                   ],
                 ),
               )
@@ -355,7 +433,7 @@ Widget buildItem() {
         Align(
             alignment: Alignment.center,
             child: new Text(
-              "€50",
+              "€${data.price ?? "0"}",
               style: TextThemes.blackDarkHeaderSub,
             )),
       ],

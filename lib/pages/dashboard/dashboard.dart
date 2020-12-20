@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/search/search_home.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -96,8 +98,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   redirect() async {
-    //Navigator.of(context).pushNamed(Routes.nearpost);
-
+    Navigator.push(
+      context,
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return Material(child: new PostFavour());
+      }),
+    );
   }
 
   @override

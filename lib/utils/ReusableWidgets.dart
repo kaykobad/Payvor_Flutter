@@ -239,12 +239,18 @@ Widget getSetupDecoratorButtonNew(
   );
 }
 
-Widget getLocation(TextEditingController controller, BuildContext context,
+Widget getLocation(
+    TextEditingController controller,
+    BuildContext context,
     StreamController<bool> _streamControllerShowLoader,
+    bool isBackground,
     TextEditingController controllers,
-    {String iconData, double iconPadding = 0}) {
+    {String iconData,
+    double iconPadding = 0}) {
   return Container(
-    margin: new EdgeInsets.only(left: 20, right: 20),
+    margin: !isBackground
+        ? new EdgeInsets.only(left: 20, right: 20)
+        : new EdgeInsets.only(left: 0, right: 0),
     child: Stack(
       children: <Widget>[
         AutoCompleteTextView(
@@ -252,6 +258,7 @@ Widget getLocation(TextEditingController controller, BuildContext context,
           defaultPadding: iconPadding,
           svgicon: iconData,
           hintText: "Location",
+          backgroundShow: isBackground,
           suggestionsApiFetchDelay: 100,
           focusGained: () {},
           onTapCallback: (String text) async {

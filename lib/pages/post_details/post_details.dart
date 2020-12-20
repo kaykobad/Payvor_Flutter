@@ -4,8 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/favour_details_response/favour_details_response.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/pages/search/search_name.dart';
+import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/review/review_post.dart';
 import 'package:payvor/utils/AppColors.dart';
@@ -13,8 +16,13 @@ import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/themes_styles.dart';
+import 'package:provider/provider.dart';
 
 class PostFavorDetails extends StatefulWidget {
+  final String id;
+
+  PostFavorDetails({this.id});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -29,15 +37,14 @@ class _HomeState extends State<PostFavorDetails>
 
   List<String> listOption = ["Report", "Share"];
 
+  AuthProvider provider;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  TextEditingController _TitleController = new TextEditingController();
-  TextEditingController _PriceController = new TextEditingController();
-  TextEditingController _DescriptionController = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
-  FocusNode _TitleField = new FocusNode();
-  FocusNode _PriceField = new FocusNode();
   FocusNode _DescriptionField = new FocusNode();
+
+  FavourDetailsResponse favoriteResponse;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
@@ -49,48 +56,56 @@ class _HomeState extends State<PostFavorDetails>
 
   @override
   void initState() {
-    _setScrollListener();
+    Future.delayed(const Duration(milliseconds: 300), () {
+      hitApi();
+    });
 
     super.initState();
   }
 
+  hitApi() async {
+    provider.setLoading();
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    var response = await provider.getFavorPostDetails(context, widget.id);
+
+    if (response is FavourDetailsResponse) {
+      provider.hideLoader();
+
+      if (response != null &&
+          response.data != null &&
+          response.data.length > 0) {
+        favoriteResponse = response;
+      }
+
+      print(response);
+      try {} catch (ex) {}
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
+
+    setState(() {});
+  }
+
   @override
   bool get wantKeepAlive => true;
-
-  void _setScrollListener() {}
-
-  Widget getTextField(
-      String labelText,
-      TextEditingController controller,
-      FocusNode focusNodeCurrent,
-      FocusNode focusNodeNext,
-      TextInputType textInputType,
-      int lines) {
-    return Container(
-      padding: new EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
-      color: Colors.white,
-      child: new TextField(
-        controller: controller,
-        keyboardType: textInputType,
-        style: TextThemes.blackTextFieldNormal,
-        focusNode: focusNodeCurrent,
-        maxLines: lines,
-        onSubmitted: (String value) {
-          if (focusNodeCurrent == _DescriptionField) {
-            _DescriptionField.unfocus();
-          } else {
-            FocusScope.of(context).autofocus(focusNodeNext);
-          }
-        },
-        decoration: new InputDecoration(
-          enabledBorder: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          hintText: labelText,
-          hintStyle: TextThemes.greyTextFieldHintNormal,
-        ),
-      ),
-    );
-  }
 
   void callback() {
     showBottomSheet();
@@ -109,7 +124,7 @@ class _HomeState extends State<PostFavorDetails>
               children: [
                 Container(
                   child: new Text(
-                    "Help me move out of",
+                    favoriteResponse?.data[0].title ?? "",
                     style: TextThemes.blackCirculerMedium,
                   ),
                 ),
@@ -127,9 +142,9 @@ class _HomeState extends State<PostFavorDetails>
                       ),
                       Container(
                           child: new Text(
-                        "Grand Cnal Duke, Dublin",
-                        style: TextThemes.greyDarkTextHomeLocation,
-                      )),
+                            favoriteResponse?.data[0].location ?? "",
+                            style: TextThemes.greyDarkTextHomeLocation,
+                          )),
                     ],
                   ),
                 )
@@ -139,7 +154,7 @@ class _HomeState extends State<PostFavorDetails>
           Align(
               alignment: Alignment.center,
               child: new Text(
-                "€50",
+                "€${favoriteResponse?.data[0].price ?? ""}",
                 style: TextThemes.blackDarkHeaderSub,
               )),
         ],
@@ -407,7 +422,7 @@ class _HomeState extends State<PostFavorDetails>
                 Container(
                   margin: new EdgeInsets.only(left: 10.0, right: 10.0),
                   child: new Text(
-                    "Jonathan Dore",
+                    favoriteResponse?.data[0].name ?? "",
                     style: TextThemes.blackCirculerMedium,
                   ),
                 ),
@@ -417,10 +432,10 @@ class _HomeState extends State<PostFavorDetails>
                     children: [
                       Container(
                           child: new Text(
-                        "Favor Post Owner",
-                        style: TextThemes.greyTextFieldNormalNw,
-                      )),
-                      Container(
+                            "Favor Post Owner",
+                            style: TextThemes.greyTextFieldNormalNw,
+                          )),
+                      favoriteResponse?.data[0].isActive == 1 ? Container(
                         width: 3,
                         height: 3,
                         margin: new EdgeInsets.only(left: 4, right: 4),
@@ -428,12 +443,12 @@ class _HomeState extends State<PostFavorDetails>
                           shape: BoxShape.circle,
                           color: AppColors.darkgrey,
                         ),
-                      ),
-                      Container(
+                      ) : Container(),
+                      favoriteResponse?.data[0].isActive == 1 ? Container(
                           child: new Text(
-                        "VERIFIED",
-                        style: TextThemes.blueMediumSmallNew,
-                      )),
+                            "VERIFIED",
+                            style: TextThemes.blueMediumSmallNew,
+                          )) : Container(),
                     ],
                   ),
                 )
@@ -454,7 +469,10 @@ class _HomeState extends State<PostFavorDetails>
 
   @override
   Widget build(BuildContext context) {
-    screenSize = MediaQuery.of(context).size;
+    provider = Provider.of<AuthProvider>(context);
+    screenSize = MediaQuery
+        .of(context)
+        .size;
     return Scaffold(
       key: _scaffoldKey,
       body: Stack(
@@ -462,7 +480,8 @@ class _HomeState extends State<PostFavorDetails>
           new Container(
             color: AppColors.whiteGray,
             height: screenSize.height,
-            child: SingleChildScrollView(
+            child: favoriteResponse != null && favoriteResponse.data != null &&
+                favoriteResponse.data.length > 0 ? SingleChildScrollView(
               child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -475,7 +494,7 @@ class _HomeState extends State<PostFavorDetails>
 
                       child: getCachedNetworkImageWithurl(
                         url:
-                            "https://cdn.pixabay.com/photo/2013/07/21/13/00/rose-165819__340.jpg",
+                        "https://cdn.pixabay.com/photo/2013/07/21/13/00/rose-165819__340.jpg",
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -502,8 +521,9 @@ class _HomeState extends State<PostFavorDetails>
                     padding: new EdgeInsets.only(
                         left: 16.0, right: 16.0, top: 10.0, bottom: 18),
                     color: Colors.white,
+                    width: double.infinity,
                     child: ReadMoreText(
-                      "I need help moving out of my flat as there are many things to carry. Can someone help me out? It should not take more than 2 hours since I don’t have that many belongings,I need help moving out of my flat as there are many things to carry.",
+                      favoriteResponse?.data[0]?.description ?? "",
                       trimLines: 4,
                       colorClickableText: AppColors.colorDarkCyan,
                       trimMode: TrimMode.Line,
@@ -522,7 +542,7 @@ class _HomeState extends State<PostFavorDetails>
                   Container(
                       color: Colors.white,
                       padding:
-                          new EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
+                      new EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
                       margin: new EdgeInsets.only(top: 4),
                       alignment: Alignment.centerLeft,
                       child: new Text(
@@ -575,7 +595,7 @@ class _HomeState extends State<PostFavorDetails>
                   ),
                 ],
               ),
-            ),
+            ) : Container(),
           ),
           Offstage(
             offstage: true,
@@ -600,11 +620,16 @@ class _HomeState extends State<PostFavorDetails>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      new SvgPicture.asset(
-                        AssetStrings.back,
-                        width: 21.0,
-                        height: 18.0,
-                        color: Colors.white,
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: new SvgPicture.asset(
+                          AssetStrings.back,
+                          width: 21.0,
+                          height: 18.0,
+                          color: Colors.white,
+                        ),
                       ),
                       GestureDetector(
                           onTapDown: (TapDownDetails details) {
@@ -621,7 +646,8 @@ class _HomeState extends State<PostFavorDetails>
                   ),
                 ),
               )),
-          Positioned(
+          favoriteResponse != null && favoriteResponse.data != null &&
+              favoriteResponse.data.length > 0 ? Positioned(
             bottom: 0.0,
             left: 0.0,
             right: 0.0,
@@ -633,6 +659,14 @@ class _HomeState extends State<PostFavorDetails>
                   child: getSetupButtonNew(
                       callback, ResString().get('apply_for_fav'), 16,
                       newColor: AppColors.colorDarkCyan)),
+            ),
+          ) : Container(),
+
+
+          new Center(
+            child: getFullScreenProviderLoader(
+              status: provider.getLoading(),
+              context: context,
             ),
           ),
           /* new Center(
