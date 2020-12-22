@@ -1,18 +1,30 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payvor/model/create_payvor/payvorcreate.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 
 class PreviewPost extends StatefulWidget {
+  final PayvorCreateRequest request;
+  final int type;
+  final File file;
+  ValueSetter<int> voidcallback;
+
+  PreviewPost({this.request, this.type, this.file, this.voidcallback});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -24,15 +36,20 @@ class _HomeState extends State<PreviewPost>
   String searchkey = null;
 
   final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
+  new StreamController<bool>();
   ScrollController scrollController = new ScrollController();
   bool _loadMore = false;
   bool isPullToRefresh = false;
 
+  var userName = "";
+  var active = 0;
+  var profile = "";
+  var location = "";
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+  new GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
@@ -42,6 +59,13 @@ class _HomeState extends State<PreviewPost>
   @override
   void initState() {
     _setScrollListener();
+    var infoData = jsonDecode(MemoryManagement.getUserInfo());
+    var userinfo = LoginSignupResponse.fromJson(infoData);
+    userName = userinfo.user.name ?? "";
+    active = userinfo.user.isActive ?? 0;
+    profile = userinfo.user.profilePic ?? "";
+    location = userinfo.user.location ?? "";
+
     super.initState();
   }
 
@@ -63,7 +87,9 @@ class _HomeState extends State<PreviewPost>
 
   @override
   Widget build(BuildContext context) {
-    screenSize = MediaQuery.of(context).size;
+    screenSize = MediaQuery
+        .of(context)
+        .size;
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
@@ -150,7 +176,10 @@ class _HomeState extends State<PreviewPost>
     );
   }
 
-  void callback() {}
+  void callback() {
+    widget.voidcallback(1);
+    Navigator.pop(context);
+  }
 
   _buildContestList() {
     return Expanded(
@@ -184,21 +213,22 @@ class _HomeState extends State<PreviewPost>
           ),
           index
               ? new Container(
-                  height: 147,
-                  width: double.infinity,
-                  margin:
-                      new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
-                  child: ClipRRect(
-                    // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                    borderRadius: new BorderRadius.circular(10.0),
-
-                    child: getCachedNetworkImageWithurl(
-                      url:
-                          "https://cdn.pixabay.com/photo/2013/07/21/13/00/rose-165819__340.jpg",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                )
+            height: 147,
+            width: double.infinity,
+            margin:
+            new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
+            child: ClipRRect(
+              // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+              borderRadius: new BorderRadius.circular(10.0),
+              child: widget.file != null ? new Image.file(
+                widget.file,
+                fit: BoxFit.cover,
+                width: 147,
+              ) : Container(
+                color: Colors.grey,
+              ),
+            ),
+          )
               : Container(),
           new SizedBox(
             height: 16.0,
@@ -214,15 +244,17 @@ class _HomeState extends State<PreviewPost>
           ),
           Container(
               margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+              width: double.infinity,
               alignment: Alignment.centerLeft,
               child: new Text(
-                "Help me move out of my flat",
+                widget?.request?.title ?? "",
                 style: TextThemes.blackCirculerMediumHeight,
               )),
           Container(
             margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+            width: double.infinity,
             child: ReadMoreText(
-              "I need help moving out of my flat as there are many things to carry. Can someone help me out? It should not take more than 2 hours since I don’t have that many belongings,I need help moving out of my flat as there are many things to carry.",
+              widget?.request?.description ?? "",
               trimLines: 4,
               colorClickableText: AppColors.colorDarkCyan,
               trimMode: TrimMode.Line,
@@ -242,78 +274,77 @@ class _HomeState extends State<PreviewPost>
       ),
     );
   }
-}
 
-Widget buildItem() {
-  return Container(
-    margin: new EdgeInsets.only(left: 16.0, right: 16.0),
-    child: Row(
-      children: <Widget>[
-        new Container(
-          width: 40.0,
-          height: 40.0,
-          alignment: Alignment.center,
-          decoration: new BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-              colors: [const Color(0xFF177FBE), const Color(0xFF00BBA6)],
-              end: Alignment.centerRight,
-              begin: Alignment.centerLeft,
+
+  Widget buildItem() {
+    return Container(
+      margin: new EdgeInsets.only(left: 16.0, right: 16.0),
+      child: Row(
+        children: <Widget>[
+          new Container(
+            width: 40.0,
+            height: 40.0,
+            alignment: Alignment.center,
+            child: new ClipOval(
+              child: getCachedNetworkImageWithurl(
+                  url: profile,
+                  fit: BoxFit.fill,
+                  size: 40),
             ),
           ),
-        ),
-        Expanded(
-          child: new Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                  margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+          Expanded(
+            child: new Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Row(
+                      children: [
+                        new Text(
+                          userName,
+                          style: TextThemes.blackCirculerMedium,
+                        ),
+                        new SizedBox(
+                          width: 8,
+                        ),
+                        active == 1 ? new Image.asset(
+                          AssetStrings.verify,
+                          width: 16,
+                          height: 16,
+                        ) : Container(),
+                      ],
+                    )),
+                Container(
+                  margin: new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
                   child: Row(
                     children: [
-                      new Text(
-                        "Jonathan Dore",
-                        style: TextThemes.blackCirculerMedium,
+                      new Image.asset(
+                        AssetStrings.locationHome,
+                        width: 11,
+                        height: 14,
                       ),
                       new SizedBox(
-                        width: 8,
+                        width: 6,
                       ),
-                      new Image.asset(
-                        AssetStrings.verify,
-                        width: 16,
-                        height: 16,
-                      ),
+                      Container(
+                          child: new Text(
+                            location,
+                            style: TextThemes.greyDarkTextHomeLocation,
+                          )),
                     ],
-                  )),
-              Container(
-                margin: new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
-                child: Row(
-                  children: [
-                    new Image.asset(
-                      AssetStrings.locationHome,
-                      width: 11,
-                      height: 14,
-                    ),
-                    new SizedBox(
-                      width: 6,
-                    ),
-                    Container(
-                        child: new Text(
-                      "Grand Cnal Duke, Dublin",
-                      style: TextThemes.greyDarkTextHomeLocation,
-                    )),
-                  ],
-                ),
-              )
-            ],
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-        Align(
-            alignment: Alignment.center,
-            child: new Text(
-              "€50",
-              style: TextThemes.blackDarkHeaderSub,
-            )),
-      ],
-    ),
-  );
+          Align(
+              alignment: Alignment.center,
+              child: new Text(
+                "€ ${widget.request.price}",
+                style: TextThemes.blackDarkHeaderSub,
+              )),
+        ],
+      ),
+    );
+  }
 }

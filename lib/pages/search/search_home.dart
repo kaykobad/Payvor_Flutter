@@ -12,6 +12,7 @@ import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
@@ -26,17 +27,21 @@ class _HomeState extends State<SearchCompany>
 
   String searchkey = null;
 
-  List<Data> list = List<Data>();
+  List<Datas> list = List<Datas>();
 
   final StreamController<bool> _loaderStreamController =
       new StreamController<bool>();
   TextEditingController _controller = new TextEditingController();
-  ScrollController scrollController = new ScrollController();
+  ScrollController _scrollController = new ScrollController();
   bool _loadMore = false;
   AuthProvider provider;
   bool isPullToRefresh = false;
 
-  int currentPage = 0;
+  bool offstagenodata = false;
+
+  int currentPage = 1;
+
+  String text = "";
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -50,19 +55,16 @@ class _HomeState extends State<SearchCompany>
 
   @override
   void initState() {
-    _setScrollListener();
-
     Future.delayed(const Duration(milliseconds: 300), () {
       hitApi();
     });
+    _setScrollListener();
 
     super.initState();
   }
 
 
   hitApi() async {
-    provider.setLoading();
-
     bool gotInternetConnection = await hasInternetConnection(
       context: context,
       mounted: mounted,
@@ -77,13 +79,125 @@ class _HomeState extends State<SearchCompany>
       return;
     }
 
-    var response = await provider.getFavorList(context);
+    if (!isPullToRefresh) {
+      provider.setLoading();
+    }
+
+
+    if (_loadMore) {
+      currentPage++;
+    } else {
+      currentPage = 1;
+    }
+
+    var response = await provider.getFavorList(context, currentPage);
+
+    if (response is GetFavorListResponse) {
+      isPullToRefresh = false;
+
+      provider.hideLoader();
+
+      print("res $response");
+
+      if (response != null && response.data != null) {
+        if (currentPage == 1) {
+          list.clear();
+        }
+
+        list.addAll(response.data.data);
+
+        if (response.data != null &&
+            response.data.data.length < Constants.PAGINATION_SIZE) {
+          _loadMore = false;
+        } else {
+          _loadMore = true;
+        }
+
+        if (list.length > 0) {
+          offstagenodata = true;
+        } else {
+          offstagenodata = false;
+        }
+
+
+        setState(() {
+
+        });
+      }
+
+      print("no load $_loadMore");
+      try {
+
+      } catch (ex) {
+
+      }
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
+  }
+
+
+  hitSearchApi(String data) async {
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    if (!isPullToRefresh) {
+      provider.setLoading();
+    }
+
+
+    if (_loadMore) {
+      currentPage++;
+    } else {
+      currentPage = 1;
+    }
+
+    var response = await provider.getSearchList(data, context, currentPage);
 
     if (response is GetFavorListResponse) {
       provider.hideLoader();
 
+      print("res $response");
+      isPullToRefresh = false;
+
       if (response != null && response.data != null) {
-        list.addAll(response.data);
+        if (currentPage == 1) {
+          list.clear();
+        }
+
+        list.addAll(response.data.data);
+
+        if (response.data != null && response.data.data != null &&
+            response.data.data.length < Constants.PAGINATION_SIZE) {
+          _loadMore = false;
+        } else {
+          _loadMore = true;
+        }
+
+        if (list.length > 0) {
+          offstagenodata = true;
+        } else {
+          offstagenodata = false;
+        }
+
+        setState(() {
+
+        });
       }
 
       print(response);
@@ -102,19 +216,24 @@ class _HomeState extends State<SearchCompany>
   }
 
   void _setScrollListener() {
-    //scrollController.position.isScrollingNotifier.addListener(() { print("called");});
+    //crollController.position.isScrollingNotifier.addListener(() { print("called");});
 
-    scrollController = new ScrollController();
-    /* scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent ==
-          scrollController.offset) {
-        if (list.length >= (PAGINATION_SIZE * _currentPageNumber)) {
-          isPullToRefresh=true;
-          _loadHomeData();
+    _scrollController = new ScrollController();
+    _scrollController.addListener(() {
+      if (_scrollController.position.maxScrollExtent ==
+          _scrollController.offset) {
+        print("size ${list.length}");
+
+        if (list.length >= (Constants.PAGINATION_SIZE * currentPage)) {
+          isPullToRefresh = true;
+          hitApi();
           showInSnackBar("Loading data...");
         }
+        else {
+          print("not called");
+        }
       }
-    });*/
+    });
   }
 
   @override
@@ -154,21 +273,27 @@ class _HomeState extends State<SearchCompany>
             ),
           ),
           Offstage(
-            offstage: true,
-            child: new Center(
-              child: new Text(
-                "No Favors Found",
-                style: new TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0),
+            offstage: offstagenodata,
+            child: Container(
+              margin: new EdgeInsets.only(top: 170),
+              child: new Center(
+                child: new Text(
+                  "No Favors Found",
+                  style: new TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0),
+                ),
               ),
             ),
           ),
           new Center(
-            child: getFullScreenProviderLoader(
-              status: provider.getLoading(),
-              context: context,
+            child: Container(
+              margin: new EdgeInsets.only(top: 50),
+              child: getFullScreenProviderLoader(
+                status: provider.getLoading(),
+                context: context,
+              ),
             ),
           ),
         ],
@@ -188,7 +313,22 @@ class _HomeState extends State<SearchCompany>
                 controller: _controller,
                 style: TextThemes.blackTextFieldNormal,
                 keyboardType: TextInputType.text,
-                onSubmitted: (String value) {},
+                onSubmitted: (String value) {
+                  if (value != null && value.isNotEmpty) {
+                    text = value;
+                    hitSearchApi(value);
+                  }
+                  else {
+                    text = "";
+                    hitApi();
+                  }
+                },
+                onChanged: (String value) {
+                  text = value;
+                  if (value.isEmpty) {
+                    hitApi();
+                  }
+                },
                 decoration: new InputDecoration(
                   enabledBorder: new OutlineInputBorder(
                       borderRadius: new BorderRadius.circular(3)),
@@ -253,12 +393,19 @@ class _HomeState extends State<SearchCompany>
         onRefresh: () async {
           isPullToRefresh = true;
           _loadMore = false;
-          await hitApi();
+          currentPage = 1;
+          if (text.isNotEmpty && text.length > 0) {
+            await hitSearchApi(text);
+          }
+          else {
+            await hitApi();
+          }
         },
         child: Container(
           color: AppColors.whiteGray,
           child: new ListView.builder(
             padding: new EdgeInsets.all(0.0),
+            controller: _scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
               return buildItemMain(index, list[index]);
@@ -273,7 +420,7 @@ class _HomeState extends State<SearchCompany>
   @override
   bool get wantKeepAlive => true;
 
-  Widget buildItemMain(int pos, Data data) {
+  Widget buildItemMain(int pos, Datas data) {
     var index = pos % 2 == 0 ? true : false;
 
     return InkWell(
@@ -288,6 +435,7 @@ class _HomeState extends State<SearchCompany>
         );
       },
       child: Container(
+        color: Colors.white,
         child: Column(
           children: <Widget>[
             new Container(
@@ -306,35 +454,38 @@ class _HomeState extends State<SearchCompany>
                 color: AppColors.dividerColor,
               ),
             ),
-            index
-                ? new Container(
-                    height: 147,
-                    width: double.infinity,
-                    margin:
-                        new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
-                    child: ClipRRect(
-                      // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                      borderRadius: new BorderRadius.circular(10.0),
 
-                      child: getCachedNetworkImageWithurl(
-                        url:
-                            "https://cdn.pixabay.com/photo/2013/07/21/13/00/rose-165819__340.jpg",
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  )
+            data?.image != null && data.image.isNotEmpty ? new Container(
+              height: 147,
+              width: double.infinity,
+              margin:
+              new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
+              child: ClipRRect(
+                // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                borderRadius: new BorderRadius.circular(10.0),
+
+                child: getCachedNetworkImageWithurl(
+                  url: data?.image,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            )
                 : Container(),
             Container(
+                width: double.infinity,
+                color: Colors.white,
                 margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
                 alignment: Alignment.centerLeft,
                 child: new Text(
-                  "Help me move out of my flat",
+                  data?.title ?? "",
                   style: TextThemes.blackCirculerMediumHeight,
                 )),
             Container(
               margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+              width: double.infinity,
+              color: Colors.white,
               child: ReadMoreText(
-                "I need help moving out of my flat as there are many things to carry. Can someone help me out? It should not take more than 2 hours since I don’t have that many belongings,I need help moving out of my flat as there are many things to carry.",
+                data?.description ?? "",
                 trimLines: 4,
                 colorClickableText: AppColors.colorDarkCyan,
                 trimMode: TrimMode.Line,
@@ -344,16 +495,15 @@ class _HomeState extends State<SearchCompany>
                   fontSize: 14.0,
                 ),
                 trimCollapsedText: '...more',
+                textAlign: TextAlign.start,
                 trimExpandedText: ' less',
               ),
             ),
 
-/*
 
-         new SizedBox(
-              height: 50.0,
+            new SizedBox(
+              height: 15.0,
             )
-*/
           ],
         ),
       ),
@@ -361,7 +511,7 @@ class _HomeState extends State<SearchCompany>
   }
 }
 
-Widget buildItem(Data data) {
+Widget buildItem(Datas data) {
   return Container(
     margin: new EdgeInsets.only(left: 16.0, right: 16.0),
     child: Row(
@@ -379,7 +529,7 @@ Widget buildItem(Data data) {
 
             child: getCachedNetworkImageWithurl(
                 url:
-                data.image,
+                data.user.profilePic,
                 fit: BoxFit.fill,
                 size: 40
             ),
@@ -394,17 +544,17 @@ Widget buildItem(Data data) {
                   child: Row(
                     children: [
                       new Text(
-                        data?.title,
+                        data.user.name,
                         style: TextThemes.blackCirculerMedium,
                       ),
                       new SizedBox(
                         width: 8,
                       ),
-                      new Image.asset(
+                      data?.user?.isActive == 1 ? new Image.asset(
                         AssetStrings.verify,
                         width: 16,
                         height: 16,
-                      ),
+                      ) : Container(),
                     ],
                   )),
               Container(
@@ -419,7 +569,7 @@ Widget buildItem(Data data) {
                     new SizedBox(
                       width: 6,
                     ),
-                    Container(
+                    Expanded(
                         child: new Text(
                           data?.location ?? "",
                           style: TextThemes.greyDarkTextHomeLocation,

@@ -71,6 +71,18 @@ class TextThemes {
     color: Color.fromRGBO(183, 183, 183, 1.0),
   );
 
+  static final TextStyle readAlert = TextStyle(
+    fontFamily: AssetStrings.circulerNormal,
+    fontSize: 16,
+    color: Color.fromRGBO(255, 107, 102, 1.0),
+  );
+
+  static final TextStyle greyTextFieldHintNormalHeight = TextStyle(
+    fontFamily: AssetStrings.circulerNormal,
+    fontSize: 16,
+    color: Color.fromRGBO(183, 183, 183, 1.0),
+  );
+
   static final TextStyle blackTextSmallMedium = TextStyle(
     fontFamily: AssetStrings.circulerMedium,
     fontSize: 14,

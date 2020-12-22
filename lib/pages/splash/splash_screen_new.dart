@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
+import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/memory_management.dart';
 
@@ -196,7 +197,7 @@ class FadeIn extends State<SplashScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         new CupertinoPageRoute(builder: (BuildContext context) {
-          return (status) ? new DashBoardScreen() : new DashBoardScreen();
+          return (status) ? new DashBoardScreen() : new LoginScreenNew();
         }),
         (route) => false,
       );

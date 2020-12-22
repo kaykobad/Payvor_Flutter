@@ -35,6 +35,7 @@ class AutoCompleteTextView extends StatefulWidget
   final double defaultPadding;
   final String svgicon;
   final bool backgroundShow;
+  final bool hintTheme;
 
   AutoCompleteTextView(
       {this.isLocation,
@@ -47,17 +48,18 @@ class AutoCompleteTextView extends StatefulWidget
       this.tfStyle = TextThemes.blackTextFieldNormal,
       this.tfTextDecoration = const InputDecoration(),
       this.tfTextAlign = TextAlign.left,
-      this.suggestionStyle = TextThemes.blackTextFieldNormal,
-      this.suggestionTextAlign = TextAlign.left,
-      @required this.getSuggestionsMethod,
-      this.focusGained,
-      this.suggestionsApiFetchDelay = 0,
-      this.focusLost,
-      this.onValueChanged,
-      this.icon,
-      this.svgicon,
-      this.defaultPadding,
-      this.backgroundShow});
+    this.suggestionStyle = TextThemes.blackTextFieldNormal,
+    this.suggestionTextAlign = TextAlign.left,
+    @required this.getSuggestionsMethod,
+    this.focusGained,
+    this.suggestionsApiFetchDelay = 0,
+    this.focusLost,
+    this.onValueChanged,
+    this.icon,
+    this.svgicon,
+    this.defaultPadding,
+    this.backgroundShow,
+    this.hintTheme});
 
   @override
   _AutoCompleteTextViewState createState() => _AutoCompleteTextViewState();
@@ -228,7 +230,9 @@ class _AutoCompleteTextViewState extends State<AutoCompleteTextView> {
             focusedBorder: InputBorder.none,
             contentPadding: new EdgeInsets.only(top: 10.0),
             hintText: widget.hintText,
-            hintStyle: TextThemes.greyTextFieldHintNormal,
+            hintStyle: widget.hintTheme != null && widget.hintTheme ? TextThemes
+                .readAlert : TextThemes.greyTextFieldHintNormal,
+
           ),
         ),
       ),

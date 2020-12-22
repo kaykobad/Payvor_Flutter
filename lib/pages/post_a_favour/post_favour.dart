@@ -1,15 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:payvor/model/apierror.dart';
-import 'package:payvor/model/create_payvor/create_payvor_response.dart';
 import 'package:payvor/model/create_payvor/payvorcreate.dart';
+import 'package:payvor/networkmodel/APIs.dart';
+import 'package:payvor/pages/preview_post/preview_post.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
@@ -17,6 +19,7 @@ import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
@@ -48,6 +51,7 @@ class _HomeState extends State<PostFavour>
 
   File _image; //to store profile image
   String profile;
+  bool isValid = false;
 
   final StreamController<bool> _streamControllerShowLoader =
       StreamController<bool>();
@@ -100,9 +104,51 @@ class _HomeState extends State<PostFavour>
       try {
         lat = data[0];
         long = data[1];
-      } catch (e) {}
+      } catch (e) {
+        showInSnackBar("Please enter valid location");
+        return;
+      }
+    }
+    else {
+      showInSnackBar("Please enter valid location");
+      return;
+    }
+    Map<String, String> headers = {
+//header
+      "Content-Type": "multipart/form-data",
+      "Accept": "application/json"
+    };
+
+    if (MemoryManagement.getAccessToken() != null) {
+      headers["Authorization"] =
+          "Bearer " + MemoryManagement.getAccessToken();
     }
 
+    http.MultipartRequest request =
+    new http.MultipartRequest("POST", Uri.parse(APIs.createPayvor)); //changed
+
+    request.headers.addAll(headers);
+
+    request.fields['title'] = _TitleController.text;
+    request.fields['location'] = _LocationController.text;
+    request.fields['description'] = _DescriptionController.text;
+    request.fields['price'] = _PriceController.text;
+    request.fields['lat'] = lat;
+    request.fields['long'] = long;
+
+    if (_image != null) {
+      final fileName = _image.path;
+      print("imsgrs $fileName");
+
+      var bytes = await _image.readAsBytes();
+
+      request.files.add(new http.MultipartFile.fromBytes(
+        "image",
+        bytes,
+        filename: fileName,
+      ));
+    }
+/*
     PayvorCreateRequest loginRequest = new PayvorCreateRequest(
         title: _TitleController.text,
         location: _LocationController.text,
@@ -110,16 +156,43 @@ class _HomeState extends State<PostFavour>
         price: _PriceController.text,
         lat: lat,
         long: long);
-    var response = await provider.createPayvor(loginRequest, context);
+    var response = await provider.createPayvor(loginRequest, context);*/
 
+    print(request.fields);
+
+
+    http.StreamedResponse response = await request.send();
+    provider.hideLoader();
+    if (response.statusCode == 200) {
+      final respStr = await response.stream.bytesToString();
+      print("respStr: $respStr");
+      Map data = jsonDecode(respStr); // Parse data from JSON string
+      String responseData = data['status']['message'];
+      showInSnackBar(responseData);
+      _TitleController.text = "";
+      _PriceController.text = "";
+      _DescriptionController.text = "";
+      _LocationController.text = "";
+      _LatLongController.text = "";
+      _image = null;
+      isValid = false;
+      setState(() {
+
+      });
+    }
+    else {
+      showInSnackBar("Something went wrong!!Please try again");
+    }
+
+/*
     if (response is FavourCreateResponse) {
       provider.hideLoader();
 
       print(response);
       try {
         showInSnackBar(response.success);
-        /*   Navigator.pop(context);
-        Navigator.pop(context);*/
+        */ /*   Navigator.pop(context);
+        Navigator.pop(context);*/ /*
       } catch (ex) {}
     } else {
       provider.hideLoader();
@@ -127,7 +200,7 @@ class _HomeState extends State<PostFavour>
       print(apiError.error);
 
       showInSnackBar(apiError.error);
-    }
+    }*/
   }
 
   void containerForSheet<T>({BuildContext context, Widget child}) {
@@ -258,32 +331,141 @@ class _HomeState extends State<PostFavour>
     return Container(
       padding: new EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
       color: Colors.white,
-      child: new TextField(
-        controller: controller,
-        keyboardType: textInputType,
-        style: TextThemes.blackTextFieldNormal,
-        focusNode: focusNodeCurrent,
-        maxLines: lines,
+      child: Stack(
+        children: [
+          new TextField(
+            controller: controller,
+            keyboardType: textInputType,
+            style: TextThemes.blackTextFieldNormal,
+            focusNode: focusNodeCurrent,
+            maxLines: lines,
 
-        onSubmitted: (String value) {
-          if (focusNodeCurrent == _DescriptionField) {
-            _DescriptionField.unfocus();
-          } else {
-            FocusScope.of(context).autofocus(focusNodeNext);
-          }
-        },
-        decoration: new InputDecoration(
-          enabledBorder: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          hintText: labelText,
-          prefixText: focusNodeCurrent == _PriceField ? "€ " : "",
-          hintStyle: TextThemes.greyTextFieldHintNormal,
-        ),
+            onSubmitted: (String value) {
+              if (focusNodeCurrent == _DescriptionField) {
+                _DescriptionField.unfocus();
+              } else {
+                FocusScope.of(context).autofocus(focusNodeNext);
+              }
+            },
+            decoration: new InputDecoration(
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              hintText: labelText,
+              contentPadding: new EdgeInsets.only(right: 50.0),
+              prefix: new Text(
+                  focusNodeCurrent == _PriceField && _PriceField.hasFocus
+                      ? "€ "
+                      : ""),
+              hintStyle: controller.text.length == 0 && isValid ? TextThemes
+                  .readAlert : TextThemes.greyTextFieldHintNormal,
+            ),
+          ),
+
+          controller.text.length == 0 && isValid ? new Positioned(
+            right: 0.0,
+            child: new Padding(padding: lines > 1
+                ? new EdgeInsets.only(bottom: 4)
+                : new EdgeInsets.only(top: 13),
+              child: new SvgPicture.asset(
+                AssetStrings.notFilled,
+              ),
+            ),
+          ) : Container(),
+        ],
       ),
     );
   }
 
   void callback() {
+    if (getResult()) {
+      hitApi();
+    }
+    else {
+      setState(() {
+
+      });
+    }
+  }
+
+
+  bool getResult() {
+    var title = _TitleController.text;
+    var price = _PriceController.text;
+    var desc = _DescriptionController.text;
+    var location = _LocationController.text;
+    isValid = true;
+    if (title.isEmpty || title
+        .trim()
+        .length == 0) {
+      showInSnackBar("Please enter the title");
+      return false;
+    } else if (price.isEmpty || price.length == 0) {
+      showInSnackBar("Please enyter the price");
+      return false;
+    }
+    else if (desc.isEmpty || desc.length == 0) {
+      showInSnackBar("Please enter the description");
+      return false;
+    }
+    else if (location.isEmpty || location.length == 0) {
+      showInSnackBar("Please enter the location");
+      return false;
+    }
+    else {
+      isValid = false;
+      return true;
+    }
+  }
+
+
+  void callbackPreview() {
+    if (getResult()) {
+      var lat = "0.0";
+      var long = "0.0";
+
+      if (_LatLongController.text.length > 0) {
+        var data = _LatLongController.text.trim().toString().split(",");
+
+        try {
+          lat = data[0];
+          long = data[1];
+        } catch (e) {}
+      }
+      else {
+        showInSnackBar("Please enter valid location");
+        return;
+      }
+
+
+      PayvorCreateRequest loginRequest = new PayvorCreateRequest(
+          title: _TitleController.text,
+          location: _LocationController.text,
+          description: _DescriptionController.text,
+          price: _PriceController.text,
+          lat: lat,
+          long: long);
+
+      Navigator.push(
+        context,
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return Material(child: new PreviewPost(
+            request: loginRequest,
+            type: 1,
+            file: _image,
+            voidcallback: voidCallBackDialog,));
+        }),
+      );
+    }
+    else {
+      setState(() {
+
+      });
+    }
+  }
+
+  Future<ValueSetter> voidCallBackDialog(int type) async {
+    print("calllll");
+
     hitApi();
   }
 
@@ -408,7 +590,7 @@ class _HomeState extends State<PostFavour>
                           child: ClipRect(
                             child: new Image.file(
                               _image,
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                             ),
                           )),
 
@@ -500,14 +682,23 @@ class _HomeState extends State<PostFavour>
                             padding: new EdgeInsets.only(left: 16, right: 5.0),
                             alignment: Alignment.centerLeft,
                             child: getLocation(_LocationController, context,
-                              _streamControllerShowLoader,
-                              true,
-                              _LatLongController,
-                              iconData: AssetStrings.location,
+                                _streamControllerShowLoader,
+                                true,
+                                _LatLongController,
+                                iconData: AssetStrings.location,
+                                colorAlert: isValid
                             ),
                           ),
                         ),
-
+                        new SizedBox(
+                          width: 15,
+                        ),
+                        isValid ? new SvgPicture.asset(
+                          AssetStrings.notFilled,
+                        ) : Container(),
+                        isValid ? new SizedBox(
+                          width: 5,
+                        ) : Container(),
                         new Text(
                           ">",
                           style: new TextStyle(
@@ -552,7 +743,8 @@ class _HomeState extends State<PostFavour>
                     children: [
                       Expanded(
                         child: getSetupButtonBorderNew(
-                            callback, ResString().get('preview_favor'), 0,
+                            callbackPreview, ResString().get('preview_favor'),
+                            0,
                             border: Color.fromRGBO(103, 99, 99, 0.19),
                             newColor: Color.fromRGBO(248, 248, 250, 1.0),
                             textColor: Colors.black),

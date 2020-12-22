@@ -38,6 +38,8 @@ class AssetStrings {
   static const String cross = 'assets/svg/cancel.svg';
   static const String share = 'assets/svg/share.svg';
   static const String slash = 'assets/svg/slash.svg';
+  static const String referIcon = 'assets/svg/referIcon.svg';
+  static const String shape = 'assets/svg/shape.svg';
   static const String passPng = 'assets/png/pass_new.png';
   static const String logopng = 'assets/png/logo.png';
   static const String clean = 'assets/svg/clean.png';
@@ -59,4 +61,5 @@ class AssetStrings {
   static const String home = 'assets/svg/home.svg';
   static const String job = 'assets/svg/job.svg';
   static const String profile = 'assets/svg/profile.svg';
+  static const String notFilled = 'assets/svg/notFilled.svg';
 }

@@ -85,9 +85,7 @@ class _HomeState extends State<PostFavorDetails>
     if (response is FavourDetailsResponse) {
       provider.hideLoader();
 
-      if (response != null &&
-          response.data != null &&
-          response.data.length > 0) {
+      if (response != null && response.data != null) {
         favoriteResponse = response;
       }
 
@@ -124,7 +122,7 @@ class _HomeState extends State<PostFavorDetails>
               children: [
                 Container(
                   child: new Text(
-                    favoriteResponse?.data[0].title ?? "",
+                    favoriteResponse?.data.title ?? "",
                     style: TextThemes.blackCirculerMedium,
                   ),
                 ),
@@ -142,7 +140,7 @@ class _HomeState extends State<PostFavorDetails>
                       ),
                       Container(
                           child: new Text(
-                            favoriteResponse?.data[0].location ?? "",
+                            favoriteResponse?.data.location ?? "",
                             style: TextThemes.greyDarkTextHomeLocation,
                           )),
                     ],
@@ -154,7 +152,7 @@ class _HomeState extends State<PostFavorDetails>
           Align(
               alignment: Alignment.center,
               child: new Text(
-                "€${favoriteResponse?.data[0].price ?? ""}",
+                "€${favoriteResponse?.data.price ?? ""}",
                 style: TextThemes.blackDarkHeaderSub,
               )),
         ],
@@ -292,9 +290,10 @@ class _HomeState extends State<PostFavorDetails>
                   color: Color.fromRGBO(255, 107, 102, 0.17),
                   shape: BoxShape.circle),
               alignment: Alignment.center,
-              child: new Icon(
-                Icons.search,
-                color: Color.fromRGBO(255, 107, 102, 1),
+              child: new SvgPicture.asset(
+                type == 1 ? AssetStrings.shape : AssetStrings.referIcon,
+                height: 18,
+                width: 18,
               ),
             ),
             Expanded(
@@ -322,8 +321,9 @@ class _HomeState extends State<PostFavorDetails>
                               ),
                               Container(
                                   child: new Text(
-                                "5",
-                                style: TextThemes.greyTextFieldNormalNw,
+                                    favoriteResponse.data.ratingAvg
+                                        .toString() ?? "",
+                                    style: TextThemes.greyTextFieldNormalNw,
                               )),
                               Container(
                                 width: 3,
@@ -336,8 +336,9 @@ class _HomeState extends State<PostFavorDetails>
                               ),
                               Container(
                                   child: new Text(
-                                "3 Reviews",
-                                style: TextThemes.greyTextFieldNormalNw,
+                                    "${favoriteResponse.data.ratingCount
+                                        .toString() ?? "0"} Reviews",
+                                    style: TextThemes.greyTextFieldNormalNw,
                               )),
                             ],
                           )
@@ -409,8 +410,7 @@ class _HomeState extends State<PostFavorDetails>
             alignment: Alignment.center,
             child: new ClipOval(
               child: getCachedNetworkImageWithurl(
-                  url:
-                      "https://cdn.pixabay.com/photo/2013/07/21/13/00/rose-165819__340.jpg",
+                  url: favoriteResponse.data.user.profilePic ?? "",
                   fit: BoxFit.fill,
                   size: 50),
             ),
@@ -422,7 +422,8 @@ class _HomeState extends State<PostFavorDetails>
                 Container(
                   margin: new EdgeInsets.only(left: 10.0, right: 10.0),
                   child: new Text(
-                    favoriteResponse?.data[0].name ?? "",
+                    favoriteResponse?.data.title
+                        ?? "",
                     style: TextThemes.blackCirculerMedium,
                   ),
                 ),
@@ -435,7 +436,7 @@ class _HomeState extends State<PostFavorDetails>
                             "Favor Post Owner",
                             style: TextThemes.greyTextFieldNormalNw,
                           )),
-                      favoriteResponse?.data[0].isActive == 1 ? Container(
+                      favoriteResponse?.data.isActive == 1 ? Container(
                         width: 3,
                         height: 3,
                         margin: new EdgeInsets.only(left: 4, right: 4),
@@ -444,7 +445,7 @@ class _HomeState extends State<PostFavorDetails>
                           color: AppColors.darkgrey,
                         ),
                       ) : Container(),
-                      favoriteResponse?.data[0].isActive == 1 ? Container(
+                      favoriteResponse?.data.isActive == 1 ? Container(
                           child: new Text(
                             "VERIFIED",
                             style: TextThemes.blueMediumSmallNew,
@@ -480,8 +481,8 @@ class _HomeState extends State<PostFavorDetails>
           new Container(
             color: AppColors.whiteGray,
             height: screenSize.height,
-            child: favoriteResponse != null && favoriteResponse.data != null &&
-                favoriteResponse.data.length > 0 ? SingleChildScrollView(
+            child: favoriteResponse != null && favoriteResponse.data != null
+                ? SingleChildScrollView(
               child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -492,9 +493,10 @@ class _HomeState extends State<PostFavorDetails>
                       // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
                       borderRadius: new BorderRadius.circular(0.0),
 
-                      child: getCachedNetworkImageWithurl(
-                        url:
-                        "https://cdn.pixabay.com/photo/2013/07/21/13/00/rose-165819__340.jpg",
+                      child: getCachedNetworkImageRect(
+                        url: favoriteResponse.data.image,
+                        size: 214,
+
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -523,7 +525,7 @@ class _HomeState extends State<PostFavorDetails>
                     color: Colors.white,
                     width: double.infinity,
                     child: ReadMoreText(
-                      favoriteResponse?.data[0]?.description ?? "",
+                      favoriteResponse?.data?.description ?? "",
                       trimLines: 4,
                       colorClickableText: AppColors.colorDarkCyan,
                       trimMode: TrimMode.Line,
@@ -646,8 +648,8 @@ class _HomeState extends State<PostFavorDetails>
                   ),
                 ),
               )),
-          favoriteResponse != null && favoriteResponse.data != null &&
-              favoriteResponse.data.length > 0 ? Positioned(
+          favoriteResponse != null && favoriteResponse.data != null
+              ? Positioned(
             bottom: 0.0,
             left: 0.0,
             right: 0.0,

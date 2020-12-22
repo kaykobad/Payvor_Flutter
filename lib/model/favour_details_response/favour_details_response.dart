@@ -1,20 +1,13 @@
 class FavourDetailsResponse {
   Status status;
-  String success;
-  List<Data> data;
+  Data data;
 
-  FavourDetailsResponse({this.status, this.success, this.data});
+  FavourDetailsResponse({this.status, this.data});
 
   FavourDetailsResponse.fromJson(Map<String, dynamic> json) {
     status =
         json['status'] != null ? new Status.fromJson(json['status']) : null;
-    success = json['Success'];
-    if (json['data'] != null) {
-      data = new List<Data>();
-      json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
-      });
-    }
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -22,9 +15,8 @@ class FavourDetailsResponse {
     if (this.status != null) {
       data['status'] = this.status.toJson();
     }
-    data['Success'] = this.success;
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data.toJson();
     }
     return data;
   }
@@ -65,42 +57,27 @@ class Data {
   String image;
   String createdAt;
   String updatedAt;
-  String name;
-  String email;
-  String phone;
-  String otp;
-  String type;
-  String countryCode;
-  String password;
-  int userType;
-  String snsId;
-  String profilePic;
-  String rememberToken;
+  User user;
+  List<Rating> rating;
+  int ratingCount;
+  int ratingAvg;
 
-  Data(
-      {this.id,
-      this.userId,
-      this.isActive,
-      this.title,
-      this.price,
-      this.description,
-      this.lat,
-      this.long,
-      this.location,
-      this.image,
-      this.createdAt,
-      this.updatedAt,
-      this.name,
-      this.email,
-      this.phone,
-      this.otp,
-      this.type,
-      this.countryCode,
-      this.password,
-      this.userType,
-      this.snsId,
-      this.profilePic,
-      this.rememberToken});
+  Data({this.id,
+    this.userId,
+    this.isActive,
+    this.title,
+    this.price,
+    this.description,
+    this.lat,
+    this.long,
+    this.location,
+    this.image,
+    this.createdAt,
+    this.updatedAt,
+    this.user,
+    this.rating,
+    this.ratingCount,
+    this.ratingAvg});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -115,17 +92,15 @@ class Data {
     image = json['image'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    name = json['name'];
-    email = json['email'];
-    phone = json['phone'];
-    otp = json['otp'];
-    type = json['type'];
-    countryCode = json['country_code'];
-    password = json['password'];
-    userType = json['user_type'];
-    snsId = json['snsId'];
-    profilePic = json['profile_pic'];
-    rememberToken = json['remember_token'];
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    if (json['rating'] != null) {
+      rating = new List<Rating>();
+      json['rating'].forEach((v) {
+        rating.add(new Rating.fromJson(v));
+      });
+    }
+    ratingCount = json['rating_count'];
+    ratingAvg = json['rating_avg'];
   }
 
   Map<String, dynamic> toJson() {
@@ -142,17 +117,130 @@ class Data {
     data['image'] = this.image;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    if (this.user != null) {
+      data['user'] = this.user.toJson();
+    }
+    if (this.rating != null) {
+      data['rating'] = this.rating.map((v) => v.toJson()).toList();
+    }
+    data['rating_count'] = this.ratingCount;
+    data['rating_avg'] = this.ratingAvg;
+    return data;
+  }
+}
+
+class User {
+  int id;
+  String name;
+  String email;
+  Null phone;
+  Null otp;
+  String type;
+  Null countryCode;
+  Null lat;
+  Null long;
+  int userType;
+  int isActive;
+  Null snsId;
+  String profilePic;
+  Null location;
+  String createdAt;
+  String updatedAt;
+
+  User({this.id,
+    this.name,
+    this.email,
+    this.phone,
+    this.otp,
+    this.type,
+    this.countryCode,
+    this.lat,
+    this.long,
+    this.userType,
+    this.isActive,
+    this.snsId,
+    this.profilePic,
+    this.location,
+    this.createdAt,
+    this.updatedAt});
+
+  User.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    email = json['email'];
+    phone = json['phone'];
+    otp = json['otp'];
+    type = json['type'];
+    countryCode = json['country_code'];
+    lat = json['lat'];
+    long = json['long'];
+    userType = json['user_type'];
+    isActive = json['is_active'];
+    snsId = json['snsId'];
+    profilePic = json['profile_pic'];
+    location = json['location'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
     data['name'] = this.name;
     data['email'] = this.email;
     data['phone'] = this.phone;
     data['otp'] = this.otp;
     data['type'] = this.type;
     data['country_code'] = this.countryCode;
-    data['password'] = this.password;
+    data['lat'] = this.lat;
+    data['long'] = this.long;
     data['user_type'] = this.userType;
+    data['is_active'] = this.isActive;
     data['snsId'] = this.snsId;
     data['profile_pic'] = this.profilePic;
-    data['remember_token'] = this.rememberToken;
+    data['location'] = this.location;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    return data;
+  }
+}
+
+class Rating {
+  int id;
+  int userId;
+  int rating;
+  String description;
+  int isActive;
+  String createdAt;
+  String updatedAt;
+
+  Rating({this.id,
+    this.userId,
+    this.rating,
+    this.description,
+    this.isActive,
+    this.createdAt,
+    this.updatedAt});
+
+  Rating.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userId = json['user_id'];
+    rating = json['rating'];
+    description = json['description'];
+    isActive = json['is_active'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['user_id'] = this.userId;
+    data['rating'] = this.rating;
+    data['description'] = this.description;
+    data['is_active'] = this.isActive;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     return data;
   }
 }

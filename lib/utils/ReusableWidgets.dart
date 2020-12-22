@@ -246,6 +246,7 @@ Widget getLocation(
     bool isBackground,
     TextEditingController controllers,
     {String iconData,
+    bool colorAlert,
     double iconPadding = 0}) {
   return Container(
     margin: !isBackground
@@ -258,6 +259,8 @@ Widget getLocation(
           defaultPadding: iconPadding,
           svgicon: iconData,
           hintText: "Location",
+          hintTheme: colorAlert,
+
           backgroundShow: isBackground,
           suggestionsApiFetchDelay: 100,
           focusGained: () {},

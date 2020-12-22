@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:payvor/model/apierror.dart';
@@ -375,31 +376,54 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      FavourDetailsResponse resendOtpResponse = new FavourDetailsResponse
-          .fromJson(response);
+      FavourDetailsResponse resendOtpResponse =
+          new FavourDetailsResponse.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;
     }
   }
 
-
-  Future<dynamic> getFavorList(BuildContext context) async {
+  Future<dynamic> getFavorList(BuildContext context, int page) async {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.get(
-        context: context, url: APIs.getFavorList);
+        context: context, url: APIs.getFavorList + "?page=$page");
+
+    print(APIs.getFavorList);
 
     if (response is APIError) {
       completer.complete(response);
       return completer.future;
     } else {
-      GetFavorListResponse resendOtpResponse = new GetFavorListResponse
-          .fromJson(response);
+      GetFavorListResponse resendOtpResponse =
+          new GetFavorListResponse.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;
     }
   }
+
+  Future<dynamic> getSearchList(
+      String data, BuildContext context, int page) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(
+        context: context, url: APIs.seacrhList + data + "?page=$page");
+
+    print(APIs.seacrhList + data);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      print("res $jsonDecode($response)");
+      GetFavorListResponse resendOtpResponse =
+          new GetFavorListResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
 
   void hideLoader() {
     _isLoading = false;

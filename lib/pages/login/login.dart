@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -206,8 +207,10 @@ class _LoginScreenState extends State<LoginScreenNew> {
       LoginSignupResponse loginSignupResponse = response;
       MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
       MemoryManagement.setAccessToken(accessToken: loginSignupResponse.data);
+      MemoryManagement.setUserInfo(userInfo: json.encode(response));
 
-      if ((loginSignupResponse.isnew == null || loginSignupResponse.isnew)&&typse!=0) {
+      if ((loginSignupResponse.isnew == null || loginSignupResponse.isnew) &&
+          typse != 0) {
         Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
@@ -303,7 +306,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
                         margin: new EdgeInsets.only(left: 20.0, right: 20.0),
                         child: Row(
                           children: <Widget>[
-                           /* InkWell(
+                            /* InkWell(
                               onTap: () {
                                 boolCheckBox = !boolCheckBox;
                                 setState(() {});
@@ -337,23 +340,23 @@ class _LoginScreenState extends State<LoginScreenNew> {
                                     padding: const EdgeInsets.all(4.0),
                                     child: boolCheckBox
                                         ? new SvgPicture.asset(
-                                            AssetStrings.tick,
-                                          )
+                                      AssetStrings.tick,
+                                    )
                                         : new Container(),
                                   ),
                                 ),
                               ),
                               decoration: boolCheckBox
                                   ? new BoxDecoration(
-                                      borderRadius:
-                                          new BorderRadius.circular(4.0),
-                                      color: AppColors.colorCyanPrimary)
+                                  borderRadius:
+                                  new BorderRadius.circular(4.0),
+                                  color: AppColors.colorCyanPrimary)
                                   : new BoxDecoration(
-                                      borderRadius:
-                                          new BorderRadius.circular(4.0),
-                                      border: new Border.all(
-                                          color: Colors.grey.withOpacity(0.6),
-                                          width: 1.6)),
+                                  borderRadius:
+                                  new BorderRadius.circular(4.0),
+                                  border: new Border.all(
+                                      color: Colors.grey.withOpacity(0.6),
+                                      width: 1.6)),
                               width: 20,
                               height: 20,
                             ),
