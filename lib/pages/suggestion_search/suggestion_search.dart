@@ -464,25 +464,26 @@ class _HomeState extends State<SearchHomeByName>
                     color: AppColors.dividerColor,
                   ),
                 ),
-
                 isSearchCalled
                     ? _buildContestList()
                     : _buildContestListSearch(),
               ],
             ),
           ),
-          Offstage(
-            offstage: true,
-            child: new Center(
-              child: new Text(
-                "No Favors Found",
-                style: new TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0),
-              ),
-            ),
-          ),
+          text.length > 0 && listResult.length == 0 || list.length == 0
+              ? Container(
+                  margin: new EdgeInsets.only(top: 120),
+                  child: new Center(
+                    child: new Text(
+                      "No Favors Found",
+                      style: new TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0),
+                    ),
+                  ),
+                )
+              : Container(),
           new Center(
             child: Container(
               margin: new EdgeInsets.only(top: 50),
@@ -553,7 +554,7 @@ class _HomeState extends State<SearchHomeByName>
                         hitSearchApi(title);
                       },
                       onChanged: (String value) {
-                        currentPage = 1;
+                        currentPageSuggest = 1;
                         text = value;
                         hitSearchSuggestApi(value);
                       },
@@ -572,6 +573,12 @@ class _HomeState extends State<SearchHomeByName>
                   InkWell(
                     onTap: () {
                       _controller.text = "";
+                      ;
+                      text = "";
+                      currentPageSuggest = 1;
+                      _loadMore = false;
+                      isPullToRefresh = false;
+                      hitSearchSuggestApi(text);
                       setState(() {});
                     },
                     child: new Image.asset(
