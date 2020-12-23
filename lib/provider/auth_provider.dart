@@ -18,6 +18,7 @@ import 'package:payvor/model/otp/resendotpresponse.dart';
 import 'package:payvor/model/reset_password/reset_pass_request.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signuprequest.dart';
+import 'package:payvor/model/suggest/suggest_response.dart';
 import 'package:payvor/model/update_profile/update_profile_request.dart';
 import 'package:payvor/model/update_profile/update_profile_response.dart';
 import 'package:payvor/networkmodel/APIHandler.dart';
@@ -424,6 +425,26 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<dynamic> getSearchSuggestList(
+      String data, BuildContext context, int page) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(
+        context: context, url: APIs.seacrhSuggestList + data + "?page=$page");
+
+    print(APIs.seacrhSuggestList + data);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      print("res $jsonDecode($response)");
+      SuggestSearchResponse resendOtpResponse =
+          new SuggestSearchResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
 
   void hideLoader() {
     _isLoading = false;

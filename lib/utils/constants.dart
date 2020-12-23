@@ -15,6 +15,7 @@ class Constants{
   static double maxWidth = 400;
   static double maxHeight = 400;
   static int PAGINATION_SIZE = 10;
+  static int PAGINATION_SIZE_NEW = 20;
 
   //privacy policy and term of users links
   static const String privacyPolicy =

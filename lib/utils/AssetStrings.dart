@@ -62,4 +62,8 @@ class AssetStrings {
   static const String job = 'assets/svg/job.svg';
   static const String profile = 'assets/svg/profile.svg';
   static const String notFilled = 'assets/svg/notFilled.svg';
+  static const String pathSuggest = 'assets/svg/path_suggest.svg';
+  static const String searchSuggest = 'assets/svg/search_suggest.svg';
+  static const String recentSuggest = 'assets/svg/recent_suggest.svg';
+  static const String cancelSuggest = 'assets/svg/cancel_suggest.svg';
 }

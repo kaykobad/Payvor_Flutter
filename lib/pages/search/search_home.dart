@@ -8,6 +8,7 @@ import 'package:payvor/model/apierror.dart';
 import 'package:payvor/pages/get_favor_list/favor_list_response.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
+import 'package:payvor/pages/suggestion_search/suggestion_search.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -41,7 +42,6 @@ class _HomeState extends State<SearchCompany>
 
   int currentPage = 1;
 
-  String text = "";
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -141,80 +141,6 @@ class _HomeState extends State<SearchCompany>
   }
 
 
-  hitSearchApi(String data) async {
-    bool gotInternetConnection = await hasInternetConnection(
-      context: context,
-      mounted: mounted,
-      canShowAlert: true,
-      onFail: () {
-        provider.hideLoader();
-      },
-      onSuccess: () {},
-    );
-
-    if (!gotInternetConnection) {
-      return;
-    }
-
-    if (!isPullToRefresh) {
-      provider.setLoading();
-    }
-
-
-    if (_loadMore) {
-      currentPage++;
-    } else {
-      currentPage = 1;
-    }
-
-    var response = await provider.getSearchList(data, context, currentPage);
-
-    if (response is GetFavorListResponse) {
-      provider.hideLoader();
-
-      print("res $response");
-      isPullToRefresh = false;
-
-      if (response != null && response.data != null) {
-        if (currentPage == 1) {
-          list.clear();
-        }
-
-        list.addAll(response.data.data);
-
-        if (response.data != null && response.data.data != null &&
-            response.data.data.length < Constants.PAGINATION_SIZE) {
-          _loadMore = false;
-        } else {
-          _loadMore = true;
-        }
-
-        if (list.length > 0) {
-          offstagenodata = true;
-        } else {
-          offstagenodata = false;
-        }
-
-        setState(() {
-
-        });
-      }
-
-      print(response);
-      try {
-
-      } catch (ex) {
-
-      }
-    } else {
-      provider.hideLoader();
-      APIError apiError = response;
-      print(apiError.error);
-
-      showInSnackBar(apiError.error);
-    }
-  }
-
   void _setScrollListener() {
     //crollController.position.isScrollingNotifier.addListener(() { print("called");});
 
@@ -313,22 +239,16 @@ class _HomeState extends State<SearchCompany>
                 controller: _controller,
                 style: TextThemes.blackTextFieldNormal,
                 keyboardType: TextInputType.text,
-                onSubmitted: (String value) {
-                  if (value != null && value.isNotEmpty) {
-                    text = value;
-                    hitSearchApi(value);
-                  }
-                  else {
-                    text = "";
-                    hitApi();
-                  }
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    new CupertinoPageRoute(builder: (BuildContext context) {
+                      return Material(child: new SearchHomeByName(
+                      ));
+                    }),
+                  );
                 },
-                onChanged: (String value) {
-                  text = value;
-                  if (value.isEmpty) {
-                    hitApi();
-                  }
-                },
+
                 decoration: new InputDecoration(
                   enabledBorder: new OutlineInputBorder(
                       borderRadius: new BorderRadius.circular(3)),
@@ -394,12 +314,8 @@ class _HomeState extends State<SearchCompany>
           isPullToRefresh = true;
           _loadMore = false;
           currentPage = 1;
-          if (text.isNotEmpty && text.length > 0) {
-            await hitSearchApi(text);
-          }
-          else {
-            await hitApi();
-          }
+
+          await hitApi();
         },
         child: Container(
           color: AppColors.whiteGray,
