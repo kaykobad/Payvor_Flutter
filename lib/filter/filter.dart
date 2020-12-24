@@ -248,6 +248,7 @@ class _HomeState extends State<Filter>
                             });
                           },
                           child: Container(
+                            height: 20,
                             child: new Text(
                               ResString().get('reset'),
                               style: new TextStyle(

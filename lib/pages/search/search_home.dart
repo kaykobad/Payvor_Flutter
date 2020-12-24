@@ -44,6 +44,7 @@ class _HomeState extends State<SearchCompany>
   int currentPage = 1;
 
   FilterRequest filterRequest;
+  bool showData = false;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -93,7 +94,7 @@ class _HomeState extends State<SearchCompany>
     }
 
     var response = await provider.getFavorList(
-        context, currentPage, filterRequest);
+        context, currentPage, filterRequest, voidCallBackStaus);
 
     if (response is GetFavorListResponse) {
       isPullToRefresh = false;
@@ -190,10 +191,30 @@ class _HomeState extends State<SearchCompany>
                       "Find your favors",
                       style: TextThemes.whiteMedium,
                     )),
-                new SizedBox(
-                  height: 16.0,
+
+                Stack(
+                  children: [
+                    getTextField(),
+                    new Positioned(
+                      right: 0.0,
+                      top: 0.0,
+                      child: Offstage(
+                        offstage: !showData,
+                        child: new Container(
+                          width: 15,
+                          height: 15,
+                          margin: new EdgeInsets.only(right: 8.0, top: 8),
+                          decoration: new BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle
+                          ),
+
+
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-                getTextField(),
                 new SizedBox(
                   height: 16.0,
                 ),
@@ -232,6 +253,7 @@ class _HomeState extends State<SearchCompany>
 
   Widget getTextField() {
     return Container(
+      margin: new EdgeInsets.only(top: 16),
       padding: new EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: [
@@ -312,6 +334,13 @@ class _HomeState extends State<SearchCompany>
     );
   }
 
+  Future<ValueSetter> voidCallBackStaus(bool boolean) async {
+    showData = boolean;
+
+    setState(() {
+
+    });
+  }
 
   Future<ValueSetter> voidCallBacks(FilterRequest filter) async {
     currentPage = 1;
@@ -469,7 +498,7 @@ Widget buildItem(Datas data) {
 
             child: getCachedNetworkImageWithurl(
                 url:
-                data.user.profilePic,
+                data.user?.profilePic ?? "",
                 fit: BoxFit.fill,
                 size: 40
             ),

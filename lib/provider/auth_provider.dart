@@ -387,13 +387,14 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<dynamic> getFavorList(
-      BuildContext context, int page, FilterRequest filterRequest) async {
+  Future<dynamic> getFavorList(BuildContext context, int page,
+      FilterRequest filterRequest, ValueSetter<bool> voidcallback) async {
     var uri = APIs.getFavorList + "?page=$page";
 
     var data = new StringBuffer();
 
     if (filterRequest != null) {
+      var isFilter = false;
       if (filterRequest.latlongData.isNotEmpty &&
           filterRequest.location.isNotEmpty) {
         if (filterRequest.latlongData.length > 0) {
@@ -402,6 +403,7 @@ class AuthProvider with ChangeNotifier {
           try {
             var lat = datas[0].toString();
             var long = datas[1].toString();
+            isFilter = true;
 
             data.write("&lat=$lat&long=$long");
           } catch (e) {}
@@ -416,9 +418,11 @@ class AuthProvider with ChangeNotifier {
       }
 
       if (filterRequest.distance != null && filterRequest.distance > 0) {
+        isFilter = true;
         data.write("&distance=${filterRequest?.distance?.toString()}");
       }
       if (filterRequest.minAmount > 0 || filterRequest.maxAmount < 100) {
+        isFilter = true;
         data.write(
             "&minAmount=${filterRequest?.minAmount?.toString()}&maxAmount=${filterRequest?.maxAmount?.toString()}");
       }
@@ -436,13 +440,22 @@ class AuthProvider with ChangeNotifier {
           }
         }
         if (datanew != null && isData) {
+          isFilter = true;
           data.write("&sort_by=$datanew");
         }
       }
 
+      if (isFilter) {
+        voidcallback(true);
+      }
+      else {
+        voidcallback(false);
+      }
       print("data $data");
 
-      if (data.toString().length > 0) {
+      if (data
+          .toString()
+          .length > 0) {
         uri = uri + data.toString();
       }
     } else {
@@ -451,6 +464,7 @@ class AuthProvider with ChangeNotifier {
       if (userinfo?.user?.lat != "0" && userinfo?.user?.lat != "0.0") {
         data.write("&lat=${userinfo?.user?.lat}&long=${userinfo?.user?.long}");
       }
+      voidcallback(false);
       uri = uri + data.toString();
     }
     Completer<dynamic> completer = new Completer<dynamic>();
