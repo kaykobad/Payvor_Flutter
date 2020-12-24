@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_pickers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/update_profile/update_profile_request.dart';
 import 'package:payvor/model/update_profile/update_profile_response.dart';
 import 'package:payvor/pages/otp/enter_otp.dart';
@@ -15,6 +17,7 @@ import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
@@ -321,8 +324,16 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
       try {
         lat = data[0];
         long = data[1];
-      }
-      catch (e) {
+
+        var infoData = jsonDecode(MemoryManagement.getUserInfo());
+        var userinfo = LoginSignupResponse.fromJson(infoData);
+
+        userinfo.user.lat = lat;
+        userinfo.user.long = long;
+        userinfo.user.phone = _PhoneController.text;
+
+        MemoryManagement.setUserInfo(userInfo: json.encode(userinfo));
+      } catch (e) {
 
       }
     }

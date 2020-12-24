@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -104,8 +105,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     );
   }*/
 
-  Widget getTextField(
-      String labelText,
+  Widget getTextField(String labelText,
       TextEditingController controller,
       FocusNode focusNodeCurrent,
       FocusNode focusNodeNext,
@@ -300,8 +300,8 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                                           context,
                                           new CupertinoPageRoute(
                                               builder: (BuildContext context) {
-                                            return new LoginScreenNew();
-                                          }),
+                                                return new LoginScreenNew();
+                                              }),
                                         );
                                       },
                                   ),
@@ -365,7 +365,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
 
 
   void getTwitterInfo() async {
-   var socialLogin=new SocialLogin();
+    var socialLogin=new SocialLogin();
     var result = (Platform.isIOS)?await socialLogin.twitterLogin():await socialLogin.twitterLoginAndroid();
 
     if (result.login) {
@@ -475,6 +475,8 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     provider.hideLoader();
     if (response is LoginSignupResponse) {
       if (response.isnew == null || response.isnew) {
+        MemoryManagement.setUserInfo(userInfo: json.encode(response));
+
         MemoryManagement.setAccessToken(accessToken: response.data);
 
         Navigator.push(

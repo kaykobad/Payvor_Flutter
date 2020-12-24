@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/filter/data.dart';
+import 'package:payvor/filter/filter_request.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -13,6 +14,11 @@ import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/themes_styles.dart';
 
 class Filter extends StatefulWidget {
+  ValueSetter<FilterRequest> voidcallback;
+  FilterRequest filterRequest;
+
+  Filter({this.voidcallback, this.filterRequest});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -37,27 +43,63 @@ class _HomeState extends State<Filter>
 
   var _currentSliderValue = 0.0;
 
+
   var _paymentMin = 0;
   var _paymentMax = 100;
+  TextEditingController _LocationController = new TextEditingController();
+  TextEditingController _LatLongController = new TextEditingController();
+
+  final StreamController<bool> _streamControllerShowLoader =
+  StreamController<bool>();
 
   var list = List<DataModel>();
 
-  RangeValues _currentRangeValues = const RangeValues(0, 100);
+  RangeValues _currentRangeValues = RangeValues(0, 100);
 
   @override
   void initState() {
     _setScrollListener();
 
-    var data = DataModel(name: "Newest post first", isSelect: false);
-    var data1 = DataModel(name: "Most relevant", isSelect: false);
-    var data2 = DataModel(name: "Closest location first", isSelect: false);
-    var data3 = DataModel(name: "Price low to high", isSelect: false);
-    var data4 = DataModel(name: "Price high to low", isSelect: false);
+    var data = DataModel(name: "Newest post first",
+        isSelect: false,
+        sendTitle: "newest_first",
+        id: 1);
+    var data1 = DataModel(name: "Most relevant",
+        isSelect: false,
+        sendTitle: "most_relevent",
+        id: 2);
+    var data2 = DataModel(name: "Closest location first",
+        isSelect: false,
+        sendTitle: "nearest_location",
+        id: 3);
+    var data3 = DataModel(name: "Price low to high",
+        isSelect: false,
+        sendTitle: "price_low_to_high",
+        id: 4);
+    var data4 = DataModel(name: "Price high to low",
+        isSelect: false,
+        sendTitle: "price_high_to_low",
+        id: 5);
     list.add(data);
     list.add(data1);
     list.add(data2);
     list.add(data3);
     list.add(data4);
+
+
+    if (widget.filterRequest != null) {
+      if (widget.filterRequest.list != null) {
+        list.clear();
+        list.addAll(widget.filterRequest.list);
+      }
+      _paymentMin = widget.filterRequest.minAmount ?? 0;
+      _paymentMax = widget.filterRequest.maxAmount ?? 100;
+      _currentRangeValues =
+          RangeValues(_paymentMin?.toDouble(), _paymentMax?.toDouble());
+      _currentSliderValue = widget.filterRequest.distance?.toDouble() ?? 0.0;
+      _LocationController.text = widget.filterRequest.location ?? "";
+      _LatLongController.text = widget.filterRequest.latlongData ?? "";
+    }
 
     super.initState();
   }
@@ -72,6 +114,19 @@ class _HomeState extends State<Filter>
       yield InkWell(
         onTap: () {
           data.isSelect = !data.isSelect;
+
+          var id = data.id;
+
+          if ((id == 4 || id == 5) && data.isSelect) {
+            if (id == 4) {
+              list[4].isSelect = false;
+            }
+            else {
+              list[3].isSelect = false;
+            }
+          }
+
+
           setState(() {});
         },
         child: data.isSelect
@@ -109,16 +164,29 @@ class _HomeState extends State<Filter>
                       fontSize: 13,
                       fontFamily: AssetStrings.circulerNormal),
                 ),
-              ),
+        ),
       );
     }
   }
 
-  void callback() {}
+  void callback() {
+    var filter = FilterRequest(location: _LocationController.text,
+      latlongData: _LatLongController.text,
+      minAmount: _paymentMin,
+      maxAmount: _paymentMax,
+      distance: _currentSliderValue?.toInt(),
+      list: list,);
+
+    widget.voidcallback(filter);
+
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
-    screenSize = MediaQuery.of(context).size;
+    screenSize = MediaQuery
+        .of(context)
+        .size;
     return Scaffold(
       key: _scaffoldKey,
       body: Stack(
@@ -163,14 +231,31 @@ class _HomeState extends State<Filter>
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        Container(
-                          child: new Text(
-                            ResString().get('reset'),
-                            style: new TextStyle(
-                                fontFamily: AssetStrings.circulerMedium,
-                                color: AppColors.redLight,
-                                fontSize: 14),
-                            textAlign: TextAlign.center,
+                        InkWell(
+                          onTap: () {
+                            _currentRangeValues = RangeValues(0, 100);
+                            _paymentMin = 0;
+                            _paymentMax = 100;
+                            _currentSliderValue = 0.0;
+                            _LocationController.text = "";
+                            _LatLongController.text = "";
+                            for (DataModel data in list) {
+                              data.isSelect = false;
+                            }
+
+                            setState(() {
+
+                            });
+                          },
+                          child: Container(
+                            child: new Text(
+                              ResString().get('reset'),
+                              style: new TextStyle(
+                                  fontFamily: AssetStrings.circulerMedium,
+                                  color: AppColors.redLight,
+                                  fontSize: 14),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       ],
@@ -184,17 +269,32 @@ class _HomeState extends State<Filter>
                     color: Colors.white,
                     height: 64.0,
                     margin: new EdgeInsets.only(top: 9.0),
-                    padding: new EdgeInsets.only(left: 16, right: 16),
+                    padding: new EdgeInsets.only(right: 16),
                     child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        new Text(
+                        /*   new Text(
                           ResString().get('location'),
                           style: new TextStyle(
                               fontFamily: AssetStrings.circulerNormal,
                               color: AppColors.lightGrey,
                               fontSize: 16),
                           textAlign: TextAlign.center,
+                        ),
+*/
+                        Expanded(
+                          child: Container(
+                            padding: new EdgeInsets.only(left: 16, right: 5.0),
+                            alignment: Alignment.centerLeft,
+                            child: getLocation(_LocationController, context,
+                                _streamControllerShowLoader,
+                                true,
+                                _LatLongController,
+                                iconData: AssetStrings.location
+                            ),
+                          ),
+                        ),
+                        new SizedBox(
+                          width: 15,
                         ),
                         new Text(
                           ">",

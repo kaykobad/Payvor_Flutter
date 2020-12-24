@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:payvor/filter/filter.dart';
+import 'package:payvor/filter/filter_request.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/pages/get_favor_list/favor_list_response.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
@@ -42,6 +43,7 @@ class _HomeState extends State<SearchCompany>
 
   int currentPage = 1;
 
+  FilterRequest filterRequest;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -56,7 +58,7 @@ class _HomeState extends State<SearchCompany>
   @override
   void initState() {
     Future.delayed(const Duration(milliseconds: 300), () {
-      hitApi();
+      hitApi(filterRequest);
     });
     _setScrollListener();
 
@@ -64,7 +66,7 @@ class _HomeState extends State<SearchCompany>
   }
 
 
-  hitApi() async {
+  hitApi(FilterRequest filterRequest) async {
     bool gotInternetConnection = await hasInternetConnection(
       context: context,
       mounted: mounted,
@@ -90,7 +92,8 @@ class _HomeState extends State<SearchCompany>
       currentPage = 1;
     }
 
-    var response = await provider.getFavorList(context, currentPage);
+    var response = await provider.getFavorList(
+        context, currentPage, filterRequest);
 
     if (response is GetFavorListResponse) {
       isPullToRefresh = false;
@@ -152,7 +155,7 @@ class _HomeState extends State<SearchCompany>
 
         if (list.length >= (Constants.PAGINATION_SIZE * currentPage)) {
           isPullToRefresh = true;
-          hitApi();
+          hitApi(filterRequest);
           showInSnackBar("Loading data...");
         }
         else {
@@ -239,6 +242,8 @@ class _HomeState extends State<SearchCompany>
                 controller: _controller,
                 style: TextThemes.blackTextFieldNormal,
                 keyboardType: TextInputType.text,
+                showCursor: false,
+                autofocus: false,
                 onTap: () {
                   Navigator.push(
                     context,
@@ -279,7 +284,8 @@ class _HomeState extends State<SearchCompany>
               Navigator.push(
                 context,
                 new CupertinoPageRoute(builder: (BuildContext context) {
-                  return Material(child: new Filter());
+                  return Material(child: new Filter(voidcallback: voidCallBacks,
+                      filterRequest: filterRequest));
                 }),
               );
             },
@@ -306,6 +312,24 @@ class _HomeState extends State<SearchCompany>
     );
   }
 
+
+  Future<ValueSetter> voidCallBacks(FilterRequest filter) async {
+    currentPage = 1;
+
+    print(filter.maxAmount);
+    print(filter.minAmount);
+    print(filter.list);
+    print(filter.location);
+    print(filter.distance);
+    print(filter.latlongData);
+
+    filterRequest = filter;
+
+    print("filter $filter");
+
+    hitApi(filterRequest);
+  }
+
   _buildContestList() {
     return Expanded(
       child: RefreshIndicator(
@@ -315,7 +339,7 @@ class _HomeState extends State<SearchCompany>
           _loadMore = false;
           currentPage = 1;
 
-          await hitApi();
+          await hitApi(filterRequest);
         },
         child: Container(
           color: AppColors.whiteGray,

@@ -470,7 +470,8 @@ class _HomeState extends State<SearchHomeByName>
               ],
             ),
           ),
-          text.length > 0 && listResult.length == 0 || list.length == 0
+          (title.length > 0 && listResult.length == 0 && !isSearchCalled) ||
+                  (text.length == 0 || (list.length == 0 && text.length > 0))
               ? Container(
                   margin: new EdgeInsets.only(top: 120),
                   child: new Center(
@@ -556,7 +557,17 @@ class _HomeState extends State<SearchHomeByName>
                       onChanged: (String value) {
                         currentPageSuggest = 1;
                         text = value;
-                        hitSearchSuggestApi(value);
+                        if (value
+                            .trim()
+                            .isEmpty) {
+                          list.clear();
+                          setState(() {
+
+                          });
+                        }
+                        else {
+                          hitSearchSuggestApi(value.trim());
+                        }
                       },
                       decoration: new InputDecoration(
                         enabledBorder: InputBorder.none,
@@ -578,8 +589,11 @@ class _HomeState extends State<SearchHomeByName>
                       currentPageSuggest = 1;
                       _loadMore = false;
                       isPullToRefresh = false;
-                      hitSearchSuggestApi(text);
-                      setState(() {});
+                      list.clear();
+                      listResult.clear();
+                      setState(() {
+
+                      });
                     },
                     child: new Image.asset(
                       AssetStrings.clean,

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:payvor/filter/filter_request.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/common_response/common_success_response.dart';
 import 'package:payvor/model/create_payvor/create_payvor_response.dart';
@@ -24,6 +25,7 @@ import 'package:payvor/model/update_profile/update_profile_response.dart';
 import 'package:payvor/networkmodel/APIHandler.dart';
 import 'package:payvor/networkmodel/APIs.dart';
 import 'package:payvor/pages/get_favor_list/favor_list_response.dart';
+import 'package:payvor/utils/memory_management.dart';
 
 class AuthProvider with ChangeNotifier {
   var _isLoading = false;
@@ -385,12 +387,76 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<dynamic> getFavorList(BuildContext context, int page) async {
-    Completer<dynamic> completer = new Completer<dynamic>();
-    var response = await APIHandler.get(
-        context: context, url: APIs.getFavorList + "?page=$page");
+  Future<dynamic> getFavorList(
+      BuildContext context, int page, FilterRequest filterRequest) async {
+    var uri = APIs.getFavorList + "?page=$page";
 
-    print(APIs.getFavorList);
+    var data = new StringBuffer();
+
+    if (filterRequest != null) {
+      if (filterRequest.latlongData.isNotEmpty &&
+          filterRequest.location.isNotEmpty) {
+        if (filterRequest.latlongData.length > 0) {
+          var datas = filterRequest.latlongData.trim().toString().split(",");
+
+          try {
+            var lat = datas[0].toString();
+            var long = datas[1].toString();
+
+            data.write("&lat=$lat&long=$long");
+          } catch (e) {}
+        }
+      } else {
+        var datas = jsonDecode(MemoryManagement.getUserInfo());
+        var userinfo = LoginSignupResponse.fromJson(datas);
+        if (userinfo?.user?.lat != "0" && userinfo?.user?.lat != "0.0") {
+          data.write(
+              "&lat=${userinfo?.user?.lat}&long=${userinfo?.user?.long}");
+        }
+      }
+
+      if (filterRequest.distance != null && filterRequest.distance > 0) {
+        data.write("&distance=${filterRequest?.distance?.toString()}");
+      }
+      if (filterRequest.minAmount > 0 || filterRequest.maxAmount < 100) {
+        data.write(
+            "&minAmount=${filterRequest?.minAmount?.toString()}&maxAmount=${filterRequest?.maxAmount?.toString()}");
+      }
+      if (filterRequest?.list != null) {
+        var datanew = "";
+        var isData = false;
+        for (int i = 0; i < filterRequest.list.length; i++) {
+          var dataitem = filterRequest.list[i];
+
+          if (dataitem.isSelect) {
+            if (!isData) {
+              isData = true;
+            }
+            datanew = datanew + dataitem.sendTitle + ",";
+          }
+        }
+        if (datanew != null && isData) {
+          data.write("&sort_by=$datanew");
+        }
+      }
+
+      print("data $data");
+
+      if (data.toString().length > 0) {
+        uri = uri + data.toString();
+      }
+    } else {
+      var datas = jsonDecode(MemoryManagement.getUserInfo());
+      var userinfo = LoginSignupResponse.fromJson(datas);
+      if (userinfo?.user?.lat != "0" && userinfo?.user?.lat != "0.0") {
+        data.write("&lat=${userinfo?.user?.lat}&long=${userinfo?.user?.long}");
+      }
+      uri = uri + data.toString();
+    }
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(context: context, url: uri);
+
+    print(uri);
 
     if (response is APIError) {
       completer.complete(response);
