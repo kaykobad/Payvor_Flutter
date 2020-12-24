@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:payvor/localdb/DatabaseHelper.dart';
 import 'package:payvor/model/home/homerequest.dart';
 import 'package:payvor/model/places/placeitem.dart';
 
@@ -108,6 +109,38 @@ class HomeViewModel with ChangeNotifier {
 //      return completer.future;
 //    }
   }
+
+//  Future<dynamic> getDoctorsListLocal() async {
+//    Completer<dynamic> completer = new Completer<dynamic>();
+//    var localDataList = await DatabaseHelper.instance.queryAllRows();
+//    //if not record found
+//    if (localDataList.length == 0) {
+//      completer.complete(APIError(status: 400, message: "No data found"));
+//      return completer.future;
+//    }
+//    ContactsResponse homeResponse =
+//    new ContactsResponse.fromJson(localDataList);
+//    print("response ${homeResponse}");
+//    completer.complete(homeResponse);
+//    return completer.future;
+//  }
+//
+//
+//  Future<dynamic> updateDoctorInformation(DoctorContact doctorContact) async {
+//    Completer<dynamic> completer = new Completer<dynamic>();
+//    var result = await DatabaseHelper.instance.updateDoctorInformation(
+//        doctorContact);
+//    print("update result $result");
+//    completer.complete(result);
+//    return completer.future;
+//  }
+//
+//  try {
+//  var id = await DatabaseHelper.instance.insert(data);
+//  print(id);
+//  } catch (ex) {
+//  //print("insert errro ${ex.toString()}");
+//  }
 
   void hideLoader() {
     _isLoading = false;
