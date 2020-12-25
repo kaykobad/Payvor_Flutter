@@ -209,8 +209,8 @@ class _HomeState extends State<SearchCompany>
               ],
             ),
           ),
-          Offstage(
-            offstage: offstagenodata,
+          Visibility(
+            visible:showData,
             child: Container(
               margin: new EdgeInsets.only(top: 170),
               child: new Center(
@@ -224,33 +224,8 @@ class _HomeState extends State<SearchCompany>
               ),
             ),
           ),
-//          Visibility(
-//            visible: true,
-//            child: Padding(
-//              padding: const EdgeInsets.only(top:50),
-//              child: Container(
-//                child: HomeShimmer(),
-//              ),
-//            ),
-//          ),
-          new Positioned(
-            right: 0.0,
-            top: 0.0,
-            child: Offstage(
-              offstage: (!showData),
-              child: new Container(
-                width: 15,
-                height: 15,
-                margin: new EdgeInsets.only(right: 8.0, top: 8),
-                decoration: new BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle
-                ),
 
 
-              ),
-            ),
-          )
         ],
       ),
     );
