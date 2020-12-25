@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/search/search_home.dart';
+import 'package:payvor/pages/search/search_name.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/constants.dart';
@@ -106,6 +107,18 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     );
   }
 
+  ValueChanged<Widget> homeCallBack(Widget screen) {
+    Navigator.push(
+      context,
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return screen;
+
+      }),
+    );
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -124,7 +137,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               onGenerateRoute: (route) =>
                   MaterialPageRoute(
                     settings: route,
-                    builder: (context) => SearchCompany(),
+                    builder: (context) =>
+                        SearchCompany(lauchCallBack: homeCallBack,),
                   ),
             ),
             Navigator(
@@ -220,6 +234,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     return MaterialButton(
       minWidth: 40,
       onPressed: () {
+        if (pos == 0) //for home tab
+            {
+          _homeScreen.currentState?.popUntil((route) => route.isFirst);
+        }
         setState(() {
           currentTab = pos;
         });

@@ -22,4 +22,9 @@ class Constants{
       "https://www.freeprivacypolicy.com/blog/privacy-policy-url/";
   static const String TermOfUses =
       "https://www.freeprivacypolicy.com/blog/privacy-policy-url/";
+
+  static const int HOME_LAUCH_DETAILS_SCREEN = 1;
+  static const int HOME_LAUCH_SEARCH_SCREEN = 2;
+  static const int HOME_LAUCH_FILTER_SCREEN = 3;
+
 }

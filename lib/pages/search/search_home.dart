@@ -19,6 +19,10 @@ import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class SearchCompany extends StatefulWidget {
+  final ValueChanged<Widget> lauchCallBack;
+
+  SearchCompany({@required this.lauchCallBack});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -31,8 +35,6 @@ class _HomeState extends State<SearchCompany>
 
   List<Datas> list = List<Datas>();
 
-  final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
   TextEditingController _controller = new TextEditingController();
   ScrollController _scrollController = new ScrollController();
   bool _loadMore = false;
@@ -266,14 +268,9 @@ class _HomeState extends State<SearchCompany>
                 keyboardType: TextInputType.text,
                 showCursor: false,
                 autofocus: false,
+                readOnly: true,
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    new CupertinoPageRoute(builder: (BuildContext context) {
-                      return Material(child: new SearchHomeByName(
-                      ));
-                    }),
-                  );
+                  widget.lauchCallBack(Material(child: new SearchHomeByName()));
                 },
 
                 decoration: new InputDecoration(
@@ -303,13 +300,10 @@ class _HomeState extends State<SearchCompany>
           ),
           InkWell(
             onTap: () {
-              Navigator.push(
-                context,
-                new CupertinoPageRoute(builder: (BuildContext context) {
-                  return Material(child: new Filter(voidcallback: voidCallBacks,
-                      filterRequest: filterRequest));
-                }),
-              );
+              widget.lauchCallBack(Material(
+                  child: new Filter(
+                      voidcallback: voidCallBacks,
+                      filterRequest: filterRequest)));
             },
             child: new Container(
               width: 55,
@@ -390,18 +384,13 @@ class _HomeState extends State<SearchCompany>
   bool get wantKeepAlive => true;
 
   Widget buildItemMain(int pos, Datas data) {
-    var index = pos % 2 == 0 ? true : false;
-
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
-            return Material(child: new PostFavorDetails(
-              id: data.id.toString(),
-            ));
-          }),
-        );
+        widget.lauchCallBack(Material(
+            child: Material(
+                child: new PostFavorDetails(
+          id: data.id.toString(),
+        ))));
       },
       child: Container(
         color: Colors.white,
