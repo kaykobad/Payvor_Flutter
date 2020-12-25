@@ -195,29 +195,7 @@ class _HomeState extends State<SearchCompany>
                       style: TextThemes.whiteMedium,
                     )),
 
-                Stack(
-                  children: [
-                    getTextField(),
-                    new Positioned(
-                      right: 0.0,
-                      top: 0.0,
-                      child: Offstage(
-                        offstage: (!showData),
-                        child: new Container(
-                          width: 15,
-                          height: 15,
-                          margin: new EdgeInsets.only(right: 8.0, top: 8),
-                          decoration: new BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle
-                          ),
-
-
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                getTextField(),
                 new SizedBox(
                   height: 16.0,
                 ),
@@ -255,6 +233,24 @@ class _HomeState extends State<SearchCompany>
 //              ),
 //            ),
 //          ),
+          new Positioned(
+            right: 0.0,
+            top: 0.0,
+            child: Offstage(
+              offstage: (!showData),
+              child: new Container(
+                width: 15,
+                height: 15,
+                margin: new EdgeInsets.only(right: 8.0, top: 8),
+                decoration: new BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle
+                ),
+
+
+              ),
+            ),
+          )
         ],
       ),
     );
