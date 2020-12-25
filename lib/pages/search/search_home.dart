@@ -11,6 +11,7 @@ import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/pages/suggestion_search/suggestion_search.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/shimmers/home_shimmer_loader.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
@@ -201,7 +202,7 @@ class _HomeState extends State<SearchCompany>
                       right: 0.0,
                       top: 0.0,
                       child: Offstage(
-                        offstage: !showData,
+                        offstage: (!showData),
                         child: new Container(
                           width: 15,
                           height: 15,
@@ -220,7 +221,13 @@ class _HomeState extends State<SearchCompany>
                 new SizedBox(
                   height: 16.0,
                 ),
-                _buildContestList(),
+
+                (provider.getLoading())?Expanded(
+                  child: Container(
+                    height: double.infinity,
+                    child: HomeShimmer(),
+                  ),
+                ): _buildContestList(),
               ],
             ),
           ),
@@ -239,15 +246,15 @@ class _HomeState extends State<SearchCompany>
               ),
             ),
           ),
-          new Center(
-            child: Container(
-              margin: new EdgeInsets.only(top: 50),
-              child: getFullScreenProviderLoader(
-                status: provider.getLoading(),
-                context: context,
-              ),
-            ),
-          ),
+//          Visibility(
+//            visible: true,
+//            child: Padding(
+//              padding: const EdgeInsets.only(top:50),
+//              child: Container(
+//                child: HomeShimmer(),
+//              ),
+//            ),
+//          ),
         ],
       ),
     );

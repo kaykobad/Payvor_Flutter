@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/search/search_home.dart';
-import 'package:payvor/pages/search/search_name.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/constants.dart';
@@ -188,10 +187,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomAppBar(
           clipBehavior: Clip.antiAlias,
-          shape: CircularNotchedRectangle(),
-          notchMargin: 20.0,
+           shape: CircularNotchedRectangle(),
+          notchMargin: 15.0,
           child: Container(
-            height: 80,
+            color: Colors.transparent,
+            height: 85,
             width: double.infinity,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -275,6 +275,7 @@ class CustomFloatingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
+
       width: 85,
       height: 85,
       child: Icon(
@@ -282,6 +283,7 @@ class CustomFloatingButton extends StatelessWidget {
         size: 40,
       ),
       decoration: BoxDecoration(
+          color: Colors.transparent,
           shape: BoxShape.circle,
           gradient: LinearGradient(colors: [
             AppColors.colorCyanPrimary,
