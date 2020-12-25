@@ -71,6 +71,9 @@ class _HomeState extends State<SearchCompany>
 
 
   hitApi(FilterRequest filterRequest) async {
+    if (!isPullToRefresh) {
+      provider.setLoading();
+    }
     bool gotInternetConnection = await hasInternetConnection(
       context: context,
       mounted: mounted,
@@ -85,10 +88,6 @@ class _HomeState extends State<SearchCompany>
       return;
     }
 
-    if (!isPullToRefresh) {
-      provider.setLoading();
-    }
-
 
     if (_loadMore) {
       currentPage++;
@@ -101,8 +100,6 @@ class _HomeState extends State<SearchCompany>
 
     if (response is GetFavorListResponse) {
       isPullToRefresh = false;
-
-      provider.hideLoader();
 
       print("res $response");
 
@@ -126,25 +123,17 @@ class _HomeState extends State<SearchCompany>
           offstagenodata = false;
         }
 
-
-        setState(() {
-
-        });
       }
 
-      print("no load $_loadMore");
-      try {
 
-      } catch (ex) {
-
-      }
     } else {
-      provider.hideLoader();
+
       APIError apiError = response;
       print(apiError.error);
 
       showInSnackBar(apiError.error);
     }
+    provider.hideLoader();
   }
 
 
@@ -210,7 +199,7 @@ class _HomeState extends State<SearchCompany>
             ),
           ),
           Visibility(
-            visible:showData,
+            visible:!offstagenodata,
             child: Container(
               margin: new EdgeInsets.only(top: 170),
               child: new Center(
@@ -327,7 +316,7 @@ class _HomeState extends State<SearchCompany>
     filterRequest = filter;
 
     print("filter $filter");
-
+    isPullToRefresh=false;
     hitApi(filterRequest);
   }
 
