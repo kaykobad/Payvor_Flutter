@@ -11,6 +11,7 @@ import 'package:payvor/pages/search/search_name.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/review/review_post.dart';
+import 'package:payvor/shimmers/shimmer_demo.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
@@ -665,12 +666,15 @@ class _HomeState extends State<PostFavorDetails>
           ) : Container(),
 
 
-          new Center(
-            child: getFullScreenProviderLoader(
-              status: provider.getLoading(),
-              context: context,
-            ),
-          ),
+//          new Center(
+//            child: getFullScreenProviderLoader(
+//              status: provider.getLoading(),
+//              context: context,
+//            ),
+//          ),
+          Visibility(
+              visible: provider.getLoading(),
+              child: MyOrderDetailsShimmer())
           /* new Center(
             child: _getLoader,
           ),*/
