@@ -10,16 +10,17 @@ class HomeShimmer extends StatelessWidget {
     return Scaffold(
       body: Container(
         width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Expanded(
                 child: ListView.builder(
                   itemBuilder: (_, index) => Padding(
-                padding: const EdgeInsets.only(top: 2.0),
-                child: ShimmerMyOrderItem(),
+                padding: const EdgeInsets.only(top: 0.0),
+                child: ShimmerFavourItem(),
               ),
-              itemCount: 3,
+              itemCount: 4,
             )),
           ],
         ),
@@ -28,66 +29,62 @@ class HomeShimmer extends StatelessWidget {
   }
 }
 
-class ShimmerMyOrderItem extends StatelessWidget {
+class ShimmerFavourItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      child: Shimmer.fromColors(
-        baseColor: Colors.grey[200],
-        highlightColor: Colors.grey[400],
-        child: Container(
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[200],
+      highlightColor: Colors.grey[400],
+      child: Container(
 
-          child: Column(
-            children: <Widget>[
-
-              buildItem(),
-              Opacity(
-                opacity: 0.12,
-                child: new Container(
-                  height: 1.0,
-                  margin: new EdgeInsets.only(
-                      left: 17.0, right: 17.0, top: 16.0),
-                  color: AppColors.dividerColor,
-                ),
+        child: Column(
+          children: <Widget>[
+            buildItem(),
+            Opacity(
+              opacity: 0.12,
+              child: new Container(
+                height: 1.0,
+                margin: new EdgeInsets.only(
+                    left: 17.0, right: 17.0, top: 16.0),
+                color: AppColors.dividerColor,
               ),
+            ),
 
-              new Container(
-                height: 147,
+            new Container(
+              height: 147,
+              width: double.infinity,
+              color: Colors.white,
+              margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
+              child: ClipRRect(
+                // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                borderRadius: new BorderRadius.circular(10.0),
+              ),
+            ),
+
+            Container(
                 width: double.infinity,
                 color: Colors.white,
-                margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
-                child: ClipRRect(
-                  // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                  borderRadius: new BorderRadius.circular(10.0),
-                ),
+                margin: new EdgeInsets.only(
+                    left: 16.0, right: 16.0, top: 7.0),
+                alignment: Alignment.centerLeft,
+                child: new Text(
+                  "",
+                  style: TextThemes.blackCirculerMediumHeight,
+                )),
+            Container(
+              margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+              width: double.infinity,
+              color: Colors.white,
+              child: Text(
+                  ""
               ),
-
-              Container(
-                  width: double.infinity,
-                  color: Colors.white,
-                  margin: new EdgeInsets.only(
-                      left: 16.0, right: 16.0, top: 7.0),
-                  alignment: Alignment.centerLeft,
-                  child: new Text(
-                    "",
-                    style: TextThemes.blackCirculerMediumHeight,
-                  )),
-              Container(
-                margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
-                width: double.infinity,
-                color: Colors.white,
-                child: Text(
-                    ""
-                ),
-              ),
+            ),
 
 
-              new SizedBox(
-                height: 15.0,
-              )
-            ],
-          ),
+            new SizedBox(
+              height: 15.0,
+            )
+          ],
         ),
       ),
     );
