@@ -331,12 +331,8 @@ class _LoginScreenState extends State<JoinCommunityNew> {
 
   Future<ValueSetter> voidCallBackLike(Token tokem) async {
     {
-      print("tokenss get ${tokem.access}");
-      print("id get ${tokem.id}");
-      print("name get ${tokem.username}");
-      print("url get ${tokem.image}");
 
-      email = "";
+      email = tokem.id.toString()+"_";
       name = tokem.username ?? "";
       type = "3";
       snsId = tokem.id.toString();
@@ -368,11 +364,11 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     var socialLogin=new SocialLogin();
     var result = (Platform.isIOS)?await socialLogin.twitterLogin():await socialLogin.twitterLoginAndroid();
 
-    if (result.login) {
-      email = result.email;
+    if (result!=null&&result.login) {
+      email = result.id+"_"+result.email;
       name = result.username;
       type = "2";
-      snsId = "123";
+      snsId = result.id;
       profilePic = result.image;
       hitApi();
     } else {
@@ -386,18 +382,18 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     if (googleSignInAccount != null && googleSignInAccount is Map) {
       var nameUser = googleSignInAccount["name"];
       var id = googleSignInAccount["id"];
-      var emails = googleSignInAccount["email"];
+      var emails = id+"_"+googleSignInAccount["email"];
       var photodata = googleSignInAccount["picture"];
       var photourl = photodata["data"];
       // MemoryManagement.setuserName(username: nameUser);
 
       var photo = photourl["url"];
 
-      print("$nameUser");
-      print("$email");
-      print("$photodata");
-      print("$photourl");
-      print("$photo");
+//      print("$nameUser");
+//      print("$email");
+//      print("$photodata");
+//      print("$photourl");
+//      print("$photo");
 
       email = emails;
       name = nameUser;
@@ -459,9 +455,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
           name: name, password: "123", email: email, type: types);
       response = await provider.signup(loginRequest, context);
 
-      MemoryManagement.socialMediaStatus("0");
-      MemoryManagement.setUserEmail(email);
-      MemoryManagement.setuserName(username: name);
+
     } else {
       SignUpSocialRequest loginRequest = new SignUpSocialRequest(
           name: name,
@@ -474,10 +468,10 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     }
     provider.hideLoader();
     if (response is LoginSignupResponse) {
-      if (response.isnew == null || response.isnew) {
-        MemoryManagement.setUserInfo(userInfo: json.encode(response));
+      MemoryManagement.setAccessToken(accessToken: response.data);
+      MemoryManagement.setUserInfo(userInfo: json.encode(response));
 
-        MemoryManagement.setAccessToken(accessToken: response.data);
+      if (response.isnew == null || response.isnew) {
 
         Navigator.push(
           context,
@@ -499,7 +493,6 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       provider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
-
       showInSnackBar(apiError.error);
     }
   }

@@ -18,6 +18,7 @@ import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 class PostFavorDetails extends StatefulWidget {
   final String id;
@@ -106,8 +107,12 @@ class _HomeState extends State<PostFavorDetails>
   @override
   bool get wantKeepAlive => true;
 
-  void callback() {
-    showBottomSheet();
+  void callback() async {
+    await Future.delayed(Duration(milliseconds: 200));
+    showInSnackBar("Favour applied successfully");
+    await Future.delayed(Duration(milliseconds: 1500));
+    Navigator.pop(context); //back to previous screen
+   // showBottomSheet();
   }
 
   Widget buildItem() {
@@ -162,34 +167,41 @@ class _HomeState extends State<PostFavorDetails>
   }
 
   Widget getBottomText(String icon, String text, double size) {
-    return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            alignment: Alignment.topLeft,
-            child: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: new SvgPicture.asset(
-                icon,
-                width: size,
-                height: size,
+    return InkWell(
+      onTap: () {
+        if (text == "Report Post") {
+          _showConfirmDialog();
+        }
+      },
+      child: Container(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              alignment: Alignment.topLeft,
+              child: InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: new SvgPicture.asset(
+                  icon,
+                  width: size,
+                  height: size,
+                ),
               ),
             ),
-          ),
-          new SizedBox(
-            width: 20.0,
-          ),
-          Container(
-            child: new Text(
-              text,
-              style: TextThemes.darkBlackMedium,
-              textAlign: TextAlign.center,
+            new SizedBox(
+              width: 20.0,
             ),
-          ),
-        ],
+            Container(
+              child: new Text(
+                text,
+                style: TextThemes.darkBlackMedium,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -253,8 +265,10 @@ class _HomeState extends State<PostFavorDetails>
 
     if (selected == "Report") {
       print("Report");
+      _showConfirmDialog();
     } else {
       print("Share");
+      _share();
     }
   }
 
@@ -475,12 +489,50 @@ class _HomeState extends State<PostFavorDetails>
     );
   }
 
+  Future<void> _showConfirmDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Alert'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                //Text('This is a demo alert dialog.'),
+                Text('Are you sure want to report this post?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('YES'),
+              onPressed: () {
+                showInSnackBar("Post reported successfully");
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('NO'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _share()async
+  {
+    Share.share('check out this post https://google.com');
+
+  }
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<AuthProvider>(context);
-    screenSize = MediaQuery
-        .of(context)
-        .size;
+    screenSize = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
       body: Stack(
