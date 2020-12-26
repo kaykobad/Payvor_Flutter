@@ -548,30 +548,32 @@ class _HomeState extends State<PostFavorDetails>
                   buildItemUser(),
                   buildItemRating(1, "User Ratings"),
                   buildItemRating(2, "Refer Others"),
-                  Container(
-                      color: Colors.white,
-                      padding:
-                      new EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
-                      margin: new EdgeInsets.only(top: 4),
-                      alignment: Alignment.centerLeft,
-                      child: new Text(
-                        ResString().get('payment_brkdown'),
-                        style: TextThemes.blackCirculerMediumHeight,
-                      )),
-                  getRowsPayment(ResString().get('job_payment'), "€50", 23.0),
-                  getRowsPayment(
-                      ResString().get('payvor_service_fee'), "€50", 9.0),
-                  new Container(
-                    height: 13,
-                    color: Colors.white,
-                  ),
-                  Opacity(
-                    opacity: 0.12,
-                    child: new Container(
-                      height: 1.0,
-                      margin: new EdgeInsets.only(left: 17.0, right: 17.0),
-                      color: AppColors.dividerColor,
-                    ),
+                        Container(
+                            color: Colors.white,
+                            padding: new EdgeInsets.only(
+                                left: 16.0, right: 16.0, top: 16),
+                            margin: new EdgeInsets.only(top: 4),
+                            alignment: Alignment.centerLeft,
+                            child: new Text(
+                              ResString().get('payment_brkdown'),
+                              style: TextThemes.blackCirculerMediumHeight,
+                            )),
+                        getRowsPayment(ResString().get('job_payment'),
+                            "€${favoriteResponse?.data?.price}", 23.0),
+                        getRowsPayment(ResString().get('payvor_service_fee'),
+                            "€${favoriteResponse?.data?.service_fee}", 9.0),
+                        new Container(
+                          height: 13,
+                          color: Colors.white,
+                        ),
+                        Opacity(
+                          opacity: 0.12,
+                          child: new Container(
+                            height: 1.0,
+                            margin:
+                                new EdgeInsets.only(left: 17.0, right: 17.0),
+                            color: AppColors.dividerColor,
+                          ),
                   ),
                   new Container(
                     color: Colors.white,
@@ -589,7 +591,7 @@ class _HomeState extends State<PostFavorDetails>
                           textAlign: TextAlign.center,
                         ),
                         new Text(
-                          "€40",
+                          "€${favoriteResponse?.data?.receiving}",
                           style: new TextStyle(
                               fontFamily: AssetStrings.circulerNormal,
                               color: AppColors.bluePrimary,

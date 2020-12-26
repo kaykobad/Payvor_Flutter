@@ -61,23 +61,28 @@ class Data {
   List<Rating> rating;
   int ratingCount;
   int ratingAvg;
+  num service_fee;
+  num receiving;
 
-  Data({this.id,
-    this.userId,
-    this.isActive,
-    this.title,
-    this.price,
-    this.description,
-    this.lat,
-    this.long,
-    this.location,
-    this.image,
-    this.createdAt,
-    this.updatedAt,
-    this.user,
-    this.rating,
-    this.ratingCount,
-    this.ratingAvg});
+  Data(
+      {this.id,
+      this.userId,
+      this.isActive,
+      this.title,
+      this.price,
+      this.description,
+      this.lat,
+      this.long,
+      this.location,
+      this.image,
+      this.createdAt,
+      this.updatedAt,
+      this.user,
+      this.rating,
+      this.ratingCount,
+      this.ratingAvg,
+      this.service_fee,
+      this.receiving});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -92,6 +97,7 @@ class Data {
     image = json['image'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    service_fee = json['service_fee'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     if (json['rating'] != null) {
       rating = new List<Rating>();
@@ -101,6 +107,8 @@ class Data {
     }
     ratingCount = json['rating_count'];
     ratingAvg = json['rating_avg'];
+    service_fee = json['service_fee'];
+    receiving = json['receiving'];
   }
 
   Map<String, dynamic> toJson() {
@@ -117,6 +125,7 @@ class Data {
     data['image'] = this.image;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['service_fee'] = this.service_fee;
     if (this.user != null) {
       data['user'] = this.user.toJson();
     }
@@ -125,6 +134,7 @@ class Data {
     }
     data['rating_count'] = this.ratingCount;
     data['rating_avg'] = this.ratingAvg;
+    data['receiving'] = this.receiving;
     return data;
   }
 }
