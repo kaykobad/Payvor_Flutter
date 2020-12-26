@@ -353,8 +353,8 @@ class MemoryManagement {
 
 
   //clear all values from shared preferences
-  static void clearMemory() {
-    prefs.clear();
+  static void clearMemory()async {
+    await prefs.clear();
   }
 
   //Theme module

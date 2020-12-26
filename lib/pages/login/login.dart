@@ -522,7 +522,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       print("tokenss get ${tokem.access}");
       print("id get ${tokem.id}");
 
-      email = "";
+      email = tokem.id.toString()+"_";
       name = "";
       type = "3";
       snsId = tokem.id.toString();
@@ -558,7 +558,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
         : await socialLogin.twitterLoginAndroid();
 
     if (result != null && result.login) {
-      email = result.email;
+      email = result.id+"_"+result.email;
       name = result.username;
       type = "2";
       snsId = result.id;
@@ -575,7 +575,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
     if (googleSignInAccount != null && googleSignInAccount is Map) {
       var nameUser = googleSignInAccount["name"];
       var id = googleSignInAccount["id"];
-      var emails = googleSignInAccount["email"];
+      var emails = id+"_"+googleSignInAccount["email"];
       var photodata = googleSignInAccount["picture"];
       var photourl = photodata["data"];
       // MemoryManagement.setuserName(username: nameUser);

@@ -43,7 +43,14 @@
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This information required during registration process so that later system can use to delivery nearby data later.</string>
-	<key>Payvor</key>
+	
+    <key>NSCameraUsageDescription</key>
+    <string>$(PRODUCT_NAME) to click camera while create a post.</string>
+    
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>$(PRODUCT_NAME) picking photos from gallery while creating post.</string>
+    
+    <key>Payvor</key>
 	<string>Payvor</string>
 	<key>UIBackgroundModes</key>
 	<array>
