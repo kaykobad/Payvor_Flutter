@@ -94,7 +94,7 @@ class _LoginScreenState extends State<ForgotPassword> {
       {bool obsectextType}) {
     return Container(
       margin: new EdgeInsets.only(left: 20.0, right: 20.0),
-      height: 64,
+      height: Constants.textFieldHeight,
       child: new TextField(
         controller: controller,
         keyboardType: textInputType,
