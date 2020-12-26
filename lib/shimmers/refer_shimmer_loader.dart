@@ -15,6 +15,7 @@ class HomeShimmerRefer extends StatelessWidget {
           children: <Widget>[
             Expanded(
                 child: ListView.builder(
+                  padding: const EdgeInsets.only(top: 2.0),
               itemBuilder: (_, index) => ShimmerMyOrderItem(),
               itemCount: 10,
             )),

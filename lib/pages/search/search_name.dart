@@ -39,12 +39,13 @@ class _HomeState extends State<SearchHomeByName>
   int currentPage = 1;
   bool isPullToRefresh = false;
   bool offstagenodata = true;
+  bool loader = false;
   String title = "";
 
   List<DataRefer> listResult = List();
 
   final StreamController<bool> _loaderStreamController =
-  new StreamController<bool>();
+      new StreamController<bool>();
   TextEditingController _controller = new TextEditingController();
   ScrollController scrollController = new ScrollController();
   bool _loadMore = false;
@@ -240,6 +241,15 @@ class _HomeState extends State<SearchHomeByName>
             ),
           ),
 
+          Container(
+            margin: new EdgeInsets.only(top: 160),
+            child: new Center(
+              child: getHalfScreenLoader(
+                status: loader,
+                context: context,
+              ),
+            ),
+          ),
           /* new Center(
             child: _getLoader,
           ),*/
@@ -250,14 +260,14 @@ class _HomeState extends State<SearchHomeByName>
 
 
   hitApi(String id, DataRefer refer) async {
-    provider.setLoading();
+    loader = true;
 
     bool gotInternetConnection = await hasInternetConnection(
       context: context,
       mounted: mounted,
       canShowAlert: true,
       onFail: () {
-        provider.hideLoader();
+        loader = false;
       },
       onSuccess: () {},
     );
@@ -270,13 +280,14 @@ class _HomeState extends State<SearchHomeByName>
         favour_id: widget?.id,
         description: widget?.description ?? "");
     var response = await provider.referUser(loginRequest, context);
-    provider.hideLoader();
+    loader = false;
     if (response is ReferUserResponse) {
       refer?.isSelect = true;
 
       setState(() {});
     }
     else {
+      loader = false;
       APIError apiError = response;
       print(apiError.error);
 
