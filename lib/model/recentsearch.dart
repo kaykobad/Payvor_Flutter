@@ -22,7 +22,7 @@ class RecentSearch {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['keyword'] = this.keyword;
-    data['createAt'] = this.createAt;
+    data['createdAt'] = this.createAt;
 
     return data;
   }
