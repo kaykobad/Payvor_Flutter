@@ -260,7 +260,7 @@ class _HomeState extends State<ShimmerDetails> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       new Container(
-                        height: 214,
+                        height: 200,
                         width: double.infinity,
                         child: ClipRRect(
                           // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
