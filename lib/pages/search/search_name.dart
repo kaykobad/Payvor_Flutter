@@ -240,15 +240,6 @@ class _HomeState extends State<SearchHomeByName>
             ),
           ),
 
-          Container(
-            margin: new EdgeInsets.only(top: 160),
-            child: new Center(
-              child: getHalfScreenLoader(
-                status: provider.getLoading(),
-                context: context,
-              ),
-            ),
-          ),
           /* new Center(
             child: _getLoader,
           ),*/

@@ -10,14 +10,13 @@ class HomeShimmer extends StatelessWidget {
     return Scaffold(
       body: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Expanded(
                 child: ListView.builder(
                   itemBuilder: (_, index) => Padding(
-                padding: const EdgeInsets.only(top: 32.0),
+                padding: const EdgeInsets.only(top: 2.0),
                 child: ShimmerMyOrderItem(),
               ),
               itemCount: 3,
@@ -33,7 +32,7 @@ class ShimmerMyOrderItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 6,
+      elevation: 0,
       child: Shimmer.fromColors(
         baseColor: Colors.grey[200],
         highlightColor: Colors.grey[400],
@@ -42,9 +41,6 @@ class ShimmerMyOrderItem extends StatelessWidget {
           child: Column(
             children: <Widget>[
 
-              new SizedBox(
-                height: 16.0,
-              ),
               buildItem(),
               Opacity(
                 opacity: 0.12,

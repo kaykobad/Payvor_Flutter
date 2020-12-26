@@ -1,20 +1,17 @@
-import 'package:flutter/cupertino.dart';
-
 class RecentSearch {
   int id;
   String keyword;
-  String createAt;
+  String createdAt;
 
-  RecentSearch(
-      {this.id,
-        this.keyword,
-        this.createAt,
-     });
+  RecentSearch({this.id,
+    this.keyword,
+    this.createdAt,
+  });
 
   RecentSearch.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     keyword = json['keyword'];
-    createAt = json['createdAt'];
+    createdAt = json['createdAt'];
 
   }
 
@@ -22,7 +19,7 @@ class RecentSearch {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['keyword'] = this.keyword;
-    data['createdAt'] = this.createAt;
+    data['createdAt'] = this.createdAt;
 
     return data;
   }
