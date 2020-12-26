@@ -520,149 +520,137 @@ class MyOrderDetailsShimmer extends StatelessWidget {
     return Card(
       elevation: 6,
       child: Padding(
-        padding:
-            const EdgeInsets.only( top: 12, bottom: 12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Card(
-                elevation: 6,
-                child: Shimmer.fromColors(
-                  baseColor: Colors.grey[200],
-                  highlightColor: Colors.grey[400],
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      singleItem(double.infinity.toDouble(), 24.0),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0, bottom: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            getDivider,
-                            singleItem(80, 16.0),
-                            getDivider,
-                            singleItem(100, 8.0),
-                            getDivider,
-                            singleItem(200, 8.0),
-                            getDivider,
-                            singleItem(40, 12.0),
-                            getDivider,
-                            singleItem(60, 10.0),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )),
-            getDivider,
-            Card(
-                elevation: 6,
-                child: Shimmer.fromColors(
-                  baseColor: Colors.grey[200],
-                  highlightColor: Colors.grey[400],
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      singleItem(double.infinity.toDouble(), 24.0),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0, bottom: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            getDivider,
-                            singleItem(80, 16.0),
-                            getDivider,
-                            singleItem(100, 8.0),
-                            getDivider,
-                            singleItem(200, 8.0),
-                            getDivider,
-                            singleItem(40, 12.0),
-                            getDivider,
-                            singleItem(60, 10.0),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )),
-            getDivider,
-            Card(
-                elevation: 6,
-                child: Shimmer.fromColors(
-                  baseColor: Colors.grey[200],
-                  highlightColor: Colors.grey[400],
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      singleItem(double.infinity.toDouble(), 24.0),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 8.0, bottom: 10, right: 8.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            getDivider,
-                            getRow,
-                            getDivider,
-                            getRow,
-                            getDivider,
-                            getRow,
-                            getDivider,
-                            getRow,
-                            getDivider,
-                            getRow,
-                            getDivider,
-                            getRow
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )),
-            getDivider,
-            Card(
-                elevation: 6,
-                child: Shimmer.fromColors(
-                  baseColor: Colors.grey[200],
-                  highlightColor: Colors.grey[400],
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      singleItem(double.infinity.toDouble(), 24.0),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0, bottom: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            getDivider,
-                            singleItem(80, 12.0),
-                            getDivider2,
-                            singleItem(90, 8.0),
-                            getDivider,
-                            singleItem(80, 12.0),
-                            getDivider2,
-                            singleItem(90, 12.0),
-                            getDivider,
-                            singleItem(80, 12.0),
-                            getDivider2,
-                            singleItem(90, 12.0),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )),
-          ],
+        padding: const EdgeInsets.only(top: 12, bottom: 12),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Card(
+                  child: Shimmer.fromColors(
+                baseColor: Colors.grey[200],
+                highlightColor: Colors.grey[400],
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    singleItem(double.infinity.toDouble(), 24.0),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        singleItem(double.infinity, 214),
+                      ],
+                    )
+                  ],
+                ),
+              )),
+              getDivider,
+              Card(
+                  elevation: 6,
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[200],
+                    highlightColor: Colors.grey[400],
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        singleItem(double.infinity.toDouble(), 24.0),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, bottom: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              getDivider,
+                              singleItem(80, 16.0),
+                              getDivider,
+                              singleItem(100, 8.0),
+                              getDivider,
+                              singleItem(200, 8.0),
+                              getDivider,
+                              singleItem(40, 12.0),
+                              getDivider,
+                              singleItem(60, 10.0),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
+              getDivider,
+              Card(
+                  elevation: 6,
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[200],
+                    highlightColor: Colors.grey[400],
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        singleItem(double.infinity.toDouble(), 24.0),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 8.0, bottom: 10, right: 8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              getDivider,
+                              getRow,
+                              getDivider,
+                              getRow,
+                              getDivider,
+                              getRow,
+                              getDivider,
+                              getRow,
+                              getDivider,
+                              getRow,
+                              getDivider,
+                              getRow
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
+              getDivider,
+              Card(
+                  elevation: 6,
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[200],
+                    highlightColor: Colors.grey[400],
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        singleItem(double.infinity.toDouble(), 24.0),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, bottom: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              getDivider,
+                              singleItem(80, 12.0),
+                              getDivider2,
+                              singleItem(90, 8.0),
+                              getDivider,
+                              singleItem(80, 12.0),
+                              getDivider2,
+                              singleItem(90, 12.0),
+                              getDivider,
+                              singleItem(80, 12.0),
+                              getDivider2,
+                              singleItem(90, 12.0),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
+            ],
+          ),
         ),
       ),
     );

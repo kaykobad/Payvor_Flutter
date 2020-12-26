@@ -411,10 +411,10 @@ class _HomeState extends State<SearchCompany>
                 // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
                 borderRadius: new BorderRadius.circular(10.0),
 
-                child: getCachedNetworkImageWithurl(
-                  url: data?.image,
-                  fit: BoxFit.cover,
-                ),
+                child: getCachedNetworkImageRect(
+                        url: data?.image,
+                        fit: BoxFit.cover,
+                      ),
               ),
             )
                 : Container(),
