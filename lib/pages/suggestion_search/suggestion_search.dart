@@ -5,7 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:payvor/localdb/DatabaseHelper.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/recentsearch.dart';
 import 'package:payvor/model/suggest/suggest_response.dart';
 import 'package:payvor/pages/get_favor_list/favor_list_response.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
@@ -29,6 +32,7 @@ class _HomeState extends State<SearchHomeByName>
 
   String searchkey = null;
   List<Object> list = List();
+  List<String> listRecent = List();
   List<Datas> listResult = List();
   Widget widgets;
 
@@ -69,7 +73,31 @@ class _HomeState extends State<SearchHomeByName>
   void initState() {
     _setScrollListener();
 
+    getDbResult();
+
     super.initState();
+  }
+
+
+  getDbResult() async {
+    List<Map<String, dynamic>> data = await DatabaseHelper.instance
+        .queryAllRows();
+    if (data != null && data.length > 0) {
+      listRecent.add("Recent Searches");
+    }
+    for (var item in data) {
+      item.forEach((k, v) {
+        if (k == "keyword") {
+          if (!listRecent.contains(v)) {
+            listRecent.add(v);
+          }
+        }
+      });
+    }
+    list.addAll(listRecent);
+    setState(() {
+
+    });
   }
 
   hitSearchApi(String data) async {
@@ -107,6 +135,20 @@ class _HomeState extends State<SearchHomeByName>
 
       if (response != null && response.data != null) {
         if (currentPage == 1) {
+          try {
+            var now = new DateTime.now();
+            var date = new DateFormat("yyyy-MM-dd HH:mm:ss");
+
+            var createAt = date.format(now);
+
+            RecentSearch recentSearch = RecentSearch(
+                createdAt: createAt, keyword: data);
+            var datas = DatabaseHelper.instance.database;
+            DatabaseHelper.instance.insert(recentSearch);
+          } catch (e) {
+
+          };
+
           listResult.clear();
         }
 
@@ -372,6 +414,11 @@ class _HomeState extends State<SearchHomeByName>
 
         list.addAll(response.data.data);
 
+        if (listRecent != null && listRecent.length > 0) {
+          listRecent.remove(list);
+        }
+        list.addAll(listRecent);
+
         if (response.data != null &&
             response.data.data != null &&
             response.data.data.length < Constants.PAGINATION_SIZE_NEW) {
@@ -470,21 +517,23 @@ class _HomeState extends State<SearchHomeByName>
               ],
             ),
           ),
-          (title.length > 0 && listResult.length == 0 && !isSearchCalled) ||
-                  (text.length == 0 || (list.length == 0 && text.length > 0))
-              ? Container(
-                  margin: new EdgeInsets.only(top: 120),
-                  child: new Center(
-                    child: new Text(
-                      "No Favors Found",
-                      style: new TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0),
-                    ),
-                  ),
-                )
+
+
+          listResult.length == 0 && list.length == 0 ? Container(
+            margin: new EdgeInsets.only(top: 120),
+            child: new Center(
+              child: new Text(
+                "No Favors Found",
+                style: new TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0),
+              ),
+            ),
+          )
               : Container(),
+
+
           new Center(
             child: Container(
               margin: new EdgeInsets.only(top: 50),
@@ -548,19 +597,32 @@ class _HomeState extends State<SearchHomeByName>
                       style: TextThemes.blackTextFieldNormal,
                       keyboardType: TextInputType.text,
                       onSubmitted: (String value) {
-                        currentPage = 1;
-                        text = value;
-                        title = value;
+                        if (value
+                            .trim()
+                            .length > 0) {
+                          isPullToRefresh = false;
+                          _loadMore = false;
+                          currentPage = 1;
+                          text = value;
+                          title = value;
 
-                        hitSearchApi(title);
+                          hitSearchApi(title);
+                        }
                       },
                       onChanged: (String value) {
                         currentPageSuggest = 1;
+                        isPullToRefreshSuggest = false;
+                        _loadMoreSuggest = false;
+
                         text = value;
                         if (value
                             .trim()
                             .isEmpty) {
+                          listResult.clear();
                           list.clear();
+                          if (listRecent != null && listRecent.length > 0) {
+                            list.addAll(listRecent);
+                          }
                           setState(() {
 
                           });
@@ -591,6 +653,10 @@ class _HomeState extends State<SearchHomeByName>
                       isPullToRefresh = false;
                       list.clear();
                       listResult.clear();
+
+                      if (listRecent != null && listRecent.length > 0) {
+                        list.addAll(listRecent);
+                      }
                       setState(() {
 
                       });
@@ -630,8 +696,8 @@ class _HomeState extends State<SearchHomeByName>
               controller: _scrollControllerSuggest,
               physics: const AlwaysScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
-                if (list[index] is int) {
-                  widgets = buildItemRecent(index);
+                if (list[index] is String) {
+                  widgets = buildItemRecent(list[index]);
                 }
                 else {
                   widgets = buildItemMain(index);
@@ -650,12 +716,12 @@ class _HomeState extends State<SearchHomeByName>
   bool get wantKeepAlive => true;
 
 
-  Widget buildItemRecent(int pos) {
+  Widget buildItemRecent(String pos) {
     return Container(
       child: Column(
         children: [
-          pos == 0 ? Container(
-            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
+          pos == "Recent Searches" ? Container(
+            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 30),
             alignment: Alignment.centerLeft,
             child: new Text(
               "Recent Searches",
@@ -664,8 +730,7 @@ class _HomeState extends State<SearchHomeByName>
                   fontFamily: AssetStrings.circulerMedium,
                   fontSize: 18.0),
             ),
-          ) : Container(),
-          buildItemRecentSearch(),
+          ) : buildItemRecentSearch(pos),
         ],
       ),
     );
@@ -686,7 +751,7 @@ class _HomeState extends State<SearchHomeByName>
             margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
             alignment: Alignment.centerLeft,
             child: new Text(
-              "Suggested Users",
+              "Suggested Searches",
               style: new TextStyle(
                   color: Colors.black,
                   fontFamily: AssetStrings.circulerMedium,
@@ -755,48 +820,57 @@ class _HomeState extends State<SearchHomeByName>
     );
   }
 
-  Widget buildItemRecentSearch() {
-    return Container(
-      padding: new EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        children: <Widget>[
+  Widget buildItemRecentSearch(String pos) {
+    return InkWell(
+      onTap: () {
+        _controller.text = pos;
+        isPullToRefresh = false;
+        _loadMore = false;
+        currentPage = 1;
+        hitSearchApi(pos);
+      },
+      child: Container(
+        padding: new EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          children: <Widget>[
 
 
-          new SvgPicture.asset(
-            AssetStrings.searchSuggest,
-          ),
+            new SvgPicture.asset(
+              AssetStrings.searchSuggest,
+            ),
 
-          new SizedBox(
-            width: 14,
-          ),
-          Expanded(
-            child: Container(
+            new SizedBox(
+              width: 14,
+            ),
+            Expanded(
+              child: Container(
 
-              child: new Text(
-                "Helping hand to clean house",
-                style: new TextStyle(
-                  color: Colors.black,
-                  fontFamily: AssetStrings.circulerNormal,
-                  fontSize: 15,
+                child: new Text(
+                  pos ?? "",
+                  style: new TextStyle(
+                    color: Colors.black,
+                    fontFamily: AssetStrings.circulerNormal,
+                    fontSize: 15,
+
+                  ),
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
 
                 ),
-                textAlign: TextAlign.left,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-
               ),
             ),
-          ),
 
-          new SizedBox(
-            width: 8,
-          ),
+            new SizedBox(
+              width: 8,
+            ),
 
-          new SvgPicture.asset(
-            AssetStrings.pathSuggest,
-          ),
-        ],
+            new SvgPicture.asset(
+              AssetStrings.pathSuggest,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -42,7 +42,7 @@ class _HomeState extends State<SearchCompany>
   AuthProvider provider;
   bool isPullToRefresh = false;
 
-  bool offstagenodata = false;
+  bool offstagenodata = true;
 
   int currentPage = 1;
 
@@ -184,17 +184,39 @@ class _HomeState extends State<SearchCompany>
                       style: TextThemes.whiteMedium,
                     )),
 
-                getTextField(),
+                Stack(
+                  children: [
+                    getTextField(),
+                    new Positioned(
+                      right: 0.0,
+                      top: 0.0,
+                      child: Offstage(
+                        offstage: !showData,
+                        child: new Container(
+                          width: 15,
+                          height: 15,
+                          margin: new EdgeInsets.only(right: 8.0, top: 8),
+                          decoration: new BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle
+                          ),
+
+
+                        ),
+                      ),
+                    )
+                  ],
+                ),
                 new SizedBox(
                   height: 16.0,
                 ),
 
-                (provider.getLoading())?Expanded(
+                (provider.getLoading()) ? Expanded(
                   child: Container(
                     height: double.infinity,
                     child: HomeShimmer(),
                   ),
-                ): _buildContestList(),
+                ) : _buildContestList(),
               ],
             ),
           ),
@@ -306,8 +328,8 @@ class _HomeState extends State<SearchCompany>
   Future<ValueSetter> voidCallBacks(FilterRequest filter) async {
     currentPage = 1;
 
-    print(filter.maxAmount);
-    print(filter.minAmount);
+    print(filter.minprice);
+    print(filter.maxprice);
     print(filter.list);
     print(filter.location);
     print(filter.distance);
@@ -316,7 +338,7 @@ class _HomeState extends State<SearchCompany>
     filterRequest = filter;
 
     print("filter $filter");
-    isPullToRefresh=false;
+    isPullToRefresh = false;
     hitApi(filterRequest);
   }
 

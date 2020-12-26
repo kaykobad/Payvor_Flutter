@@ -27,4 +27,6 @@ class APIs {
   static const String createPayvor = "$baseUrl/create-favour";
   static const String seacrhList = "$baseUrl/searchfavour/";
   static const String seacrhSuggestList = "$baseUrl/searchtitle/";
+  static const String refUsers = "$baseUrl/ref-user";
+  static const String referUser = "$baseUrl/refer-user";
 }

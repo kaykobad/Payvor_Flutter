@@ -101,8 +101,9 @@ class APIHandler {
       if (MemoryManagement.getAccessToken() != null) {
         headers["Authorization"] =
             "Bearer " + MemoryManagement.getAccessToken();
-      }
 
+        print("token" + "Bearer " + MemoryManagement.getAccessToken());
+      }
 
 //      if (MemoryManagement.getAccessToken() != null) {
 //        headers["Authorization"] =

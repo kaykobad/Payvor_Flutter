@@ -272,7 +272,13 @@ class _HomeState extends State<PostFavorDetails>
           Navigator.push(
             context,
             new CupertinoPageRoute(builder: (BuildContext context) {
-              return Material(child: new SearchHomeByName());
+              return Material(
+                  child: new SearchHomeByName(
+                lat: favoriteResponse?.data?.lat,
+                long: favoriteResponse?.data?.long,
+                description: favoriteResponse?.data?.description,
+                id: favoriteResponse?.data?.id.toString(),
+              ));
             }),
           );
         }

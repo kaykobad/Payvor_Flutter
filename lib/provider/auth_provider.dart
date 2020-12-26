@@ -3,6 +3,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:payvor/filter/filter_request.dart';
+import 'package:payvor/filter/refer_request.dart';
+import 'package:payvor/filter/refer_response.dart';
+import 'package:payvor/filter/refer_user.dart';
+import 'package:payvor/filter/refer_user_response.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/common_response/common_success_response.dart';
 import 'package:payvor/model/create_payvor/create_payvor_response.dart';
@@ -339,15 +343,34 @@ class AuthProvider with ChangeNotifier {
         {
           var apiError=APIError(messag: "Wrong OTP",status: 400);
           completer.complete(apiError);
-        }
-      else
-        {
-          completer.complete(otpVerification);
-        }
+      } else {
+        completer.complete(otpVerification);
+      }
 
       notifyListeners();
       return completer.future;
     }
+  }
+
+  Future<dynamic> referUser(
+      ReferUserRequest request, BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.post(
+        context: context, url: APIs.referUser, requestBody: request.toJson());
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      ReferUserResponse otpVerification =
+          new ReferUserResponse.fromJson(response);
+      //if wrong otp
+
+      completer.complete(otpVerification);
+    }
+
+    notifyListeners();
+    return completer.future;
   }
 
   Future<dynamic> getotp(String phoneNumber, BuildContext context) async {
@@ -421,10 +444,11 @@ class AuthProvider with ChangeNotifier {
         isFilter = true;
         data.write("&distance=${filterRequest?.distance?.toString()}");
       }
-      if (filterRequest.minAmount > 0 || filterRequest.maxAmount < 100) {
+      if (filterRequest.minprice > 0 || filterRequest.maxprice < 100) {
         isFilter = true;
         data.write(
-            "&minAmount=${filterRequest?.minAmount?.toString()}&maxAmount=${filterRequest?.maxAmount?.toString()}");
+            "&minprice=${filterRequest?.minprice
+                ?.toString()}&maxprice=${filterRequest?.maxprice?.toString()}");
       }
       if (filterRequest?.list != null) {
         var datanew = "";
@@ -498,15 +522,41 @@ class AuthProvider with ChangeNotifier {
     } else {
       print("res $jsonDecode($response)");
       GetFavorListResponse resendOtpResponse =
-          new GetFavorListResponse.fromJson(response);
+      new GetFavorListResponse.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;
     }
   }
 
-  Future<dynamic> getSearchSuggestList(
-      String data, BuildContext context, int page) async {
+  Future<dynamic> getReferList(ReferRequest requests, BuildContext context,
+      int page, ReferRequestNew requestsNew, int type) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.post(
+        context: context, url: APIs.refUsers + "?page=$page",
+        requestBody: type == 1 ? requests.toJson() : requestsNew.toJson()
+    );
+
+    print(APIs.refUsers);
+    print("request ${requests}");
+    print("requestsNew ${requestsNew}");
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      print("res $jsonDecode($response)");
+      ReferListResponse resendOtpResponse =
+      new ReferListResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+
+  Future<dynamic> getSearchSuggestList(String data, BuildContext context,
+      int page) async {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.get(
         context: context, url: APIs.seacrhSuggestList + data + "?page=$page");

@@ -92,8 +92,8 @@ class _HomeState extends State<Filter>
         list.clear();
         list.addAll(widget.filterRequest.list);
       }
-      _paymentMin = widget.filterRequest.minAmount ?? 0;
-      _paymentMax = widget.filterRequest.maxAmount ?? 100;
+      _paymentMin = widget.filterRequest.minprice ?? 0;
+      _paymentMax = widget.filterRequest.maxprice ?? 100;
       _currentRangeValues =
           RangeValues(_paymentMin?.toDouble(), _paymentMax?.toDouble());
       _currentSliderValue = widget.filterRequest.distance?.toDouble() ?? 0.0;
@@ -170,12 +170,14 @@ class _HomeState extends State<Filter>
   }
 
   void callback() {
-    var filter = FilterRequest(location: _LocationController.text,
+    var filter = FilterRequest(
+      location: _LocationController.text,
       latlongData: _LatLongController.text,
-      minAmount: _paymentMin,
-      maxAmount: _paymentMax,
+      minprice: _paymentMin,
+      maxprice: _paymentMax,
       distance: _currentSliderValue?.toInt(),
-      list: list,);
+      list: list,
+    );
 
     widget.voidcallback(filter);
 

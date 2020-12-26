@@ -23,6 +23,7 @@ class AppColors {
   static const Color kAppIntroBackgroundColor = const Color(0xFFF4F3F6);
   static const Color kAppIntroPreferenceColor = const Color(0xFF23C8D2);
   static const Color kAppIntroLeftRightStand = const Color(0xFFC2E9EF);
+  static const Color lightReferred = const Color(0xFFEFF9FF);
   static const Color kAppIntroImageGradientColor = const Color(0xFFF4F5F7);
   static const Color colorCyanPrimary = const Color(0xFF32C5FF);
   static const Color colorDarkCyan = const Color(0xFF09A5FF); //9.165,255

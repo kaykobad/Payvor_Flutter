@@ -4,7 +4,7 @@ import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:shimmer/shimmer.dart';
 
-class HomeShimmer extends StatelessWidget {
+class HomeShimmerRefer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,11 +16,11 @@ class HomeShimmer extends StatelessWidget {
           children: <Widget>[
             Expanded(
                 child: ListView.builder(
-                  itemBuilder: (_, index) => Padding(
+              itemBuilder: (_, index) => Padding(
                 padding: const EdgeInsets.only(top: 32.0),
                 child: ShimmerMyOrderItem(),
               ),
-              itemCount: 3,
+              itemCount: 10,
             )),
           ],
         ),
@@ -38,10 +38,8 @@ class ShimmerMyOrderItem extends StatelessWidget {
         baseColor: Colors.grey[200],
         highlightColor: Colors.grey[400],
         child: Container(
-
           child: Column(
             children: <Widget>[
-
               new SizedBox(
                 height: 16.0,
               ),
@@ -50,46 +48,11 @@ class ShimmerMyOrderItem extends StatelessWidget {
                 opacity: 0.12,
                 child: new Container(
                   height: 1.0,
-                  margin: new EdgeInsets.only(
-                      left: 17.0, right: 17.0, top: 16.0),
+                  margin:
+                      new EdgeInsets.only(left: 17.0, right: 17.0, top: 16.0),
                   color: AppColors.dividerColor,
                 ),
               ),
-
-              new Container(
-                height: 147,
-                width: double.infinity,
-                color: Colors.white,
-                margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
-                child: ClipRRect(
-                  // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                  borderRadius: new BorderRadius.circular(10.0),
-                ),
-              ),
-
-              Container(
-                  width: double.infinity,
-                  color: Colors.white,
-                  margin: new EdgeInsets.only(
-                      left: 16.0, right: 16.0, top: 7.0),
-                  alignment: Alignment.centerLeft,
-                  child: new Text(
-                    "",
-                    style: TextThemes.blackCirculerMediumHeight,
-                  )),
-              Container(
-                margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
-                width: double.infinity,
-                color: Colors.white,
-                child: Text(
-                    ""
-                ),
-              ),
-
-
-              new SizedBox(
-                height: 15.0,
-              )
             ],
           ),
         ),
@@ -106,11 +69,8 @@ Widget buildItem() {
         new Container(
           width: 40.0,
           height: 40.0,
-          decoration: BoxDecoration(
-
-              shape: BoxShape.circle,
-              color: Colors.white
-          ),
+          decoration:
+              BoxDecoration(shape: BoxShape.circle, color: Colors.white),
         ),
         Expanded(
           child: new Column(
@@ -150,9 +110,9 @@ Widget buildItem() {
                     ),
                     Expanded(
                         child: new Text(
-                          "",
-                          style: TextThemes.greyDarkTextHomeLocation,
-                        )),
+                      "",
+                      style: TextThemes.greyDarkTextHomeLocation,
+                    )),
                   ],
                 ),
               )
@@ -161,10 +121,9 @@ Widget buildItem() {
         ),
         Align(
             alignment: Alignment.center,
-
             child: Container(
               color: Colors.white,
-              width: 30,
+              width: 50,
               child: new Text(
                 "",
                 style: TextThemes.blackDarkHeaderSub,
