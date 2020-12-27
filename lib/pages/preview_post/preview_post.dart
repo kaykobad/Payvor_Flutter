@@ -101,7 +101,7 @@ class _HomeState extends State<PreviewPost>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 new SizedBox(
-                  height: 36.0,
+                  height: 16.0,
                 ),
                 Container(
                   margin: new EdgeInsets.only(left: 17.0, top: 35.0, right: 16),
@@ -139,6 +139,13 @@ class _HomeState extends State<PreviewPost>
                 ),
                 new SizedBox(
                   height: 16.0,
+                ),
+                Opacity(
+                  opacity: 0.12,
+                  child: new Container(
+                    height: 1.0,
+                    color: AppColors.dividerColor,
+                  ),
                 ),
                 _buildContestList(),
               ],
@@ -211,7 +218,7 @@ class _HomeState extends State<PreviewPost>
             height: 8.0,
             color: AppColors.whiteGray,
           ),
-          index
+          widget.file != null
               ? new Container(
             height: 147,
             width: double.infinity,

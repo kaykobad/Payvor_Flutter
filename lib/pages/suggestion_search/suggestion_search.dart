@@ -500,7 +500,7 @@ class _HomeState extends State<SearchHomeByName>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 new Container(
-                  height: 80.0,
+                  height: 50.0,
                 ),
                 getTextField(),
                 Opacity(
@@ -777,14 +777,11 @@ class _HomeState extends State<SearchHomeByName>
       child: Container(
         padding: new EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.baseline,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-
-
             new SvgPicture.asset(
               AssetStrings.recentSuggest,
             ),
-
             new SizedBox(
               width: 14,
             ),
@@ -831,45 +828,47 @@ class _HomeState extends State<SearchHomeByName>
       },
       child: Container(
         padding: new EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          children: <Widget>[
+        child: Container(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
 
 
-            new SvgPicture.asset(
-              AssetStrings.searchSuggest,
-            ),
+              new SvgPicture.asset(
+                AssetStrings.recentSuggest,
+              ),
 
-            new SizedBox(
-              width: 14,
-            ),
-            Expanded(
-              child: Container(
+              new SizedBox(
+                width: 14,
+              ),
+              Expanded(
+                child: Container(
 
-                child: new Text(
-                  pos ?? "",
-                  style: new TextStyle(
-                    color: Colors.black,
-                    fontFamily: AssetStrings.circulerNormal,
-                    fontSize: 15,
+                  child: new Text(
+                    pos ?? "",
+                    style: new TextStyle(
+                      color: Colors.black,
+                      fontFamily: AssetStrings.circulerNormal,
+                      fontSize: 15,
+
+                    ),
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
 
                   ),
-                  textAlign: TextAlign.left,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-
                 ),
               ),
-            ),
 
-            new SizedBox(
-              width: 8,
-            ),
+              new SizedBox(
+                width: 8,
+              ),
 
-            new SvgPicture.asset(
-              AssetStrings.pathSuggest,
-            ),
-          ],
+              new SvgPicture.asset(
+                AssetStrings.pathSuggest,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -300,10 +300,7 @@ class CustomFloatingButton extends StatelessWidget {
       decoration: BoxDecoration(
           color: Colors.transparent,
           shape: BoxShape.circle,
-          gradient: LinearGradient(colors: [
-            AppColors.colorCyanPrimary,
-            AppColors.colorCyanPrimary
-          ])),
+          gradient: LinearGradient(colors: [AppColors.colorDarkCyan, AppColors.colorDarkCyan])),
     );
   }
 

@@ -192,7 +192,7 @@ class _HomeState extends State<SearchHomeByName>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 new Container(
-                  height: 80.0,
+                  height: 50.0,
                 ),
                 getTextField(),
                 Opacity(

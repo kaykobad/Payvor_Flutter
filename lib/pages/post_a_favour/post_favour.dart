@@ -492,8 +492,8 @@ class _HomeState extends State<PostFavour>
                   ),
                   Container(
                     color: Colors.white,
-                    padding: new EdgeInsets.only(top: 36.0),
-                    margin: new EdgeInsets.only(left: 17.0, right: 17),
+                    padding:
+                        new EdgeInsets.only(top: 36.0, left: 17, right: 17),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -535,6 +535,13 @@ class _HomeState extends State<PostFavour>
                   new Container(
                     color: Colors.white,
                     height: 16.0,
+                  ),
+                  Opacity(
+                    opacity: 0.12,
+                    child: new Container(
+                      height: 1.0,
+                      color: AppColors.dividerColor,
+                    ),
                   ),
                   _image == null ? new Container(
                     color: Colors.white,
@@ -699,14 +706,14 @@ class _HomeState extends State<PostFavour>
                         isValid ? new SizedBox(
                           width: 5,
                         ) : Container(),
-                        new Text(
+                        /* new Text(
                           ">",
                           style: new TextStyle(
                               fontFamily: AssetStrings.circulerNormal,
                               color: AppColors.lightGrey,
                               fontSize: 16),
                           textAlign: TextAlign.center,
-                        ),
+                        ),*/
                       ],
                     ),
                   ),

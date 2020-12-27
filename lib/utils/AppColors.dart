@@ -31,6 +31,7 @@ class AppColors {
   static const Color bluePrimary = const Color(0xFF251A65);
   static const Color whiteGray = const Color(0xFFF8F8FA);
   static const Color dividerColor = const Color(0xFF979797);
+  static const Color dividerNew = const Color(0xFFE4E4E6);
   static const Color lightCyan = const Color(0xFFEFF9FF);
   static const Color moreText = const Color(0xFF72757A); //114,117,122
   static const Color lightWhite = const Color(0xFFF3F3F3);

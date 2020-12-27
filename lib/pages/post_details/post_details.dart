@@ -677,34 +677,54 @@ class _HomeState extends State<PostFavorDetails>
               left: 0.0,
               right: 0.0,
               child: Container(
-                margin: new EdgeInsets.only(top: 35, left: 16, right: 5),
+                margin: new EdgeInsets.only(top: 25, left: 16, right: 5),
                 child: new Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: new SvgPicture.asset(
-                          AssetStrings.back,
-                          width: 21.0,
-                          height: 18.0,
-                          color: Colors.white,
+                      Container(
+                        margin: new EdgeInsets.only(top: 17),
+                        child: Stack(
+                          children: [
+                            new SvgPicture.asset(
+                              AssetStrings.back,
+                              width: 22.0,
+                              height: 20.0,
+                              color: Colors.black54.withOpacity(0.2),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: new SvgPicture.asset(
+                                AssetStrings.back,
+                                width: 21.0,
+                                height: 18.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      GestureDetector(
-                          onTapDown: (TapDownDetails details) {
-                            _showPopupMenu(details.globalPosition);
-                          },
-                          child: Padding(
-                              padding: const EdgeInsets.all(4.0),
+                      Stack(
+                        children: [
+                          Icon(
+                            Icons.more_vert,
+                            color: Colors.black54.withOpacity(0.2),
+                            size: 30,
+                          ),
+                          GestureDetector(
+                              onTapDown: (TapDownDetails details) {
+                                _showPopupMenu(details.globalPosition);
+                              },
                               child: new Icon(
                                 Icons.more_vert,
                                 color: Colors.white,
-                                size: 32,
-                              )))
+                                size: 28,
+                              )),
+                        ],
+                      )
                     ],
                   ),
                 ),

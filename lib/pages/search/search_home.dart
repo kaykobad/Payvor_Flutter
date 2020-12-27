@@ -175,7 +175,7 @@ class _HomeState extends State<SearchCompany>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 new SizedBox(
-                  height: 70.0,
+                  height: 40.0,
                 ),
                 Container(
                     padding: new EdgeInsets.only(left: 16.0, right: 16.0),
@@ -193,15 +193,14 @@ class _HomeState extends State<SearchCompany>
                       child: Offstage(
                         offstage: !showData,
                         child: new Container(
-                          width: 15,
-                          height: 15,
-                          margin: new EdgeInsets.only(right: 8.0, top: 8),
+                          width: 13,
+                          height: 13,
+                          margin: new EdgeInsets.only(right: 14.0, top: 14),
                           decoration: new BoxDecoration(
                               color: Colors.red,
-                              shape: BoxShape.circle
-                          ),
-
-
+                              shape: BoxShape.circle,
+                              border: new Border.all(
+                                  color: AppColors.bluePrimary, width: 2.5)),
                         ),
                       ),
                     )
@@ -412,12 +411,11 @@ class _HomeState extends State<SearchCompany>
                 borderRadius: new BorderRadius.circular(10.0),
 
                 child: getCachedNetworkImageRect(
-                        url: data?.image,
-                        fit: BoxFit.cover,
-                      ),
+                  url: data?.image,
+                  fit: BoxFit.cover,
+                ),
               ),
-            )
-                : Container(),
+            ) : Container(),
             Container(
                 width: double.infinity,
                 color: Colors.white,

@@ -202,12 +202,12 @@ class _HomeState extends State<Filter>
                 children: <Widget>[
                   new Container(
                     color: Colors.white,
-                    height: 36.0,
+                    height: 20.0,
                   ),
                   Container(
                     color: Colors.white,
-                    padding: new EdgeInsets.only(top: 36.0),
-                    margin: new EdgeInsets.only(left: 17.0, right: 17),
+                    padding:
+                        new EdgeInsets.only(top: 36.0, left: 17.0, right: 17),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -264,9 +264,17 @@ class _HomeState extends State<Filter>
                       ],
                     ),
                   ),
+
                   new Container(
                     color: Colors.white,
-                    height: 36.0,
+                    height: 20.0,
+                  ),
+                  Opacity(
+                    opacity: 0.12,
+                    child: new Container(
+                      height: 1.0,
+                      color: AppColors.dividerColor,
+                    ),
                   ),
                   new Container(
                     color: Colors.white,
@@ -299,14 +307,14 @@ class _HomeState extends State<Filter>
                         new SizedBox(
                           width: 15,
                         ),
-                        new Text(
+                        /*  new Text(
                           ">",
                           style: new TextStyle(
                               fontFamily: AssetStrings.circulerNormal,
                               color: AppColors.lightGrey,
                               fontSize: 16),
                           textAlign: TextAlign.center,
-                        ),
+                        ),*/
                       ],
                     ),
                   ),
