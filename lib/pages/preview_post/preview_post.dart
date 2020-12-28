@@ -226,17 +226,33 @@ class _HomeState extends State<PreviewPost>
             new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
             child: ClipRRect(
               // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-              borderRadius: new BorderRadius.circular(10.0),
-              child: widget.file != null ? new Image.file(
-                widget.file,
-                fit: BoxFit.cover,
-                width: 147,
-              ) : Container(
-                color: Colors.grey,
-              ),
-            ),
-          )
-              : Container(),
+                    borderRadius: new BorderRadius.circular(10.0),
+                    child: widget.file != null
+                        ? new Image.file(
+                            widget.file,
+                            fit: BoxFit.cover,
+                            width: 147,
+                          )
+                        : Container(),
+                  ),
+                )
+              : new Container(
+                  height: 147,
+                  width: double.infinity,
+                  margin:
+                      new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
+                  child: ClipRRect(
+                    // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                    borderRadius: new BorderRadius.circular(10.0),
+                    child: Container(
+                      color: AppColors.greyProfile,
+                      child: new Icon(
+                        Icons.image,
+                        color: Colors.black54.withOpacity(0.1),
+                      ),
+                    ),
+                  ),
+                ),
           new SizedBox(
             height: 16.0,
           ),

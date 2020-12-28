@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -191,7 +192,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             ),
           ],
         ),
-        floatingActionButton: Container(
+        /* floatingActionButton: Container(
           height: MediaQuery
               .of(context)
               .size
@@ -208,9 +209,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               redirect();
             },
           ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: BottomAppBar(
+        ),*/
+        //       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        /* bottomNavigationBar: BottomAppBar(
           clipBehavior: Clip.antiAlias,
            shape: CircularNotchedRectangle(),
           notchMargin: 15.0,
@@ -250,6 +251,54 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               ],
             ),
           ),
+        ),*/
+
+        bottomNavigationBar: CurvedNavigationBar(
+          backgroundColor: AppColors.whiteGray,
+          buttonBackgroundColor: AppColors.colorDarkCyan,
+          animationCurve: Curves.bounceIn,
+          height: 60,
+          animationDuration: Duration(
+            milliseconds: 200,
+          ),
+          index: 2,
+          items: <Widget>[
+            new SvgPicture.asset(AssetStrings.home,
+                width: Constants.bottomIconSize,
+                height: Constants.bottomIconSize,
+                color: currentTab == 0 ? selectedColor : unselectedColor),
+            new SvgPicture.asset(AssetStrings.job,
+                width: Constants.bottomIconSize,
+                height: Constants.bottomIconSize,
+                color: currentTab == 1 ? selectedColor : unselectedColor),
+            new SvgPicture.asset(AssetStrings.job,
+                width: Constants.bottomIconSize,
+                height: Constants.bottomIconSize,
+                color: Colors.white),
+            currentTab == 3
+                ? new SvgPicture.asset(AssetStrings.group,
+                    width: Constants.bottomIconSize,
+                    height: Constants.bottomIconSize,
+                    color: selectedColor)
+                : new SvgPicture.asset(AssetStrings.group,
+                    width: Constants.bottomIconSize,
+                    height: Constants.bottomIconSize),
+            new SvgPicture.asset(AssetStrings.profile,
+                width: Constants.bottomIconSize,
+                height: Constants.bottomIconSize,
+                color: currentTab == 4 ? selectedColor : unselectedColor),
+          ],
+          onTap: (index) {
+            if (index == 0) //for home tab
+            {
+              _homeScreen.currentState?.popUntil((route) => route.isFirst);
+            } else if (index == 2) {
+              redirect();
+            }
+            setState(() {
+              currentTab = index;
+            });
+          },
         ),
       ),
     );

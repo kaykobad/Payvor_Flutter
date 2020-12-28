@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:lottie/lottie.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/login/login.dart';
@@ -34,7 +33,7 @@ class FadeIn extends State<SplashScreen> {
     ]);
 
     Future.delayed(Duration(milliseconds: 300), () {
-      FlutterStatusbarcolor.setStatusBarColor(AppColors.bluePrimary);
+    //  FlutterStatusbarcolor.setStatusBarColor(AppColors.bluePrimary);
     });
 
 

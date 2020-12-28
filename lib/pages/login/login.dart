@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/login/loginrequest.dart';
@@ -67,7 +66,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       DeviceOrientation.portraitUp,
     ]);
     Future.delayed(Duration(milliseconds: 300), () {
-      FlutterStatusbarcolor.setStatusBarColor(Colors.white);
+    //  FlutterStatusbarcolor.setStatusBarColor(Colors.white);
     });
   }
 
@@ -262,7 +261,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
     var screensize = MediaQuery
         .of(context)
         .size;
-    return SafeArea(
+    return Material(
       child: Scaffold(
         appBar: getAppBarNew(context),
         backgroundColor: Colors.white,
@@ -271,7 +270,6 @@ class _LoginScreenState extends State<LoginScreenNew> {
           children: [
             Container(
               color: Colors.white,
-
               child: new SingleChildScrollView(
                 child: Container(
                   color: Colors.white,

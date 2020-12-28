@@ -8,6 +8,8 @@ class MyBottomNavigationBarDemo extends StatefulWidget {
 }
 
 class _MyBottomNavigationBarDemoState extends State<MyBottomNavigationBarDemo> {
+  var pos = 2;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,14 +28,21 @@ class _MyBottomNavigationBarDemoState extends State<MyBottomNavigationBarDemo> {
         ),
         index: 2,
         items: <Widget>[
-          Icon(Icons.favorite, size: 30, color: Colors.white),
-          Icon(Icons.verified_user, size: 30, color: Colors.white),
+          Icon(Icons.favorite, size: 30,
+              color: pos == 0 ? Colors.black : Colors.white),
+          Icon(Icons.verified_user, size: 30,
+              color: pos == 1 ? Colors.black : Colors.white),
           Icon(Icons.home, size: 30, color: Colors.white),
-          Icon(Icons.settings, size: 30, color: Colors.white),
-          Icon(Icons.more_horiz, size: 30, color: Colors.white),
+          Icon(Icons.settings, size: 30,
+              color: pos == 3 ? Colors.black : Colors.white),
+          Icon(Icons.more_horiz, size: 30,
+              color: pos == 4 ? Colors.black : Colors.white),
         ],
         onTap: (index) {
-          //Handle button tap
+          pos = index;
+          setState(() {
+
+          });
         },
       ),
     );

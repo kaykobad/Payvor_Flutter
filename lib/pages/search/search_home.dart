@@ -343,28 +343,32 @@ class _HomeState extends State<SearchCompany>
 
   _buildContestList() {
     return Expanded(
-      child: RefreshIndicator(
-        key: _refreshIndicatorKey,
-        onRefresh: () async {
-          isPullToRefresh = true;
-          _loadMore = false;
-          currentPage = 1;
+      child: NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: (overscroll) {
+            overscroll.disallowGlow();
+          },
+          child: RefreshIndicator(
+            key: _refreshIndicatorKey,
+            onRefresh: () async {
+              isPullToRefresh = true;
+              _loadMore = false;
+              currentPage = 1;
 
-          await hitApi(filterRequest);
-        },
-        child: Container(
-          color: AppColors.whiteGray,
-          child: new ListView.builder(
-            padding: new EdgeInsets.all(0.0),
-            controller: _scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return buildItemMain(index, list[index]);
+              await hitApi(filterRequest);
             },
-            itemCount: list.length,
-          ),
-        ),
-      ),
+            child: Container(
+              color: AppColors.whiteGray,
+              child: new ListView.builder(
+                padding: new EdgeInsets.all(0.0),
+                controller: _scrollController,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  return buildItemMain(index, list[index]);
+                },
+                itemCount: list.length,
+              ),
+            ),
+          )),
     );
   }
 

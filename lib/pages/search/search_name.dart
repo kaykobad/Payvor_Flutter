@@ -228,7 +228,7 @@ class _HomeState extends State<SearchHomeByName>
           Offstage(
             offstage: offstagenodata,
             child: Container(
-              margin: new EdgeInsets.only(top: 160),
+              margin: new EdgeInsets.only(top: 130),
               child: new Center(
                 child: new Text(
                   "No User Found",
@@ -242,7 +242,7 @@ class _HomeState extends State<SearchHomeByName>
           ),
 
           Container(
-            margin: new EdgeInsets.only(top: 160),
+            margin: new EdgeInsets.only(top: 130),
             child: new Center(
               child: getHalfScreenLoader(
                 status: loader,
@@ -508,35 +508,44 @@ class _HomeState extends State<SearchHomeByName>
                       borderRadius: new BorderRadius.circular(12.0),
                       color: AppColors.colorDarkCyan),
                   child: new Text(
-                    "Refer",
-                    style: new TextStyle(
-                      color: Colors.white,
-                      fontFamily: AssetStrings.circulerNormal,
-                      fontSize: 13,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              )
-                  : Container(
-                width: 65,
-                height: 25,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    borderRadius: new BorderRadius.circular(12.0),
-                    color: AppColors.lightReferred),
-                child: new Text(
-                  "Refer",
-                  style: new TextStyle(
-                    color: AppColors.colorCyanPrimary,
-                    fontFamily: AssetStrings.circulerNormal,
-                    fontSize: 13,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              )
+                          "Refer",
+                          style: new TextStyle(
+                            color: Colors.white,
+                            fontFamily: AssetStrings.circulerNormal,
+                            fontSize: 13,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  : InkWell(
+                      onTap: () {
+                        loader = true;
+                        setState(() {});
 
-          ),
+                        Future.delayed(const Duration(milliseconds: 500), () {
+                          dataTile?.isSelect = false;
+                          setState(() {});
+                        });
+                      },
+                      child: Container(
+                        width: 65,
+                        height: 25,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: new BorderRadius.circular(12.0),
+                            color: AppColors.lightReferred),
+                        child: new Text(
+                          "Referred",
+                          style: new TextStyle(
+                            color: AppColors.colorCyanPrimary,
+                            fontFamily: AssetStrings.circulerNormal,
+                            fontSize: 13,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )),
         ],
       ),
     );

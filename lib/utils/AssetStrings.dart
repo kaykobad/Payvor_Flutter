@@ -60,10 +60,14 @@ class AssetStrings {
   static const String group = 'assets/svg/group.svg';
   static const String home = 'assets/svg/home.svg';
   static const String job = 'assets/svg/job.svg';
+  static const String edit = 'assets/svg/edit.svg';
+  static const String plus = 'assets/svg/plus.svg';
+  static const String delete = 'assets/svg/iconDelete.svg';
   static const String profile = 'assets/svg/profile.svg';
   static const String notFilled = 'assets/svg/notFilled.svg';
   static const String pathSuggest = 'assets/svg/path_suggest.svg';
   static const String searchSuggest = 'assets/svg/search_suggest.svg';
   static const String recentSuggest = 'assets/svg/recent_suggest.svg';
   static const String cancelSuggest = 'assets/svg/cancel_suggest.svg';
+  static const String check = 'assets/svg/check.svg';
 }

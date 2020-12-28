@@ -204,7 +204,9 @@ class _HomeState extends State<PostFavorDetails>
             Container(
               child: new Text(
                 text,
-                style: TextThemes.darkBlackMedium,
+                style: text == "Delete Post"
+                    ? TextThemes.darkRedMedium
+                    : TextThemes.darkBlackMedium,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -214,7 +216,7 @@ class _HomeState extends State<PostFavorDetails>
     );
   }
 
-  void showBottomSheet() {
+  void showBottomSheets() {
     showModalBottomSheet<void>(
         isScrollControlled: true,
         context: context,
@@ -232,11 +234,21 @@ class _HomeState extends State<PostFavorDetails>
                   Container(
                       margin: new EdgeInsets.only(top: 43, left: 27),
                       child:
-                          getBottomText(AssetStrings.share, "Share Post", 22)),
+                      getBottomText(AssetStrings.share, "Share Post", 22)),
                   Container(
                       margin: new EdgeInsets.only(top: 35, left: 27),
                       child:
-                          getBottomText(AssetStrings.slash, "Report Post", 22)),
+                      getBottomText(AssetStrings.slash, "Report Post", 22)),
+
+                  Container(
+                      margin: new EdgeInsets.only(top: 35, left: 27),
+                      child:
+                      getBottomText(AssetStrings.edit, "Edit Post", 22)),
+
+                  Container(
+                      margin: new EdgeInsets.only(top: 35, left: 27),
+                      child:
+                      getBottomText(AssetStrings.delete, "Delete Post", 22)),
                   Opacity(
                     opacity: 0.12,
                     child: new Container(
@@ -691,54 +703,62 @@ class _HomeState extends State<PostFavorDetails>
               left: 0.0,
               right: 0.0,
               child: Container(
-                margin: new EdgeInsets.only(top: 25, left: 16, right: 5),
+                margin: new EdgeInsets.only(top: 30, left: 16, right: 5,),
                 child: new Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        margin: new EdgeInsets.only(top: 17),
-                        child: Stack(
-                          children: [
-                            new SvgPicture.asset(
+
+                        child: Container(
+                          width: 30.0,
+                          height: 30.0,
+                          padding: new EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              color: AppColors.greyProfile.withOpacity(0.4),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.4),
+                                  blurRadius: .5,
+                                ),
+                              ]),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: new SvgPicture.asset(
                               AssetStrings.back,
-                              width: 22.0,
-                              height: 20.0,
-                              color: Colors.black54.withOpacity(0.2),
+                              width: 21.0,
+                              height: 18.0,
+                              color: Colors.white,
                             ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: new SvgPicture.asset(
-                                AssetStrings.back,
-                                width: 21.0,
-                                height: 18.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                      Stack(
-                        children: [
-                          Icon(
-                            Icons.more_vert,
-                            color: Colors.black54.withOpacity(0.2),
-                            size: 30,
-                          ),
-                          GestureDetector(
-                              onTapDown: (TapDownDetails details) {
-                                //_showPopupMenu(details.globalPosition);
-                                showBottomSheet();
-                              },
-                              child: new Icon(
-                                Icons.more_vert,
-                                color: Colors.white,
-                                size: 28,
-                              )),
-                        ],
+                      Container(
+                        width: 30.0,
+                        height: 30.0,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: AppColors.greyProfile.withOpacity(0.4),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.4),
+                                blurRadius: .5,
+                              ),
+                            ]),
+                        child: GestureDetector(
+                            onTapDown: (TapDownDetails details) {
+                              //_showPopupMenu(details.globalPosition);
+                              showBottomSheets();
+                            },
+                            child: new Icon(
+                              Icons.more_vert,
+                              color: Colors.white,
+                            )),
                       )
                     ],
                   ),

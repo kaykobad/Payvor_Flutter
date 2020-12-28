@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:payvor/pages/splash/splash_screen_new.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/language_provider.dart';
 import 'package:payvor/provider/theme_provider.dart';
 import 'package:payvor/viewmodel/auth_view_model.dart';
-import 'package:payvor/viewmodel/curved_bottom_sample.dart';
 import 'package:payvor/viewmodel/home_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -52,7 +52,7 @@ class Payvor extends StatelessWidget {
 
         // Define the default brightness and colors
       ),
-      home: new MyBottomNavigationBarDemo(),
+      home: new SplashScreen(),
     );
   }
 }

@@ -155,12 +155,16 @@ class TextThemes {
     fontSize: 18,
     color: Colors.black,
   );
+  static final TextStyle darkRedMedium = TextStyle(
+      fontFamily: AssetStrings.circulerMedium,
+      fontSize: 18,
+      color: Color.fromRGBO(255, 107, 102, 1.0));
+
   static final TextStyle blackCirculerMedium = TextStyle(
     fontFamily: AssetStrings.circulerMedium,
     fontSize: 16,
     color: Colors.black,
   );
-
 
   static final TextStyle blackCirculerMediumHeight = TextStyle(
     fontFamily: AssetStrings.circulerMedium,

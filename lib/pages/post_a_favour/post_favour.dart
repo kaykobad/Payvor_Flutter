@@ -166,7 +166,7 @@ class _HomeState extends State<PostFavour>
       print("respStr: $respStr");
       Map data = jsonDecode(respStr); // Parse data from JSON string
       String responseData = data['status']['message'];
-      showInSnackBar(responseData);
+
       _TitleController.text = "";
       _PriceController.text = "";
       _DescriptionController.text = "";
@@ -174,9 +174,9 @@ class _HomeState extends State<PostFavour>
       _LatLongController.text = "";
       _image = null;
       isValid = false;
-      setState(() {
 
-      });
+      showBottomSheet();
+      setState(() {});
     }
     else {
       showInSnackBar("Something went wrong!!Please try again");
@@ -460,6 +460,90 @@ class _HomeState extends State<PostFavour>
       });
     }
   }
+
+
+  void showBottomSheet() {
+    showModalBottomSheet<void>(
+        isScrollControlled: true,
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
+        ),
+        builder: (BuildContext bc) {
+          return Padding(
+              padding: MediaQuery
+                  .of(context)
+                  .viewInsets,
+              child: Container(
+                  child: new Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+
+
+                      Container(
+                        width: 86.0,
+                        height: 86.0,
+                        margin: new EdgeInsets.only(top: 38),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(37, 26, 101, 1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: GestureDetector(
+                            onTapDown: (TapDownDetails details) {
+                              //_showPopupMenu(details.globalPosition);
+                              showBottomSheet();
+                            },
+                            child: new SvgPicture.asset(
+                              AssetStrings.check,
+                              width: 42.0,
+                              height: 42.0,
+                              color: Colors.white,
+                            )),
+                      ),
+
+                      new Container(
+                        margin: new EdgeInsets.only(top: 40),
+                        child: new Text("Successful!", style: new TextStyle(
+                            fontFamily: AssetStrings.circulerMedium,
+                            fontSize: 20,
+                            color: Colors.black),),
+                      ),
+
+                      new Container(
+                        margin: new EdgeInsets.only(top: 10),
+                        child: new Text(
+                          "You have created a favor successfully.",
+                          style: new TextStyle(
+                            fontFamily: AssetStrings.circulerNormal,
+                            fontSize: 16,
+                            color: Color.fromRGBO(114, 117, 112, 1),),),
+
+
+                      ),
+
+                      Container(
+                        margin: new EdgeInsets.only(
+                            top: 60, left: 16, right: 16),
+                        child: getSetupButtonNew(
+                            callbackFavourPage, "Go to Favor Page", 0,
+                            newColor: AppColors.colorDarkCyan),
+                      ),
+
+
+                      Container(
+                        height: 56,
+                      )
+                    ],
+                  )));
+        });
+  }
+
+  void callbackFavourPage() async {
+    Navigator.pop(context);
+  }
+
 
   Future<ValueSetter> voidCallBackDialog(int type) async {
     print("calllll");

@@ -780,7 +780,7 @@ class _HomeState extends State<SearchHomeByName>
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             new SvgPicture.asset(
-              AssetStrings.recentSuggest,
+              AssetStrings.searchSuggest,
             ),
             new SizedBox(
               width: 14,
@@ -809,7 +809,7 @@ class _HomeState extends State<SearchHomeByName>
             ),
 
             new SvgPicture.asset(
-              AssetStrings.cancelSuggest,
+              AssetStrings.pathSuggest,
             ),
           ],
         ),
@@ -865,7 +865,7 @@ class _HomeState extends State<SearchHomeByName>
               ),
 
               new SvgPicture.asset(
-                AssetStrings.pathSuggest,
+                AssetStrings.cancelSuggest,
               ),
             ],
           ),
