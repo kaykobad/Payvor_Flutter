@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/apierror.dart';
@@ -61,6 +62,7 @@ class _HomeState extends State<PostFavorDetails>
     Future.delayed(const Duration(milliseconds: 300), () {
       hitApi();
     });
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
     super.initState();
   }
@@ -549,64 +551,64 @@ class _HomeState extends State<PostFavorDetails>
             height: screenSize.height,
             child: favoriteResponse != null && favoriteResponse.data != null
                 ? SingleChildScrollView(
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Container(
-                    height: 214,
-                    width: double.infinity,
-                    child: ClipRRect(
-                      // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                      borderRadius: new BorderRadius.circular(0.0),
+                    child: new Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        new Container(
+                          height: 214,
+                          width: double.infinity,
+                          child: ClipRRect(
+                            // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                            borderRadius: new BorderRadius.circular(0.0),
 
-                      child: getCachedNetworkImageRect(
-                        url: favoriteResponse.data.image,
-                        size: 214,
-
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  buildItem(),
-                  Opacity(
-                    opacity: 0.12,
-                    child: new Container(
-                      height: 1.0,
-                      margin: new EdgeInsets.only(left: 17.0, right: 17.0),
-                      color: AppColors.dividerColor,
-                    ),
-                  ),
-                  Container(
-                      color: Colors.white,
-                      padding: new EdgeInsets.only(
-                          left: 16.0, right: 16.0, top: 16.0),
-                      alignment: Alignment.centerLeft,
-                      child: new Text(
-                        ResString().get('description'),
-                        style: TextThemes.blackCirculerMediumHeight,
-                      )),
-                  Container(
-                    padding: new EdgeInsets.only(
-                        left: 16.0, right: 16.0, top: 10.0, bottom: 18),
-                    color: Colors.white,
-                    width: double.infinity,
-                    child: ReadMoreText(
-                      favoriteResponse?.data?.description ?? "",
-                      trimLines: 4,
-                      colorClickableText: AppColors.colorDarkCyan,
-                      trimMode: TrimMode.Line,
-                      style: new TextStyle(
-                        color: AppColors.moreText,
-                        fontFamily: AssetStrings.circulerNormal,
-                        fontSize: 14.0,
-                      ),
-                      trimCollapsedText: '...more',
-                      trimExpandedText: ' less',
-                    ),
-                  ),
-                  buildItemUser(),
-                  buildItemRating(1, "User Ratings"),
-                  buildItemRating(2, "Refer Others"),
+                            child: getCachedNetworkImageRect(
+                              url: favoriteResponse.data.image,
+                              size: 214,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        buildItem(),
+                        Opacity(
+                          opacity: 0.12,
+                          child: new Container(
+                            height: 1.0,
+                            margin:
+                                new EdgeInsets.only(left: 17.0, right: 17.0),
+                            color: AppColors.dividerColor,
+                          ),
+                        ),
+                        Container(
+                            color: Colors.white,
+                            padding: new EdgeInsets.only(
+                                left: 16.0, right: 16.0, top: 16.0),
+                            alignment: Alignment.centerLeft,
+                            child: new Text(
+                              ResString().get('description'),
+                              style: TextThemes.blackCirculerMediumHeight,
+                            )),
+                        Container(
+                          padding: new EdgeInsets.only(
+                              left: 16.0, right: 16.0, top: 10.0, bottom: 18),
+                          color: Colors.white,
+                          width: double.infinity,
+                          child: ReadMoreText(
+                            favoriteResponse?.data?.description ?? "",
+                            trimLines: 4,
+                            colorClickableText: AppColors.colorDarkCyan,
+                            trimMode: TrimMode.Line,
+                            style: new TextStyle(
+                              color: AppColors.moreText,
+                              fontFamily: AssetStrings.circulerNormal,
+                              fontSize: 14.0,
+                            ),
+                            trimCollapsedText: '...more',
+                            trimExpandedText: ' less',
+                          ),
+                        ),
+                        buildItemUser(),
+                        buildItemRating(1, "User Ratings"),
+                        buildItemRating(2, "Refer Others"),
                         Container(
                             color: Colors.white,
                             padding: new EdgeInsets.only(
@@ -619,8 +621,10 @@ class _HomeState extends State<PostFavorDetails>
                             )),
                         getRowsPayment(ResString().get('job_payment'),
                             "€${favoriteResponse?.data?.price}", 23.0),
-                        getRowsPayment(ResString().get('payvor_service_fee')+"(20%)",
-                            "€${favoriteResponse?.data?.service_fee}", 9.0),
+                        getRowsPayment(
+                            ResString().get('payvor_service_fee') + "(20%)",
+                            "€${favoriteResponse?.data?.service_fee}",
+                            9.0),
                         new Container(
                           height: 13,
                           color: Colors.white,
@@ -633,39 +637,42 @@ class _HomeState extends State<PostFavorDetails>
                                 new EdgeInsets.only(left: 17.0, right: 17.0),
                             color: AppColors.dividerColor,
                           ),
-                  ),
-                  new Container(
-                    color: Colors.white,
-                    padding: new EdgeInsets.only(
-                        left: 16, right: 16, top: 9, bottom: 21),
-                    child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        new Text(
-                          ResString().get('you_all_receive'),
-                          style: new TextStyle(
-                              fontFamily: AssetStrings.circulerBoldStyle,
-                              color: AppColors.bluePrimary,
-                              fontSize: 15),
-                          textAlign: TextAlign.center,
                         ),
-                        new Text(
-                          "€${favoriteResponse?.data?.receiving}",
-                          style: new TextStyle(
-                              fontFamily: AssetStrings.circulerBoldStyle,
-                              color: AppColors.bluePrimary,
-                              fontSize: 15),
-                          textAlign: TextAlign.center,
+                        new Container(
+                          color: Colors.white,
+                          padding: new EdgeInsets.only(
+                              left: 16, right: 16, top: 9, bottom: 21),
+                          child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              new Text(
+                                ResString().get('you_all_receive'),
+                                style: new TextStyle(
+                                    fontFamily:
+                                        AssetStrings.circulerBoldStyle,
+                                    color: AppColors.bluePrimary,
+                                    fontSize: 15),
+                                textAlign: TextAlign.center,
+                              ),
+                              new Text(
+                                "€${favoriteResponse?.data?.receiving}",
+                                style: new TextStyle(
+                                    fontFamily:
+                                        AssetStrings.circulerBoldStyle,
+                                    color: AppColors.bluePrimary,
+                                    fontSize: 15),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                        new SizedBox(
+                          height: 150.0,
                         ),
                       ],
                     ),
-                  ),
-                  new SizedBox(
-                    height: 150.0,
-                  ),
-                ],
-              ),
-            ) : Container(),
+                  )
+                : Container(),
           ),
           Offstage(
             offstage: true,
@@ -739,20 +746,20 @@ class _HomeState extends State<PostFavorDetails>
               )),
           favoriteResponse != null && favoriteResponse.data != null
               ? Positioned(
-            bottom: 0.0,
-            left: 0.0,
-            right: 0.0,
-            child: Material(
-              elevation: 18.0,
-              child: Container(
-                  color: Colors.white,
-                  padding: new EdgeInsets.only(top: 9, bottom: 28),
-                  child: getSetupButtonNew(
-                      callback, ResString().get('apply_for_fav'), 16,
-                      newColor: AppColors.colorDarkCyan)),
-            ),
-          ) : Container(),
-
+                  bottom: 0.0,
+                  left: 0.0,
+                  right: 0.0,
+                  child: Material(
+                    elevation: 18.0,
+                    child: Container(
+                        color: Colors.white,
+                        padding: new EdgeInsets.only(top: 9, bottom: 28),
+                        child: getSetupButtonNew(
+                            callback, ResString().get('apply_for_fav'), 16,
+                            newColor: AppColors.colorDarkCyan)),
+                  ),
+                )
+              : Container(),
 
 //          new Center(
 //            child: getFullScreenProviderLoader(

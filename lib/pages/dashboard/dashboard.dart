@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
@@ -134,10 +135,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
+
 //      body: PageStorage(
 //        child: screens[currentTab],
 //        bucket: bucket,
@@ -206,7 +216,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           notchMargin: 15.0,
           child: Container(
             color: Colors.transparent,
-            height: 85,
+            height: 80,
             width: double.infinity,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,

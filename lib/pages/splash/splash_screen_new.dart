@@ -28,7 +28,7 @@ class FadeIn extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
