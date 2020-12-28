@@ -82,7 +82,7 @@ class ResString {
     'enter_code_that': 'Please enter the code that is sent to your phone ',
     'to_continuew_plz': 'To continue, please verify your information',
     'new_password': 'New Password',
-    'post_flavor': 'Post Favor',
+    'post_favor': 'Post Favor',
     'apply_filters': 'Apply Filters',
     'enter_new_pass': 'Enter the new password ',
     'post_favour': 'Post a Favor',

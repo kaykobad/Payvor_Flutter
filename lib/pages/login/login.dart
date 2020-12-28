@@ -167,6 +167,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       LoginRequest loginRequest = new LoginRequest(
           password: _PasswordController.text, email: _EmailController.text);
       response = await provider.login(loginRequest, context);
+      MemoryManagement.socialMediaStatus("0");
     } else {
       var types = "";
 
@@ -201,6 +202,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
           snsId: snsId);
 
       response = await provider.socialSignup(loginRequest, context);
+      MemoryManagement.socialMediaStatus("1");
     }
 
     if (response is LoginSignupResponse) {

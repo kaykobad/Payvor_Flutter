@@ -212,6 +212,7 @@ class _HomeState extends State<SearchHomeByName>
   }
 
   Widget buildItemSearch(int pos, Datas data) {
+    print("image_url ${data.image}");
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -244,22 +245,21 @@ class _HomeState extends State<SearchHomeByName>
                 color: AppColors.dividerColor,
               ),
             ),
-            data?.image != null && data.image.isNotEmpty
-                ? new Container(
-                    height: 147,
-                    width: double.infinity,
-                    margin:
-                        new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
-                    child: ClipRRect(
-                      // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                      borderRadius: new BorderRadius.circular(10.0),
+            data?.image != null && data.image.isNotEmpty ? new Container(
+              height: 147,
+              width: double.infinity,
+              margin:
+              new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
+              child: ClipRRect(
+                // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                borderRadius: new BorderRadius.circular(10.0),
 
-                      child: getCachedNetworkImageWithurl(
-                        url: data?.image,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  )
+                child: getCachedNetworkImageRect(
+                  url: data?.image,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            )
                 : Container(),
             Container(
                 width: double.infinity,

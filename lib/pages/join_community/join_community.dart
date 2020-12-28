@@ -454,8 +454,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       SignUpRequest loginRequest = new SignUpRequest(
           name: name, password: "123", email: email, type: types);
       response = await provider.signup(loginRequest, context);
-
-
+      MemoryManagement.socialMediaStatus("0");
     } else {
       SignUpSocialRequest loginRequest = new SignUpSocialRequest(
           name: name,

@@ -175,7 +175,7 @@ class _HomeState extends State<PreviewPost>
                 color: Colors.white,
                 padding: new EdgeInsets.only(top: 9, bottom: 28),
                 child: getSetupButtonNew(
-                    callback, ResString().get('post_flavor'), 16,
+                    callback, ResString().get('post_favor'), 16,
                     newColor: AppColors.colorDarkCyan)),
           ),
         ],

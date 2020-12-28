@@ -169,9 +169,15 @@ class _HomeState extends State<PostFavorDetails>
   Widget getBottomText(String icon, String text, double size) {
     return InkWell(
       onTap: () {
+        Navigator.pop(context);
         if (text == "Report Post") {
           _showConfirmDialog();
         }
+        else if(text=="Share Post")
+          {
+            _share();
+          }
+
       },
       child: Container(
         child: Row(
@@ -403,6 +409,7 @@ class _HomeState extends State<PostFavorDetails>
                 fontSize: 14),
             textAlign: TextAlign.center,
           ),
+
           new Text(
             amount,
             style: new TextStyle(
@@ -410,7 +417,7 @@ class _HomeState extends State<PostFavorDetails>
                 color: Colors.black,
                 fontSize: 14),
             textAlign: TextAlign.center,
-          ),
+          )
         ],
       ),
     );
@@ -443,8 +450,8 @@ class _HomeState extends State<PostFavorDetails>
                 Container(
                   margin: new EdgeInsets.only(left: 10.0, right: 10.0),
                   child: new Text(
-                    favoriteResponse?.data.title
-                        ?? "",
+                    favoriteResponse?.data?.user?.name??""
+                        ,
                     style: TextThemes.blackCirculerMedium,
                   ),
                 ),
@@ -612,7 +619,7 @@ class _HomeState extends State<PostFavorDetails>
                             )),
                         getRowsPayment(ResString().get('job_payment'),
                             "€${favoriteResponse?.data?.price}", 23.0),
-                        getRowsPayment(ResString().get('payvor_service_fee'),
+                        getRowsPayment(ResString().get('payvor_service_fee')+"(20%)",
                             "€${favoriteResponse?.data?.service_fee}", 9.0),
                         new Container(
                           height: 13,
@@ -637,17 +644,17 @@ class _HomeState extends State<PostFavorDetails>
                         new Text(
                           ResString().get('you_all_receive'),
                           style: new TextStyle(
-                              fontFamily: AssetStrings.circulerNormal,
+                              fontFamily: AssetStrings.circulerBoldStyle,
                               color: AppColors.bluePrimary,
-                              fontSize: 14),
+                              fontSize: 15),
                           textAlign: TextAlign.center,
                         ),
                         new Text(
                           "€${favoriteResponse?.data?.receiving}",
                           style: new TextStyle(
-                              fontFamily: AssetStrings.circulerNormal,
+                              fontFamily: AssetStrings.circulerBoldStyle,
                               color: AppColors.bluePrimary,
-                              fontSize: 14),
+                              fontSize: 15),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -716,7 +723,8 @@ class _HomeState extends State<PostFavorDetails>
                           ),
                           GestureDetector(
                               onTapDown: (TapDownDetails details) {
-                                _showPopupMenu(details.globalPosition);
+                                //_showPopupMenu(details.globalPosition);
+                                showBottomSheet();
                               },
                               child: new Icon(
                                 Icons.more_vert,

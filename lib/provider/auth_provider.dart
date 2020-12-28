@@ -402,9 +402,10 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      FavourDetailsResponse resendOtpResponse =
+      FavourDetailsResponse favourDetailsResponse =
           new FavourDetailsResponse.fromJson(response);
-      completer.complete(resendOtpResponse);
+      print("detail_response ${favourDetailsResponse.toJson()}");
+      completer.complete(favourDetailsResponse);
       notifyListeners();
       return completer.future;
     }

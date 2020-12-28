@@ -32,9 +32,7 @@ class _HomeState extends State<PostFavour>
     with AutomaticKeepAliveClientMixin<PostFavour> {
   var screenSize;
 
-  final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
-  ScrollController scrollController = new ScrollController();
+   ScrollController scrollController = new ScrollController();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -601,14 +599,9 @@ class _HomeState extends State<PostFavour>
                             ),
                           )),
 
-                      Container(
-                        alignment: Alignment.center,
-                        height: 147,
-
-
-                        child: Positioned(
-                          top: 0.0,
-                          bottom: 0.0,
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.center,
                           child: InkWell(
                               onTap: () {
                                 _image = null;
@@ -761,7 +754,7 @@ class _HomeState extends State<PostFavour>
                       ),
                       Expanded(
                         child: getSetupButtonNew(
-                            callback, ResString().get('apply_filters'), 0,
+                            callback, ResString().get('post_favor'), 0,
                             newColor: AppColors.colorDarkCyan),
                       ),
                     ],
