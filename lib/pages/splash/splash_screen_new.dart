@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:lottie/lottie.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/memory_management.dart';
-
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -32,6 +32,12 @@ class FadeIn extends State<SplashScreen> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+
+    Future.delayed(Duration(milliseconds: 300), () {
+      FlutterStatusbarcolor.setStatusBarColor(AppColors.bluePrimary);
+    });
+
+
     initPlatformState();
 
     moveToScreen();

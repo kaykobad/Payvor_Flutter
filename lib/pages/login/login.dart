@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/login/loginrequest.dart';
@@ -57,6 +59,18 @@ class _LoginScreenState extends State<LoginScreenNew> {
     );
   }
 
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    Future.delayed(Duration(milliseconds: 300), () {
+      FlutterStatusbarcolor.setStatusBarColor(Colors.white);
+    });
+  }
+
   Widget getView() {
     return new Container(
       height: 1.0,
@@ -64,7 +78,8 @@ class _LoginScreenState extends State<LoginScreenNew> {
     );
   }
 
-  Widget getTextField(String labelText,
+  Widget getTextField(
+      String labelText,
       TextEditingController controller,
       FocusNode focusNodeCurrent,
       FocusNode focusNodeNext,
@@ -244,17 +259,20 @@ class _LoginScreenState extends State<LoginScreenNew> {
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<AuthProvider>(context);
-    var screensize = MediaQuery.of(context).size;
-    return Material(
-      child: Container(
-        color: Colors.white,
-        child: Stack(
+    var screensize = MediaQuery
+        .of(context)
+        .size;
+    return SafeArea(
+      child: Scaffold(
+        appBar: getAppBarNew(context),
+        backgroundColor: Colors.white,
+        key: _scaffoldKeys,
+        body: Stack(
           children: [
-            Scaffold(
-              appBar: getAppBarNew(context),
-              backgroundColor: Colors.white,
-              key: _scaffoldKeys,
-              body: new SingleChildScrollView(
+            Container(
+              color: Colors.white,
+
+              child: new SingleChildScrollView(
                 child: Container(
                   color: Colors.white,
                   width: screensize.width,
