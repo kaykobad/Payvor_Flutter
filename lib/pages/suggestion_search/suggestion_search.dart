@@ -489,61 +489,66 @@ class _HomeState extends State<SearchHomeByName>
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: AppColors.bluePrimary,
-      body: Stack(
-        children: <Widget>[
-          new Container(
-            color: Colors.white,
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                new Container(
-                  height: 50.0,
-                ),
-                getTextField(),
-                Opacity(
-                  opacity: 0.7,
-                  child: new Container(
-                    height: 0.5,
-                    margin: new EdgeInsets.only(top: 16.0),
-                    color: AppColors.dividerColor,
+    return GestureDetector(
+      onTap: (){
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+       // backgroundColor: AppColors.bluePrimary,
+        body: Stack(
+          children: <Widget>[
+            new Container(
+              color: Colors.white,
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  new Container(
+                    height: 50.0,
                   ),
+                  getTextField(),
+                  Opacity(
+                    opacity: 0.7,
+                    child: new Container(
+                      height: 0.5,
+                      margin: new EdgeInsets.only(top: 16.0),
+                      color: AppColors.dividerColor,
+                    ),
+                  ),
+                  isSearchCalled
+                      ? _buildContestList()
+                      : _buildContestListSearch(),
+                ],
+              ),
+            ),
+
+
+            listResult.length == 0 && list.length == 0 ? Container(
+              margin: new EdgeInsets.only(top: 120),
+              child: new Center(
+                child: new Text(
+                  "No Favors Found",
+                  style: new TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0),
                 ),
-                isSearchCalled
-                    ? _buildContestList()
-                    : _buildContestListSearch(),
-              ],
-            ),
-          ),
+              ),
+            )
+                : Container(),
 
 
-          listResult.length == 0 && list.length == 0 ? Container(
-            margin: new EdgeInsets.only(top: 120),
-            child: new Center(
-              child: new Text(
-                "No Favors Found",
-                style: new TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0),
+            new Center(
+              child: Container(
+                margin: new EdgeInsets.only(top: 50),
+                child: getHalfScreenLoader(
+                  status: provider.getLoading(),
+                  context: context,
+                ),
               ),
             ),
-          )
-              : Container(),
-
-
-          new Center(
-            child: Container(
-              margin: new EdgeInsets.only(top: 50),
-              child: getHalfScreenLoader(
-                status: provider.getLoading(),
-                context: context,
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -608,6 +613,7 @@ class _HomeState extends State<SearchHomeByName>
                           title = value;
 
                           hitSearchApi(title);
+
                         }
                       },
                       onChanged: (String value) {
@@ -770,10 +776,9 @@ class _HomeState extends State<SearchHomeByName>
       onTap: () {
         isPullToRefreshSuggest = false;
         _loadMore = false;
-
-
         title = datas.title;
         hitSearchApi(title);
+
       },
       child: Container(
         padding: new EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
@@ -826,6 +831,7 @@ class _HomeState extends State<SearchHomeByName>
         _loadMore = false;
         currentPage = 1;
         hitSearchApi(keyword);
+
       },
       child: Container(
         padding: new EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
@@ -869,6 +875,10 @@ class _HomeState extends State<SearchHomeByName>
                 onTap: ()async{
                    await DatabaseHelper.instance
                       .delete(keyword);
+                   list.removeAt(pos);
+                   setState(() {
+
+                   });
                 },
                 child: Center(
                   child: new SvgPicture.asset(

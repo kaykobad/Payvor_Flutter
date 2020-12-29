@@ -335,6 +335,7 @@ class _HomeState extends State<PostFavour>
             controller: controller,
             keyboardType: textInputType,
             style: TextThemes.blackTextFieldNormal,
+            keyboardAppearance: Brightness.light,
             focusNode: focusNodeCurrent,
             maxLines: lines,
 
@@ -351,10 +352,10 @@ class _HomeState extends State<PostFavour>
               hintText: labelText,
 
               contentPadding: new EdgeInsets.only(right: 50.0),
-              prefix: new Text(
-                  focusNodeCurrent == _PriceField && _PriceField.hasFocus
-                      ? "€ "
-                      : "€ "),
+//              prefix: new Text(
+//                  focusNodeCurrent == _PriceField&&_PriceField.hasFocus
+//                      ? "€ "
+//                      : ""),
               hintStyle: controller.text.length == 0 && isValid ? TextThemes
                   .readAlert : TextThemes.greyTextFieldHintNormal,
             ),
