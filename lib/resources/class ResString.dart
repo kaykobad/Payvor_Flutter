@@ -89,7 +89,7 @@ class ResString {
     'upload_photo': '+Upload Photo',
     'photo_not_mandetry': '(Photo is not mendatory)',
     'title': 'Title',
-    'price': '€ Price',
+    'price': 'Price',
     'description': 'Description',
     'location': 'Location',
     'preview_favor': 'Preview Favor',

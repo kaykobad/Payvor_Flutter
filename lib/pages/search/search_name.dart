@@ -260,7 +260,10 @@ class _HomeState extends State<SearchHomeByName>
 
 
   hitApi(String id, DataRefer refer) async {
-    loader = true;
+    setState(() {
+      loader = true;
+
+    });
 
     bool gotInternetConnection = await hasInternetConnection(
       context: context,
@@ -520,10 +523,10 @@ class _HomeState extends State<SearchHomeByName>
                     )
                   : InkWell(
                       onTap: () {
-                        loader = true;
-                        setState(() {});
+                       // loader = true;
+                       // setState(() {});
 
-                        Future.delayed(const Duration(milliseconds: 500), () {
+                        Future.delayed(const Duration(milliseconds: 300), () {
                           dataTile?.isSelect = false;
                           setState(() {});
                         });

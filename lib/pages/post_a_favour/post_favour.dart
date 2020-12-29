@@ -349,11 +349,12 @@ class _HomeState extends State<PostFavour>
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
               hintText: labelText,
+
               contentPadding: new EdgeInsets.only(right: 50.0),
               prefix: new Text(
                   focusNodeCurrent == _PriceField && _PriceField.hasFocus
                       ? "€ "
-                      : ""),
+                      : "€ "),
               hintStyle: controller.text.length == 0 && isValid ? TextThemes
                   .readAlert : TextThemes.greyTextFieldHintNormal,
             ),
@@ -490,17 +491,12 @@ class _HomeState extends State<PostFavour>
                           color: Color.fromRGBO(37, 26, 101, 1),
                           shape: BoxShape.circle,
                         ),
-                        child: GestureDetector(
-                            onTapDown: (TapDownDetails details) {
-                              //_showPopupMenu(details.globalPosition);
-                              showBottomSheet();
-                            },
-                            child: new SvgPicture.asset(
-                              AssetStrings.check,
-                              width: 42.0,
-                              height: 42.0,
-                              color: Colors.white,
-                            )),
+                        child: new SvgPicture.asset(
+                          AssetStrings.check,
+                          width: 42.0,
+                          height: 42.0,
+                          color: Colors.white,
+                        ),
                       ),
 
                       new Container(
@@ -541,6 +537,7 @@ class _HomeState extends State<PostFavour>
   }
 
   void callbackFavourPage() async {
+    Navigator.pop(context);
     Navigator.pop(context);
   }
 
@@ -585,6 +582,7 @@ class _HomeState extends State<PostFavour>
                           child: InkWell(
                             onTap: () {
                               Navigator.pop(context);
+
                             },
                             child: new Padding(
                               padding: const EdgeInsets.all(1.0),

@@ -32,11 +32,6 @@ class FadeIn extends State<SplashScreen> {
       DeviceOrientation.portraitUp,
     ]);
 
-    Future.delayed(Duration(milliseconds: 300), () {
-    //  FlutterStatusbarcolor.setStatusBarColor(AppColors.bluePrimary);
-    });
-
-
     initPlatformState();
 
     moveToScreen();

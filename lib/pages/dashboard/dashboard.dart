@@ -111,12 +111,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   ValueChanged<Widget> homeCallBack(Widget screen) {
-    Navigator.push(
+    _redirect(screen);
+  }
+
+  void _redirect(Widget screen) async {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    var value = await Navigator.push(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {
         return screen;
       }),
     );
+    print("callback $value");
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   }
 
   VoidCallback logoutCallBack() {
@@ -148,7 +155,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
-
+        backgroundColor: AppColors.kAppScreenBackGround,
 //      body: PageStorage(
 //        child: screens[currentTab],
 //        bucket: bucket,
@@ -254,13 +261,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         ),*/
 
         bottomNavigationBar: CurvedNavigationBar(
-          backgroundColor: AppColors.whiteGray,
+          backgroundColor: AppColors.kAppScreenBackGround,
           buttonBackgroundColor: AppColors.colorDarkCyan,
           animationCurve: Curves.bounceIn,
-          height: 60,
-          animationDuration: Duration(
-            milliseconds: 200,
-          ),
+          height: 85,
+          animationDuration: null,
           index: 2,
           items: <Widget>[
             new SvgPicture.asset(AssetStrings.home,
@@ -289,15 +294,24 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 color: currentTab == 4 ? selectedColor : unselectedColor),
           ],
           onTap: (index) {
+            print("index $index");
             if (index == 0) //for home tab
             {
+              SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+
               _homeScreen.currentState?.popUntil((route) => route.isFirst);
             } else if (index == 2) {
+              SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+
               redirect();
+            } else {
+              SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
             }
-            setState(() {
-              currentTab = index;
-            });
+
+            if (index > 2)
+              currentTab = index - 1;
+            else if (index <= 1) currentTab = index;
+            setState(() {});
           },
         ),
       ),

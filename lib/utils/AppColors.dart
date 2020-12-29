@@ -45,4 +45,5 @@ class AppColors {
   static const Color kSecondGradientColor = const Color(0xFF40A087);
   static const Color kAppIntroSubHeadingColor = const Color(0xFF8392A5);
   static const Color kAppIntroHeadingColor = const Color(0xFF3C4858);
+  static const Color kAppScreenBackGround=const Color(0xFFF2F2F2);
 }

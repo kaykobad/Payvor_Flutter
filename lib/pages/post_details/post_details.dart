@@ -91,19 +91,18 @@ class _HomeState extends State<PostFavorDetails>
 
       if (response != null && response.data != null) {
         favoriteResponse = response;
+        if (response.data.image == null) {
+          SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+        } else {
+          SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+        }
       }
-
-      print(response);
-      try {} catch (ex) {}
     } else {
       provider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
-
       showInSnackBar(apiError.error);
     }
-
-    setState(() {});
   }
 
   @override
@@ -703,7 +702,7 @@ class _HomeState extends State<PostFavorDetails>
               left: 0.0,
               right: 0.0,
               child: Container(
-                margin: new EdgeInsets.only(top: 30, left: 16, right: 5,),
+                margin: new EdgeInsets.only(top: 35, left: 16, right: 5,),
                 child: new Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: Row(
@@ -712,15 +711,15 @@ class _HomeState extends State<PostFavorDetails>
                       Container(
 
                         child: Container(
-                          width: 30.0,
-                          height: 30.0,
+                          width: 35.0,
+                          height: 35.0,
                           padding: new EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                              color: AppColors.greyProfile.withOpacity(0.4),
+                              color: AppColors.kBlack.withOpacity(0.2),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.grey.withOpacity(0.4),
+                                  color: AppColors.kBlack.withOpacity(0.2),
                                   blurRadius: .5,
                                 ),
                               ]),
@@ -738,15 +737,15 @@ class _HomeState extends State<PostFavorDetails>
                         ),
                       ),
                       Container(
-                        width: 30.0,
-                        height: 30.0,
+                        width: 35.0,
+                        height: 35.0,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            color: AppColors.greyProfile.withOpacity(0.4),
+                            color: AppColors.kBlack.withOpacity(0.2),
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.4),
+                                color: AppColors.kBlack.withOpacity(0.2),
                                 blurRadius: .5,
                               ),
                             ]),

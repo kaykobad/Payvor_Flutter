@@ -212,7 +212,7 @@ class _HomeState extends State<SearchHomeByName>
   }
 
   Widget buildItemSearch(int pos, Datas data) {
-    print("image_url ${data.image}");
+    print("image_url ${data.user.profilePic}");
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -596,6 +596,7 @@ class _HomeState extends State<SearchHomeByName>
                       controller: _controller,
                       style: TextThemes.blackTextFieldNormal,
                       keyboardType: TextInputType.text,
+                      keyboardAppearance: Brightness.light,
                       onSubmitted: (String value) {
                         if (value
                             .trim()
@@ -697,7 +698,7 @@ class _HomeState extends State<SearchHomeByName>
               physics: const AlwaysScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 if (list[index] is String) {
-                  widgets = buildItemRecent(list[index]);
+                  widgets = buildItemRecent(list[index],index);
                 }
                 else {
                   widgets = buildItemMain(index);
@@ -716,11 +717,11 @@ class _HomeState extends State<SearchHomeByName>
   bool get wantKeepAlive => true;
 
 
-  Widget buildItemRecent(String pos) {
+  Widget buildItemRecent(String keyword,int pos) {
     return Container(
       child: Column(
         children: [
-          pos == "Recent Searches" ? Container(
+          keyword == "Recent Searches" ? Container(
             margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 30),
             alignment: Alignment.centerLeft,
             child: new Text(
@@ -730,7 +731,7 @@ class _HomeState extends State<SearchHomeByName>
                   fontFamily: AssetStrings.circulerMedium,
                   fontSize: 18.0),
             ),
-          ) : buildItemRecentSearch(pos),
+          ) : buildItemRecentSearch(keyword,pos),
         ],
       ),
     );
@@ -817,14 +818,14 @@ class _HomeState extends State<SearchHomeByName>
     );
   }
 
-  Widget buildItemRecentSearch(String pos) {
+  Widget buildItemRecentSearch(String keyword,int pos) {
     return InkWell(
       onTap: () {
-        _controller.text = pos;
+        _controller.text = keyword;
         isPullToRefresh = false;
         _loadMore = false;
         currentPage = 1;
-        hitSearchApi(pos);
+        hitSearchApi(keyword);
       },
       child: Container(
         padding: new EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
@@ -845,7 +846,7 @@ class _HomeState extends State<SearchHomeByName>
                 child: Container(
 
                   child: new Text(
-                    pos ?? "",
+                    keyword ?? "",
                     style: new TextStyle(
                       color: Colors.black,
                       fontFamily: AssetStrings.circulerNormal,
@@ -864,8 +865,16 @@ class _HomeState extends State<SearchHomeByName>
                 width: 8,
               ),
 
-              new SvgPicture.asset(
-                AssetStrings.cancelSuggest,
+              InkWell(
+                onTap: ()async{
+                   await DatabaseHelper.instance
+                      .delete(keyword);
+                },
+                child: Center(
+                  child: new SvgPicture.asset(
+                    AssetStrings.cancelSuggest,
+                  ),
+                ),
               ),
             ],
           ),

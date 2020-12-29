@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
   static final _databaseName = "record.db";
-  static final _databaseVersion = 1;
+  static final _databaseVersion = 2;
 
   static final table = 'RecentSearch';
   static final id = 'id';
@@ -53,9 +53,9 @@ class DatabaseHelper {
     return res.toList();
   }
 
-  Future<int> delete(int id) async {
+  Future<int> delete(String value) async {
     Database db = await instance.database;
-    return await db.delete(table, where: '$id = ?', whereArgs: [id]);
+    return await db.delete(table, where: '$keyword = ?', whereArgs: [value]);
   }
 
   Future<void> clearTable() async {

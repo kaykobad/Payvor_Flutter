@@ -357,7 +357,7 @@ class _HomeState extends State<SearchCompany>
               await hitApi(filterRequest);
             },
             child: Container(
-              color: AppColors.whiteGray,
+              color: AppColors.kAppScreenBackGround,
               child: new ListView.builder(
                 padding: new EdgeInsets.all(0.0),
                 controller: _scrollController,

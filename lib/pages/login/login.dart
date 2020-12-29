@@ -62,12 +62,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
-    Future.delayed(Duration(milliseconds: 300), () {
-    //  FlutterStatusbarcolor.setStatusBarColor(Colors.white);
-    });
+
   }
 
   Widget getView() {
@@ -261,258 +256,257 @@ class _LoginScreenState extends State<LoginScreenNew> {
     var screensize = MediaQuery
         .of(context)
         .size;
-    return Material(
-      child: Scaffold(
-        appBar: getAppBarNew(context),
-        backgroundColor: Colors.white,
-        key: _scaffoldKeys,
-        body: Stack(
-          children: [
-            Container(
-              color: Colors.white,
-              child: new SingleChildScrollView(
-                child: Container(
-                  color: Colors.white,
-                  width: screensize.width,
-                  child: new Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      new SizedBox(
-                        height: Constants.backIconsSpace,
-                      ),
-                      Container(
-                          margin: new EdgeInsets.only(left: 20.0),
-                          child: new Text(
-                            ResString().get('welcome_back'),
-                            style: TextThemes.extraBold,
-                          )),
-                      Container(
-                        margin:
-                        new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+    return Scaffold(
+      appBar: getAppBarNew(context),
+      backgroundColor: Colors.white,
+      key: _scaffoldKeys,
+      body: Stack(
+        children: [
+          Container(
+            color: Colors.white,
+
+            child: new SingleChildScrollView(
+              child: Container(
+                color: Colors.white,
+                width: screensize.width,
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new SizedBox(
+                      height: Constants.backIconsSpace,
+                    ),
+                    Container(
+                        margin: new EdgeInsets.only(left: 20.0),
                         child: new Text(
-                          ResString().get('to_continuew_plz'),
-                          style: TextThemes.grayNormal,
-                        ),
+                          ResString().get('welcome_back'),
+                          style: TextThemes.extraBold,
+                        )),
+                    Container(
+                      margin:
+                      new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                      child: new Text(
+                        ResString().get('to_continuew_plz'),
+                        style: TextThemes.grayNormal,
                       ),
-                      space(),
-                      new SizedBox(
-                        height: 15.0,
-                      ),
-                      getTextField(
-                          ResString().get('email_address'),
-                          _EmailController,
-                          _EmailField,
-                          _PasswordField,
-                          TextInputType.emailAddress,
-                          AssetStrings.emailPng,
-                          obsectextType: false),
-                      new SizedBox(
-                        height: 18.0,
-                      ),
-                      getTextField(
-                          ResString().get('password'),
-                          _PasswordController,
-                          _PasswordField,
-                          _PasswordField,
-                          TextInputType.text,
-                          AssetStrings.passPng,
-                          obsectextType: true),
-                      new SizedBox(
-                        height: 51.0,
-                      ),
-                      new Container(
-                        margin: new EdgeInsets.only(left: 20.0, right: 20.0),
-                        child: Row(
-                          children: <Widget>[
-                            /* InkWell(
+                    ),
+                    space(),
+                    new SizedBox(
+                      height: 15.0,
+                    ),
+                    getTextField(
+                        ResString().get('email_address'),
+                        _EmailController,
+                        _EmailField,
+                        _PasswordField,
+                        TextInputType.emailAddress,
+                        AssetStrings.emailPng,
+                        obsectextType: false),
+                    new SizedBox(
+                      height: 18.0,
+                    ),
+                    getTextField(
+                        ResString().get('password'),
+                        _PasswordController,
+                        _PasswordField,
+                        _PasswordField,
+                        TextInputType.text,
+                        AssetStrings.passPng,
+                        obsectextType: true),
+                    new SizedBox(
+                      height: 51.0,
+                    ),
+                    new Container(
+                      margin: new EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: Row(
+                        children: <Widget>[
+                          /* InkWell(
+                            onTap: () {
+                              boolCheckBox = !boolCheckBox;
+                              setState(() {});
+                            },
+                            child: Container(
+                              child: Padding(
+                                padding: const EdgeInsets.all(1.0),
+                                child: boolCheckBox
+                                    ? Icon(
+                                  Icons.check_box,
+                                  size: 22.0,
+                                  color: Colors.lightBlueAccent,
+                                )
+                                    : Icon(
+                                  Icons.check_box_outline_blank,
+                                  size: 22.0,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ),*/
+
+                          Container(
+                            child: InkWell(
                               onTap: () {
                                 boolCheckBox = !boolCheckBox;
                                 setState(() {});
                               },
                               child: Container(
                                 child: Padding(
-                                  padding: const EdgeInsets.all(1.0),
+                                  padding: const EdgeInsets.all(4.0),
                                   child: boolCheckBox
-                                      ? Icon(
-                                    Icons.check_box,
-                                    size: 22.0,
-                                    color: Colors.lightBlueAccent,
+                                      ? new SvgPicture.asset(
+                                    AssetStrings.tick,
                                   )
-                                      : Icon(
-                                    Icons.check_box_outline_blank,
-                                    size: 22.0,
-                                    color: Colors.grey,
-                                  ),
+                                      : new Container(),
                                 ),
                               ),
-                            ),*/
-
-                            Container(
+                            ),
+                            decoration: boolCheckBox
+                                ? new BoxDecoration(
+                                borderRadius:
+                                new BorderRadius.circular(4.0),
+                                color: AppColors.colorCyanPrimary)
+                                : new BoxDecoration(
+                                borderRadius:
+                                new BorderRadius.circular(4.0),
+                                border: new Border.all(
+                                    color: Colors.grey.withOpacity(0.6),
+                                    width: 1.6)),
+                            width: 20,
+                            height: 20,
+                          ),
+                          new SizedBox(
+                            width: 8.0,
+                          ),
+                          Expanded(
                               child: InkWell(
-                                onTap: () {
-                                  boolCheckBox = !boolCheckBox;
-                                  setState(() {});
-                                },
-                                child: Container(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: boolCheckBox
-                                        ? new SvgPicture.asset(
-                                      AssetStrings.tick,
-                                    )
-                                        : new Container(),
-                                  ),
-                                ),
-                              ),
-                              decoration: boolCheckBox
-                                  ? new BoxDecoration(
-                                  borderRadius:
-                                  new BorderRadius.circular(4.0),
-                                  color: AppColors.colorCyanPrimary)
-                                  : new BoxDecoration(
-                                  borderRadius:
-                                  new BorderRadius.circular(4.0),
-                                  border: new Border.all(
-                                      color: Colors.grey.withOpacity(0.6),
-                                      width: 1.6)),
-                              width: 20,
-                              height: 20,
+                                  onTap: () {
+                                    boolCheckBox = !boolCheckBox;
+                                    setState(() {});
+                                  },
+                                  child: new Text(
+                                      ResString().get('remember_me'),
+                                      style: TextThemes
+                                          .blackTextSmallMedium))),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                new CupertinoPageRoute(
+                                    builder: (BuildContext context) {
+                                      return new ForgotPassword();
+                                    }),
+                              );
+                            },
+                            child: new Text(
+                              ResString().get('forgot_pass'),
+                              style: TextThemes.redTextSmallMedium,
                             ),
-                            new SizedBox(
-                              width: 8.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                    new SizedBox(
+                      height: 32.0,
+                    ),
+                    Container(
+                        child: getSetupButtonNew(
+                            callback, ResString().get('login'), 20)),
+                    Container(
+                      alignment: Alignment.center,
+                      margin:
+                      new EdgeInsets.only(left: 20.0, right: 20.0, top: 51),
+                      child: new Text(ResString().get('or_login_with'),
+                          style: TextThemes.greyTextFieldMedium),
+                    ),
+                    space(),
+                    Container(
+                      alignment: Alignment.center,
+                      margin: new EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: new Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          InkWell(
+                            onTap: () {
+                              getFacebookUserInfo();
+                            },
+                            child: new SvgPicture.asset(
+                              AssetStrings.facebook,
+                              height: 48,
+                              width: 48,
                             ),
-                            Expanded(
-                                child: InkWell(
-                                    onTap: () {
-                                      boolCheckBox = !boolCheckBox;
-                                      setState(() {});
-                                    },
-                                    child: new Text(
-                                        ResString().get('remember_me'),
-                                        style: TextThemes
-                                            .blackTextSmallMedium))),
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  new CupertinoPageRoute(
-                                      builder: (BuildContext context) {
-                                        return new ForgotPassword();
-                                      }),
-                                );
-                              },
-                              child: new Text(
-                                ResString().get('forgot_pass'),
+                          ),
+                          new SizedBox(
+                            width: 16.0,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              getTwitterInfo();
+                            },
+                            child: new SvgPicture.asset(
+                              AssetStrings.twitter,
+                              height: 48,
+                              width: 48,
+                            ),
+                          ),
+                          new SizedBox(
+                            width: 16.0,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              getInstaUserInfo();
+                            },
+                            child: new Image.asset(
+                              AssetStrings.insta,
+                              height: 48,
+                              width: 48,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    space(),
+                    new SizedBox(
+                      height: 17.0,
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      child: new RichText(
+                          textAlign: TextAlign.center,
+                          text: new TextSpan(
+                            text: ResString().get('dont_have_account'),
+                            style: TextThemes.greyDarkTextFieldMedium,
+                            children: <TextSpan>[
+                              new TextSpan(
+                                text: ResString().get('signup_cap_button'),
                                 style: TextThemes.redTextSmallMedium,
+                                recognizer: new TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.push(
+                                      context,
+                                      new CupertinoPageRoute(
+                                          builder: (BuildContext context) {
+                                            return new JoinCommunityNew();
+                                          }),
+                                    );
+                                  },
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      new SizedBox(
-                        height: 32.0,
-                      ),
-                      Container(
-                          child: getSetupButtonNew(
-                              callback, ResString().get('login'), 20)),
-                      Container(
-                        alignment: Alignment.center,
-                        margin:
-                        new EdgeInsets.only(left: 20.0, right: 20.0, top: 51),
-                        child: new Text(ResString().get('or_login_with'),
-                            style: TextThemes.greyTextFieldMedium),
-                      ),
-                      space(),
-                      Container(
-                        alignment: Alignment.center,
-                        margin: new EdgeInsets.only(left: 20.0, right: 20.0),
-                        child: new Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            InkWell(
-                              onTap: () {
-                                getFacebookUserInfo();
-                              },
-                              child: new SvgPicture.asset(
-                                AssetStrings.facebook,
-                                height: 48,
-                                width: 48,
-                              ),
-                            ),
-                            new SizedBox(
-                              width: 16.0,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                getTwitterInfo();
-                              },
-                              child: new SvgPicture.asset(
-                                AssetStrings.twitter,
-                                height: 48,
-                                width: 48,
-                              ),
-                            ),
-                            new SizedBox(
-                              width: 16.0,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                getInstaUserInfo();
-                              },
-                              child: new Image.asset(
-                                AssetStrings.insta,
-                                height: 48,
-                                width: 48,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      space(),
-                      new SizedBox(
-                        height: 17.0,
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        child: new RichText(
-                            textAlign: TextAlign.center,
-                            text: new TextSpan(
-                              text: ResString().get('dont_have_account'),
-                              style: TextThemes.greyDarkTextFieldMedium,
-                              children: <TextSpan>[
-                                new TextSpan(
-                                  text: ResString().get('signup_cap_button'),
-                                  style: TextThemes.redTextSmallMedium,
-                                  recognizer: new TapGestureRecognizer()
-                                    ..onTap = () {
-                                      Navigator.push(
-                                        context,
-                                        new CupertinoPageRoute(
-                                            builder: (BuildContext context) {
-                                              return new JoinCommunityNew();
-                                            }),
-                                      );
-                                    },
-                                ),
-                              ],
-                            )),
-                      ),
-                      new SizedBox(
-                        height: 17.0,
-                      ),
-                    ],
-                  ),
+                            ],
+                          )),
+                    ),
+                    new SizedBox(
+                      height: 17.0,
+                    ),
+                  ],
                 ),
               ),
             ),
-            new Center(
-              child: getFullScreenProviderLoader(
-                status: provider.getLoading(),
-                context: context,
-              ),
+          ),
+          new Center(
+            child: getFullScreenProviderLoader(
+              status: provider.getLoading(),
+              context: context,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
