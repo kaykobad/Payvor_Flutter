@@ -57,6 +57,9 @@ dev_dependencies:
   share: ^0.6.5+4
 
   curved_navigation_bar: ^0.3.1
+  flutter_slidable:
+  flutter_linkify: ^2.1.0
+  flutter_rating_bar: ^3.2.0+1
 
 
 

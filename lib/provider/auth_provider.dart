@@ -2,24 +2,31 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:payvor/current_user_hired_by_favor/current_user_hire_favor.dart';
 import 'package:payvor/filter/filter_request.dart';
 import 'package:payvor/filter/refer_request.dart';
 import 'package:payvor/filter/refer_response.dart';
 import 'package:payvor/filter/refer_user.dart';
 import 'package:payvor/filter/refer_user_response.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/applied_user/favour_applied_user.dart';
 import 'package:payvor/model/common_response/common_success_response.dart';
 import 'package:payvor/model/create_payvor/create_payvor_response.dart';
 import 'package:payvor/model/create_payvor/payvorcreate.dart';
 import 'package:payvor/model/favour_details_response/favour_details_response.dart';
+import 'package:payvor/model/favour_posted_by_user.dart';
 import 'package:payvor/model/forgot_password/forgot_password_request.dart';
 import 'package:payvor/model/forgot_password/forgot_password_response.dart';
+import 'package:payvor/model/hiew/hire_list.dart';
 import 'package:payvor/model/logged_in_user/logged_in_user_response.dart';
 import 'package:payvor/model/login/loginrequest.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/otp/otp_request.dart';
 import 'package:payvor/model/otp/otp_verification_response.dart';
 import 'package:payvor/model/otp/resendotpresponse.dart';
+import 'package:payvor/model/post_details/report_post_response.dart';
+import 'package:payvor/model/post_details/report_request.dart';
+import 'package:payvor/model/promotion/promotion_response.dart';
 import 'package:payvor/model/reset_password/reset_pass_request.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signuprequest.dart';
@@ -28,6 +35,7 @@ import 'package:payvor/model/update_profile/update_profile_request.dart';
 import 'package:payvor/model/update_profile/update_profile_response.dart';
 import 'package:payvor/networkmodel/APIHandler.dart';
 import 'package:payvor/networkmodel/APIs.dart';
+import 'package:payvor/notifications/notification_response.dart';
 import 'package:payvor/pages/get_favor_list/favor_list_response.dart';
 import 'package:payvor/utils/memory_management.dart';
 
@@ -373,6 +381,112 @@ class AuthProvider with ChangeNotifier {
     return completer.future;
   }
 
+  Future<dynamic> reportUser(
+      ReportPostRequest request, BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.post(
+        context: context,
+        url: APIs.reportFavour,
+        requestBody: request.toJson());
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      ReportResponse otpVerification = new ReportResponse.fromJson(response);
+      //if wrong otp
+
+      completer.complete(otpVerification);
+    }
+
+    notifyListeners();
+    return completer.future;
+  }
+
+  Future<dynamic> deletePost(String id, BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(
+        context: context, url: APIs.deletePost + id + "/0");
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      ReportResponse otpVerification = new ReportResponse.fromJson(response);
+      //if wrong otp
+
+      completer.complete(otpVerification);
+    }
+
+    notifyListeners();
+    return completer.future;
+  }
+
+  Future<dynamic> userHireList(String id, BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response =
+        await APIHandler.get(context: context, url: APIs.userHireFavList + id);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      UserHireListResponse otpVerification =
+          new UserHireListResponse.fromJson(response);
+      //if wrong otp
+
+      completer.complete(otpVerification);
+    }
+
+    notifyListeners();
+    return completer.future;
+  }
+
+  Future<dynamic> userHire(
+      String favid, String userid, BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+
+    print("url ${APIs.userHireFavList + favid + "/" + userid}");
+    var response = await APIHandler.get(
+        context: context, url: APIs.userHire + favid + "/" + userid);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      UserHireListResponse otpVerification =
+          new UserHireListResponse.fromJson(response);
+      //if wrong otp
+
+      completer.complete(otpVerification);
+    }
+
+    notifyListeners();
+    return completer.future;
+  }
+
+  Future<dynamic> applyFav(
+      ReportPostRequest request, BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.post(
+        context: context,
+        url: APIs.appliedFavor,
+        requestBody: request.toJson());
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      ReportResponse otpVerification = new ReportResponse.fromJson(response);
+      //if wrong otp
+
+      completer.complete(otpVerification);
+    }
+
+    notifyListeners();
+    return completer.future;
+  }
+
   Future<dynamic> getotp(String phoneNumber, BuildContext context) async {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.get(
@@ -403,8 +517,26 @@ class AuthProvider with ChangeNotifier {
       return completer.future;
     } else {
       FavourDetailsResponse favourDetailsResponse =
-          new FavourDetailsResponse.fromJson(response);
+      new FavourDetailsResponse.fromJson(response);
       print("detail_response ${favourDetailsResponse.toJson()}");
+      completer.complete(favourDetailsResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> getPromotionData(BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(
+        context: context, url: APIs.getPromotionData);
+
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      PropmoteDataResponse favourDetailsResponse =
+      new PropmoteDataResponse.fromJson(response);
       completer.complete(favourDetailsResponse);
       notifyListeners();
       return completer.future;
@@ -549,6 +681,110 @@ class AuthProvider with ChangeNotifier {
       print("res $jsonDecode($response)");
       ReferListResponse resendOtpResponse =
       new ReferListResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+
+  Future<dynamic> favourpostedbyuser(BuildContext context,
+      int page,) async {
+    print("fave");
+    var infoData = jsonDecode(MemoryManagement.getUserInfo());
+    var userinfo = LoginSignupResponse.fromJson(infoData);
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(
+        context: context, url: APIs.favorPostedByUser
+    );
+
+    print(APIs.favorPostedByUser);
+    print(APIs.favorPostedByUser + userinfo.user?.id?.toString());
+
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      print("res $jsonDecode($response)");
+      FavourPostedByUserResponse resendOtpResponse =
+      new FavourPostedByUserResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+
+  Future<dynamic> favourjobapplieduser(BuildContext context,
+      int page,) async {
+    print("fave");
+
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(
+        context: context, url: APIs.favorAppliedByUser
+    );
+
+    print(APIs.favorAppliedByUser);
+
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      print("res $jsonDecode($response)");
+      FavourAppliedByUserResponse resendOtpResponse =
+      new FavourAppliedByUserResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+
+  Future<dynamic> currentuserhirefavor(BuildContext context,
+      int page,) async {
+    print("fave");
+
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(
+        context: context, url: APIs.currentuserhirebyfavor
+    );
+
+    print(APIs.currentuserhirebyfavor);
+
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      print("res $jsonDecode($response)");
+      CurrentUserHiredByFavorResponse resendOtpResponse =
+      new CurrentUserHiredByFavorResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+
+  Future<dynamic> getNotificationList(BuildContext context,
+      int page,) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(
+        context: context, url: APIs.notiUser + "?page=$page"
+    );
+
+    print(APIs.notiUser);
+
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      print("res $jsonDecode($response)");
+      NotificationResponse resendOtpResponse =
+      new NotificationResponse.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;

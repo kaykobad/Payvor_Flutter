@@ -48,11 +48,10 @@ class Payvor extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-
-        // Define the default brightness and colors
-      ),
-      home: new SplashScreen(),
-    );
+        theme: ThemeData(
+            // Define the default brightness and colors
+            ),
+        // home: new ChatBubbleRight(message: "sample message",profilePic: "sahfhasifhiahsf",isGroup: false,isLiked: false,time: "15:20",chatId: "101",messageId: "555",userName: "user data",),
+        home: new SplashScreen());
   }
 }

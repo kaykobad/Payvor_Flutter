@@ -88,6 +88,10 @@ class TextThemes {
     fontSize: 14,
     color: Colors.black,
   );
+  static final TextStyle cyanTextSmallMedium = TextStyle(
+      fontFamily: AssetStrings.circulerMedium,
+      fontSize: 14,
+      color: Color.fromRGBO(50, 197, 255, 1.0));
   static final TextStyle redTextSmallMedium = TextStyle(
       fontFamily: AssetStrings.circulerBoldStyle,
       fontSize: 12,
@@ -97,6 +101,12 @@ class TextThemes {
     fontFamily: AssetStrings.circulerMedium,
     fontSize: 14,
     color: Color.fromRGBO(114, 117, 122, 1.0),
+  );
+
+  static final TextStyle blueTextFieldMedium = TextStyle(
+    fontFamily: AssetStrings.circulerMedium,
+    fontSize: 15,
+    color: Color.fromRGBO(9, 165, 255, 1.0),
   );
 
   static final TextStyle greyTextFieldNormal = TextStyle(
@@ -115,6 +125,13 @@ class TextThemes {
     fontFamily: AssetStrings.circulerMedium,
     fontSize: 16,
     color: Color.fromRGBO(23, 23, 23, 1.0),
+  );
+
+
+  static final TextStyle greyTextFielBold = TextStyle(
+    fontFamily: AssetStrings.circulerBoldStyle,
+    fontSize: 16,
+    color: Colors.black,
   );
 
 
@@ -160,9 +177,20 @@ class TextThemes {
       fontSize: 18,
       color: Color.fromRGBO(255, 107, 102, 1.0));
 
+  static final TextStyle darkRedMediumNew = TextStyle(
+      fontFamily: AssetStrings.circulerMedium,
+      fontSize: 14,
+      color: Color.fromRGBO(255, 107, 102, 1.0));
+
   static final TextStyle blackCirculerMedium = TextStyle(
     fontFamily: AssetStrings.circulerMedium,
     fontSize: 16,
+    color: Colors.black,
+  );
+
+  static final TextStyle blackCirculerLarge = TextStyle(
+    fontFamily: AssetStrings.circulerMedium,
+    fontSize: 20,
     color: Colors.black,
   );
 

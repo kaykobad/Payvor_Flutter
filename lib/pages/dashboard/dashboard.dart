@@ -5,7 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payvor/chat/chat_screen.dart';
 import 'package:payvor/pages/login/login.dart';
+import 'package:payvor/pages/pay_feedback/pay_give_feedback.dart';
+import 'package:payvor/pages/post/post_home.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/search/search_home.dart';
 import 'package:payvor/utils/AppColors.dart';
@@ -178,15 +181,18 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               onGenerateRoute: (route) =>
                   MaterialPageRoute(
                     settings: route,
-                    builder: (context) => Dummy(logoutCallBack: logoutCallBack,),
-                  ),
+                builder: (context) => PostScreen(
+                  lauchCallBack: homeCallBack,
+                ),
+              ),
             ),
             Navigator(
               key: _notificationScreen,
               onGenerateRoute: (route) =>
                   MaterialPageRoute(
                     settings: route,
-                    builder: (context) => Dummy(logoutCallBack: logoutCallBack,),
+                    builder: (context) =>
+                        ChatScreen(logoutCallBack: logoutCallBack,),
                   ),
             ),
             Navigator(
@@ -194,7 +200,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               onGenerateRoute: (route) =>
                   MaterialPageRoute(
                     settings: route,
-                    builder: (context) => Dummy(logoutCallBack: logoutCallBack,),
+                    builder: (context) =>
+                        PayFeebackDetails(lauchCallBack: homeCallBack),
                   ),
             ),
           ],

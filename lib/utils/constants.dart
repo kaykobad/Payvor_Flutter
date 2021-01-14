@@ -16,6 +16,7 @@ class Constants{
   static double maxHeight = 400;
   static int PAGINATION_SIZE = 10;
   static int PAGINATION_SIZE_NEW = 20;
+  static const double LOADER_RADIUS = 15;
 
   //privacy policy and term of users links
   static const String privacyPolicy =
@@ -26,5 +27,4 @@ class Constants{
   static const int HOME_LAUCH_DETAILS_SCREEN = 1;
   static const int HOME_LAUCH_SEARCH_SCREEN = 2;
   static const int HOME_LAUCH_FILTER_SCREEN = 3;
-
 }

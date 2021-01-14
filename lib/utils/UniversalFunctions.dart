@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:payvor/utils/Messages.dart';
 
 import 'AppColors.dart';
@@ -35,6 +36,30 @@ bool isAndroidPlatform({@required BuildContext context}) {
   } else {
     return false;
   }
+}
+
+String readTimestamp(String timestamp) {
+  var now = new DateTime.now();
+  var format = new DateFormat('hh:mm a');
+  var date =
+      new DateTime.fromMicrosecondsSinceEpoch(int.parse(timestamp) * 1000);
+  var diff = date.difference(now);
+  var time = '';
+
+  if (diff.inSeconds <= 0 ||
+      diff.inSeconds > 0 && diff.inMinutes == 0 ||
+      diff.inMinutes > 0 && diff.inHours == 0 ||
+      diff.inHours > 0 && diff.inDays == 0) {
+    time = format.format(date);
+  } else {
+    if (diff.inDays == 1) {
+      time = diff.inDays.toString() + 'DAY AGO';
+    } else {
+      time = diff.inDays.toString() + 'DAYS AGO';
+    }
+  }
+
+  return time;
 }
 
 // Returns bottom padding for round edge screens
@@ -213,6 +238,7 @@ Widget getHalfScreenLoader({
     )
         : new Container();
 }
+
 
 Widget getHalfAppThemedLoader({
   @required BuildContext context,

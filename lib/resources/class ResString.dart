@@ -83,13 +83,14 @@ class ResString {
     'to_continuew_plz': 'To continue, please verify your information',
     'new_password': 'New Password',
     'post_favor': 'Post Favor',
+    'update_favor': 'Update Favor',
     'apply_filters': 'Apply Filters',
     'enter_new_pass': 'Enter the new password ',
     'post_favour': 'Post a Favor',
     'upload_photo': '+Upload Photo',
     'photo_not_mandetry': '(Photo is not mendatory)',
     'title': 'Title',
-    'price': '€ Price',
+    'price': 'Price',
     'description': 'Description',
     'location': 'Location',
     'preview_favor': 'Preview Favor',
@@ -102,6 +103,10 @@ class ResString {
     'you_all_receive': 'You’ll receive',
     'apply_for_fav': 'Apply for the favor',
     'payment_brkdown': 'Payment Breakdown',
+    'card_number': 'Card Number',
+    'card_name': 'Card Name',
+    'mm/yy': 'MM/YY',
+    'cvv': 'CVV',
   };
   String get(String key){
     return data[key];

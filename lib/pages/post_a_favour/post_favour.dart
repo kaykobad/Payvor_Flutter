@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:payvor/model/create_payvor/payvorcreate.dart';
+import 'package:payvor/model/favour_details_response/favour_details_response.dart';
 import 'package:payvor/networkmodel/APIs.dart';
 import 'package:payvor/pages/preview_post/preview_post.dart';
 import 'package:payvor/provider/auth_provider.dart';
@@ -24,6 +25,11 @@ import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class PostFavour extends StatefulWidget {
+  final FavourDetailsResponse favourDetailsResponse;
+  final bool isEdit;
+
+  PostFavour({this.favourDetailsResponse, this.isEdit});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -41,6 +47,7 @@ class _HomeState extends State<PostFavour>
   TextEditingController _DescriptionController = new TextEditingController();
   TextEditingController _LocationController = new TextEditingController();
   TextEditingController _LatLongController = new TextEditingController();
+
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
   FocusNode _TitleField = new FocusNode();
   FocusNode _PriceField = new FocusNode();
@@ -65,6 +72,24 @@ class _HomeState extends State<PostFavour>
 
   @override
   void initState() {
+    if (widget.favourDetailsResponse != null) {
+      _TitleController.text = widget?.favourDetailsResponse?.data?.title ?? "";
+      _PriceController.text = widget?.favourDetailsResponse?.data?.price ?? "";
+      _DescriptionController.text =
+          widget?.favourDetailsResponse?.data?.description ?? "";
+      _LocationController.text =
+          widget?.favourDetailsResponse?.data?.location ?? "";
+      profile = widget?.favourDetailsResponse?.data?.image ?? "";
+
+
+      _LatLongController.text = widget?.favourDetailsResponse?.data?.lat + "," +
+          widget?.favourDetailsResponse?.data?.long;
+
+      /*  print("lat ${widget?.favourDetailsResponse?.data?.lat}");
+      print("long ${widget?.favourDetailsResponse?.data?.long}");
+      print("latlong ${ _LatLongController.text}");*/
+    }
+
     _setScrollListener();
 
     super.initState();
@@ -77,7 +102,7 @@ class _HomeState extends State<PostFavour>
     super.dispose();
   }
 
-  hitApi() async {
+  hitApi(int type) async {
     provider.setLoading();
     var lat = "0.0";
     var long = "0.0";
@@ -121,9 +146,21 @@ class _HomeState extends State<PostFavour>
       headers["Authorization"] =
           "Bearer " + MemoryManagement.getAccessToken();
     }
+    http.MultipartRequest request;
 
-    http.MultipartRequest request =
-    new http.MultipartRequest("POST", Uri.parse(APIs.createPayvor)); //changed
+    //changed
+
+
+    if (widget.isEdit != null && widget.isEdit) {
+      request = new http.MultipartRequest("POST", Uri.parse(APIs.editFavour));
+
+      request.fields['id'] = widget.favourDetailsResponse?.data?.id?.toString();
+      print("edit true");
+    }
+    else {
+      request = new http.MultipartRequest("POST", Uri.parse(APIs.createPayvor));
+      print("edit false");
+    }
 
     request.headers.addAll(headers);
 
@@ -146,6 +183,7 @@ class _HomeState extends State<PostFavour>
         filename: fileName,
       ));
     }
+
 /*
     PayvorCreateRequest loginRequest = new PayvorCreateRequest(
         title: _TitleController.text,
@@ -174,6 +212,7 @@ class _HomeState extends State<PostFavour>
       _LatLongController.text = "";
       _image = null;
       isValid = false;
+      profile = null;
 
       showBottomSheet();
       setState(() {});
@@ -378,7 +417,18 @@ class _HomeState extends State<PostFavour>
 
   void callback() {
     if (getResult()) {
-      hitApi();
+      hitApi(1);
+    }
+    else {
+      setState(() {
+
+      });
+    }
+  }
+
+  void callbackMain() {
+    if (getResult()) {
+      hitApi(2);
     }
     else {
       setState(() {
@@ -546,7 +596,7 @@ class _HomeState extends State<PostFavour>
   Future<ValueSetter> voidCallBackDialog(int type) async {
     print("calllll");
 
-    hitApi();
+    hitApi(1);
   }
 
   @override
@@ -624,7 +674,46 @@ class _HomeState extends State<PostFavour>
                       color: AppColors.dividerColor,
                     ),
                   ),
-                  _image == null ? new Container(
+                  profile != null && profile.isNotEmpty ? Stack(
+                    children: [
+                      new Container(
+                          width: double.infinity,
+                          padding: new EdgeInsets.only(left: 16, right: 16),
+                          height: 147.0,
+                          child: ClipRect(
+                            child: getCachedNetworkImageWithurl(
+                                url: profile,
+                                fit: BoxFit.cover,
+                                size: 147
+                            ),
+                          )),
+
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: InkWell(
+                              onTap: () {
+                                profile = null;
+                                setState(() {
+
+                                });
+                              },
+                              child: new Container(
+                                  width: 46,
+                                  height: 46,
+
+                                  decoration: new BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white
+                                  ),
+                                  child: new Icon(
+                                      Icons.delete, color: Colors.red)
+                              )
+                          ),
+                        ),
+                      ),
+                    ],
+                  ) : _image == null ? new Container(
                     color: Colors.white,
                     width: double.infinity,
                     margin: new EdgeInsets.only(top: 9.0),
@@ -818,7 +907,15 @@ class _HomeState extends State<PostFavour>
             right: 0.0,
             child: Material(
               elevation: 18.0,
-              child: Container(
+              child: widget.isEdit != null && widget.isEdit ? Container(
+                color: Colors.white,
+                margin: new EdgeInsets.only(left: 16, right: 16),
+                padding: new EdgeInsets.only(
+                    top: 28, bottom: 28, left: 16, right: 16),
+                child: getSetupButtonNew(
+                    callbackMain, ResString().get('update_favor'), 0,
+                    newColor: AppColors.colorDarkCyan),
+              ) : Container(
                   color: Colors.white,
                   padding: new EdgeInsets.only(
                       top: 9, bottom: 28, left: 16, right: 16),

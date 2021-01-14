@@ -70,4 +70,6 @@ class AssetStrings {
   static const String recentSuggest = 'assets/svg/recent_suggest.svg';
   static const String cancelSuggest = 'assets/svg/cancel_suggest.svg';
   static const String check = 'assets/svg/check.svg';
+  static const String notification = 'assets/svg/notification_empty.svg';
+  static const String chat_empty = 'assets/svg/empty_chat.svg';
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/favour_details_response/favour_details_response.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
+import 'package:payvor/model/post_details/report_post_response.dart';
+import 'package:payvor/model/post_details/report_request.dart';
+import 'package:payvor/model/promotion/promotion_response.dart';
+import 'package:payvor/pages/payment/payment_dialog.dart';
+import 'package:payvor/pages/payment/post_payment.dart';
+import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/pages/search/search_name.dart';
 import 'package:payvor/provider/auth_provider.dart';
@@ -17,6 +25,8 @@ import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/constants.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
@@ -40,7 +50,15 @@ class _HomeState extends State<PostFavorDetails>
 
   List<String> listOption = ["Report", "Share"];
 
+  PropmoteDataResponse propmoteDataResponse = new PropmoteDataResponse();
+
   AuthProvider provider;
+
+  var ids = "";
+
+  var isCurrentUser = false;
+
+  bool offstageLoader = false;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -57,10 +75,16 @@ class _HomeState extends State<PostFavorDetails>
         .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
+
   @override
   void initState() {
+    var infoData = jsonDecode(MemoryManagement.getUserInfo());
+    var userinfo = LoginSignupResponse.fromJson(infoData);
+    ids = userinfo?.user?.id.toString() ?? "";
+
     Future.delayed(const Duration(milliseconds: 300), () {
       hitApi();
+      hitApiPromotion(0);
     });
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
@@ -91,36 +115,257 @@ class _HomeState extends State<PostFavorDetails>
 
       if (response != null && response.data != null) {
         favoriteResponse = response;
-        if (response.data.image == null) {
-          SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-        } else {
-          SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+
+        var userid = favoriteResponse?.data?.userId.toString();
+
+        if (userid == ids) {
+          isCurrentUser = true;
         }
+
+        print("user $userid");
+        print("usermain $ids");
       }
+
+      print(response);
+      try {} catch (ex) {}
     } else {
       provider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
+
       showInSnackBar(apiError.error);
     }
+
+    setState(() {});
   }
+
+
+  hitApiPromotion(int type) async {
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    var response = await provider.getPromotionData(context);
+
+    if (response is PropmoteDataResponse) {
+      if (response != null && response.data != null) {
+        propmoteDataResponse = response;
+        if (type == 1) {
+          showBottomSheet();
+        }
+      }
+    }
+    else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+      if (type == 1) {
+        showInSnackBar(apiError.error);
+      }
+    }
+
+    setState(() {});
+  }
+
+
+  hitReportApi() async {
+    offstageLoader = true;
+    setState(() {
+
+    });
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        offstageLoader = false;
+        setState(() {
+
+        });
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+    var reportrequest = new ReportPostRequest(
+        favour_id: favoriteResponse?.data?.id?.toString());
+
+    var response = await provider.reportUser(reportrequest, context);
+
+    offstageLoader = false;
+
+    if (response is ReportResponse) {
+      if (response != null && response.status.code == 200) {
+        showInSnackBar(response.message);
+      }
+
+      print(response);
+      try {} catch (ex) {}
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
+
+    setState(() {});
+  }
+
+
+  hitDeletePostApi() async {
+    offstageLoader = true;
+    setState(() {
+
+    });
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        offstageLoader = false;
+        setState(() {
+
+        });
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+    //  var reportrequest=new ReportPostRequest(favour_id: favoriteResponse?.data?.id?.toString());
+
+    var response = await provider.deletePost(
+        favoriteResponse?.data?.id?.toString(), context);
+
+    offstageLoader = false;
+
+    if (response is ReportResponse) {
+      if (response != null && response.status.code == 200) {
+        showInSnackBar(response.message);
+      }
+
+      print(response);
+      try {} catch (ex) {}
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
+
+    setState(() {});
+  }
+
+
+  hitApplyFavApi() async {
+    offstageLoader = true;
+    setState(() {
+
+    });
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        offstageLoader = false;
+        setState(() {
+
+        });
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+    var reportrequest = new ReportPostRequest(
+        favour_id: favoriteResponse?.data?.id?.toString());
+
+
+    var response = await provider.applyFav(reportrequest, context);
+
+    offstageLoader = false;
+
+    if (response is ReportResponse) {
+      if (response != null && response.status.code == 200) {
+        showBottomSuccessPayment(
+            "Apply Successful!", "You have applied to the favor Successfully",
+            "Done", 0);
+
+        //  showInSnackBar(response.status.message);
+      }
+
+      print(response);
+      try {} catch (ex) {}
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
+
+    setState(() {});
+  }
+
 
   @override
   bool get wantKeepAlive => true;
 
   void callback() async {
-    await Future.delayed(Duration(milliseconds: 200));
+    hitApplyFavApi();
+    /* await Future.delayed(Duration(milliseconds: 200));
     showInSnackBar("Favour applied successfully");
     await Future.delayed(Duration(milliseconds: 1500));
+    Navigator.pop(context); //back to previous screen*/
+
+  }
+
+  void callbackPromote() async {
+    showBottomSheet();
+    if (propmoteDataResponse != null && propmoteDataResponse.data != null) {
+      showBottomSheet();
+    }
+    else {
+      hitApiPromotion(1);
+    }
+  }
+
+  void callbackPaymentSuccess() async {
     Navigator.pop(context); //back to previous screen
-   // showBottomSheet();
+
+  }
+
+
+  void callbackPaymentSuccessBack() async {
+    Navigator.pop(context);
+    Navigator.pop(context); //back to previous screen
+
   }
 
   Widget buildItem() {
     return Container(
       color: Colors.white,
       padding:
-          new EdgeInsets.only(left: 16.0, right: 16.0, top: 16, bottom: 16),
+      new EdgeInsets.only(left: 16.0, right: 16.0, top: 16, bottom: 16),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -167,17 +412,32 @@ class _HomeState extends State<PostFavorDetails>
     );
   }
 
+  redirect() async {
+    Navigator.push(
+      context,
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return Material(child: new PostFavour(
+          favourDetailsResponse: favoriteResponse, isEdit: true,));
+      }),
+    );
+  }
+
   Widget getBottomText(String icon, String text, double size) {
     return InkWell(
       onTap: () {
         Navigator.pop(context);
         if (text == "Report Post") {
-          _showConfirmDialog();
+          _showConfirmDialog(1, 'Are you sure want to report this post?');
         }
-        else if(text=="Share Post")
-          {
-            _share();
-          }
+        else if (text == "Share Post") {
+          _share();
+        }
+        else if (text == "Edit Post") {
+          redirect();
+        }
+        else if (text == "Delete Post") {
+          _showConfirmDialog(2, 'Are you sure want to delete this post?');
+        }
 
       },
       child: Container(
@@ -239,15 +499,19 @@ class _HomeState extends State<PostFavorDetails>
                       child:
                       getBottomText(AssetStrings.slash, "Report Post", 22)),
 
-                  Container(
+                  isCurrentUser
+                      ? Container(
                       margin: new EdgeInsets.only(top: 35, left: 27),
                       child:
-                      getBottomText(AssetStrings.edit, "Edit Post", 22)),
+                      getBottomText(AssetStrings.edit, "Edit Post", 22))
+                      : Container(),
 
-                  Container(
+                  isCurrentUser
+                      ? Container(
                       margin: new EdgeInsets.only(top: 35, left: 27),
                       child:
-                      getBottomText(AssetStrings.delete, "Delete Post", 22)),
+                      getBottomText(AssetStrings.delete, "Delete Post", 22))
+                      : Container(),
                   Opacity(
                     opacity: 0.12,
                     child: new Container(
@@ -263,9 +527,45 @@ class _HomeState extends State<PostFavorDetails>
                     height: 56,
                   )
                 ],
-              )));
+                  )));
         });
   }
+
+
+  void showBottomSheet() {
+    showModalBottomSheet<void>(
+        isScrollControlled: true,
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
+        ),
+        builder: (BuildContext bc) {
+          return ClipRRect(
+            borderRadius: new BorderRadius.only(
+                topLeft: const Radius.circular(25.0),
+                topRight: const Radius.circular(25.0)),
+            child: Container(
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height / 1.4,
+              decoration: new BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: new BorderRadius.only(
+                      topLeft: const Radius.circular(10.0),
+                      topRight: const Radius.circular(10.0))),
+              child: Padding(
+                  padding: MediaQuery
+                      .of(context)
+                      .viewInsets,
+                  child: PaymentDialogPost(
+                      data: propmoteDataResponse, voidcallback: voidCallBacks)),
+            ),
+          );
+        });
+  }
+
 
   void _showPopupMenu(Offset offset) async {
     double left = offset.dx;
@@ -284,7 +584,7 @@ class _HomeState extends State<PostFavorDetails>
 
     if (selected == "Report") {
       print("Report");
-      _showConfirmDialog();
+      //   _showConfirmDialog();
     } else {
       print("Share");
       _share();
@@ -509,7 +809,140 @@ class _HomeState extends State<PostFavorDetails>
     );
   }
 
-  Future<void> _showConfirmDialog() async {
+
+  Future<ValueSetter> voidCallBacks(int type) async {
+    if (type == 1) {
+      showPaymentDialog();
+    }
+    else {
+      showBottomSuccessPayment("Successful!",
+          "Payment is Successful! It will take some time to be appeared higher up in the feed.",
+          "I Understand", 1);
+    }
+  }
+
+
+  void showPaymentDialog() {
+    showModalBottomSheet<void>(
+        isScrollControlled: true,
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(26.0),
+              topRight: Radius.circular(26.0)),
+        ),
+        builder: (BuildContext bc) {
+          return ClipRRect(
+            borderRadius: new BorderRadius.only(
+                topLeft: const Radius.circular(25.0),
+                topRight: const Radius.circular(25.0)),
+            child: Container(
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height / 1.4,
+              decoration: new BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: new BorderRadius.only(
+                      topLeft: const Radius.circular(10.0),
+                      topRight: const Radius.circular(10.0))),
+              child: Padding(
+                  padding: MediaQuery
+                      .of(context)
+                      .viewInsets,
+                  child: PaymentDialog(voidcallback: voidCallBacks)),
+            ),
+          );
+        });
+  }
+
+  void showBottomSuccessPayment(String title, String description,
+      String buttonText, int type) {
+    showModalBottomSheet<void>(
+        isScrollControlled: true,
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
+        ),
+        builder: (BuildContext bc) {
+          return Padding(
+              padding: MediaQuery
+                  .of(context)
+                  .viewInsets,
+              child: Container(
+
+                  child: new Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+
+
+                      Container(
+                        width: 86.0,
+                        height: 86.0,
+                        margin: new EdgeInsets.only(top: 38),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(37, 26, 101, 1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: GestureDetector(
+                            onTapDown: (TapDownDetails details) {
+                              /* //_showPopupMenu(details.globalPosition);
+                               showBottomSheet();*/
+                            },
+                            child: new SvgPicture.asset(
+                              AssetStrings.check,
+                              width: 42.0,
+                              height: 42.0,
+                              color: Colors.white,
+                            )),
+                      ),
+
+                      new Container(
+                        margin: new EdgeInsets.only(top: 40),
+                        child: new Text(title, style: new TextStyle(
+                            fontFamily: AssetStrings.circulerMedium,
+                            fontSize: 20,
+                            color: Colors.black),),
+                      ),
+
+                      new Container(
+                        margin: new EdgeInsets.only(
+                            top: 10, left: 35, right: 35),
+                        alignment: Alignment.center,
+                        child: new Text(
+                          description,
+                          textAlign: TextAlign.center,
+                          style: new TextStyle(
+                            fontFamily: AssetStrings.circulerNormal,
+                            fontSize: 16,
+                            height: 1.5,
+                            color: Color.fromRGBO(114, 117, 112, 1),),),
+
+
+                      ),
+
+                      Container(
+                        margin: new EdgeInsets.only(
+                            top: 60, left: 16, right: 16),
+                        child: getSetupButtonNew(
+                            type == 1
+                                ? callbackPaymentSuccess
+                                : callbackPaymentSuccessBack, buttonText, 0,
+                            newColor: AppColors.colorDarkCyan),
+                      ),
+
+
+                      Container(
+                        height: 56,
+                      )
+                    ],
+                  )));
+        });
+  }
+
+  Future<void> _showConfirmDialog(int type, String text) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -520,7 +953,7 @@ class _HomeState extends State<PostFavorDetails>
             child: ListBody(
               children: <Widget>[
                 //Text('This is a demo alert dialog.'),
-                Text('Are you sure want to report this post?'),
+                Text(text),
               ],
             ),
           ),
@@ -528,7 +961,14 @@ class _HomeState extends State<PostFavorDetails>
             TextButton(
               child: Text('YES'),
               onPressed: () {
-                showInSnackBar("Post reported successfully");
+                if (type == 1) {
+                  hitReportApi();
+                }
+                else {
+                  hitDeletePostApi();
+                }
+
+                //showInSnackBar("Post reported successfully");
                 Navigator.of(context).pop();
               },
             ),
@@ -549,6 +989,8 @@ class _HomeState extends State<PostFavorDetails>
     Share.share('check out this post https://google.com');
 
   }
+
+
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<AuthProvider>(context);
@@ -702,7 +1144,7 @@ class _HomeState extends State<PostFavorDetails>
               left: 0.0,
               right: 0.0,
               child: Container(
-                margin: new EdgeInsets.only(top: 35, left: 16, right: 5,),
+                margin: new EdgeInsets.only(top: 30, left: 16, right: 5,),
                 child: new Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: Row(
@@ -711,15 +1153,15 @@ class _HomeState extends State<PostFavorDetails>
                       Container(
 
                         child: Container(
-                          width: 35.0,
-                          height: 35.0,
+                          width: 30.0,
+                          height: 30.0,
                           padding: new EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                              color: AppColors.kBlack.withOpacity(0.2),
+                              color: AppColors.greyProfile.withOpacity(0.4),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppColors.kBlack.withOpacity(0.2),
+                                  color: Colors.grey.withOpacity(0.4),
                                   blurRadius: .5,
                                 ),
                               ]),
@@ -737,15 +1179,15 @@ class _HomeState extends State<PostFavorDetails>
                         ),
                       ),
                       Container(
-                        width: 35.0,
-                        height: 35.0,
+                        width: 30.0,
+                        height: 30.0,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            color: AppColors.kBlack.withOpacity(0.2),
+                            color: AppColors.greyProfile.withOpacity(0.4),
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.kBlack.withOpacity(0.2),
+                                color: Colors.grey.withOpacity(0.4),
                                 blurRadius: .5,
                               ),
                             ]),
@@ -753,6 +1195,9 @@ class _HomeState extends State<PostFavorDetails>
                             onTapDown: (TapDownDetails details) {
                               //_showPopupMenu(details.globalPosition);
                               showBottomSheets();
+
+                              //    showBottomSheetSuccesss();
+                              //  showBottomSheet();
                             },
                             child: new Icon(
                               Icons.more_vert,
@@ -764,28 +1209,41 @@ class _HomeState extends State<PostFavorDetails>
                 ),
               )),
           favoriteResponse != null && favoriteResponse.data != null
-              ? Positioned(
-                  bottom: 0.0,
-                  left: 0.0,
-                  right: 0.0,
-                  child: Material(
-                    elevation: 18.0,
-                    child: Container(
-                        color: Colors.white,
-                        padding: new EdgeInsets.only(top: 9, bottom: 28),
-                        child: getSetupButtonNew(
-                            callback, ResString().get('apply_for_fav'), 16,
-                            newColor: AppColors.colorDarkCyan)),
-                  ),
-                )
+              ? !isCurrentUser ? Positioned(
+            bottom: 0.0,
+            left: 0.0,
+            right: 0.0,
+            child: Material(
+              elevation: 18.0,
+              child: Container(
+                  color: Colors.white,
+                  padding: new EdgeInsets.only(top: 9, bottom: 28),
+                  child: getSetupButtonNew(
+                      callback, ResString().get('apply_for_fav'), 16,
+                      newColor: AppColors.colorDarkCyan)),
+            ),
+          ) : Positioned(
+            bottom: 0.0,
+            left: 0.0,
+            right: 0.0,
+            child: Material(
+              elevation: 18.0,
+              child: Container(
+                  color: Colors.white,
+                  padding: new EdgeInsets.only(top: 9, bottom: 28),
+                  child: getSetupButtonNew(
+                      callbackPromote, "Promote your Favor", 16,
+                      newColor: AppColors.bluePrimary)),
+            ),
+          )
               : Container(),
 
-//          new Center(
-//            child: getFullScreenProviderLoader(
-//              status: provider.getLoading(),
-//              context: context,
-//            ),
-//          ),
+          new Center(
+            child: getHalfScreenLoader(
+              status: offstageLoader,
+              context: context,
+            ),
+          ),
           Visibility(visible: provider.getLoading(), child: ShimmerDetails())
           /* new Center(
             child: _getLoader,

@@ -24,9 +24,21 @@ class APIs {
   static const String getOtpUrl = "$baseUrl/auth/send-otp-ph/";
   static const String getFavorList = "$baseUrl/list-favour";
   static const String favoeDetails = "$baseUrl/favour-detail/";
+  static const String getPromotionData = "$baseUrl/hire-user/promo-list";
   static const String createPayvor = "$baseUrl/create-favour";
   static const String seacrhList = "$baseUrl/searchfavour/";
   static const String seacrhSuggestList = "$baseUrl/searchtitle/";
   static const String refUsers = "$baseUrl/ref-user";
   static const String referUser = "$baseUrl/refer-user";
+  static const String notiUser = "$baseUrl/noti-user";
+  static const String favorPostedByUser = "$baseUrl/myfavour";
+  static const String favorAppliedByUser = "$baseUrl/favourapplybyuser";
+  static const String currentuserhirebyfavor =
+      "$baseUrl/hire-user/hiredbyfavour";
+  static const String reportFavour = "$baseUrl/report-favour";
+  static const String editFavour = "$baseUrl/edit-favour";
+  static const String appliedFavor = "$baseUrl/applyfavour";
+  static const String userHireFavList = "$baseUrl/appliedfavlist/";
+  static const String userHire = "$baseUrl/hire-user/";
+  static const String deletePost = "$baseUrl/delete-repost-favour/";
 }
