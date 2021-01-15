@@ -48,5 +48,5 @@ class AppColors {
 
   static const Color kAppBubbleMainColor = const Color(0xFFC000E6);
   static const Color kAppBubbleSeconderyColor = const Color(0xFF9620D9);
-  static const Color kAppScreenBackGround = const Color(0xFF9620D9);
+  static const Color kAppScreenBackGround = const Color(0xFFffffff);
 }

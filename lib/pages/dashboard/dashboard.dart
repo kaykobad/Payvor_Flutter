@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,8 +14,6 @@ import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
-
-import '../dummy.dart';
 
 class DashBoardScreen extends StatefulWidget {
   @override
@@ -197,130 +194,74 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             ),
             Navigator(
               key: _profileScreen,
-              onGenerateRoute: (route) =>
-                  MaterialPageRoute(
-                    settings: route,
-                    builder: (context) =>
-                        PayFeebackDetails(lauchCallBack: homeCallBack),
-                  ),
+              onGenerateRoute: (route) => MaterialPageRoute(
+                settings: route,
+                builder: (context) =>
+                    PayFeebackDetails(lauchCallBack: homeCallBack),
+              ),
             ),
           ],
         ),
-        /* floatingActionButton: Container(
-          height: MediaQuery
-              .of(context)
-              .size
-              .width * 0.22,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width * 0.2,
-          margin: new EdgeInsets.only(top: 20.0),
-          child: FloatingActionButton(
 
-            child: CustomFloatingButton(),
-            onPressed: () {
-              redirect();
+        bottomNavigationBar: Container(
+          height: 65,
+          child: BottomNavigationBar(
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.white,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                  icon: firstWidget(unselectedColor, AssetStrings.home),
+                  activeIcon: firstWidget(selectedColor, AssetStrings.home),
+                  label: ""),
+              BottomNavigationBarItem(
+                  icon: firstWidget(unselectedColor, AssetStrings.job),
+                  activeIcon: firstWidget(selectedColor, AssetStrings.job),
+                  label: ""),
+              BottomNavigationBarItem(
+                  icon: firstWidget(unselectedColor, AssetStrings.group),
+                  activeIcon: firstWidget(selectedColor, AssetStrings.group),
+                  label: ""),
+              BottomNavigationBarItem(
+                  icon: firstWidget(unselectedColor, AssetStrings.group),
+                  activeIcon: firstWidget(selectedColor, AssetStrings.group),
+                  label: ""),
+              BottomNavigationBarItem(
+                  icon: firstWidget(unselectedColor, AssetStrings.profile),
+                  activeIcon: firstWidget(selectedColor, AssetStrings.profile),
+                  label: ""),
+            ],
+            currentIndex: currentTab,
+            onTap: (int index) {
+              setState(() {
+                currentTab = index;
+                print("index $index");
+                if (index == 0) //for home tab
+                {
+                  SystemChrome.setSystemUIOverlayStyle(
+                      SystemUiOverlayStyle.light);
+
+                  _homeScreen.currentState?.popUntil((route) => route.isFirst);
+                } else if (index == 2) {
+                  SystemChrome.setSystemUIOverlayStyle(
+                      SystemUiOverlayStyle.dark);
+
+                  redirect();
+                } else {
+                  SystemChrome.setSystemUIOverlayStyle(
+                      SystemUiOverlayStyle.dark);
+                }
+
+                if (index > 2)
+                  currentTab = index - 1;
+                else if (index <= 1) currentTab = index;
+                setState(() {});
+              });
             },
           ),
-        ),*/
-        //       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        /* bottomNavigationBar: BottomAppBar(
-          clipBehavior: Clip.antiAlias,
-           shape: CircularNotchedRectangle(),
-          notchMargin: 15.0,
-          child: Container(
-            color: Colors.transparent,
-            height: 80,
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      _bottomTabWidget(AssetStrings.home, currentTab == 0, 0),
-                      _bottomTabWidget(AssetStrings.job, currentTab == 1, 1),
-                    ],
-                  ),
-                ),
-
-                // Right Tab bar icons
-                SizedBox(
-                  width: 80,
-                ),
-                Expanded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      _bottomTabWidget(
-                          AssetStrings.group, currentTab == 2, 2),
-                      _bottomTabWidget(AssetStrings.profile, currentTab == 3, 3)
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),*/
-
-        bottomNavigationBar: CurvedNavigationBar(
-          backgroundColor: AppColors.kAppScreenBackGround,
-          buttonBackgroundColor: AppColors.colorDarkCyan,
-          animationCurve: Curves.bounceIn,
-          height: 85,
-          animationDuration: null,
-          index: 2,
-          items: <Widget>[
-            new SvgPicture.asset(AssetStrings.home,
-                width: Constants.bottomIconSize,
-                height: Constants.bottomIconSize,
-                color: currentTab == 0 ? selectedColor : unselectedColor),
-            new SvgPicture.asset(AssetStrings.job,
-                width: Constants.bottomIconSize,
-                height: Constants.bottomIconSize,
-                color: currentTab == 1 ? selectedColor : unselectedColor),
-            new SvgPicture.asset(AssetStrings.job,
-                width: Constants.bottomIconSize,
-                height: Constants.bottomIconSize,
-                color: Colors.white),
-            currentTab == 3
-                ? new SvgPicture.asset(AssetStrings.group,
-                    width: Constants.bottomIconSize,
-                    height: Constants.bottomIconSize,
-                    color: selectedColor)
-                : new SvgPicture.asset(AssetStrings.group,
-                    width: Constants.bottomIconSize,
-                    height: Constants.bottomIconSize),
-            new SvgPicture.asset(AssetStrings.profile,
-                width: Constants.bottomIconSize,
-                height: Constants.bottomIconSize,
-                color: currentTab == 4 ? selectedColor : unselectedColor),
-          ],
-          onTap: (index) {
-            print("index $index");
-            if (index == 0) //for home tab
-            {
-              SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-
-              _homeScreen.currentState?.popUntil((route) => route.isFirst);
-            } else if (index == 2) {
-              SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-
-              redirect();
-            } else {
-              SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-            }
-
-            if (index > 2)
-              currentTab = index - 1;
-            else if (index <= 1) currentTab = index;
-            setState(() {});
-          },
         ),
+
       ),
     );
   }
@@ -362,6 +303,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         ],
       ),
     );
+  }
+
+
+  Widget firstWidget(Color color, String image) {
+    return SvgPicture.asset(image, width: Constants.bottomIconSize,
+        height: Constants.bottomIconSize,
+        color: color);
   }
 }
 
