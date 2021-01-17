@@ -25,7 +25,6 @@ import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
-import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
@@ -340,7 +339,6 @@ class _HomeState extends State<PostFavorDetails>
   }
 
   void callbackPromote() async {
-    showBottomSheet();
     if (propmoteDataResponse != null && propmoteDataResponse.data != null) {
       showBottomSheet();
     }
@@ -661,8 +659,7 @@ class _HomeState extends State<PostFavorDetails>
                               ),
                               Container(
                                   child: new Text(
-                                    favoriteResponse.data.ratingAvg
-                                        .toString() ?? "",
+                                    favoriteResponse?.data?.ratingAvg.toString() ?? "",
                                     style: TextThemes.greyTextFieldNormalNw,
                               )),
                               Container(
@@ -676,7 +673,7 @@ class _HomeState extends State<PostFavorDetails>
                               ),
                               Container(
                                   child: new Text(
-                                    "${favoriteResponse.data.ratingCount
+                                    "${favoriteResponse?.data?.ratingCount
                                         .toString() ?? "0"} Reviews",
                                     style: TextThemes.greyTextFieldNormalNw,
                               )),

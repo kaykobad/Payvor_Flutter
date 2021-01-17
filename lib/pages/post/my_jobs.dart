@@ -5,20 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/current_user_hired_by_favor/current_user_hire_favor.dart';
-
-import 'package:payvor/filter/refer_user.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/applied_user/favour_applied_user.dart';
-import 'package:payvor/notifications/notification_response.dart';
 import 'package:payvor/provider/auth_provider.dart';
-import 'package:payvor/shimmers/refer_shimmer_loader.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class MyJobs extends StatefulWidget {
   final ValueChanged<Widget> lauchCallBack;
@@ -65,8 +60,6 @@ class _HomeState extends State<MyJobs>
   void initState() {
     Future.delayed(const Duration(milliseconds: 300), () {
       hitJobsPost();
-
-      hitCurrentUserHire();
     });
 
     /*  listResult.add("Hired Favors");
@@ -109,7 +102,6 @@ class _HomeState extends State<MyJobs>
     var response = await provider.favourjobapplieduser(context, currentPage);
 
     if (response is FavourAppliedByUserResponse) {
-      provider.hideLoader();
 
       print("res $response");
       isPullToRefresh = false;
@@ -123,19 +115,20 @@ class _HomeState extends State<MyJobs>
 
         listResult.addAll(response?.data?.data);
 
-        if (response != null &&
-            response.data != null &&
+        if (response != null && response.data != null &&
             response.data?.data?.length < Constants.PAGINATION_SIZE) {
           _loadMore = false;
         } else {
           _loadMore = true;
         }
 
-        if (listResult.length > 0) {
+        if (listResult?.length > 0) {
           offstagenodata = true;
         } else {
           offstagenodata = false;
         }
+
+        hitCurrentUserHire();
 
         setState(() {});
       }
@@ -147,7 +140,9 @@ class _HomeState extends State<MyJobs>
       APIError apiError = response;
       print(apiError.error);
 
-      showInSnackBar(apiError.error);
+      hitCurrentUserHire();
+
+      //  showInSnackBar(apiError.error);
     }
   }
 
@@ -165,7 +160,7 @@ class _HomeState extends State<MyJobs>
     if (!gotInternetConnection) {
       return;
     }
-
+/*
     if (!isPullToRefresh) {
       provider.setLoading();
     }
@@ -174,7 +169,7 @@ class _HomeState extends State<MyJobs>
       currentPage++;
     } else {
       currentPage = 1;
-    }
+    }*/
 
     var response = await provider.currentuserhirefavor(context, currentPage);
 
@@ -193,18 +188,24 @@ class _HomeState extends State<MyJobs>
 
         listResult.addAll(response?.data);
 
-        if (response != null &&
-            response.data != null &&
-            response.data?.length < Constants.PAGINATION_SIZE) {
-          _loadMore = false;
-        } else {
-          _loadMore = true;
+
+        if (!_loadMore) {
+          if (response != null &&
+              response.data != null &&
+              response.data?.length < Constants.PAGINATION_SIZE) {
+            _loadMore = false;
+          } else {
+            _loadMore = true;
+          }
         }
 
-        if (listResult.length > 0) {
-          offstagenodata = true;
-        } else {
-          offstagenodata = false;
+
+        if (!offstagenodata) {
+          if (listResult.length > 0) {
+            offstagenodata = true;
+          } else {
+            offstagenodata = false;
+          }
         }
 
         setState(() {});

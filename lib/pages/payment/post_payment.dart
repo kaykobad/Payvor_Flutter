@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:payvor/filter/data_payment.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/promotion/promotion_response.dart';
-import 'package:payvor/pages/payment/payment_dialog.dart';
-import 'package:payvor/pages/post_details/cardformatter.dart';
-import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
-import 'package:payvor/utils/constants.dart';
-import 'package:payvor/utils/themes_styles.dart';
-import 'package:flutter_svg/svg.dart';
 
 class PaymentDialogPost extends StatefulWidget {
   final PropmoteDataResponse data;
@@ -31,39 +24,9 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
 
   @override
   void initState() {
-    var data1 = DataPromotion(
-        id: 1,
-        type: "Bese value",
-        title: "first title",
-        validity: "5 days",
-        createdAt: "",
-        updatedAt: "",
-        isSelect: false);
-    var data2 = DataPromotion(
-        id: 1,
-        type: "Bese value",
-        title: "first title",
-        validity: "5 days",
-        createdAt: "",
-        updatedAt: "",
-        isSelect: false);
-    var data3 = DataPromotion(
-        id: 1,
-        type: "Bese value",
-        title: "first title",
-        validity: "5 days",
-        createdAt: "",
-        updatedAt: "",
-        isSelect: false);
-
-    list.add(data1);
-    list.add(data2);
-    list.add(data3);
-
-    /*   if(widget.data!=null){
-
-       list.addAll(widget.data.data);
-     }*/
+    if (widget.data != null) {
+      list.addAll(widget.data.data);
+    }
 
     super.initState();
   }
@@ -175,13 +138,15 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
         decoration: new BoxDecoration(
             borderRadius: new BorderRadius.circular(10.0),
             border: new Border.all(color: Color.fromRGBO(227, 227, 227, 1)),
-            color: payment.isSelect ? AppColors.bluePrimary : Colors.white),
+            color: payment?.isSelect ?? false
+                ? AppColors.bluePrimary
+                : Colors.white),
         child: new Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             CircleAvatar(
-              backgroundColor: payment.isSelect
+              backgroundColor: payment?.isSelect ?? false
                   ? AppColors.colorDarkCyan
                   : Color.fromRGBO(227, 227, 227, 1),
               radius: 13,
@@ -201,30 +166,32 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
               ),
               alignment: Alignment.center,
               child: new Text(
-                payment.price ?? "",
+                payment?.price.toString() ?? "",
                 style: new TextStyle(
                     fontFamily: AssetStrings.circulerMedium,
                     fontSize: 20,
-                    color: payment.isSelect ? Colors.white : Colors.black),
+                    color: payment.isSelect ?? false ? Colors.white : Colors
+                        .black),
               ),
             ),
             new Container(
-              width: 80,
+              width: 110,
               margin: new EdgeInsets.only(
                 top: 9,
               ),
               alignment: Alignment.center,
               child: new Text(
-                payment.validity ?? "",
+                payment?.title ?? "",
+                overflow: TextOverflow.ellipsis,
                 style: new TextStyle(
                     fontFamily: AssetStrings.circulerNormal,
                     fontSize: 14,
-                    color: payment.isSelect
+                    color: payment?.isSelect ?? false
                         ? Color.fromRGBO(255, 255, 255, 1)
                         : Color.fromRGBO(103, 99, 99, 1)),
               ),
             ),
-            payment.isSelect
+            payment?.isSelect ?? false
                 ? new Container(
                     margin: new EdgeInsets.only(
                       top: 9,
