@@ -4,19 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-
-import 'package:payvor/filter/refer_user.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/notifications/notification_response.dart';
 import 'package:payvor/provider/auth_provider.dart';
-import 'package:payvor/shimmers/refer_shimmer_loader.dart';
-import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
-import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class Notifications extends StatefulWidget {
   @override
@@ -204,10 +198,9 @@ class _HomeState extends State<Notifications>
             ),
           ),
           Container(
-            margin: new EdgeInsets.only(top: 130),
             child: new Center(
               child: getHalfScreenLoader(
-                status: loader,
+                status: provider.getLoading(),
                 context: context,
               ),
             ),
