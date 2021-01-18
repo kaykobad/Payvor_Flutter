@@ -582,13 +582,13 @@ class _LoginScreenState extends State<LoginScreenNew> {
   }
 
   void getFacebookUserInfo() async {
-    var googleSignInAccount = await new SocialLogin().initiateFacebookLogin();
+    var facebookSignInAccount = await new SocialLogin().initiateFacebookLogin();
 
-    if (googleSignInAccount != null && googleSignInAccount is Map) {
-      var nameUser = googleSignInAccount["name"];
-      var id = googleSignInAccount["id"];
-      var emails = id+"_"+googleSignInAccount["email"];
-      var photodata = googleSignInAccount["picture"];
+    if (facebookSignInAccount != null && facebookSignInAccount is Map) {
+      var nameUser = facebookSignInAccount["name"];
+      var id = facebookSignInAccount["id"];
+      var emails = id+"_"+facebookSignInAccount["email"];
+      var photodata = facebookSignInAccount["picture"];
       var photourl = photodata["data"];
       // MemoryManagement.setuserName(username: nameUser);
 
@@ -611,6 +611,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       loginSocial(email,id);*/
 
     } else {
+      showInSnackBar(Messages.genericError);
       /*showAlert(
         context: context,
         titleText: "ERROR",

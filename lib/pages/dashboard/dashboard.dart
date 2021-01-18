@@ -202,7 +202,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             ),
           ],
         ),
-
+        floatingActionButton: FloatingActionButton(
+          child: CustomFloatingButton(),
+          onPressed: () {
+            redirect();
+          },
+        ),
+        floatingActionButtonLocation:
+        FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: Container(
           height: 65,
           child: BottomNavigationBar(
@@ -220,8 +227,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   activeIcon: firstWidget(selectedColor, AssetStrings.job),
                   label: ""),
               BottomNavigationBarItem(
-                  icon: firstWidget(unselectedColor, AssetStrings.group),
-                  activeIcon: firstWidget(selectedColor, AssetStrings.group),
+                  icon: firstWidget(AppColors.kWhite, AssetStrings.group),
+                  activeIcon: firstWidget(AppColors.kWhite, AssetStrings.group),
                   label: ""),
               BottomNavigationBarItem(
                   icon: firstWidget(unselectedColor, AssetStrings.group),
@@ -323,7 +330,7 @@ class CustomFloatingButton extends StatelessWidget {
       height: 85,
       child: Icon(
         Icons.add,
-        size: 40,
+        size: 30,
       ),
       decoration: BoxDecoration(
           color: Colors.transparent,
