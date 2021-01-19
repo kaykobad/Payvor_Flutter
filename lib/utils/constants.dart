@@ -17,6 +17,8 @@ class Constants{
   static int PAGINATION_SIZE = 10;
   static int PAGINATION_SIZE_NEW = 20;
   static const double LOADER_RADIUS = 15;
+  static const String USER_BLOCKED_MESSAGE = "User blocked successfully";
+  static const String USER_UNBLOCKED_MESSAGE = "User Unblocked successfully";
 
   //privacy policy and term of users links
   static const String privacyPolicy =

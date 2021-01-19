@@ -19,7 +19,7 @@ class AppColors {
   static const Color kTinderSwipeLikeDislikeTextColor = const Color(0xFF23C8D2);
 
   //for app intro
-
+  static const Color kAppBlue = const Color(0xFF00BDF7);
   static const Color kAppIntroBackgroundColor = const Color(0xFFF4F3F6);
   static const Color kAppIntroPreferenceColor = const Color(0xFF23C8D2);
   static const Color kAppIntroLeftRightStand = const Color(0xFFC2E9EF);

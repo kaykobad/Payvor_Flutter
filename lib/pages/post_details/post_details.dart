@@ -491,22 +491,22 @@ class _HomeState extends State<PostFavorDetails>
                   Container(
                       margin: new EdgeInsets.only(top: 43, left: 27),
                       child:
-                      getBottomText(AssetStrings.share, "Share Post", 22)),
-                  Container(
-                      margin: new EdgeInsets.only(top: 35, left: 27),
-                      child:
-                      getBottomText(AssetStrings.slash, "Report Post", 22)),
-
-                  isCurrentUser
+                          getBottomText(AssetStrings.share, "Share Post", 22)),
+                  !isCurrentUser
                       ? Container(
-                      margin: new EdgeInsets.only(top: 35, left: 27),
-                      child:
-                      getBottomText(AssetStrings.edit, "Edit Post", 22))
+                          margin: new EdgeInsets.only(top: 35, left: 27),
+                          child: getBottomText(
+                              AssetStrings.slash, "Report Post", 22))
                       : Container(),
-
                   isCurrentUser
                       ? Container(
-                      margin: new EdgeInsets.only(top: 35, left: 27),
+                          margin: new EdgeInsets.only(top: 35, left: 27),
+                          child:
+                              getBottomText(AssetStrings.edit, "Edit Post", 22))
+                      : Container(),
+                  isCurrentUser
+                      ? Container(
+                          margin: new EdgeInsets.only(top: 35, left: 27),
                       child:
                       getBottomText(AssetStrings.delete, "Delete Post", 22))
                       : Container(),
@@ -1229,8 +1229,7 @@ class _HomeState extends State<PostFavorDetails>
                   color: Colors.white,
                   padding: new EdgeInsets.only(top: 9, bottom: 28),
                   child: getSetupButtonNew(
-                      callbackPromote, "Promote your Favor", 16,
-                      newColor: AppColors.bluePrimary)),
+                      callbackPromote, "Promote your Favor", 16)),
             ),
           )
               : Container(),

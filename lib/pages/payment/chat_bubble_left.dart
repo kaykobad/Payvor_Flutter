@@ -1,31 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:payvor/utils/AppColors.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
 
 class ChatBubbleLeft extends StatefulWidget {
   final String message;
   final String userName;
   final String profilePic;
   final String time;
-  final String chatId;
-  final String messageId;
-  bool isLiked;
-  final bool isGroup;
 
   ChatBubbleLeft(
       {@required this.message,
       @required this.userName,
       @required this.profilePic,
-      @required this.time,
-      @required this.isLiked,
-      @required this.chatId,
-      @required this.messageId,
-      @required this.isGroup});
+      @required this.time});
 
   @override
   _ChatBubbleLeftState createState() => _ChatBubbleLeftState();
@@ -34,19 +24,6 @@ class ChatBubbleLeft extends StatefulWidget {
 class _ChatBubbleLeftState extends State<ChatBubbleLeft>
     with AutomaticKeepAliveClientMixin<ChatBubbleLeft> {
 //  FirebaseProvider firebaseProvider;
-
-  void _likeUnlike() async {
-    print("called ${widget.isGroup}");
-    //  var userId = MemoryManagement.getuserId();
-    /*   if (widget.isGroup)
-      widget.isLiked = await firebaseProvider.groupChatMessageChatLikedUnliked(
-          widget.isLiked, widget.chatId, widget.messageId, int.parse(userId));
-    else
-      widget.isLiked = await firebaseProvider.privateChatLikedUnliked(
-          widget.isLiked, widget.chatId, widget.messageId, int.parse(userId));
-*/
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
