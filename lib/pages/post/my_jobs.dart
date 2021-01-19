@@ -181,7 +181,6 @@ class _HomeState extends State<MyJobs>
 
       if (response != null && response.data != null) {
         if (currentPage == 1) {
-          listResult.clear();
 
           listResult.add("Next Jobs");
         }
@@ -382,6 +381,8 @@ class _HomeState extends State<MyJobs>
                     child: new Text(
                       data?.favour?.description,
                       style: TextThemes.grayNormalSmall,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
