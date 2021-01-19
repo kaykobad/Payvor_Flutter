@@ -32,8 +32,9 @@ import 'package:share/share.dart';
 
 class PostFavorDetails extends StatefulWidget {
   final String id;
+  ValueSetter<int> voidcallback;
 
-  PostFavorDetails({this.id});
+  PostFavorDetails({this.id, this.voidcallback});
 
   @override
   _HomeState createState() => _HomeState();
@@ -256,6 +257,10 @@ class _HomeState extends State<PostFavorDetails>
 
     if (response is ReportResponse) {
       if (response != null && response.status.code == 200) {
+        if (widget.voidcallback != null) {
+          widget.voidcallback(1);
+          Navigator.pop(context);
+        }
         showInSnackBar(response.message);
       }
 

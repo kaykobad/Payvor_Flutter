@@ -7,7 +7,6 @@ import 'package:payvor/filter/filter.dart';
 import 'package:payvor/filter/filter_request.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/pages/get_favor_list/favor_list_response.dart';
-import 'package:payvor/pages/original_post/original_post_data.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/pages/suggestion_search/suggestion_search.dart';
@@ -373,6 +372,15 @@ class _HomeState extends State<SearchCompany>
     );
   }
 
+  ValueSetter<int> callback(int type) {
+    if (type == 1) {
+      currentPage = 1;
+      isPullToRefresh = true;
+      _loadMore = false;
+      hitApi(filterRequest);
+    }
+  }
+
   @override
   bool get wantKeepAlive => true;
 
@@ -383,6 +391,7 @@ class _HomeState extends State<SearchCompany>
             child: Material(
                 child: new PostFavorDetails(
           id: data.id.toString(),
+                  voidcallback: callback,
         ))));
       },
       child: Container(
