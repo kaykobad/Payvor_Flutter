@@ -10,11 +10,13 @@ import 'package:intl/intl.dart';
 import 'package:payvor/networkmodel/APIs.dart';
 import 'package:payvor/pages/chat/chat_user.dart';
 import 'package:payvor/pages/payment/chat_bubble_image_left.dart';
+import 'package:payvor/pages/payment/chat_bubble_image_right.dart';
 import 'package:payvor/pages/payment/chat_bubble_left.dart';
 import 'package:payvor/pages/payment/chat_bubble_right.dart';
 import 'package:payvor/pages/payment/chat_input_widgetr.dart';
 import 'package:payvor/pages/payment/firebase_constants.dart';
 import 'package:payvor/pages/payment/private_chat_top.dart';
+import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/common_dialog.dart';
@@ -296,7 +298,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
     //check for user block status
     //if user is blocked to whom is chatting
     if (isUserBlocked) {
-      showWarningDialog(USER_BLOCKED_ALERT_MESSAGE);
+      showWarningDialog("User Blocked");
       return;
     }
 

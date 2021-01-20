@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/pages/chat/chat_user.dart';
 import 'package:payvor/pages/chat/payvor_firebase_user.dart';
+import 'package:payvor/pages/chat/payvor_group_chat.dart';
 import 'package:payvor/pages/payment/firebase_constants.dart';
+import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart'
@@ -329,12 +331,12 @@ class FirebaseProvider with ChangeNotifier {
     String deviceid = MemoryManagement.getuserId();
 
     var document =
-    Firestore.instance.collection(FCM_DEVICE_TOKEN).document(userId);
+    Firestore.instance.collection(Constants.FCM_DEVICE_TOKEN).document(userId);
 
     var documentDevices = Firestore.instance
-        .collection(FCM_DEVICE_TOKEN)
+        .collection(Constants.FCM_DEVICE_TOKEN)
         .document(userId)
-        .collection(DEVICES)
+        .collection(Constants.DEVICES)
         .document(deviceid);
 
     //save document to collection

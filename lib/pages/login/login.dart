@@ -11,12 +11,14 @@ import 'package:payvor/model/login/loginrequest.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/otp/sample_webview.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
+import 'package:payvor/pages/chat/payvor_firebase_user.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/forgot_password/forgot_password.dart';
 import 'package:payvor/pages/join_community/join_community.dart';
 import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
 import 'package:payvor/pages/social_login.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -43,7 +45,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
   IconData icon = Icons.visibility_off;
   bool obsecureText = true;
   bool boolCheckBox = false;
-
+  FirebaseProvider firebaseProvider;
   AuthProvider provider;
 
   String name = "";
@@ -173,6 +175,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
     }
 
     if (typse == 0) {
+
       LoginRequest loginRequest = new LoginRequest(
           password: _PasswordController.text, email: _EmailController.text);
       response = await provider.login(loginRequest, context);
@@ -220,6 +223,47 @@ class _LoginScreenState extends State<LoginScreenNew> {
       MemoryManagement.setAccessToken(accessToken: loginSignupResponse.data);
       MemoryManagement.setUserInfo(userInfo: json.encode(response));
 
+      var email = _EmailController.text;
+
+      try {
+        switch (type) {
+          case "1":
+            {
+              email = "${response?.user?.id?.toString()}@facebook.com ";
+            }
+            break;
+
+          case "2":
+            {
+              email = "${response?.user?.id?.toString()}@twitter.com ";
+            }
+            break;
+
+          case "3":
+            {
+              email = "${response?.user?.id?.toString()}@instagram.com ";
+            }
+        }
+        //firebase login
+        var firebaseId = await firebaseProvider.signIn(
+            email, Constants.FIREBASE_USER_PASSWORD);
+        //update user info to fire store user collection
+        await firebaseProvider
+            .updateFirebaseUser(getUser(response, firebaseId, email));
+      } catch (ex) {
+        print("error ${ex.toString()}");
+        //for old filmshape users
+        //firebase signup for later use in chat
+        var firebaseId = await firebaseProvider.signUp(
+            email, Constants.FIREBASE_USER_PASSWORD);
+        //save user info to fire store user collection
+        var user = getUser(response, firebaseId, email);
+        user.created = DateTime.now()
+            .toIso8601String(); //if user is not registered with firebase
+        await firebaseProvider.createFirebaseUser(user);
+      }
+
+
       if ((loginSignupResponse.isnew == null || loginSignupResponse.isnew) &&
           typse != 0) {
         Navigator.push(
@@ -245,6 +289,21 @@ class _LoginScreenState extends State<LoginScreenNew> {
     }
   }
 
+
+  PayvorFirebaseUser getUser(LoginSignupResponse signupResponse,
+      String firebaseId, String email) {
+    return new PayvorFirebaseUser(
+        fullName: signupResponse.user.name,
+        email: email,
+        location: signupResponse.user.location,
+        updated: DateTime.now().toIso8601String(),
+        created: DateTime.now().toIso8601String(),
+        filmShapeId: signupResponse.user.id,
+        firebaseId: firebaseId,
+        isOnline: true
+    );
+  }
+
   void showInSnackBar(String value) {
     _scaffoldKeys.currentState
         .showSnackBar(new SnackBar(content: new Text(value)));
@@ -253,6 +312,8 @@ class _LoginScreenState extends State<LoginScreenNew> {
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<AuthProvider>(context);
+    firebaseProvider = Provider.of<FirebaseProvider>(context);
+
     var screensize = MediaQuery
         .of(context)
         .size;

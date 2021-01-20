@@ -10,11 +10,13 @@ import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/otp/sample_webview.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signuprequest.dart';
+import 'package:payvor/pages/chat/payvor_firebase_user.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
 import 'package:payvor/pages/social_login.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -46,7 +48,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
   String profilePic = "";
 
   AuthProvider provider;
-
+  FirebaseProvider firebaseProvider;
 
   Widget space() {
     return new SizedBox(
@@ -164,8 +166,11 @@ class _LoginScreenState extends State<JoinCommunityNew> {
 
   @override
   Widget build(BuildContext context) {
-    var screensize = MediaQuery.of(context).size;
+    var screensize = MediaQuery
+        .of(context)
+        .size;
     provider = Provider.of<AuthProvider>(context);
+    firebaseProvider = Provider.of<FirebaseProvider>(context);
     return Material(
       child: Container(
         color: Colors.white,
@@ -470,8 +475,35 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       MemoryManagement.setAccessToken(accessToken: response.data);
       MemoryManagement.setUserInfo(userInfo: json.encode(response));
 
-      if (response.isnew == null || response.isnew) {
+      var email = _EmailController.text;
 
+      switch (type) {
+        case "1":
+          {
+            email = "${response?.user?.id?.toString()}@facebook.com ";
+          }
+          break;
+
+        case "2":
+          {
+            email = "${response?.user?.id?.toString()}@twitter.com ";
+          }
+          break;
+
+        case "3":
+          {
+            email = "${response?.user?.id?.toString()}@instagram.com ";
+          }
+      }
+
+      var firebaseId = await firebaseProvider.signUp(
+          email, Constants.FIREBASE_USER_PASSWORD);
+
+      await firebaseProvider.createFirebaseUser(
+          getUser(response, firebaseId, email));
+
+
+      if (response.isnew == null || response.isnew) {
         Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
@@ -494,6 +526,21 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       print(apiError.error);
       showInSnackBar(apiError.error);
     }
+  }
+
+
+  PayvorFirebaseUser getUser(LoginSignupResponse signupResponse,
+      String firebaseId, String email) {
+    return new PayvorFirebaseUser(
+        fullName: signupResponse?.user?.name,
+        email: email,
+        location: signupResponse?.user?.location,
+        updated: DateTime.now().toIso8601String(),
+        created: DateTime.now().toIso8601String(),
+        filmShapeId: signupResponse?.user?.id,
+        firebaseId: firebaseId,
+        isOnline: true
+    );
   }
 
   static String validatorEmail(String value) {

@@ -1,13 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/common_response/common_success_response.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/update_profile/update_profile_request.dart';
+import 'package:payvor/pages/chat/payvor_firebase_user.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/privacypolicy/webview_page.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -27,13 +32,14 @@ class _LoginScreenState extends State<CreateCredential> {
 
   TextEditingController _PasswordController = new TextEditingController();
   TextEditingController _ConfirmPasswordController =
-      new TextEditingController();
+  new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
   FocusNode _PasswordField = new FocusNode();
   FocusNode _ConfirmPasswordField = new FocusNode();
 
   bool obsecureText = true;
   bool obsecureTextConfirm = true;
+
 
   String name = "";
   String email = "";
@@ -66,6 +72,7 @@ class _LoginScreenState extends State<CreateCredential> {
     );
   }
 
+
   hitApi() async {
     provider.setLoading();
     UpdateProfileRequest updateProfileRequest = new UpdateProfileRequest();
@@ -86,16 +93,22 @@ class _LoginScreenState extends State<CreateCredential> {
     }
 
     var response =
-        await provider.createCredential(updateProfileRequest, context);
+    await provider.createCredential(updateProfileRequest, context);
+
+
     provider.hideLoader();
     if (response is CommonSuccessResponse) {
+      var infoData = jsonDecode(MemoryManagement.getUserInfo());
+      var userinfo = LoginSignupResponse.fromJson(infoData);
+
+
       MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
       Navigator.pushAndRemoveUntil(
         context,
         new CupertinoPageRoute(builder: (BuildContext context) {
           return DashBoardScreen();
         }),
-        (route) => false,
+            (route) => false,
       );
     } else {
       APIError apiError = response;
@@ -178,8 +191,7 @@ class _LoginScreenState extends State<CreateCredential> {
     );
   }*/
 
-  Widget getTextField(
-      String labelText,
+  Widget getTextField(String labelText,
       TextEditingController controller,
       FocusNode focusNodeCurrent,
       FocusNode focusNodeNext,
@@ -239,11 +251,11 @@ class _LoginScreenState extends State<CreateCredential> {
               child: new Text(
                 type == 1
                     ? obsecureText
-                        ? "show"
-                        : "hide"
+                    ? "show"
+                    : "hide"
                     : obsecureTextConfirm
-                        ? "show"
-                        : "hide",
+                    ? "show"
+                    : "hide",
                 style: TextThemes.blackTextSmallNormal,
               ),
             ),
@@ -281,9 +293,9 @@ class _LoginScreenState extends State<CreateCredential> {
               children: [
                 Container(
                     child: new Text(
-                  name,
-                  style: TextThemes.smallBold,
-                )),
+                      name,
+                      style: TextThemes.smallBold,
+                    )),
                 Container(
                   margin: new EdgeInsets.only(top: 1),
                   child: new Text(
@@ -308,6 +320,7 @@ class _LoginScreenState extends State<CreateCredential> {
   Widget build(BuildContext context) {
     var screensize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
+
     return Material(
       child: Stack(
         children: [
@@ -333,7 +346,7 @@ class _LoginScreenState extends State<CreateCredential> {
                         )),
                     Container(
                       margin:
-                          new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                      new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
                       child: new Text(
                         ResString().get('set_password'),
                         style: TextThemes.grayNormal,
@@ -431,15 +444,15 @@ class _LoginScreenState extends State<CreateCredential> {
   }
 
   _redirect({@required String heading, @required String url}) async
-    {
+  {
     Navigator.push(
         context,
         new MaterialPageRoute(
             builder: (context) => new WebViewPages(
-                  heading: heading,
-                  url: url,
-                )));
-   }
+              heading: heading,
+              url: url,
+            )));
+  }
 
   void callback() {
     var password = _PasswordController.text;

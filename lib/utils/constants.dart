@@ -11,12 +11,15 @@ class Constants{
   static String CAMERA = "Take Photo";
   static String CANCEL = "Cancel";
   static String DELETE_PHOTO = "Delete Photo";
+  static String FIREBASE_USER_PASSWORD = "PayvorUser";
 
   static double maxWidth = 400;
   static double maxHeight = 400;
   static int PAGINATION_SIZE = 10;
   static int PAGINATION_SIZE_NEW = 20;
   static const double LOADER_RADIUS = 15;
+  static const String DEVICES = "devices";
+  static const String FCM_DEVICE_TOKEN = "fcm_device_token";
   static const String USER_BLOCKED_MESSAGE = "User blocked successfully";
   static const String USER_UNBLOCKED_MESSAGE = "User Unblocked successfully";
 
