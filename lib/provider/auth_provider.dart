@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:payvor/current_user_hired_by_favor/current_user_favor_hire.dart';
 import 'package:payvor/current_user_hired_by_favor/current_user_hire_favor.dart';
 import 'package:payvor/filter/filter_request.dart';
 import 'package:payvor/filter/refer_request.dart';
@@ -680,16 +681,44 @@ class AuthProvider with ChangeNotifier {
     } else {
       print("res $jsonDecode($response)");
       ReferListResponse resendOtpResponse =
-      new ReferListResponse.fromJson(response);
+          new ReferListResponse.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;
     }
   }
 
+  Future<dynamic> hiredFavourPost(
+    BuildContext context,
+    int page,
+  ) async {
+    print("fave");
+    var infoData = jsonDecode(MemoryManagement.getUserInfo());
+    var userinfo = LoginSignupResponse.fromJson(infoData);
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response =
+        await APIHandler.get(context: context, url: APIs.favorHiredByUser);
 
-  Future<dynamic> favourpostedbyuser(BuildContext context,
-      int page,) async {
+    print(APIs.favorHiredByUser);
+    print(APIs.favorHiredByUser);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      print("res $jsonDecode($response)");
+      CurrentUserHiredFavorResponse resendOtpResponse =
+          new CurrentUserHiredFavorResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> favourpostedbyuser(
+    BuildContext context,
+    int page,
+  ) async {
     print("fave");
     var infoData = jsonDecode(MemoryManagement.getUserInfo());
     var userinfo = LoginSignupResponse.fromJson(infoData);

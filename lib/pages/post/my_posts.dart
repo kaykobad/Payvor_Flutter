@@ -4,20 +4,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-
-import 'package:payvor/filter/refer_user.dart';
+import 'package:intl/intl.dart';
+import 'package:payvor/current_user_hired_by_favor/current_user_favor_hire.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/favour_posted_by_user.dart';
+import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/original_post/original_post_data.dart';
 import 'package:payvor/provider/auth_provider.dart';
-import 'package:payvor/shimmers/refer_shimmer_loader.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class MyPosts extends StatefulWidget {
   final ValueChanged<Widget> lauchCallBack;
@@ -103,18 +102,17 @@ class _HomeState extends State<MyPosts>
       currentPage = 1;
     }
 
-    var response = await provider.favourpostedbyuser(context, currentPage);
+    var response = await provider.hiredFavourPost(context, currentPage);
 
-    if (response is FavourPostedByUserResponse) {
-      provider.hideLoader();
-
+    if (response is CurrentUserHiredFavorResponse) {
       print("res $response");
       isPullToRefresh = false;
 
       if (response != null && response.data != null) {
         if (currentPage == 1) {
           listResult.clear();
-          listResult.add("Posted Favors");
+
+          listResult.add("Hired Favors");
         }
 
         listResult.addAll(response?.data);
@@ -131,6 +129,55 @@ class _HomeState extends State<MyPosts>
           offstagenodata = true;
         } else {
           offstagenodata = false;
+        }
+        hitHireJobApi();
+
+        setState(() {});
+      }
+
+      print(response);
+      try {} catch (ex) {}
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
+  }
+
+  hitHireJobApi() async {
+    var response = await provider.favourpostedbyuser(context, currentPage);
+
+    provider.hideLoader();
+
+    if (response is FavourPostedByUserResponse) {
+      print("res $response");
+      isPullToRefresh = false;
+
+      if (response != null && response.data != null) {
+        if (currentPage == 1) {
+          listResult.add("Posted Favors");
+        }
+
+        listResult.addAll(response?.data);
+
+        if (!_loadMore) {
+          if (response != null &&
+              response.data != null &&
+              response.data?.length < Constants.PAGINATION_SIZE) {
+            _loadMore = false;
+          } else {
+            _loadMore = true;
+          }
+        }
+
+        if (!offstagenodata) {
+          if (listResult.length > 0) {
+            offstagenodata = true;
+          } else {
+            offstagenodata = false;
+          }
         }
 
         setState(() {});
@@ -258,8 +305,8 @@ class _HomeState extends State<MyPosts>
           itemBuilder: (BuildContext context, int index) {
             if (listResult[index] is String) {
               widgets = buildItemHeader(listResult[index]);
-            } else if (listResult[index] is int) {
-              widgets = buildItemMain();
+            } else if (listResult[index] is DataNextPost) {
+              widgets = buildItemMain(listResult[index]);
             } else if (listResult[index] is DataFavour) {
               widgets = buildItem(listResult[index]);
             }
@@ -344,92 +391,114 @@ class _HomeState extends State<MyPosts>
     );
   }
 
-  Widget buildItemMain() {
-    return Container(
-      padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
-      margin: new EdgeInsets.only(top: 8.0),
-      decoration: new BoxDecoration(
-        borderRadius: new BorderRadius.circular(5.0),
-        color: Colors.white,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                new SvgPicture.asset(
-                  AssetStrings.referIcon,
-                  height: 18,
-                  width: 18,
-                ),
-                Expanded(
-                  child: Container(
-                    margin: new EdgeInsets.only(left: 7.0),
-                    child: new Text(
-                      "02 jan 2020",
-                      style: TextThemes.greyDarkTextHomeLocation,
+  String formatDateString(String dateString) {
+    try {
+      DateTime dateTime = DateTime.parse(dateString);
+
+      return DateFormat('dd MMM yyyy').format(dateTime);
+    } catch (e) {
+      print("date error ${e.toString()}");
+      return "";
+    }
+  }
+
+  Widget buildItemMain(DataNextPost data) {
+    var dates = formatDateString(data?.createdAt ?? "");
+    return InkWell(
+      onTap: () {
+        widget.lauchCallBack(Material(
+            child: Material(
+                child: new ChatMessageDetails(
+                  id: data.userId.toString(),
+                  name: data.title,
+                ))));
+      },
+      child: Container(
+        padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
+        margin: new EdgeInsets.only(top: 8.0),
+        decoration: new BoxDecoration(
+          borderRadius: new BorderRadius.circular(5.0),
+          color: Colors.white,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              child: new Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  new SvgPicture.asset(
+                    AssetStrings.referIcon,
+                    height: 18,
+                    width: 18,
+                  ),
+                  Expanded(
+                    child: Container(
+                      margin: new EdgeInsets.only(left: 7.0),
+                      child: new Text(
+                        dates,
+                        style: TextThemes.greyDarkTextHomeLocation,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  margin: new EdgeInsets.only(left: 3.0),
-                  child: new Text(
-                    "€50",
-                    style: TextThemes.darkRedMediumNew,
-                  ),
-                )
-              ],
+                  Container(
+                    margin: new EdgeInsets.only(left: 3.0),
+                    child: new Text(
+                      "€${data?.price ?? "0"}",
+                      style: TextThemes.darkRedMediumNew,
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-          new Container(
-            margin: new EdgeInsets.only(top: 10.0),
-            child: new Text(
-              "Help me carry some books",
-              style: TextThemes.blackCirculerMedium,
+            new Container(
+              margin: new EdgeInsets.only(top: 10.0),
+              child: new Text(
+                data?.title ?? "",
+                style: TextThemes.blackCirculerMedium,
+              ),
             ),
-          ),
-          Opacity(
-            opacity: 0.12,
-            child: new Container(
-              margin: new EdgeInsets.only(top: 30.0),
-              height: 1.0,
-              color: AppColors.dividerColor,
+            Opacity(
+              opacity: 0.12,
+              child: new Container(
+                margin: new EdgeInsets.only(top: 30.0),
+                height: 1.0,
+                color: AppColors.dividerColor,
+              ),
             ),
-          ),
-          Container(
-            margin: new EdgeInsets.only(top: 10.0),
-            child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  child: new Text(
-                    "You have hired ",
-                    style: TextThemes.grayNormalSmall,
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    margin: new EdgeInsets.only(left: 1.0),
+            Container(
+              margin: new EdgeInsets.only(top: 10.0),
+              child: new Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
                     child: new Text(
                       "You have hired ",
-                      style: TextThemes.cyanTextSmallMedium,
+                      style: TextThemes.grayNormalSmall,
                     ),
                   ),
-                ),
-                Container(
-                  margin: new EdgeInsets.only(left: 7.0),
-                  child: new Icon(
-                    Icons.arrow_forward_ios,
-                    size: 13,
-                    color: Color.fromRGBO(183, 183, 183, 1),
+                  Expanded(
+                    child: Container(
+                      margin: new EdgeInsets.only(left: 1.0),
+                      child: new Text(
+                        data?.hired?.name ?? "",
+                        style: TextThemes.cyanTextSmallMedium,
+                      ),
+                    ),
                   ),
-                )
-              ],
+                  Container(
+                    margin: new EdgeInsets.only(left: 7.0),
+                    child: new Icon(
+                      Icons.arrow_forward_ios,
+                      size: 13,
+                      color: Color.fromRGBO(183, 183, 183, 1),
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

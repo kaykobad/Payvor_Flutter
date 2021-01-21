@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/pages/chat/chat_user.dart';
@@ -9,8 +11,6 @@ import 'package:payvor/pages/chat/payvor_group_chat.dart';
 import 'package:payvor/pages/payment/firebase_constants.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart'
 
 class FirebaseProvider with ChangeNotifier {
   var _isLoading = false;
@@ -430,9 +430,9 @@ class FirebaseProvider with ChangeNotifier {
   Future<void> updateUserOnlineOfflineStatus({@required bool status}) async {
     var firebaseUser = await getCurrentUser();
     var document =
-    Firestore.instance.collection(USERS).document(firebaseUser.uid);
-    var PayvorFirebaseUser = PayvorFirebaseUser(isOnline: status);
-    return await document.updateData(PayvorFirebaseUser.toJson());
+        Firestore.instance.collection(USERS).document(firebaseUser.uid);
+    var data = new PayvorFirebaseUser(isOnline: status);
+    return await document.updateData(data.toJson());
   }
 
 
