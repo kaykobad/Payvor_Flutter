@@ -32,6 +32,7 @@ class APIs {
   static const String referUser = "$baseUrl/refer-user";
   static const String notiUser = "$baseUrl/noti-user";
   static const String favorPostedByUser = "$baseUrl/myfavour";
+  static const String favorHiredByUser = "$baseUrl/hiredfavour";
   static const String favorAppliedByUser = "$baseUrl/favourapplybyuser";
   static const String currentuserhirebyfavor = "$baseUrl/hiredbyfavour";
   static const String reportFavour = "$baseUrl/report-favour";

@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:payvor/current_user_hired_by_favor/current_user_hire_favor.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/applied_user/favour_applied_user.dart';
+import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -99,10 +101,9 @@ class _HomeState extends State<MyJobs>
       currentPage = 1;
     }
 
-    var response = await provider.favourjobapplieduser(context, currentPage);
+    var response = await provider.currentuserhirefavor(context, currentPage);
 
-    if (response is FavourAppliedByUserResponse) {
-
+    if (response is CurrentUserHiredByFavorResponse) {
       print("res $response");
       isPullToRefresh = false;
 
@@ -110,13 +111,14 @@ class _HomeState extends State<MyJobs>
         if (currentPage == 1) {
           listResult.clear();
 
-          listResult.add("Applied Jobs");
+
+          listResult.add("Next Jobs");
         }
 
-        listResult.addAll(response?.data?.data);
+        listResult.addAll(response?.data);
 
         if (response != null && response.data != null &&
-            response.data?.data?.length < Constants.PAGINATION_SIZE) {
+            response?.data.length < Constants.PAGINATION_SIZE) {
           _loadMore = false;
         } else {
           _loadMore = true;
@@ -171,9 +173,9 @@ class _HomeState extends State<MyJobs>
       currentPage = 1;
     }*/
 
-    var response = await provider.currentuserhirefavor(context, currentPage);
+    var response = await provider.favourjobapplieduser(context, currentPage);
 
-    if (response is CurrentUserHiredByFavorResponse) {
+    if (response is FavourAppliedByUserResponse) {
       provider.hideLoader();
 
       print("res $response");
@@ -181,17 +183,16 @@ class _HomeState extends State<MyJobs>
 
       if (response != null && response.data != null) {
         if (currentPage == 1) {
-
-          listResult.add("Next Jobs");
+          listResult.add("Applied Jobs");
         }
 
-        listResult.addAll(response?.data);
+        listResult.addAll(response?.data?.data);
 
 
         if (!_loadMore) {
           if (response != null &&
-              response.data != null &&
-              response.data?.length < Constants.PAGINATION_SIZE) {
+              response?.data != null &&
+              response?.data?.data.length < Constants.PAGINATION_SIZE) {
             _loadMore = false;
           } else {
             _loadMore = true;
@@ -359,7 +360,7 @@ class _HomeState extends State<MyJobs>
           new Container(
             margin: new EdgeInsets.only(top: 10.0),
             child: new Text(
-              data?.favour?.title,
+              data?.favour?.title ?? "",
               style: TextThemes.blackCirculerMedium,
             ),
           ),
@@ -379,7 +380,7 @@ class _HomeState extends State<MyJobs>
                 Expanded(
                   child: Container(
                     child: new Text(
-                      data?.favour?.description,
+                      data?.favour?.description ?? "",
                       style: TextThemes.grayNormalSmall,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
@@ -409,92 +410,115 @@ class _HomeState extends State<MyJobs>
     );
   }
 
+  String formatDateString(String dateString) {
+    try {
+      DateTime dateTime = DateTime.parse(dateString);
+
+      return DateFormat('dd MMM yyyy').format(dateTime);
+    } catch (e) {
+      print("date error ${e.toString()}");
+      return "";
+    }
+  }
+
   Widget buildItemMain(int index, DataNextJob data) {
-    return Container(
-      padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
-      margin: new EdgeInsets.only(top: 8.0),
-      decoration: new BoxDecoration(
-        borderRadius: new BorderRadius.circular(5.0),
-        color: Colors.white,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                new SvgPicture.asset(
-                  AssetStrings.referIcon,
-                  height: 18,
-                  width: 18,
-                ),
-                Expanded(
-                  child: Container(
+    var dates = formatDateString(data?.createdAt ?? "");
+
+    return InkWell(
+      onTap: () {
+        widget.lauchCallBack(Material(
+            child: Material(
+                child: new ChatMessageDetails(
+                  id: data.userId.toString(),
+                  name: data.title,
+                ))));
+      },
+      child: Container(
+        padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
+        margin: new EdgeInsets.only(top: 8.0),
+        decoration: new BoxDecoration(
+          borderRadius: new BorderRadius.circular(5.0),
+          color: Colors.white,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              child: new Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  new SvgPicture.asset(
+                    AssetStrings.referIcon,
+                    height: 18,
+                    width: 18,
+                  ),
+                  Expanded(
+                    child: Container(
+                      margin: new EdgeInsets.only(left: 7.0),
+                      child: new Text(
+                        dates,
+                        style: TextThemes.greyDarkTextHomeLocation,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: new EdgeInsets.only(left: 3.0),
+                    child: new Text(
+                      "€${data?.price}",
+                      style: TextThemes.darkRedMediumNew,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            new Container(
+              margin: new EdgeInsets.only(top: 10.0),
+              child: new Text(
+                data?.title ?? "",
+                style: TextThemes.blackCirculerMedium,
+              ),
+            ),
+            Opacity(
+              opacity: 0.12,
+              child: new Container(
+                margin: new EdgeInsets.only(top: 30.0),
+                height: 1.0,
+                color: AppColors.dividerColor,
+              ),
+            ),
+            Container(
+              margin: new EdgeInsets.only(top: 10.0),
+              child: new Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    child: new Text(
+                      data?.hiredBy?.name ?? "",
+                      style: TextThemes.cyanTextSmallMedium,
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      margin: new EdgeInsets.only(left: 1.0),
+                      child: new Text(
+                        data?.description ?? "",
+                        style: TextThemes.grayNormalSmall,
+                      ),
+                    ),
+                  ),
+                  Container(
                     margin: new EdgeInsets.only(left: 7.0),
-                    child: new Text(
-                      "02 jan 2020",
-                      style: TextThemes.greyDarkTextHomeLocation,
+                    child: new Icon(
+                      Icons.arrow_forward_ios,
+                      size: 13,
+                      color: Color.fromRGBO(183, 183, 183, 1),
                     ),
-                  ),
-                ),
-                Container(
-                  margin: new EdgeInsets.only(left: 3.0),
-                  child: new Text(
-                    "€${data?.price}",
-                    style: TextThemes.darkRedMediumNew,
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
-          new Container(
-            margin: new EdgeInsets.only(top: 10.0),
-            child: new Text(
-              data?.title ?? "",
-              style: TextThemes.blackCirculerMedium,
-            ),
-          ),
-          Opacity(
-            opacity: 0.12,
-            child: new Container(
-              margin: new EdgeInsets.only(top: 30.0),
-              height: 1.0,
-              color: AppColors.dividerColor,
-            ),
-          ),
-          Container(
-            margin: new EdgeInsets.only(top: 10.0),
-            child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  child: new Text(
-                    data?.hiredBy?.name ?? "",
-                    style: TextThemes.cyanTextSmallMedium,
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    margin: new EdgeInsets.only(left: 1.0),
-                    child: new Text(
-                      data?.description ?? "",
-                      style: TextThemes.grayNormalSmall,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: new EdgeInsets.only(left: 7.0),
-                  child: new Icon(
-                    Icons.arrow_forward_ios,
-                    size: 13,
-                    color: Color.fromRGBO(183, 183, 183, 1),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
