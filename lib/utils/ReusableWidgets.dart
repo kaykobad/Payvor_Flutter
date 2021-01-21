@@ -453,28 +453,28 @@ Future<List<String>> getLocationSuggestionsList(String locationText) async {
   return suggestionList;
 }
 
-bool isCurrentUser(String userId) {
-  var currentUserId = MemoryManagement.getuserId();
-  return (currentUserId == userId);
-}
+//bool isCurrentUser(String userId) {
+//  var currentUserId = MemoryManagement.getuserId();
+//  return (currentUserId == userId);
+//}
 
-Widget getBackButton(String userId, BuildContext context, bool showit) {
-  return (!isCurrentUser(userId) && showit)
-      ? Positioned(
-          top: 6,
-          left: 15,
-          child: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            ),
-          ),
-        )
-      : Container();
-}
+//Widget getBackButton(String userId, BuildContext context, bool showit) {
+//  return (!isCurrentUser(userId) && showit)
+//      ? Positioned(
+//          top: 6,
+//          left: 15,
+//          child: InkWell(
+//            onTap: () {
+//              Navigator.pop(context);
+//            },
+//            child: Icon(
+//              Icons.arrow_back,
+//              color: Colors.black,
+//            ),
+//          ),
+//        )
+//      : Container();
+//}
 
 //for youtube auth in native
 TargetPlatform platform;

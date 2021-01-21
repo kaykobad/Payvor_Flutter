@@ -217,6 +217,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       MemoryManagement.socialMediaStatus("1");
     }
 
+    provider.setLoading();
     if (response is LoginSignupResponse) {
       LoginSignupResponse loginSignupResponse = response;
       MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
@@ -263,7 +264,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
         await firebaseProvider.createFirebaseUser(user);
       }
 
-
+      firebaseProvider.hideLoader();
       if ((loginSignupResponse.isnew == null || loginSignupResponse.isnew) &&
           typse != 0) {
         Navigator.push(
@@ -283,6 +284,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
         );
       }
     } else {
+      firebaseProvider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
       showInSnackBar("Authentication Failed");

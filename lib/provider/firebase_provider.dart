@@ -316,12 +316,18 @@ class FirebaseProvider with ChangeNotifier {
         .collection("friends")
         .document(chatUserId);
 
-    await document.updateData({
-      "unreadMessageCount": 0,
-      "updatedAt": DateTime
-          .now()
-          .millisecondsSinceEpoch
-    });
+    try {
+      await document.updateData({
+        "unreadMessageCount": 0,
+        "updatedAt": DateTime
+            .now()
+            .millisecondsSinceEpoch
+      });
+    }
+    catch(ex)
+    {
+
+    }
     return true;
   }
 
@@ -330,7 +336,7 @@ class FirebaseProvider with ChangeNotifier {
     String userId,
     @required String deviceType,
     @required String userName}) async {
-    String deviceid = MemoryManagement.getuserId();
+    String deviceid ="";// MemoryManagement.getuserId();
 
     var document =
     Firestore.instance.collection(Constants.FCM_DEVICE_TOKEN).document(userId);

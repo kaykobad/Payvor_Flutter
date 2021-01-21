@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/chat/chat_screen.dart';
+import 'package:payvor/pages/dummy.dart';
 import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/pages/pay_feedback/pay_give_feedback.dart';
 import 'package:payvor/pages/post/post_home.dart';
@@ -197,7 +198,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               onGenerateRoute: (route) => MaterialPageRoute(
                 settings: route,
                 builder: (context) =>
-                    PayFeebackDetails(lauchCallBack: homeCallBack),
+                    Dummy(logoutCallBack:logoutCallBack),
               ),
             ),
           ],

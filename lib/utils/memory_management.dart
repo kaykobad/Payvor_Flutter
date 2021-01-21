@@ -28,13 +28,7 @@ class MemoryManagement {
     return prefs.getString(SharedPrefsKeys.NAME);
   }
 
-  static void setuserId({@required String id}) {
-    prefs.setString(SharedPrefsKeys.USERID, id);
-  }
 
-  static String getuserId() {
-    return prefs.getString(SharedPrefsKeys.USERID);
-  }
 
 
   static void setVerifyMailTemp({@required bool verify}) {
@@ -310,13 +304,7 @@ class MemoryManagement {
     return prefs?.getInt(SharedPrefsKeys.USER_TYPE_SCREEN);
   }
 
-  static void setUserData({@required String data}) {
-    prefs.setString(SharedPrefsKeys.USER_DATA, data);
-  }
 
-  static String getUserData() {
-    return prefs?.getString(SharedPrefsKeys.USER_DATA);
-  }
 
 
 

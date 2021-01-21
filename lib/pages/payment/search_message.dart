@@ -46,7 +46,8 @@ class _HomeState extends State<SearchMessage>
   List<DataRefer> listResult = List();
   String userId;
   var _firstTimeChatUser = true;
-
+  var _userName ;
+ var  _userProfilePic ;
 
   TextEditingController _controller = new TextEditingController();
   ScrollController scrollController = new ScrollController();
@@ -63,7 +64,15 @@ class _HomeState extends State<SearchMessage>
 
   @override
   void initState() {
-    userId = MemoryManagement.getuserId();
+    var userData = MemoryManagement.getUserInfo();
+    if (userData != null) {
+      Map<String, dynamic> data = jsonDecode(userData);
+      LoginSignupResponse userResponse = LoginSignupResponse.fromJson(data);
+      _userName = userResponse.user.name ?? "";
+      _userProfilePic = userResponse.user.profilePic ?? "";
+      userId=userResponse.user.id.toString();
+    }
+
     Future.delayed(const Duration(milliseconds: 100), () {
       _hitApi();
       // checkNewGroup(userId: userId);
@@ -127,30 +136,67 @@ class _HomeState extends State<SearchMessage>
 
   }
 
-  void _moveToPrivateChatScreen(PayvorFirebaseUser filmShapeFirebaseUser) {
-    var currentUserId = MemoryManagement.getuserId();
-    var _userName;
-    var _userProfilePic;
-    var userData = MemoryManagement.getUserData();
-    if (userData != null) {
-      Map<String, dynamic> data = jsonDecode(userData);
-      LoginSignupResponse userResponse = LoginSignupResponse.fromJson(data);
-      _userName = userResponse.user.name ?? "";
-      _userProfilePic = userResponse.user.profilePic ?? "";
-    }
+  void _moveToPrivateChatScreen(ChatUser chatUser) {
+
     var screen = PrivateChat(
-      peerId: filmShapeFirebaseUser.filmShapeId.toString(),
-      peerAvatar: filmShapeFirebaseUser.thumbnailUrl,
-      userName: filmShapeFirebaseUser.fullName,
+      peerId: chatUser.userId.toString(),
+      peerAvatar: chatUser.profilePic,
+      userName: chatUser.username,
       isGroup: false,
-      currentUserId: currentUserId,
+      currentUserId: userId,
       currentUserName: _userName,
       currentUserProfilePic: _userProfilePic,
     );
     //move to private chat screen
     //widget.fullScreenWidget(screen);
+    Navigator.push(
+      context,
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return Material(child: screen);
+      }),
+    );
   }
-
+  Widget _buildContestList() {
+    return StreamBuilder<List<ChatUser>>(
+        stream: firebaseProvider.getChatFriends(userId: userId),
+        builder: (context, AsyncSnapshot<List<ChatUser>> result) {
+          if (result.hasData) {
+            if (result.data.length == 0) {
+              return _getEmptyWidget;
+            }
+           // widget.countCallBack(result.data.length);
+            return Expanded(
+              child: Container(
+                child: new ListView.builder(
+                  padding: new EdgeInsets.all(0.0),
+                  itemBuilder: (BuildContext context, int index) {
+                    var data = result.data[index];
+                    return InkWell(
+                        onTap: () {
+                         // _moveToPrivateChatScreen();
+                        },
+                        child: buildItemMain(data));
+                  },
+                  itemCount: result.data.length,
+                ),
+              ),
+            );
+          } else {
+            return _getEmptyWidget;
+          }
+        });
+  }
+  get _getEmptyWidget
+  {
+    return Column();
+//    return Expanded(
+//      child: EmptyWidget(
+//        message: "No Active users",
+//        callback: refreshList,
+//        isEnabled: false,
+//      ),
+//    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -314,25 +360,25 @@ class _HomeState extends State<SearchMessage>
     );
   }
 
-  _buildContestList() {
-    return Expanded(
-        child: Container(
-          color: Colors.white,
-          child: new ListView.builder(
-            padding: new EdgeInsets.all(0.0),
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return buildItemMain();
-            },
-            itemCount: 5,
-          ),
-        ));
-  }
+//  _buildContestList() {
+//    return Expanded(
+//        child: Container(
+//          color: Colors.white,
+//          child: new ListView.builder(
+//            padding: new EdgeInsets.all(0.0),
+//            physics: const AlwaysScrollableScrollPhysics(),
+//            itemBuilder: (BuildContext context, int index) {
+//              return buildItemMain();
+//            },
+//            itemCount:firebaseProvider.userList.length,
+//          ),
+//        ));
+//  }
 
-  Widget buildItem() {
+  Widget buildItem(ChatUser chatUser) {
     return InkWell(
       onTap: (){
-        //_moveToPrivateChatScreen();
+        _moveToPrivateChatScreen(chatUser);
       },
       child: Container(
         margin: new EdgeInsets.only(left: 16.0, right: 16.0),
@@ -362,7 +408,7 @@ class _HomeState extends State<SearchMessage>
                             left: 10.0,
                           ),
                           child: new Text(
-                            "xgdsgdsg",
+                            chatUser.username,
                             style: TextThemes.greyTextFielBold,
                           ),
                         ),
@@ -380,7 +426,7 @@ class _HomeState extends State<SearchMessage>
                           new EdgeInsets.only(left: 10.0, right: 10.0, top: 6),
                       child: Container(
                           child: new Text(
-                        "Great! Let’s do it together in susta…",
+                       chatUser.lastMessage,
                         style: TextThemes.greyDarkTextHomeLocation,
                       )),
                     )
@@ -388,23 +434,26 @@ class _HomeState extends State<SearchMessage>
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                padding:
-                    new EdgeInsets.only(top: 2, bottom: 2, left: 5, right: 5),
+            Visibility(
+              visible: chatUser.unreadMessageCount>0,
+              child: Align(
                 alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    borderRadius: new BorderRadius.circular(12.0),
-                    color: AppColors.colorDarkCyan),
-                child: new Text(
-                  "03",
-                  style: new TextStyle(
-                    color: Colors.white,
-                    fontFamily: AssetStrings.circulerMedium,
-                    fontSize: 12,
+                child: Container(
+                  padding:
+                      new EdgeInsets.only(top: 2, bottom: 2, left: 5, right: 5),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: new BorderRadius.circular(12.0),
+                      color: AppColors.colorDarkCyan),
+                  child: new Text(
+                    "${chatUser.unreadMessageCount}",
+                    style: new TextStyle(
+                      color: Colors.white,
+                      fontFamily: AssetStrings.circulerMedium,
+                      fontSize: 12,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ),
             )
@@ -417,7 +466,7 @@ class _HomeState extends State<SearchMessage>
   @override
   bool get wantKeepAlive => true;
 
-  Widget buildItemMain() {
+  Widget buildItemMain(ChatUser chatUser) {
     return Slidable(
       actionPane: SlidableDrawerActionPane(),
       actionExtentRatio: 0.3,
@@ -427,7 +476,7 @@ class _HomeState extends State<SearchMessage>
             new SizedBox(
               height: 14.0,
             ),
-            buildItem(),
+            buildItem(chatUser),
             Opacity(
               opacity: 1,
               child: new Container(

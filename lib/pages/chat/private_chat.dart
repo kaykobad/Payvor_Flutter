@@ -273,7 +273,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
   }
 
   Future uploadFile() async {
-    var user = "user+${MemoryManagement.getuserId()}";
+    var user = "user+${widget.currentUserId}";
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     StorageReference reference =
         FirebaseStorage.instance.ref().child(user).child(fileName);
@@ -763,18 +763,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
   @override
   Widget build(BuildContext context) {
     firebaseProvider = Provider.of<FirebaseProvider>(context);
-    var user = firebaseProvider.firebaseUserList[peerId];
-    var bio;
-    var isOnline;
-    if (user != null) //this is from chat users screen
-    {
-      bio = user.bio;
-      isOnline = user.isOnline;
-    } else //this when user comes from profile and send message
-    {
-      bio = widget.bio ?? "";
-      isOnline = widget.isOnline ?? false;
-    }
+
     return SafeArea(
       child: new Scaffold(
         backgroundColor: AppColors.kWhite,
@@ -785,15 +774,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
           child: new Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container(
-                margin: new EdgeInsets.only(top: 10.0, bottom: 20),
-                child: PrivateChatTopWidget(
-                  userName: widget.userName,
-                  profilePic: APIs.imageBaseUrl + widget.peerAvatar,
-                  desc: bio ?? "",
-                  isOnline: isOnline ?? false,
-                ),
-              ),
+
               Container(
                 height: 1,
                 color: AppColors.dividerColor.withOpacity(0.5),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/favour_details_response/favour_details_response.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
@@ -17,8 +19,12 @@ import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
+
+import 'chat/payvor_firebase_user.dart';
+import 'chat/private_chat.dart';
 
 class ChatMessageDetails extends StatefulWidget {
   final String id;
@@ -218,11 +224,37 @@ class _HomeState extends State<ChatMessageDetails>
   bool get wantKeepAlive => true;
 
   void callback() async {
-    await Future.delayed(Duration(milliseconds: 200));
-    showInSnackBar("Chat successfully");
-    await Future.delayed(Duration(milliseconds: 1500));
-    Navigator.pop(context); //back to previous screen
-    // showBottomSheet();
+
+      var currentUserId ;
+      var _userName;
+      var _userProfilePic;
+      var userData = MemoryManagement.getUserInfo();
+      if (userData != null) {
+        Map<String, dynamic> data = jsonDecode(userData);
+        LoginSignupResponse userResponse = LoginSignupResponse.fromJson(data);
+        _userName = userResponse.user.name ?? "";
+        _userProfilePic = userResponse.user.profilePic ?? "";
+        currentUserId=userResponse.user.id.toString();
+      }
+      var screen = PrivateChat(
+        peerId: widget.id,
+        peerAvatar: "",
+        userName: widget.name,
+        isGroup: false,
+        currentUserId: currentUserId,
+        currentUserName: _userName,
+        currentUserProfilePic: _userProfilePic,
+      );
+      //move to private chat screen
+      //widget.fullScreenWidget(screen);
+
+      Navigator.push(
+        context,
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return Material(child:screen);
+        }),
+      );
+
   }
 
   redirect() async {

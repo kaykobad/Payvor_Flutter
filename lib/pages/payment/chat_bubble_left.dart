@@ -103,8 +103,7 @@ class _ChatBubbleLeftState extends State<ChatBubbleLeft>
                                         throw 'Could not launch $link';
                                       }*/
                                     },
-                                    text:
-                                        "I’m free now, can you send me your location? I’ll be at yours in a few. hiudhsiuhfishaiofhioashfiohaiohfihasiofhioashfoihasiohfioashioashnfikhasnikfnhs :)",
+                                    text:widget.message??"",
                                     linkStyle: TextStyle(color: Colors.blue),
                                     style: TextStyle(
                                         fontSize: 14,
