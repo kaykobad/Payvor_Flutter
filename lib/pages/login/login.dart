@@ -300,8 +300,8 @@ class _LoginScreenState extends State<LoginScreenNew> {
         created: DateTime.now().toIso8601String(),
         filmShapeId: signupResponse.user.id,
         firebaseId: firebaseId,
-        isOnline: true
-    );
+        isOnline: true,
+        thumbnailUrl: signupResponse.user.profilePic);
   }
 
   void showInSnackBar(String value) {

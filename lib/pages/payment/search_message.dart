@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,15 +10,22 @@ import 'package:payvor/filter/refer_response.dart';
 import 'package:payvor/filter/refer_user.dart';
 import 'package:payvor/filter/refer_user_response.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
+import 'package:payvor/pages/chat/chat_user.dart';
+import 'package:payvor/pages/chat/payvor_firebase_user.dart';
+import 'package:payvor/pages/chat/private_chat.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/shimmers/refer_shimmer_loader.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SearchMessage extends StatefulWidget {
   @override
@@ -29,20 +37,19 @@ class _HomeState extends State<SearchMessage>
   var screenSize;
 
   String searchkey = null;
-  AuthProvider provider;
+  FirebaseProvider firebaseProvider;
   int currentPage = 1;
   bool isPullToRefresh = false;
   bool offstagenodata = true;
   bool loader = false;
   String title = "";
-
   List<DataRefer> listResult = List();
+  String userId;
+  var _firstTimeChatUser = true;
 
-  final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
+
   TextEditingController _controller = new TextEditingController();
   ScrollController scrollController = new ScrollController();
-  bool _loadMore = false;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -56,126 +63,99 @@ class _HomeState extends State<SearchMessage>
 
   @override
   void initState() {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      hitSearchApi("");
+    userId = MemoryManagement.getuserId();
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _hitApi();
+      // checkNewGroup(userId: userId);
+      checkNewUser(userId: userId);
     });
-    _setScrollListener();
     super.initState();
   }
 
-  hitSearchApi(String data) async {
-    bool gotInternetConnection = await hasInternetConnection(
-      context: context,
-      mounted: mounted,
-      canShowAlert: true,
-      onFail: () {
-        provider.hideLoader();
-      },
-      onSuccess: () {},
-    );
+  void _hitApi() async {
 
-    if (!gotInternetConnection) {
-      return;
-    }
+    (firebaseProvider.myFriendsIdList.length == 0)
+        ? await firebaseProvider.getFriends(userId: userId)
+        : firebaseProvider.myFriendsIdList;
 
-    if (!isPullToRefresh) {
-      provider.setLoading();
-    }
-
-    if (_loadMore) {
-      currentPage++;
-    } else {
-      currentPage = 1;
-    }
-
-    var request;
-    var newRequest;
-
-/*
-
-    var type = 1;
-    if (data.isNotEmpty && data
-        .trim()
-        .length > 0) {
-      request = ReferRequest(
-          lat: widget?.lat ?? "", long: widget?.long ?? "", name: data);
-    }
-    else {
-      type = 2;
-      newRequest =
-          ReferRequestNew(lat: widget?.lat ?? "", long: widget?.long ?? "");
-    }
-*/
-
-/*
-
-    var response = await provider.getReferList(
-        request, context, currentPage, newRequest, type);
-*/
-
-    var response;
-
-    if (response is ReferListResponse) {
-      provider.hideLoader();
-
-      print("res $response");
-      isPullToRefresh = false;
-
-      if (response != null && response.data != null) {
-        if (currentPage == 1) {
-          listResult.clear();
-        }
-
-        listResult.addAll(response?.data?.data);
-
-        if (response.data != null &&
-            response.data.data != null &&
-            response.data.data?.length < Constants.PAGINATION_SIZE) {
-          _loadMore = false;
-        } else {
-          _loadMore = true;
-        }
-
-        if (listResult.length > 0) {
-          offstagenodata = true;
-        } else {
-          offstagenodata = false;
-        }
-
-        setState(() {});
-      }
-
-      print(response);
-      try {} catch (ex) {}
-    } else {
-      provider.hideLoader();
-      APIError apiError = response;
-      print(apiError.error);
-
-      showInSnackBar(apiError.error);
-    }
+    setState(() {});
   }
 
-  void _setScrollListener() {
-    //scrollController.position.isScrollingNotifier.addListener(() { print("called");});
 
-    scrollController = new ScrollController();
-    scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent ==
-          scrollController.offset) {
-        if (listResult.length >= (Constants.PAGINATION_SIZE * currentPage)) {
-          isPullToRefresh = true;
-          hitSearchApi(title);
-          showInSnackBar("Loading data...");
-        }
+  void checkNewUser({@required String userId}) {
+    var firestore = Firestore.instance
+        .collection("chatfriends")
+        .document(userId)
+        .collection("friends")
+        .orderBy('lastMessageTime', descending: true)
+        .snapshots();
+
+    //get the data and convert to list
+    firestore.listen((QuerySnapshot snapshot) {
+      print("new chat");
+      if (!_firstTimeChatUser) {
+        checkForNewUserOrLatestMessage(snapshot.documents[0]);
+      } else {
+        _firstTimeChatUser = false;
       }
     });
   }
+
+  void checkForNewUserOrLatestMessage(DocumentSnapshot documentSnapshot) {
+    var chatUser = ChatUser.fromMap(documentSnapshot.data);
+    print("new chat user ${chatUser.toJson()}");
+    if (firebaseProvider.userList.isNotEmpty) {
+      var isOldUser = false;
+      for (var data in firebaseProvider.userList) {
+        if (data is ChatUser) {
+          if (data.userId == chatUser.userId) {
+            isOldUser = true;
+            print("new_msg ${chatUser.lastMessage}");
+            break;
+          }
+        }
+      }
+      if (!isOldUser) {
+        firebaseProvider.myFriendsIdList.add(int.parse(chatUser.userId));
+        setState(() {});
+      }
+    } else {
+      firebaseProvider.myFriendsIdList.add(int.parse(chatUser.userId));
+      setState(() {});
+    }
+
+
+  }
+
+  void _moveToPrivateChatScreen(PayvorFirebaseUser filmShapeFirebaseUser) {
+    var currentUserId = MemoryManagement.getuserId();
+    var _userName;
+    var _userProfilePic;
+    var userData = MemoryManagement.getUserData();
+    if (userData != null) {
+      Map<String, dynamic> data = jsonDecode(userData);
+      LoginSignupResponse userResponse = LoginSignupResponse.fromJson(data);
+      _userName = userResponse.user.name ?? "";
+      _userProfilePic = userResponse.user.profilePic ?? "";
+    }
+    var screen = PrivateChat(
+      peerId: filmShapeFirebaseUser.filmShapeId.toString(),
+      peerAvatar: filmShapeFirebaseUser.thumbnailUrl,
+      userName: filmShapeFirebaseUser.fullName,
+      isGroup: false,
+      currentUserId: currentUserId,
+      currentUserName: _userName,
+      currentUserProfilePic: _userProfilePic,
+    );
+    //move to private chat screen
+    //widget.fullScreenWidget(screen);
+  }
+
 
   @override
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
-    provider = Provider.of<AuthProvider>(context);
+    firebaseProvider = Provider.of<FirebaseProvider>(context);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -336,105 +316,100 @@ class _HomeState extends State<SearchMessage>
 
   _buildContestList() {
     return Expanded(
-        child: RefreshIndicator(
-      key: _refreshIndicatorKey,
-      onRefresh: () async {
-        /* isPullToRefresh = true;
-            _loadMore = false;
-            currentPage = 1;
-
-            await hitSearchApi(title);*/
-      },
-      child: Container(
-        color: Colors.white,
-        child: new ListView.builder(
-          padding: new EdgeInsets.all(0.0),
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) {
-            return buildItemMain();
-          },
-          itemCount: 5,
-        ),
-      ),
-    ));
+        child: Container(
+          color: Colors.white,
+          child: new ListView.builder(
+            padding: new EdgeInsets.all(0.0),
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return buildItemMain();
+            },
+            itemCount: 5,
+          ),
+        ));
   }
 
   Widget buildItem() {
-    return Container(
-      margin: new EdgeInsets.only(left: 16.0, right: 16.0),
-      child: Row(
-        children: <Widget>[
-          new Container(
-            width: 49.0,
-            height: 49.0,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(shape: BoxShape.circle),
-            child: ClipOval(
-              // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-
-              child: getCachedNetworkImageWithurl(
-                  url: "", fit: BoxFit.fill, size: 49),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        margin: new EdgeInsets.only(
-                          left: 10.0,
-                        ),
-                        child: new Text(
-                          "xgdsgdsg",
-                          style: TextThemes.greyTextFielBold,
-                        ),
-                      ),
-                      Container(
-                        margin: new EdgeInsets.only(left: 6),
-                        child: new Text(
-                          "now",
-                          style: TextThemes.lightGrey,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    margin:
-                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 6),
-                    child: Container(
-                        child: new Text(
-                      "Great! Let’s do it together in susta…",
-                      style: TextThemes.greyDarkTextHomeLocation,
-                    )),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              padding:
-                  new EdgeInsets.only(top: 2, bottom: 2, left: 5, right: 5),
+    return InkWell(
+      onTap: (){
+        //_moveToPrivateChatScreen();
+      },
+      child: Container(
+        margin: new EdgeInsets.only(left: 16.0, right: 16.0),
+        child: Row(
+          children: <Widget>[
+            new Container(
+              width: 49.0,
+              height: 49.0,
               alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  borderRadius: new BorderRadius.circular(12.0),
-                  color: AppColors.colorDarkCyan),
-              child: new Text(
-                "03",
-                style: new TextStyle(
-                  color: Colors.white,
-                  fontFamily: AssetStrings.circulerMedium,
-                  fontSize: 12,
-                ),
-                textAlign: TextAlign.center,
+              decoration: BoxDecoration(shape: BoxShape.circle),
+              child: ClipOval(
+                // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+
+                child: getCachedNetworkImageWithurl(
+                    url: "", fit: BoxFit.fill, size: 49),
               ),
             ),
-          )
-        ],
+            Expanded(
+              child: Container(
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          margin: new EdgeInsets.only(
+                            left: 10.0,
+                          ),
+                          child: new Text(
+                            "xgdsgdsg",
+                            style: TextThemes.greyTextFielBold,
+                          ),
+                        ),
+                        Container(
+                          margin: new EdgeInsets.only(left: 6),
+                          child: new Text(
+                            "now",
+                            style: TextThemes.lightGrey,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      margin:
+                          new EdgeInsets.only(left: 10.0, right: 10.0, top: 6),
+                      child: Container(
+                          child: new Text(
+                        "Great! Let’s do it together in susta…",
+                        style: TextThemes.greyDarkTextHomeLocation,
+                      )),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                padding:
+                    new EdgeInsets.only(top: 2, bottom: 2, left: 5, right: 5),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    borderRadius: new BorderRadius.circular(12.0),
+                    color: AppColors.colorDarkCyan),
+                child: new Text(
+                  "03",
+                  style: new TextStyle(
+                    color: Colors.white,
+                    fontFamily: AssetStrings.circulerMedium,
+                    fontSize: 12,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

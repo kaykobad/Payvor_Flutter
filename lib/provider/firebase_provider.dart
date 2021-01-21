@@ -10,7 +10,7 @@ import 'package:payvor/pages/payment/firebase_constants.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart'
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseProvider with ChangeNotifier {
   var _isLoading = false;
@@ -431,8 +431,8 @@ class FirebaseProvider with ChangeNotifier {
     var firebaseUser = await getCurrentUser();
     var document =
     Firestore.instance.collection(USERS).document(firebaseUser.uid);
-    var PayvorFirebaseUser = PayvorFirebaseUser(isOnline: status);
-    return await document.updateData(PayvorFirebaseUser.toJson());
+    var payvorFirebaseUser = PayvorFirebaseUser(isOnline: status);
+    return await document.updateData(payvorFirebaseUser.toJson());
   }
 
 
