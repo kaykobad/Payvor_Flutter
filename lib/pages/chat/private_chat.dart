@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:payvor/networkmodel/APIs.dart';
 import 'package:payvor/pages/chat/chat_user.dart';
 import 'package:payvor/pages/payment/chat_bubble_image_left.dart';
@@ -18,6 +19,7 @@ import 'package:payvor/pages/payment/firebase_constants.dart';
 import 'package:payvor/pages/payment/private_chat_top.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
+import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/common_dialog.dart';
 import 'package:payvor/utils/constants.dart';
@@ -630,34 +632,17 @@ class PrivateChatScreenState extends State<PrivateChat> {
   }
 
   Widget popupMenuPrivate() {
-    return PopupMenuButton<ChoicePrivate>(
-      icon: Icon(
-        Icons.menu,
-        color: AppColors.kBlack,
-      ),
-      onSelected: onItemMenuPressPrivate,
-      itemBuilder: (BuildContext context) {
-        return choicesPrivate.map((ChoicePrivate choice) {
-          return PopupMenuItem<ChoicePrivate>(
-              value: choice,
-              child: Row(
-                children: <Widget>[
-                  Icon(
-                    choice.icon,
-                    color: AppColors.kAppBlue,
-                  ),
-                  Container(
-                    width: 10.0,
-                  ),
-                  Text(
-                    choice.title,
-                    style: TextStyle(
-                        color: AppColors.kAppBlue, fontFamily: "RobotoRegular"),
-                  ),
-                ],
-              ));
-        }).toList();
+    return InkWell(
+      onTap: () {
+        showBottomSheets();
       },
+      child: Container(
+        width: 50,
+        child: Icon(
+          Icons.more_vert,
+          color: AppColors.kBlack,
+        ),
+      ),
     );
   }
 
@@ -691,6 +676,91 @@ class PrivateChatScreenState extends State<PrivateChat> {
         }).toList();
       },
     );
+  }
+
+  Widget getBottomText(String icon, String text, double size) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+        if (text == "Report Profile") {
+          _showReportDialog();
+        } else if (text == "Share Post") {}
+      },
+      child: Container(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              alignment: Alignment.topLeft,
+              child: InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: new SvgPicture.asset(
+                  icon,
+                  width: size,
+                  height: size,
+                ),
+              ),
+            ),
+            new SizedBox(
+              width: 20.0,
+            ),
+            Container(
+              child: new Text(
+                text,
+                style: text == "Delete Post"
+                    ? TextThemes.darkRedMedium
+                    : TextThemes.darkBlackMedium,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void showBottomSheets() {
+    showModalBottomSheet<void>(
+        isScrollControlled: true,
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
+        ),
+        builder: (BuildContext bc) {
+          return Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Container(
+                  child: new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                      margin: new EdgeInsets.only(top: 43, left: 27),
+                      child: getBottomText(
+                          AssetStrings.share, "View Profile", 22)),
+                  Container(
+                      margin: new EdgeInsets.only(top: 35, left: 27),
+                      child: getBottomText(
+                          AssetStrings.slash, "Report Profile", 22)),
+                  Opacity(
+                    opacity: 0.12,
+                    child: new Container(
+                      height: 1.0,
+                      margin: new EdgeInsets.only(top: 35, left: 27, right: 27),
+                      color: AppColors.dividerColor,
+                    ),
+                  ),
+                  Container(
+                      margin: new EdgeInsets.only(top: 35, left: 24),
+                      child: getBottomText(AssetStrings.cross, " Cancel", 18)),
+                  Container(
+                    height: 56,
+                  )
+                ],
+              )));
+        });
   }
 
   void onItemMenuPressPrivate(ChoicePrivate choice) {
@@ -892,7 +962,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
                     fontFamily: "RobotoRegular"),
                 controller: textEditingController,
                 decoration: InputDecoration.collapsed(
-                  hintText: 'Type your message...',
+                  hintText: ' Type your message...',
                   hintStyle: TextStyle(
                       color: AppColors.kGrey, fontFamily: "RobotoRegular"),
                 ),

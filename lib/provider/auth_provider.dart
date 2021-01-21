@@ -28,6 +28,7 @@ import 'package:payvor/model/otp/resendotpresponse.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
 import 'package:payvor/model/promotion/promotion_response.dart';
+import 'package:payvor/model/rating/give_rating_request.dart';
 import 'package:payvor/model/reset_password/reset_pass_request.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signuprequest.dart';
@@ -682,6 +683,23 @@ class AuthProvider with ChangeNotifier {
       print("res $jsonDecode($response)");
       ReferListResponse resendOtpResponse =
           new ReferListResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> giveUserRating(
+      GiveRatingRequest requests, BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.post(
+        context: context, url: APIs.giveRating, requestBody: requests.toJson());
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      ReportResponse resendOtpResponse = new ReportResponse.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;

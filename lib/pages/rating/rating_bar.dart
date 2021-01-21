@@ -9,6 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:payvor/filter/search_item.dart';
 import 'package:payvor/localdb/DatabaseHelper.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/post_details/report_post_response.dart';
+import 'package:payvor/model/rating/give_rating_request.dart';
 import 'package:payvor/model/recentsearch.dart';
 import 'package:payvor/model/suggest/suggest_response.dart';
 import 'package:payvor/pages/get_favor_list/favor_list_response.dart';
@@ -91,6 +93,53 @@ class _HomeState extends State<RatingBarNew>
         ),
       ),
     );
+  }
+
+  hitRatingApi() async {
+    if (_rating < 1.0) {
+      showInSnackBar("Please give a rating");
+      return;
+    }
+    provider.setLoading();
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    var request = new GiveRatingRequest(
+        favour_id: "25",
+        rating: _rating.toString(),
+        description: _DescriptionController.text.toString());
+
+    var response = await provider.giveUserRating(request, context);
+
+    if (response is ReportResponse) {
+      provider.hideLoader();
+
+      if (response != null && response?.status?.code == 200) {
+        showBottomSheetSuccesss();
+      }
+
+      setState(() {});
+
+      print(response);
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
   }
 
   Widget getAppBarNew(BuildContext context) {
@@ -355,7 +404,7 @@ class _HomeState extends State<RatingBarNew>
           ),
           new Center(
             child: Container(
-              margin: new EdgeInsets.only(top: 50),
+
               child: getHalfScreenLoader(
                 status: provider.getLoading(),
                 context: context,
@@ -373,7 +422,7 @@ class _HomeState extends State<RatingBarNew>
   }
 
   void callback() async {
-    showBottomSheetSuccesss();
+    hitRatingApi();
   }
 
   void callbackReport() async {

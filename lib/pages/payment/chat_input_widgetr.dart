@@ -18,106 +18,68 @@ class ChatInputWidget extends StatelessWidget {
     return new Container(
       width: getScreenSize(context: context).width,
       decoration: new BoxDecoration(
+        color: Colors.white,
         border: new Border(
-          top: new BorderSide(width: 0.8, color: AppColors.dividerColor),
+          top: new BorderSide(
+              width: 0.3, color: AppColors.dividerColor.withOpacity(0.8)),
         ),
       ),
-      padding: new EdgeInsets.symmetric(
-        vertical: 14.0,
-        horizontal: 12.0,
-      ),
+      padding:
+          new EdgeInsets.only(bottom: 35.0, left: 12.0, right: 12.0, top: 16.0),
       child: new Row(
         children: <Widget>[
           new Expanded(
             child: new Container(
-              margin: new EdgeInsets.only(left: 15.0, right: 15.0),
               constraints: const BoxConstraints(
-                maxHeight: 90.0,
+                maxHeight: 100.0,
               ),
               child: new TextField(
                 controller: messageFieldController,
                 style: const TextStyle(
-                  fontSize: 14.0,
-                  color: AppColors.greyProfile,
-                  fontFamily: AssetStrings.circulerNormal,
+                  fontSize: 18.0,
                 ),
                 maxLines: null,
                 decoration: new InputDecoration(
                   border: new OutlineInputBorder(
                     borderSide: new BorderSide(
-                      color: Colors.red,
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(24.0),
-                  ),
-                  enabledBorder: new OutlineInputBorder(
-                    borderSide: new BorderSide(
-                      color: AppColors.dividerColor,
-                      width: 1,
+                      color: Color.fromRGBO(227, 227, 227, 1),
+                      width: 0.5,
                     ),
                     borderRadius: BorderRadius.circular(24.0),
                   ),
                   focusedBorder: new OutlineInputBorder(
                     borderSide: new BorderSide(
-                      color: AppColors.dividerColor,
-                      width: 1,
+                      color: AppColors.colorDarkCyan,
+                      width: 0.5,
                     ),
                     borderRadius: BorderRadius.circular(24.0),
                   ),
-                  contentPadding: new EdgeInsets.only(
-                      left: 20.0, right: 20, top: 10, bottom: 0),
-                  fillColor: AppColors.dividerColor,
-                  filled: true,
-                  hintText: "Write a message...",
-                  hintStyle: new TextStyle(
-                      fontSize: 14.0,
-                      fontFamily: AssetStrings.circulerNormal,
-                      color: AppColors.kBlack),
-                  suffixIcon: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-//                      new InkWell(
-//                        child: Padding(
-//                          padding: const EdgeInsets.all(8.0),
-//                          child: new Icon(
-//                            Icons.image,
-//                            size: 18,
-//                            color: AppColors.kAppBlack,
-//                          ),
-//                        ),
-//                        onTap: () {
-//                          callBack(2); //for image
-//                        },
-//                      ),
-                      new InkWell(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: new Icon(
-                            Icons.send,
-                            color: AppColors.kPrimaryBlue,
-                            size: 18,
-                          ),
-                        ),
-                        onTap: () {
-                          callBack(1); // for chat
-                        },
-                      ),
-                      new SizedBox(
-                        width: 11.0,
-                      )
-                    ],
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 12.0,
+                    horizontal: 12.0,
                   ),
+                  fillColor: Color.fromRGBO(248, 248, 250, 1),
+                  filled: true,
+                  hintText: "Write a message..",
+                  hintStyle: new TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w600,
+                      color: Color.fromRGBO(183, 183, 183, 1)
+                  ),
+
                 ),
               ),
             ),
           ),
-          /* new IconButton(
-              icon: new Icon(Icons.image,size: 18),
-              //onPressed: _imagePicker,
-              color: AppColors.kAppBlack,
-
-            ),*/
+          new IconButton(
+            icon: new Icon(
+              Icons.send,
+              color: AppColors.bluePrimary,
+            ),
+            onPressed: () {
+              callBack(1);
+            },
+          ),
         ],
       ),
     );
