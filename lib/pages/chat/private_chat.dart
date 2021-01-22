@@ -5,10 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:payvor/networkmodel/APIs.dart';
 import 'package:payvor/pages/chat/chat_user.dart';
 import 'package:payvor/pages/payment/chat_bubble_image_left.dart';
 import 'package:payvor/pages/payment/chat_bubble_image_right.dart';
@@ -16,7 +15,6 @@ import 'package:payvor/pages/payment/chat_bubble_left.dart';
 import 'package:payvor/pages/payment/chat_bubble_right.dart';
 import 'package:payvor/pages/payment/chat_input_widgetr.dart';
 import 'package:payvor/pages/payment/firebase_constants.dart';
-import 'package:payvor/pages/payment/private_chat_top.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -359,8 +357,9 @@ class PrivateChatScreenState extends State<PrivateChat> {
   }
 
   Widget _myChatBubbleMessage(String content, num timeStamp, int index) {
-    return Column(
-      children: <Widget>[
+    return Container(
+      child: Column(
+        children: <Widget>[
 //        Bubble(
 //          message: content,
 //          time: readTimestamp(timeStamp),
@@ -369,17 +368,18 @@ class PrivateChatScreenState extends State<PrivateChat> {
 //          isGroup: widget.isGroup,
 //          name: listMessage[index]['idFrom'],
 //        ),
-        ChatBubbleRight(
-          message: content,
-          time: readTimestamp(timeStamp.toString()),
-          userName: widget.currentUserName,
-          profilePic: widget.currentUserProfilePic,
-        ),
-        // Container(height:100,child: ChatLeft()),
-        SizedBox(
-          height: 8,
-        )
-      ],
+          ChatBubbleRight(
+            message: content,
+            time: readTimestamp(timeStamp.toString()),
+            userName: widget.currentUserName,
+            profilePic: widget.currentUserProfilePic,
+          ),
+          // Container(height:100,child: ChatLeft()),
+          SizedBox(
+            height: 8,
+          )
+        ],
+      ),
     );
   }
 

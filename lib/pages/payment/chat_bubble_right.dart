@@ -32,6 +32,7 @@ class _ChatBubbleLeftState extends State<ChatBubbleRight>
     super.build(context);
     // firebaseProvider = Provider.of<FirebaseProvider>(context);
     return Material(
+      color: Colors.white,
       child: Container(
         margin: const EdgeInsets.only(left: 20, right: 20.0, top: 25),
         color: Colors.white,
@@ -45,7 +46,7 @@ class _ChatBubbleLeftState extends State<ChatBubbleRight>
                     right: 50.0,
                     left: 3.0,
                   ),
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
                     color: Color.fromRGBO(255, 255, 255, 1),
                     border: new Border.all(
@@ -71,7 +72,7 @@ class _ChatBubbleLeftState extends State<ChatBubbleRight>
                                 }*/
                               },
                               text:widget.message??"",
-                               linkStyle: TextStyle(color: Colors.blue),
+                              linkStyle: TextStyle(color: Colors.blue),
                               style: TextStyle(
                                   fontSize: 14,
                                   color: Color.fromRGBO(23, 23, 23, 1),

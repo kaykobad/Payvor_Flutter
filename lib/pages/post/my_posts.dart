@@ -10,6 +10,7 @@ import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/favour_posted_by_user.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/original_post/original_post_data.dart';
+import 'package:payvor/pages/pay_feedback/pay_give_feedback.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -410,8 +411,10 @@ class _HomeState extends State<MyPosts>
             child: Material(
                 child: new ChatMessageDetails(
                   id: data.userId.toString(),
-                  name: data.title,
-                ))));
+          name: data.title,
+          hireduserId: data?.hiredUserId?.toString(),
+          image: data?.image,
+        ))));
       },
       child: Container(
         padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
@@ -466,35 +469,47 @@ class _HomeState extends State<MyPosts>
                 color: AppColors.dividerColor,
               ),
             ),
-            Container(
-              margin: new EdgeInsets.only(top: 10.0),
-              child: new Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    child: new Text(
-                      "You have hired ",
-                      style: TextThemes.grayNormalSmall,
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: new EdgeInsets.only(left: 1.0),
+            InkWell(
+
+              onTap: () {
+                widget.lauchCallBack(Material(
+                    child: Material(
+                        child: new PayFeebackDetails(
+                          lauchCallBack: widget?.lauchCallBack,
+                          userId: data?.hiredUserId?.toString(),
+                          data: data,
+                        ))));
+              },
+              child: Container(
+                margin: new EdgeInsets.only(top: 10.0),
+                child: new Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
                       child: new Text(
-                        data?.hired?.name ?? "",
-                        style: TextThemes.cyanTextSmallMedium,
+                        "You have hired ",
+                        style: TextThemes.grayNormalSmall,
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: new EdgeInsets.only(left: 7.0),
-                    child: new Icon(
-                      Icons.arrow_forward_ios,
-                      size: 13,
-                      color: Color.fromRGBO(183, 183, 183, 1),
+                    Expanded(
+                      child: Container(
+                        margin: new EdgeInsets.only(left: 1.0),
+                        child: new Text(
+                          data?.hired?.name ?? "",
+                          style: TextThemes.cyanTextSmallMedium,
+                        ),
+                      ),
                     ),
-                  )
-                ],
+                    Container(
+                      margin: new EdgeInsets.only(left: 7.0),
+                      child: new Icon(
+                        Icons.arrow_forward_ios,
+                        size: 13,
+                        color: Color.fromRGBO(183, 183, 183, 1),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ],

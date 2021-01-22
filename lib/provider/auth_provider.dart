@@ -35,6 +35,7 @@ import 'package:payvor/model/signup/signuprequest.dart';
 import 'package:payvor/model/suggest/suggest_response.dart';
 import 'package:payvor/model/update_profile/update_profile_request.dart';
 import 'package:payvor/model/update_profile/update_profile_response.dart';
+import 'package:payvor/model/update_profile/user_hired_favor_response.dart';
 import 'package:payvor/networkmodel/APIHandler.dart';
 import 'package:payvor/networkmodel/APIs.dart';
 import 'package:payvor/notifications/notification_response.dart';
@@ -733,6 +734,31 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<dynamic> userProfileDetails(
+      BuildContext context, int page, String userID) async {
+    print("fave");
+    var infoData = jsonDecode(MemoryManagement.getUserInfo());
+    var userinfo = LoginSignupResponse.fromJson(infoData);
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(
+        context: context, url: APIs.userProfileDetails + userID);
+
+    print(APIs.userProfileDetails);
+    print(APIs.userProfileDetails);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      print("res $jsonDecode($response)");
+      UserProfileFavorResponse resendOtpResponse =
+          new UserProfileFavorResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
   Future<dynamic> favourpostedbyuser(
     BuildContext context,
     int page,
@@ -741,8 +767,8 @@ class AuthProvider with ChangeNotifier {
     var infoData = jsonDecode(MemoryManagement.getUserInfo());
     var userinfo = LoginSignupResponse.fromJson(infoData);
     Completer<dynamic> completer = new Completer<dynamic>();
-    var response = await APIHandler.get(
-        context: context, url: APIs.favorPostedByUser
+    var response =
+        await APIHandler.get(context: context, url: APIs.favorPostedByUser
     );
 
     print(APIs.favorPostedByUser);

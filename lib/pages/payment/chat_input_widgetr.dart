@@ -25,7 +25,7 @@ class ChatInputWidget extends StatelessWidget {
         ),
       ),
       padding:
-          new EdgeInsets.only(bottom: 35.0, left: 12.0, right: 12.0, top: 16.0),
+          new EdgeInsets.only(bottom: 50.0, left: 12.0, right: 12.0, top: 16.0),
       child: new Row(
         children: <Widget>[
           new Expanded(
@@ -40,7 +40,7 @@ class ChatInputWidget extends StatelessWidget {
                 ),
                 maxLines: null,
                 decoration: new InputDecoration(
-                  border: new OutlineInputBorder(
+                  enabledBorder: new OutlineInputBorder(
                     borderSide: new BorderSide(
                       color: Color.fromRGBO(227, 227, 227, 1),
                       width: 0.5,
@@ -71,7 +71,7 @@ class ChatInputWidget extends StatelessWidget {
               ),
             ),
           ),
-          new IconButton(
+          /*  new IconButton(
             icon: new Icon(
               Icons.send,
               color: AppColors.bluePrimary,
@@ -79,6 +79,47 @@ class ChatInputWidget extends StatelessWidget {
             onPressed: () {
               callBack(1);
             },
+          ),*/
+
+
+          Stack(
+            children: [
+              Container(
+                margin: new EdgeInsets.only(left: 12),
+                child: InkWell(
+                  onTap: () {
+                    callBack(1);
+                  },
+                  child: new Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: new Image.asset(
+                      AssetStrings.chatSend,
+                      width: 48,
+                      height: 48,
+                    ),
+                  ),
+                ),
+              ),
+
+              Positioned(
+                left: 0.0,
+                right: 0.0,
+                child: InkWell(
+                  onTap: () {
+                    callBack(1);
+                  },
+                  child: new Container(
+                    margin: const EdgeInsets.only(top: 14, left: 10),
+                    child: new Image.asset(
+                      AssetStrings.chatSendButton,
+                      width: 22,
+                      height: 22,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

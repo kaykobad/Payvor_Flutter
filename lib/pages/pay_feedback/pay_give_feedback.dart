@@ -1,41 +1,34 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payvor/current_user_hired_by_favor/current_user_favor_hire.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/favour_details_response/favour_details_response.dart';
-import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
 import 'package:payvor/pages/chat_message_details.dart';
-import 'package:payvor/pages/payment/payment_dialog.dart';
-import 'package:payvor/pages/payment/post_payment.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/rating/rating_bar.dart';
-import 'package:payvor/pages/search/read_more_text.dart';
-import 'package:payvor/pages/search/search_name.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
-import 'package:payvor/review/review_post.dart';
 import 'package:payvor/shimmers/shimmer_details.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
-import 'package:payvor/utils/constants.dart';
-import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
-import 'package:share/share.dart';
 
 class PayFeebackDetails extends StatefulWidget {
   final ValueChanged<Widget> lauchCallBack;
+  final String userId;
+  final DataNextPost data;
 
-  PayFeebackDetails({@required this.lauchCallBack});
+  PayFeebackDetails({@required this.lauchCallBack, this.userId, this.data});
 
 /*  final String id;
 
@@ -86,13 +79,15 @@ class _HomeState extends State<PayFeebackDetails>
     ids = userinfo?.user?.id.toString() ?? "";
 */
 
+
     Future.delayed(const Duration(milliseconds: 300), () {
-      //  hitApi();
+      // hitApi();
     });
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
     super.initState();
   }
+
 
   hitApi() async {
     provider.setLoading();
@@ -141,6 +136,7 @@ class _HomeState extends State<PayFeebackDetails>
 
     setState(() {});
   }
+
 
   hitReportApi() async {
     offstageLoader = true;
@@ -232,7 +228,8 @@ class _HomeState extends State<PayFeebackDetails>
   bool get wantKeepAlive => true;
 
   void callback() async {
-    widget.lauchCallBack(Material(child: Material(child: new RatingBarNew())));
+    widget.lauchCallBack(Material(child: Material(
+        child: new RatingBarNew(id: widget?.data?.id?.toString(),))));
 
     /*  await Future.delayed(Duration(milliseconds: 200));
     showInSnackBar("Favour applied successfully");

@@ -12,21 +12,16 @@ import 'package:payvor/model/hiew/hire_list.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
-import 'package:payvor/pages/payment/payment_dialog.dart';
-import 'package:payvor/pages/payment/post_payment.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
-import 'package:payvor/pages/search/search_name.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
-import 'package:payvor/review/review_post.dart';
 import 'package:payvor/shimmers/shimmer_details.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
-import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
@@ -779,7 +774,7 @@ class _HomeState extends State<OriginalPostData>
           ),
           Align(
               alignment: Alignment.center,
-              child: type == false
+              child: user?.status == 0
                   ? InkWell(
                       onTap: () {
                         showBottomSheetHire(user?.userId?.toString(), pos);
@@ -804,13 +799,7 @@ class _HomeState extends State<OriginalPostData>
                     )
                   : InkWell(
                       onTap: () {
-                        // loader = true;
-                        setState(() {});
 
-                        /* Future.delayed(const Duration(milliseconds: 500), () {
-                    dataTile?.isSelect = false;
-                    setState(() {});
-                  });*/
                       },
                       child: Container(
                         width: 65,

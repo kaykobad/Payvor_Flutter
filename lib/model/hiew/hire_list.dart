@@ -118,6 +118,7 @@ class DatasUser {
   int favourId;
   String createdAt;
   String updatedAt;
+  int status;
   User user;
 
   DatasUser(
@@ -126,6 +127,7 @@ class DatasUser {
       this.favourId,
       this.createdAt,
       this.updatedAt,
+      this.status,
       this.user});
 
   DatasUser.fromJson(Map<String, dynamic> json) {
@@ -134,6 +136,7 @@ class DatasUser {
     favourId = json['favour_id'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    status = json['status'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
 
@@ -144,6 +147,7 @@ class DatasUser {
     data['favour_id'] = this.favourId;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['status'] = this.status;
     if (this.user != null) {
       data['user'] = this.user.toJson();
     }

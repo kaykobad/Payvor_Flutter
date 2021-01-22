@@ -48,6 +48,8 @@ class AssetStrings {
   static const String filters = 'assets/png/filter.png';
   static const String searches = 'assets/png/searchs.png';
   static const String location = 'assets/png/location.png';
+  static const String chatSend = 'assets/svg/chat_shared.png';
+  static const String chatSendButton = 'assets/svg/send_button.png';
   static const String phone = 'assets/png/phone.png';
   static const String locationHome = 'assets/png/location_home.png';
   static const String fullname = 'assets/png/fullname.png';

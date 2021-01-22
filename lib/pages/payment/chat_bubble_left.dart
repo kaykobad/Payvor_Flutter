@@ -30,9 +30,11 @@ class _ChatBubbleLeftState extends State<ChatBubbleLeft>
     super.build(context);
     // firebaseProvider = Provider.of<FirebaseProvider>(context);
     return Material(
+      color: Colors.white,
       child: Container(
         margin: const EdgeInsets.only(left: 20, right: 20.0, top: 25),
         color: Colors.white,
+        alignment: Alignment.centerLeft,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -109,7 +111,7 @@ class _ChatBubbleLeftState extends State<ChatBubbleLeft>
                                         fontSize: 14,
                                         color: Color.fromRGBO(23, 23, 23, 1),
                                         fontFamily:
-                                            AssetStrings.circulerNormal)),
+                                        AssetStrings.circulerNormal)),
                               ],
                             ),
                           ),

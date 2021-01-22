@@ -4,30 +4,26 @@ import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:payvor/filter/search_item.dart';
-import 'package:payvor/localdb/DatabaseHelper.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/rating/give_rating_request.dart';
-import 'package:payvor/model/recentsearch.dart';
-import 'package:payvor/model/suggest/suggest_response.dart';
-import 'package:payvor/pages/get_favor_list/favor_list_response.dart';
-import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/report_problem.dart';
-import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
-import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class RatingBarNew extends StatefulWidget {
+  final String id;
+
+  RatingBarNew({@required this.id});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -117,7 +113,7 @@ class _HomeState extends State<RatingBarNew>
     }
 
     var request = new GiveRatingRequest(
-        favour_id: "25",
+        favour_id: widget?.id.toString(),
         rating: _rating.toString(),
         description: _DescriptionController.text.toString());
 
@@ -300,7 +296,7 @@ class _HomeState extends State<RatingBarNew>
                   new Container(
                     height: 25,
                   ),
-                  new Column(
+                  /*   new Column(
                     children: [
                       getRowTop(),
                       getRowBottom(),
@@ -314,7 +310,7 @@ class _HomeState extends State<RatingBarNew>
                         ),
                       ),
                     ],
-                  ),
+                  ),*/
                   Container(
                     margin: new EdgeInsets.only(left: 18, right: 18.0, top: 20),
                     alignment: Alignment.centerLeft,
@@ -329,7 +325,7 @@ class _HomeState extends State<RatingBarNew>
                   Container(
                     margin: new EdgeInsets.only(left: 9, right: 18.0, top: 15),
                     child: RatingBar.builder(
-                      initialRating: 2,
+                      initialRating: 0,
                       minRating: 0,
                       glowColor: Colors.white,
                       direction: Axis.horizontal,

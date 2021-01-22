@@ -430,8 +430,10 @@ class _HomeState extends State<MyJobs>
             child: Material(
                 child: new ChatMessageDetails(
                   id: data.userId.toString(),
-                  name: data.title,
-                ))));
+          name: data.title,
+          hireduserId: data?.hiredUserId?.toString(),
+          image: data?.image,
+        ))));
       },
       child: Container(
         padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
