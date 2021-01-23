@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>360739950981-a3im6r7kkn95j42ptjf0c05scj6dfoo3.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.360739950981-a3im6r7kkn95j42ptjf0c05scj6dfoo3</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>360739950981-3ec3kuhrodkj8u60kojmpfp39pvp6e8f.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAHUpMlwewMPC1NWsDJpS_3Hr1Z5GK9pF4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>360739950981</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.app.payvor</string>
+	<key>PROJECT_ID</key>
+	<string>payvor</string>
+	<key>STORAGE_BUCKET</key>
+	<string>payvor.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:360739950981:ios:bab743e4c21a00f89534ec</string>
+	<key>DATABASE_URL</key>
+	<string>https://payvor.firebaseio.com</string>
+</dict>
+</plist>

@@ -212,7 +212,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         floatingActionButtonLocation:
         FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: Container(
-          height: 65,
+         // height: 65,
           child: BottomNavigationBar(
             showSelectedLabels: false,
             showUnselectedLabels: false,

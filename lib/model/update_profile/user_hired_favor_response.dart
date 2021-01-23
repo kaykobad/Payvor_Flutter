@@ -205,8 +205,8 @@ class User {
   String location;
   String createdAt;
   String updatedAt;
-  int ratingAvg;
-  int ratingCount;
+  num ratingAvg;
+  num ratingCount;
 
   User({this.id,
     this.name,

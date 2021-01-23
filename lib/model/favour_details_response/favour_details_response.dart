@@ -219,7 +219,7 @@ class User {
 class Rating {
   int id;
   int userId;
-  int rating;
+  num rating;
   String description;
   int isActive;
   String createdAt;
