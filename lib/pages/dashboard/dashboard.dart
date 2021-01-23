@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -11,10 +12,12 @@ import 'package:payvor/pages/pay_feedback/pay_give_feedback.dart';
 import 'package:payvor/pages/post/post_home.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/search/search_home.dart';
+import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
+import 'package:provider/provider.dart';
 
 class DashBoardScreen extends StatefulWidget {
   @override
@@ -30,6 +33,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   final _chatScreen = GlobalKey<NavigatorState>();
   final _notificationScreen = GlobalKey<NavigatorState>();
   final _profileScreen = GlobalKey<NavigatorState>();
+  final _dummyScreen = GlobalKey<NavigatorState>();
 
   int currentTab = 0; // to keep track of active tab index
 
@@ -40,6 +44,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   // double selectedDotSize = 20;
   double selectedDotSize = 0;
+  FirebaseProvider _firebaseProvider;
+  bool _isNewActivityFound = false;
 
   Future<bool> _onBackPressed() async {
     bool canPop = false;
@@ -148,11 +154,22 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     // TODO: implement initState
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    Future.delayed(Duration(milliseconds: 200), () {
+      _setupCounterChangeListener();
+    });
+  }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _firebaseProvider.notificationStreamController.close();
   }
 
   @override
   Widget build(BuildContext context) {
+    _firebaseProvider = Provider.of<FirebaseProvider>(context);
+
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
@@ -179,10 +196,22 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               onGenerateRoute: (route) =>
                   MaterialPageRoute(
                     settings: route,
-                builder: (context) => PostScreen(
-                  lauchCallBack: homeCallBack,
-                ),
-              ),
+                    builder: (context) =>
+                        PostScreen(
+                          lauchCallBack: homeCallBack,
+                        ),
+                  ),
+            ),
+            Navigator(
+              key: _dummyScreen,
+              onGenerateRoute: (route) =>
+                  MaterialPageRoute(
+                    settings: route,
+                    builder: (context) =>
+                        Dummy(
+                          logoutCallBack: logoutCallBack,
+                        ),
+                  ),
             ),
             Navigator(
               key: _notificationScreen,
@@ -212,7 +241,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         floatingActionButtonLocation:
         FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: Container(
-         // height: 65,
+          // height: 65,
           child: BottomNavigationBar(
             showSelectedLabels: false,
             showUnselectedLabels: false,
@@ -220,24 +249,31 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             backgroundColor: Colors.white,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                  icon: firstWidget(unselectedColor, AssetStrings.home),
-                  activeIcon: firstWidget(selectedColor, AssetStrings.home),
+                  icon: bottomMenuIconWidget( AssetStrings.home_inactive),
+                  activeIcon: bottomMenuIconWidget( AssetStrings.home_active),
                   label: ""),
               BottomNavigationBarItem(
-                  icon: firstWidget(unselectedColor, AssetStrings.job),
-                  activeIcon: firstWidget(selectedColor, AssetStrings.job),
+                  icon: bottomMenuIconWidget( AssetStrings.job_inactive),
+                  activeIcon: bottomMenuIconWidget( AssetStrings.job_active),
                   label: ""),
               BottomNavigationBarItem(
                   icon: firstWidget(AppColors.kWhite, AssetStrings.group),
                   activeIcon: firstWidget(AppColors.kWhite, AssetStrings.group),
                   label: ""),
               BottomNavigationBarItem(
-                  icon: firstWidget(unselectedColor, AssetStrings.group),
-                  activeIcon: firstWidget(selectedColor, AssetStrings.group),
+                  icon: bottomMenuIconWidget(
+                      (_isNewActivityFound) ? AssetStrings
+                          .activity_unselected_with_noti : AssetStrings
+                          .activity_not_selected),
+                  activeIcon: bottomMenuIconWidget(
+                      (_isNewActivityFound) ? AssetStrings
+                          .activity_selected_with_noti : AssetStrings
+                          .activity_selected),
                   label: ""),
+
               BottomNavigationBarItem(
-                  icon: firstWidget(unselectedColor, AssetStrings.profile),
-                  activeIcon: firstWidget(selectedColor, AssetStrings.profile),
+                  icon: bottomMenuIconWidget( AssetStrings.profile_inactive),
+                  activeIcon: bottomMenuIconWidget( AssetStrings.profile_active),
                   label: ""),
             ],
             currentIndex: currentTab,
@@ -246,7 +282,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 currentTab = index;
                 print("index $index");
                 if (index == 0) //for home tab
-                {
+                    {
                   SystemChrome.setSystemUIOverlayStyle(
                       SystemUiOverlayStyle.light);
 
@@ -261,10 +297,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       SystemUiOverlayStyle.dark);
                 }
 
-                if (index > 2)
-                  currentTab = index - 1;
-                else if (index <= 1) currentTab = index;
-                setState(() {});
+//                if (index > 2)
+//                  currentTab = index - 1;
+//                else if (index <= 1) currentTab = index;
+//                setState(() {});
               });
             },
           ),
@@ -274,44 +310,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     );
   }
 
-  Widget _bottomTabWidget(String icon, bool isChecked, int pos) {
-    return MaterialButton(
-      minWidth: 40,
-      onPressed: () {
-        if (pos == 0) //for home tab
-            {
-          _homeScreen.currentState?.popUntil((route) => route.isFirst);
-        }
-        setState(() {
-          currentTab = pos;
-        });
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          new SvgPicture.asset(
-            icon,
-            width: Constants.bottomIconSize,
-            height: Constants.bottomIconSize,
-            color: isChecked ? selectedColor : unselectedColor,
-          ),
-          SizedBox(
-            height: 3,
-          ),
-          /* Visibility(
-              visible: isChecked,
-              child: Container(
-                height: 5,
-                width: 5,
-                decoration: new BoxDecoration(
-                  color: isChecked ? selectedColor : unselectedColor,
-                  shape: BoxShape.circle,
-                ),
-              ))*/
-        ],
-      ),
-    );
-  }
+
 
 
   Widget firstWidget(Color color, String image) {
@@ -319,7 +318,32 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         height: Constants.bottomIconSize,
         color: color);
   }
+
+  Widget bottomMenuIconWidget(String image) {
+    return SvgPicture.asset(image, width: Constants.bottomIconSize,
+      height: Constants.bottomIconSize,
+    );
+  }
+
+  void _setupCounterChangeListener() {
+    _firebaseProvider.setStreamNotifier(StreamController<bool>()) ;
+    _firebaseProvider.notificationStreamController.stream.listen((event) {
+      print("notificatoion count status $event");
+
+      if(event!=_isNewActivityFound)
+        {
+          print("update called");
+          _isNewActivityFound=event;
+          setState(() {
+
+          });
+        }
+
+    });
+  }
+
 }
+
 
 class CustomFloatingButton extends StatelessWidget {
   @override

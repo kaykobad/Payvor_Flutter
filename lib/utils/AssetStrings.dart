@@ -61,7 +61,7 @@ class AssetStrings {
   static const String back = 'assets/svg/back.svg';
   static const String group = 'assets/svg/group.svg';
   static const String home = 'assets/svg/home.svg';
-  static const String job = 'assets/svg/job.svg';
+  static const String job = 'assets/svg/favour_not_selected.svg';
   static const String edit = 'assets/svg/edit.svg';
   static const String plus = 'assets/svg/plus.svg';
   static const String delete = 'assets/svg/iconDelete.svg';
@@ -74,4 +74,21 @@ class AssetStrings {
   static const String check = 'assets/svg/check.svg';
   static const String notification = 'assets/svg/notification_empty.svg';
   static const String chat_empty = 'assets/svg/empty_chat.svg';
+
+  //bottom navigation bar
+  static const String home_active = 'assets/svg/bottom_tab_home_active.svg';
+  static const String home_inactive = 'assets/svg/bottom_tab_home_inactive.svg';
+
+  static const String job_active = 'assets/svg/bottom_tab_job_active.svg';
+  static const String job_inactive = 'assets/svg/bottom_tab_job_inactive.svg';
+
+  static const String profile_active = 'assets/svg/bottom_tab_profile_active.svg';
+  static const String profile_inactive = 'assets/svg/bottom_tab_profile_inactive.svg';
+
+
+  static const String activity_selected = 'assets/svg/bottom_tab_activity_active.svg';
+  static const String activity_not_selected = 'assets/svg/bottom_tab_activity_inactive.svg';
+  static const String activity_selected_with_noti = 'assets/svg/bottom_tab_activity_active_with_count.svg';
+  static const String activity_unselected_with_noti = 'assets/svg/bottom_tab_activity_inactive_with_count.svg';
+
 }

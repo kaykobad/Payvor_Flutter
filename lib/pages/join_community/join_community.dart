@@ -470,8 +470,9 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       response = await provider.socialSignup(loginRequest, context);
       MemoryManagement.socialMediaStatus("1");
     }
-    provider.hideLoader();
+
     if (response is LoginSignupResponse) {
+      provider.setLoading();
       MemoryManagement.setAccessToken(accessToken: response.data);
       MemoryManagement.setUserInfo(userInfo: json.encode(response));
 
@@ -502,6 +503,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       await firebaseProvider.createFirebaseUser(
           getUser(response, firebaseId, email));
 
+      provider.hideLoader();
 
       if (response.isnew == null || response.isnew) {
         Navigator.push(

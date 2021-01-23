@@ -217,8 +217,9 @@ class _LoginScreenState extends State<LoginScreenNew> {
       MemoryManagement.socialMediaStatus("1");
     }
 
-    provider.setLoading();
+
     if (response is LoginSignupResponse) {
+      provider.setLoading();
       LoginSignupResponse loginSignupResponse = response;
       MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
       MemoryManagement.setAccessToken(accessToken: loginSignupResponse.data);

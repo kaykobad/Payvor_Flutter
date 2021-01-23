@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -73,63 +72,63 @@ class _HomeState extends State<SearchMessage>
     super.initState();
   }
 
-  void _hitApi() async {
+//
+//  void _hitApi() async {
+//
+//    (firebaseProvider.myFriendsIdList.length == 0)
+//        ? await firebaseProvider.getFriends(userId: userId)
+//        : firebaseProvider.myFriendsIdList;
+//
+//    setState(() {});
+//  }
 
-    (firebaseProvider.myFriendsIdList.length == 0)
-        ? await firebaseProvider.getFriends(userId: userId)
-        : firebaseProvider.myFriendsIdList;
-
-    setState(() {});
-  }
-
-
-  void checkNewUser({@required String userId}) {
-    var firestore = Firestore.instance
-        .collection("chatfriends")
-        .document(userId)
-        .collection("friends")
-        .orderBy('lastMessageTime', descending: true)
-        .snapshots();
-
-    //get the data and convert to list
-    firestore.listen((QuerySnapshot snapshot) {
-      print("new chat");
-      if (!_firstTimeChatUser) {
-        checkForNewUserOrLatestMessage(snapshot.documents[0]);
-      } else {
-        _firstTimeChatUser = false;
-      }
-    });
-  }
-
-  void checkForNewUserOrLatestMessage(DocumentSnapshot documentSnapshot) {
-    var chatUser = ChatUser.fromMap(documentSnapshot.data);
-    print("new chat user ${chatUser.toJson()}");
-    if (firebaseProvider.userList.isNotEmpty) {
-      var isOldUser = false;
-      for (var data in firebaseProvider.userList) {
-        if (data is ChatUser) {
-          if (data.userId == chatUser.userId) {
-            isOldUser = true;
-            print("new_msg ${chatUser.lastMessage}");
-            break;
-          }
-        }
-      }
-      if (!isOldUser) {
-        firebaseProvider.myFriendsIdList.add(int.parse(chatUser.userId));
-        setState(() {});
-      }
-    } else {
-      firebaseProvider.myFriendsIdList.add(int.parse(chatUser.userId));
-      setState(() {});
-    }
-
-
-  }
+//
+//  void checkNewUser({@required String userId}) {
+//    var firestore = Firestore.instance
+//        .collection("chatfriends")
+//        .document(userId)
+//        .collection("friends")
+//        .orderBy('lastMessageTime', descending: true)
+//        .snapshots();
+//
+//    //get the data and convert to list
+//    firestore.listen((QuerySnapshot snapshot) {
+//      print("new chat");
+//      if (!_firstTimeChatUser) {
+//        checkForNewUserOrLatestMessage(snapshot.documents[0]);
+//      } else {
+//        _firstTimeChatUser = false;
+//      }
+//    });
+//  }
+//
+//  void checkForNewUserOrLatestMessage(DocumentSnapshot documentSnapshot) {
+//    var chatUser = ChatUser.fromMap(documentSnapshot.data);
+//    print("new chat user ${chatUser.toJson()}");
+//    if (firebaseProvider.userList.isNotEmpty) {
+//      var isOldUser = false;
+//      for (var data in firebaseProvider.userList) {
+//        if (data is ChatUser) {
+//          if (data.userId == chatUser.userId) {
+//            isOldUser = true;
+//            print("new_msg ${chatUser.lastMessage}");
+//            break;
+//          }
+//        }
+//      }
+//      if (!isOldUser) {
+//        firebaseProvider.myFriendsIdList.add(int.parse(chatUser.userId));
+//        setState(() {});
+//      }
+//    } else {
+//      firebaseProvider.myFriendsIdList.add(int.parse(chatUser.userId));
+//      setState(() {});
+//    }
+//
+//
+//  }
 
   void _moveToPrivateChatScreen(ChatUser chatUser) {
-
     var screen = PrivateChat(
       peerId: chatUser.userId.toString(),
       peerAvatar: chatUser.profilePic,
@@ -152,22 +151,24 @@ class _HomeState extends State<SearchMessage>
     return StreamBuilder<List<ChatUser>>(
         stream: firebaseProvider.getChatFriends(userId: userId),
         builder: (context, AsyncSnapshot<List<ChatUser>> result) {
+          var unreadMessageCount = 0;
           if (result.hasData) {
             if (result.data.length == 0) {
               return _getEmptyWidget;
             }
-           // widget.countCallBack(result.data.length);
+            // widget.countCallBack(result.data.length);
             return Expanded(
               child: Container(
                 child: new ListView.builder(
                   padding: new EdgeInsets.all(0.0),
                   itemBuilder: (BuildContext context, int index) {
                     var data = result.data[index];
-                    return InkWell(
-                        onTap: () {
-                         // _moveToPrivateChatScreen();
-                        },
-                        child: buildItemMain(data));
+                    unreadMessageCount =
+                        unreadMessageCount + data.unreadMessageCount;
+                    firebaseProvider.notificationStreamController
+                        .add(unreadMessageCount > 0);
+
+                    return buildItemMain(data);
                   },
                   itemCount: result.data.length,
                 ),

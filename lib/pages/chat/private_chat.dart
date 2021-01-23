@@ -1003,12 +1003,9 @@ class PrivateChatScreenState extends State<PrivateChat> {
             for (var document in snapshot.data.documents) {
               var timeSection = TimeAgo.timeString(document['timestamp']);
               if (_timeSection != timeSection) {
-                 print("added time section $timeSection");
-
                 messageList.add(_timeSectionWidget(_timeSection));
                  _timeSection = timeSection;
               }
-
               messageList.add(buildItem(index, snapshot.data.documents[index]));
               index++;
 

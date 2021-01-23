@@ -16,21 +16,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseProvider with ChangeNotifier {
   var _isLoading = false;
-  final List<dynamic> userList = List();
-  var groupUserList = new Map<String, List<PayvorFirebaseUser>>();
-  var firebaseUserList = new Map<String, PayvorFirebaseUser>();
+   StreamController<bool> notificationStreamController;
+//  final List<dynamic> userList = List();
+//  var groupUserList = new Map<String, List<PayvorFirebaseUser>>();
+//  var firebaseUserList = new Map<String, PayvorFirebaseUser>();
+//
+//  final List<int> myFriendsIdList = List();
 
-  final List<int> myFriendsIdList = List();
+  void setStreamNotifier(StreamController<bool> streamController)
+  {
+    notificationStreamController=streamController;
+  }
 
   getLoading() => _isLoading;
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   void clearAllCache() {
-    userList.clear();
-    groupUserList.clear();
-    firebaseUserList.clear();
-    myFriendsIdList.clear();
+//    userList.clear();
+//    groupUserList.clear();
+//    firebaseUserList.clear();
+//    myFriendsIdList.clear();
   }
 
   Stream<List<ChatUser>> getChatFriends({@required String userId}) {
@@ -59,101 +65,101 @@ class FirebaseProvider with ChangeNotifier {
     return controller.stream;
   }
 
-  Future<List<dynamic>> getUserChatAndGroups({@required int userId}) async {
-    var firestore = Firestore.instance
-        .collection("chatfriends")
-        .document(userId.toString())
-        .collection("friends")
-        .orderBy('lastMessageTime', descending: true);
+//  Future<List<dynamic>> getUserChatAndGroups({@required int userId}) async {
+//    var firestore = Firestore.instance
+//        .collection("chatfriends")
+//        .document(userId.toString())
+//        .collection("friends")
+//        .orderBy('lastMessageTime', descending: true);
+//
+//    var firestoreGroup = Firestore.instance
+//        .collection(GROUPS)
+//        .where('groupMembersId', arrayContains: userId);
+//
+//    //read personal chat users
+//
+//    var querySnapshots = await firestore.getDocuments();
+//    for (var document in querySnapshots.documents) {
+//      userList.add(ChatUser.fromMap(document.data));
+//    }
+//
+//    //read group data
+//    var querySnapshotsGroup = await firestoreGroup.getDocuments();
+//
+//    for (var document in querySnapshotsGroup.documents) {
+//      userList.add(FilmShapeFirebaseGroup.fromJson(document.data));
+//    }
+//
+//    return userList;
+//  }
 
-    var firestoreGroup = Firestore.instance
-        .collection(GROUPS)
-        .where('groupMembersId', arrayContains: userId);
-
-    //read personal chat users
-
-    var querySnapshots = await firestore.getDocuments();
-    for (var document in querySnapshots.documents) {
-      userList.add(ChatUser.fromMap(document.data));
-    }
-
-    //read group data
-    var querySnapshotsGroup = await firestoreGroup.getDocuments();
-
-    for (var document in querySnapshotsGroup.documents) {
-      userList.add(FilmShapeFirebaseGroup.fromJson(document.data));
-    }
-
-    return userList;
-  }
-
-  Future<List<dynamic>> getFriends({@required String userId}) async {
-    var firestore = Firestore.instance
-        .collection("chatfriends")
-        .document(userId)
-        .collection("friends")
-        .orderBy('lastMessageTime', descending: true);
-
-    //read personal chat users
-
-    var querySnapshots = await firestore.getDocuments();
-    for (var document in querySnapshots.documents) {
-      ChatUser chatUser = ChatUser.fromMap(document.data);
-      myFriendsIdList.add(int.tryParse(chatUser.userId));
-    }
-    return myFriendsIdList;
-  }
-
-  Stream<List<PayvorFirebaseUser>> getActiveFriends(
-      {@required List<int> userIds}) {
-//    if(userIds.length==0)
-//      userIds.add(0);//to avoid error
-    print("friendlist ${userIds.join(",")}");
-    var firestore = Firestore.instance
-        .collection(USERS)
-        .where("is_online", isEqualTo: true)
-        .where("filmshape_id", whereIn: userIds)
+//  Future<List<dynamic>> getFriends({@required String userId}) async {
+//    var firestore = Firestore.instance
+//        .collection("chatfriends")
 //        .document(userId)
 //        .collection("friends")
-//        .orderBy('lastMessageTime', descending: true)
-        .snapshots();
+//        .orderBy('lastMessageTime', descending: true);
+//
+//    //read personal chat users
+//
+//    var querySnapshots = await firestore.getDocuments();
+//    for (var document in querySnapshots.documents) {
+//      ChatUser chatUser = ChatUser.fromMap(document.data);
+//      myFriendsIdList.add(int.tryParse(chatUser.userId));
+//    }
+//    return myFriendsIdList;
+//  }
 
-    var controller = new StreamController<List<PayvorFirebaseUser>>();
+//  Stream<List<PayvorFirebaseUser>> getActiveFriends(
+//      {@required List<int> userIds}) {
+////    if(userIds.length==0)
+////      userIds.add(0);//to avoid error
+//    print("friendlist ${userIds.join(",")}");
+//    var firestore = Firestore.instance
+//        .collection(USERS)
+//        .where("is_online", isEqualTo: true)
+//        .where("filmshape_id", whereIn: userIds)
+////        .document(userId)
+////        .collection("friends")
+////        .orderBy('lastMessageTime', descending: true)
+//        .snapshots();
+//
+//    var controller = new StreamController<List<PayvorFirebaseUser>>();
+//
+//    //get the data and convert to list
+//    firestore.listen((QuerySnapshot snapshot) {
+//      final List<PayvorFirebaseUser> activeUsers =
+//      snapshot.documents.map((documentSnapshot) {
+//        return PayvorFirebaseUser.fromJson(documentSnapshot.data);
+//      }).toList();
+//
+//      //saving quick access at some other screen
+//      for (var user in activeUsers) {
+//        firebaseUserList[user.filmShapeId.toString()] = user;
+//      }
+//      controller.add(activeUsers);
+//    });
+//
+//    return controller.stream;
+//  }
 
-    //get the data and convert to list
-    firestore.listen((QuerySnapshot snapshot) {
-      final List<PayvorFirebaseUser> activeUsers =
-      snapshot.documents.map((documentSnapshot) {
-        return PayvorFirebaseUser.fromJson(documentSnapshot.data);
-      }).toList();
-
-      //saving quick access at some other screen
-      for (var user in activeUsers) {
-        firebaseUserList[user.filmShapeId.toString()] = user;
-      }
-      controller.add(activeUsers);
-    });
-
-    return controller.stream;
-  }
-
-  Future<List<PayvorFirebaseUser>> getGroupFriends(
-      {@required List<int> userIds, @required String groupId}) async {
-    var firestore = Firestore.instance
-        .collection(USERS)
-        .where("filmshape_id", whereIn: userIds);
-
-    print("group_id $groupId userids ${userIds.join(",")}");
-    var snapshot = await firestore.getDocuments();
-    final List<PayvorFirebaseUser> groupUsers =
-    snapshot.documents.map((documentSnapshot) {
-      return PayvorFirebaseUser.fromJson(documentSnapshot.data);
-    }).toList();
-
-    groupUserList[groupId] = groupUsers; //save user for later quick access
-    print("group_id $groupId memeber_received ${groupUsers.length}");
-    return groupUsers;
-  }
+//  Future<List<PayvorFirebaseUser>> getGroupFriends(
+//      {@required List<int> userIds, @required String groupId}) async {
+//    var firestore = Firestore.instance
+//        .collection(USERS)
+//        .where("filmshape_id", whereIn: userIds);
+//
+//    print("group_id $groupId userids ${userIds.join(",")}");
+//    var snapshot = await firestore.getDocuments();
+//    final List<PayvorFirebaseUser> groupUsers =
+//    snapshot.documents.map((documentSnapshot) {
+//      return PayvorFirebaseUser.fromJson(documentSnapshot.data);
+//    }).toList();
+//
+//    groupUserList[groupId] = groupUsers; //save user for later quick access
+//    print("group_id $groupId memeber_received ${groupUsers.length}");
+//    return groupUsers;
+//  }
 
   Future<bool> checkGroupMemberIsAdmin(
       {@required String groupId, @required String userId}) async {
@@ -176,24 +182,24 @@ class FirebaseProvider with ChangeNotifier {
     }
   }
 
-  Future<PayvorFirebaseUser> getUserInfo({@required int userId}) async {
-    var firestore = Firestore.instance
-        .collection(USERS)
-        .where("filmshape_id", isEqualTo: userId);
-
-    var snapshot = await firestore.getDocuments();
-    final List<PayvorFirebaseUser> groupUsers =
-    snapshot.documents.map((documentSnapshot) {
-      return PayvorFirebaseUser.fromJson(documentSnapshot.data);
-    }).toList();
-
-    //save for later quick access
-    if (groupUsers.isNotEmpty) {
-      var user = groupUsers.first;
-      firebaseUserList[user.filmShapeId.toString()] = user;
-    }
-    return (groupUsers.isNotEmpty) ? groupUsers.first : null;
-  }
+//  Future<PayvorFirebaseUser> getUserInfo({@required int userId}) async {
+//    var firestore = Firestore.instance
+//        .collection(USERS)
+//        .where("filmshape_id", isEqualTo: userId);
+//
+//    var snapshot = await firestore.getDocuments();
+//    final List<PayvorFirebaseUser> groupUsers =
+//    snapshot.documents.map((documentSnapshot) {
+//      return PayvorFirebaseUser.fromJson(documentSnapshot.data);
+//    }).toList();
+//
+//    //save for later quick access
+//    if (groupUsers.isNotEmpty) {
+//      var user = groupUsers.first;
+//      firebaseUserList[user.filmShapeId.toString()] = user;
+//    }
+//    return (groupUsers.isNotEmpty) ? groupUsers.first : null;
+//  }
 
   Future<void> updateGroupMessage({@required String message,
     @required num timestamp,
