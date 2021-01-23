@@ -438,9 +438,16 @@ class FirebaseProvider with ChangeNotifier {
   Future<void> updateUserOnlineOfflineStatus({@required bool status}) async {
     var firebaseUser = await getCurrentUser();
     var document =
-    Firestore.instance.collection(USERS).document(firebaseUser.uid);
+    Firestore.instance.collection(CHATFRIENDS).document(firebaseUser.uid);
     var payvorFirebaseUser = PayvorFirebaseUser(isOnline: status);
     return await document.updateData(payvorFirebaseUser.toJson());
+  }
+
+  Future<void> deleteFriend({@required String userId,@required String friendId}) async {
+    var document =
+    Firestore.instance.collection(CHATFRIENDS).document(userId).collection(FRIENDS).document(friendId);
+    print("path ${document.path}");
+    return await document.delete();
   }
 
 

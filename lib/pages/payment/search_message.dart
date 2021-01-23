@@ -1,31 +1,22 @@
-import 'dart:async';
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:payvor/filter/refer_request.dart';
 import 'package:payvor/filter/refer_response.dart';
-import 'package:payvor/filter/refer_user.dart';
-import 'package:payvor/filter/refer_user_response.dart';
-import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/pages/chat/chat_user.dart';
-import 'package:payvor/pages/chat/payvor_firebase_user.dart';
 import 'package:payvor/pages/chat/private_chat.dart';
-import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
-import 'package:payvor/shimmers/refer_shimmer_loader.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
-import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SearchMessage extends StatefulWidget {
   @override
@@ -70,14 +61,14 @@ class _HomeState extends State<SearchMessage>
       LoginSignupResponse userResponse = LoginSignupResponse.fromJson(data);
       _userName = userResponse.user.name ?? "";
       _userProfilePic = userResponse.user.profilePic ?? "";
-      userId=userResponse.user.id.toString();
+      userId = userResponse.user.id.toString();
     }
 
-    Future.delayed(const Duration(milliseconds: 100), () {
-      _hitApi();
-      // checkNewGroup(userId: userId);
-      checkNewUser(userId: userId);
-    });
+//    Future.delayed(const Duration(milliseconds: 100), () {
+//      _hitApi();
+//      // checkNewGroup(userId: userId);
+//      checkNewUser(userId: userId);
+//    });
     super.initState();
   }
 
@@ -186,16 +177,40 @@ class _HomeState extends State<SearchMessage>
           }
         });
   }
-  get _getEmptyWidget
-  {
-    return Column();
-//    return Expanded(
-//      child: EmptyWidget(
-//        message: "No Active users",
-//        callback: refreshList,
-//        isEnabled: false,
-//      ),
-//    );
+  get _getEmptyWidget {
+    return Expanded(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            new SvgPicture.asset(
+              AssetStrings.chat_empty,
+            ),
+            Container(
+              margin: new EdgeInsets.only(top: 61),
+              child: new Text(
+                "No Messages",
+                style: new TextStyle(
+                    color: Colors.black,
+                    fontFamily: AssetStrings.circulerMedium,
+                    fontSize: 17.0),
+              ),
+            ),
+            Container(
+              margin: new EdgeInsets.only(top: 9),
+              child: new Text(
+                "You don’t have any conversation yet",
+                style: new TextStyle(
+                    color: Color.fromRGBO(103, 99, 99, 1.0),
+                    fontFamily: AssetStrings.circulerNormal,
+                    fontSize: 15.0),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -215,47 +230,6 @@ class _HomeState extends State<SearchMessage>
                 getTextField(),
                 _buildContestList(),
               ],
-            ),
-          ),
-          Offstage(
-            offstage: true,
-            child: Container(
-              height: screenSize.height,
-              child: new Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: new SvgPicture.asset(
-                        AssetStrings.chat_empty,
-                      ),
-                    ),
-                    Container(
-                      margin: new EdgeInsets.only(top: 61),
-                      child: new Text(
-                        "No Messages",
-                        style: new TextStyle(
-                            color: Colors.black,
-                            fontFamily: AssetStrings.circulerMedium,
-                            fontSize: 17.0),
-                      ),
-                    ),
-                    Container(
-                      margin: new EdgeInsets.only(top: 9),
-                      child: new Text(
-                        "You don’t have any conversation yet",
-                        style: new TextStyle(
-                            color: Color.fromRGBO(103, 99, 99, 1.0),
-                            fontFamily: AssetStrings.circulerNormal,
-                            fontSize: 15.0),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ),
           ),
           Container(
@@ -492,6 +466,11 @@ class _HomeState extends State<SearchMessage>
         IconSlideAction(
           color: Color.fromRGBO(255, 107, 102, 1),
           icon: Icons.delete,
+          onTap: () {
+            print("delete user $userId friend ${chatUser.userId}");
+            firebaseProvider.deleteFriend(
+                userId: userId, friendId: chatUser.userId); //delete chat friend
+          },
         ),
       ],
     );
