@@ -65,6 +65,37 @@ class FirebaseProvider with ChangeNotifier {
     return controller.stream;
   }
 
+  Future<List<ChatUser>> getChatFriendsList({@required String userId}) async {
+    var firestore = Firestore.instance
+        .collection("chatfriends")
+        .document(userId)
+        .collection("friends")
+        .orderBy('lastMessageTime', descending: true);
+
+//    StreamController<List<ChatUser>> controller =
+//    new StreamController<List<ChatUser>>();
+//
+//    //get the data and convert to list
+//    firestore.listen((QuerySnapshot snapshot) {
+//      final List<ChatUser> productList =
+//      snapshot.documents.map((documentSnapshot) {
+//        return ChatUser.fromMap(documentSnapshot.data);
+//      }).toList();
+//
+//      //remove if any item is null
+//      productList.removeWhere((product) => product == null);
+//      controller.add(productList);
+//    });
+
+    var chatUserList=List<ChatUser>();
+    var querySnapshots = await firestore.getDocuments();
+    for (var document in querySnapshots.documents) {
+      chatUserList.add(ChatUser.fromMap(document.data));
+    }
+
+    return chatUserList;
+  }
+
 //  Future<List<dynamic>> getUserChatAndGroups({@required int userId}) async {
 //    var firestore = Firestore.instance
 //        .collection("chatfriends")

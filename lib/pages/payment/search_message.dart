@@ -17,6 +17,8 @@ import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:payvor/utils/timeago.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SearchMessage extends StatefulWidget {
   @override
@@ -37,16 +39,18 @@ class _HomeState extends State<SearchMessage>
   List<DataRefer> listResult = List();
   String userId;
   var _firstTimeChatUser = true;
-  var _userName ;
- var  _userProfilePic ;
+  var _userName;
 
+  var _userProfilePic;
+
+  var _chatUserList = List<ChatUser>();
   TextEditingController _controller = new TextEditingController();
   ScrollController scrollController = new ScrollController();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+  new GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
@@ -64,69 +68,77 @@ class _HomeState extends State<SearchMessage>
       userId = userResponse.user.id.toString();
     }
 
-//    Future.delayed(const Duration(milliseconds: 100), () {
-//      _hitApi();
-//      // checkNewGroup(userId: userId);
-//      checkNewUser(userId: userId);
-//    });
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _hitApi();
+      checkNewUser(userId: userId);
+    });
     super.initState();
   }
 
-//
-//  void _hitApi() async {
-//
-//    (firebaseProvider.myFriendsIdList.length == 0)
-//        ? await firebaseProvider.getFriends(userId: userId)
-//        : firebaseProvider.myFriendsIdList;
-//
-//    setState(() {});
-//  }
+
+  void _hitApi() async {
+    _chatUserList = await firebaseProvider.getChatFriendsList(userId: userId);
+
+    _checkUnreadMessageCount();
+  }
+
+  void _checkUnreadMessageCount() {
+    var unreadMessageCount = 0;
+    for (var chatUser in _chatUserList) {
+      unreadMessageCount =
+          unreadMessageCount + chatUser.unreadMessageCount;
+    }
+    firebaseProvider.notificationStreamController
+        .add(unreadMessageCount > 0);
+  }
 
 //
-//  void checkNewUser({@required String userId}) {
-//    var firestore = Firestore.instance
-//        .collection("chatfriends")
-//        .document(userId)
-//        .collection("friends")
-//        .orderBy('lastMessageTime', descending: true)
-//        .snapshots();
-//
-//    //get the data and convert to list
-//    firestore.listen((QuerySnapshot snapshot) {
-//      print("new chat");
-//      if (!_firstTimeChatUser) {
-//        checkForNewUserOrLatestMessage(snapshot.documents[0]);
-//      } else {
-//        _firstTimeChatUser = false;
-//      }
-//    });
-//  }
-//
-//  void checkForNewUserOrLatestMessage(DocumentSnapshot documentSnapshot) {
-//    var chatUser = ChatUser.fromMap(documentSnapshot.data);
-//    print("new chat user ${chatUser.toJson()}");
-//    if (firebaseProvider.userList.isNotEmpty) {
-//      var isOldUser = false;
-//      for (var data in firebaseProvider.userList) {
-//        if (data is ChatUser) {
-//          if (data.userId == chatUser.userId) {
-//            isOldUser = true;
-//            print("new_msg ${chatUser.lastMessage}");
-//            break;
-//          }
-//        }
-//      }
-//      if (!isOldUser) {
-//        firebaseProvider.myFriendsIdList.add(int.parse(chatUser.userId));
-//        setState(() {});
-//      }
-//    } else {
-//      firebaseProvider.myFriendsIdList.add(int.parse(chatUser.userId));
-//      setState(() {});
-//    }
-//
-//
-//  }
+  void checkNewUser({@required String userId}) {
+    var firestore = Firestore.instance
+        .collection("chatfriends")
+        .document(userId)
+        .collection("friends")
+        .orderBy('lastMessageTime', descending: true)
+        .limit(1)
+        .snapshots();
+
+    //get the data and convert to list
+    firestore.listen((QuerySnapshot snapshot) {
+      print("new chat");
+      if (!_firstTimeChatUser) {
+        checkForNewUserOrLatestMessage(snapshot.documents[0]);
+      } else {
+        _firstTimeChatUser = false;
+      }
+    });
+  }
+
+  void checkForNewUserOrLatestMessage(DocumentSnapshot documentSnapshot) {
+    var newChatUser = ChatUser.fromMap(documentSnapshot.data);
+    print("new chat user ${newChatUser.toJson()}");
+    if (_chatUserList.isNotEmpty) {
+      var isOldUser = false;
+      for (var chatUser in _chatUserList) {
+          if (chatUser.userId == newChatUser.userId) {
+            isOldUser = true;
+            print("new_msg ${chatUser.lastMessage}");
+            chatUser.unreadMessageCount=newChatUser.unreadMessageCount;
+            chatUser.lastMessage=newChatUser.lastMessage;
+            chatUser.lastMessageTime=newChatUser.lastMessageTime;
+            break;
+          }
+
+      }
+      if (!isOldUser) {
+        _chatUserList.add(newChatUser);
+
+      }
+      setState(() {});
+    } else {
+      _chatUserList.add(newChatUser);
+      setState(() {});
+    }
+  }
 
   void _moveToPrivateChatScreen(ChatUser chatUser) {
     var screen = PrivateChat(
@@ -148,36 +160,47 @@ class _HomeState extends State<SearchMessage>
     );
   }
   Widget _buildContestList() {
-    return StreamBuilder<List<ChatUser>>(
-        stream: firebaseProvider.getChatFriends(userId: userId),
-        builder: (context, AsyncSnapshot<List<ChatUser>> result) {
-          var unreadMessageCount = 0;
-          if (result.hasData) {
-            if (result.data.length == 0) {
-              return _getEmptyWidget;
-            }
-            // widget.countCallBack(result.data.length);
-            return Expanded(
-              child: Container(
-                child: new ListView.builder(
-                  padding: new EdgeInsets.all(0.0),
-                  itemBuilder: (BuildContext context, int index) {
-                    var data = result.data[index];
-                    unreadMessageCount =
-                        unreadMessageCount + data.unreadMessageCount;
-                    firebaseProvider.notificationStreamController
-                        .add(unreadMessageCount > 0);
+    return Expanded(
+      child: Container(
+        child: new ListView.builder(
+          padding: new EdgeInsets.all(0.0),
+          itemBuilder: (BuildContext context, int index) {
+            return buildItemMain(_chatUserList[index],index);
+          },
+          itemCount: _chatUserList.length,
+        ),
+      ),
+    );
 
-                    return buildItemMain(data);
-                  },
-                  itemCount: result.data.length,
-                ),
-              ),
-            );
-          } else {
-            return _getEmptyWidget;
-          }
-        });
+//    return StreamBuilder<List<ChatUser>>(
+//        stream: firebaseProvider.getChatFriends(userId: userId),
+//        builder: (context, AsyncSnapshot<List<ChatUser>> result) {
+//          if (result.hasData) {
+//            if (result.data.length == 0) {
+//              return _getEmptyWidget;
+//            }
+//            // widget.countCallBack(result.data.length);
+//            return Expanded(
+//              child: Container(
+//                child: new ListView.builder(
+//                  padding: new EdgeInsets.all(0.0),
+//                  itemBuilder: (BuildContext context, int index) {
+//                    var data = result.data[index];
+//                    unreadMessageCount =
+//                        unreadMessageCount + data.unreadMessageCount;
+//                    firebaseProvider.notificationStreamController
+//                        .add(unreadMessageCount > 0);
+//
+//                    return buildItemMain(data);
+//                  },
+//                  itemCount: result.data.length,
+//                ),
+//              ),
+//            );
+//          } else {
+//            return _getEmptyWidget;
+//          }
+//        });
   }
   get _getEmptyWidget {
     return Expanded(
@@ -234,6 +257,7 @@ class _HomeState extends State<SearchMessage>
               ],
             ),
           ),
+          (_chatUserList.isEmpty)?_getEmptyWidget:Container(),
           Container(
             margin: new EdgeInsets.only(top: 130),
             child: new Center(
@@ -243,6 +267,7 @@ class _HomeState extends State<SearchMessage>
               ),
             ),
           ),
+
           /* new Center(
             child: _getLoader,
           ),*/
@@ -442,7 +467,7 @@ class _HomeState extends State<SearchMessage>
   @override
   bool get wantKeepAlive => true;
 
-  Widget buildItemMain(ChatUser chatUser) {
+  Widget buildItemMain(ChatUser chatUser,int index) {
     return Slidable(
       actionPane: SlidableDrawerActionPane(),
       actionExtentRatio: 0.3,
@@ -471,7 +496,12 @@ class _HomeState extends State<SearchMessage>
           onTap: () {
             print("delete user $userId friend ${chatUser.userId}");
             firebaseProvider.deleteFriend(
-                userId: userId, friendId: chatUser.userId); //delete chat friend
+                userId: userId, friendId: chatUser.userId);
+            _chatUserList.removeAt(index);
+            setState(() {
+
+            });
+            //delete chat friend
           },
         ),
       ],
