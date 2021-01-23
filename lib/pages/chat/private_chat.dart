@@ -23,6 +23,7 @@ import 'package:payvor/utils/common_dialog.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
+import 'package:payvor/utils/timeago.dart';
 import 'package:provider/provider.dart';
 
 class ChoicePrivate {
@@ -90,6 +91,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
   bool isUserBlocked = false;
   bool isUserBlockedBy;
   bool userWindowStatus = false;
+  String _timeSection = "Today";
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   FirebaseProvider firebaseProvider;
@@ -360,14 +362,6 @@ class PrivateChatScreenState extends State<PrivateChat> {
     return Container(
       child: Column(
         children: <Widget>[
-//        Bubble(
-//          message: content,
-//          time: readTimestamp(timeStamp),
-//          delivered: false,
-//          isMe: true,
-//          isGroup: widget.isGroup,
-//          name: listMessage[index]['idFrom'],
-//        ),
           ChatBubbleRight(
             message: content,
             time: readTimestamp(timeStamp.toString()),
@@ -401,15 +395,6 @@ class PrivateChatScreenState extends State<PrivateChat> {
     }
     return Column(
       children: <Widget>[
-//        Bubble(
-//          message: content,
-//          time: readTimestamp(timeStamp),
-//          delivered: false,
-//          isMe: false,
-//          isGroup: widget.isGroup,
-//          name: listMessage[index]['idFrom'],
-//        ),
-
         ChatBubbleLeft(
           message: content,
           time: readTimestamp(timeStamp.toString()),
@@ -792,7 +777,8 @@ class PrivateChatScreenState extends State<PrivateChat> {
         children: <Widget>[
           new Text(
             userName,
-            style: TextThemes.blackTextSmallNormal,
+            style: TextThemes.blackTextFieldNormal,
+
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -838,7 +824,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
       child: new Scaffold(
         backgroundColor: AppColors.kWhite,
         key: _scaffoldKey,
-        appBar: _getAppbar("data"),
+        appBar: _getAppbar(widget.userName),
         body: new SafeArea(
           top: false,
           child: new Column(
@@ -1011,18 +997,54 @@ class PrivateChatScreenState extends State<PrivateChat> {
               radius: Constants.LOADER_RADIUS,
             ));
           } else {
-            print("data size ${snapshot.data.documents.length}");
             listMessage = snapshot.data.documents;
+            var messageList = List<Widget>();
+            var index = 0;
+            for (var document in snapshot.data.documents) {
+              var timeSection = TimeAgo.timeString(document['timestamp']);
+              if (_timeSection != timeSection) {
+                 print("added time section $timeSection");
+
+                messageList.add(_timeSectionWidget(_timeSection));
+                 _timeSection = timeSection;
+              }
+
+              messageList.add(buildItem(index, snapshot.data.documents[index]));
+              index++;
+
+            }
+            messageList.add(_timeSectionWidget(_timeSection));
+            _timeSection="Today";
             return ListView.builder(
               padding: EdgeInsets.all(10.0),
-              itemBuilder: (context, index) =>
-                  buildItem(index, snapshot.data.documents[index]),
-              itemCount: snapshot.data.documents.length,
+              itemBuilder: (context, index) {
+                return messageList[index];
+              },
+              itemCount: messageList.length,
               reverse: true,
               controller: listScrollController,
             );
           }
         },
+      ),
+    );
+  }
+
+  Widget _timeSectionWidget(String text) {
+    return Center(
+      child: Container(
+          width: 100,
+          decoration: BoxDecoration(
+              border: Border.all(
+                color: AppColors.colorGray,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(20))
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Center(child: Text(
+                text.toUpperCase(), style: TextThemes.blackTextSmallNormal)),
+          )
       ),
     );
   }

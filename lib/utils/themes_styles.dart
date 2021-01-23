@@ -47,6 +47,12 @@ class TextThemes {
     color: Colors.black,
   );
 
+  static final TextStyle chatTimeStampblackTextSmallNormal = TextStyle(
+    fontFamily: AssetStrings.circulerNormal,
+    fontSize: 11,
+    color: Colors.black,
+  );
+
   static const TextStyle blackTextFieldNormal = TextStyle(
     fontFamily: AssetStrings.circulerNormal,
     fontSize: 16,

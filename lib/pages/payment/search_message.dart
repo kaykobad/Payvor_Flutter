@@ -16,6 +16,7 @@ import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
+import 'package:payvor/utils/timeago.dart';
 import 'package:provider/provider.dart';
 
 class SearchMessage extends StatefulWidget {
@@ -389,7 +390,7 @@ class _HomeState extends State<SearchMessage>
                         Container(
                           margin: new EdgeInsets.only(left: 6),
                           child: new Text(
-                            "now",
+                            TimeAgo.timeAgoSinceDate(chatUser.lastMessageTime),
                             style: TextThemes.lightGrey,
                           ),
                         ),

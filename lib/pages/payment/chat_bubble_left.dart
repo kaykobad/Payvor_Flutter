@@ -4,8 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/themes_styles.dart';
 
-class ChatBubbleLeft extends StatefulWidget {
+class ChatBubbleLeft extends StatelessWidget {
   final String message;
   final String userName;
   final String profilePic;
@@ -17,17 +18,9 @@ class ChatBubbleLeft extends StatefulWidget {
       @required this.profilePic,
       @required this.time});
 
-  @override
-  _ChatBubbleLeftState createState() => _ChatBubbleLeftState();
-}
-
-class _ChatBubbleLeftState extends State<ChatBubbleLeft>
-    with AutomaticKeepAliveClientMixin<ChatBubbleLeft> {
-//  FirebaseProvider firebaseProvider;
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     // firebaseProvider = Provider.of<FirebaseProvider>(context);
     return Material(
       color: Colors.white,
@@ -50,15 +43,13 @@ class _ChatBubbleLeftState extends State<ChatBubbleLeft>
                         ),
                         child: ClipOval(
                           child: getCachedNetworkImageWithurl(
-                              url: widget.profilePic ?? "", size: 38),
+                              url: profilePic ?? "", size: 38),
                         )),
                     Container(
                         margin: const EdgeInsets.only(top: 4.0),
                         child: new Text(
-                          "16:38",
-                          style: new TextStyle(
-                              fontSize: 12,
-                              color: Color.fromRGBO(103, 99, 99, 1)),
+                          time,
+                          style: TextThemes.chatTimeStampblackTextSmallNormal,
                         ))
                   ],
                 ),
@@ -105,7 +96,7 @@ class _ChatBubbleLeftState extends State<ChatBubbleLeft>
                                         throw 'Could not launch $link';
                                       }*/
                                     },
-                                    text:widget.message??"",
+                                    text:message??"",
                                     linkStyle: TextStyle(color: Colors.blue),
                                     style: TextStyle(
                                         fontSize: 14,
@@ -128,7 +119,5 @@ class _ChatBubbleLeftState extends State<ChatBubbleLeft>
     );
   }
 
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
+
 }

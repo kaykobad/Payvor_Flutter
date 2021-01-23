@@ -39,26 +39,34 @@ bool isAndroidPlatform({@required BuildContext context}) {
 }
 
 String readTimestamp(String timestamp) {
-  var now = new DateTime.now();
-  var format = new DateFormat('hh:mm a');
-  var date =
-      new DateTime.fromMicrosecondsSinceEpoch(int.parse(timestamp) * 1000);
-  var diff = date.difference(now);
   var time = '';
+ try {
+   var now = new DateTime.now();
+   var format = new DateFormat('hh:mm a');
+   var date =
 
-  if (diff.inSeconds <= 0 ||
-      diff.inSeconds > 0 && diff.inMinutes == 0 ||
-      diff.inMinutes > 0 && diff.inHours == 0 ||
-      diff.inHours > 0 && diff.inDays == 0) {
-    time = format.format(date);
-  } else {
-    if (diff.inDays == 1) {
-      time = diff.inDays.toString() + 'DAY AGO';
-    } else {
-      time = diff.inDays.toString() + 'DAYS AGO';
-    }
+   new DateTime.fromMicrosecondsSinceEpoch(num.parse(timestamp) * 1000);
+   time = format.format(date);
+//   var diff = date.difference(now);
+//
+//   if (diff.inSeconds <= 0 ||
+//       diff.inSeconds > 0 && diff.inMinutes == 0 ||
+//       diff.inMinutes > 0 && diff.inHours == 0 ||
+//       diff.inHours > 0 && diff.inDays == 0) {
+//
+//   } else {
+//     if (diff.inDays == 1) {
+//       time = diff.inDays.toString() + 'DAY AGO';
+//     } else {
+//       time = diff.inDays.toString() + 'DAYS AGO';
+//     }
+//   }
+ }
+ catch(ex)
+  {
+    print("chat time ${ex.toString()}");
+    time=timestamp;
   }
-
   return time;
 }
 
