@@ -30,6 +30,7 @@ class APIs {
   static const String seacrhSuggestList = "$baseUrl/searchtitle/";
   static const String refUsers = "$baseUrl/ref-user";
   static const String giveRating = "$baseUrl/give-rating";
+  static const String updateFavStatus = "$baseUrl/update-fav-status";
   static const String referUser = "$baseUrl/refer-user";
   static const String notiUser = "$baseUrl/noti-user";
   static const String favorPostedByUser = "$baseUrl/myfavour";

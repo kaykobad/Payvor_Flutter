@@ -37,7 +37,8 @@ class FirebaseProvider with ChangeNotifier {
 //    myFriendsIdList.clear();
   }
 
-  Stream<List<ChatUser>> getChatFriends({@required String userId}) {
+  Stream<List<ChatUser>> getChatFriends(
+      {@required String userId, String name}) {
     var firestore = Firestore.instance
         .collection("chatfriends")
         .document(userId)

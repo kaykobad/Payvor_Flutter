@@ -36,6 +36,7 @@ import 'package:payvor/model/suggest/suggest_response.dart';
 import 'package:payvor/model/update_profile/update_profile_request.dart';
 import 'package:payvor/model/update_profile/update_profile_response.dart';
 import 'package:payvor/model/update_profile/user_hired_favor_response.dart';
+import 'package:payvor/model/update_status/update_status_request.dart';
 import 'package:payvor/networkmodel/APIHandler.dart';
 import 'package:payvor/networkmodel/APIs.dart';
 import 'package:payvor/notifications/notification_response.dart';
@@ -695,6 +696,25 @@ class AuthProvider with ChangeNotifier {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.post(
         context: context, url: APIs.giveRating, requestBody: requests.toJson());
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      ReportResponse resendOtpResponse = new ReportResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> updateFavStatus(
+      UpdateStatusRequest requests, BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.post(
+        context: context,
+        url: APIs.updateFavStatus,
+        requestBody: requests.toJson());
 
     if (response is APIError) {
       completer.complete(response);
