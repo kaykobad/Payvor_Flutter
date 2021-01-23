@@ -9,6 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:payvor/pages/chat/chat_user.dart';
+import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/payment/chat_bubble_image_left.dart';
 import 'package:payvor/pages/payment/chat_bubble_image_right.dart';
 import 'package:payvor/pages/payment/chat_bubble_left.dart';
@@ -669,7 +670,18 @@ class PrivateChatScreenState extends State<PrivateChat> {
         Navigator.pop(context);
         if (text == "Report Profile") {
           _showReportDialog();
-        } else if (text == "Share Post") {}
+        } else if (text == "View Profile") {
+          Navigator.push(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return Material(
+                  child: new ChatMessageDetails(
+                hireduserId: widget.peerId,
+                userButtonMsg: false,
+              ));
+            }),
+          );
+        }
       },
       child: Container(
         child: Row(

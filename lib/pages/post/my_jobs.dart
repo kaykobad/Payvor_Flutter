@@ -432,6 +432,7 @@ class _HomeState extends State<MyJobs>
           name: data.title,
           hireduserId: data?.hiredUserId?.toString(),
           image: data?.image,
+          userButtonMsg: true,
         ))));
       },
       child: Container(

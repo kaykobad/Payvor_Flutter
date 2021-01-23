@@ -31,8 +31,10 @@ class ChatMessageDetails extends StatefulWidget {
   final String name;
   final String hireduserId;
   final String image;
+  final bool userButtonMsg;
 
-  ChatMessageDetails({this.id, this.name, this.hireduserId, this.image});
+  ChatMessageDetails(
+      {this.id, this.name, this.hireduserId, this.image, this.userButtonMsg});
 
   @override
   _HomeState createState() => _HomeState();
@@ -668,28 +670,31 @@ class _HomeState extends State<ChatMessageDetails>
                               style: TextThemes.blueMediumSmall,
                             )),
                       ],
-                    ),
-                  ),
-                  Material(
-                    elevation: 0.0,
-                    child: Container(
-                        color: Colors.white,
-                        padding: new EdgeInsets.only(top: 20, bottom: 10),
-                        child: getSetupButtonNewRow(
-                            callback, "Message", 16,
-                            newColor: AppColors.colorDarkCyan)),
-                  ),
-                  Container(
-                      margin: new EdgeInsets.only(
-                          left: 16, right: 16, top: 22, bottom: 10),
-                      alignment: Alignment.centerLeft,
-                      child: new Text(
-                        "All Posts",
-                        style: TextThemes.blackCirculerMediumHeight,
-                      )),
-                  _buildContestList(),
-                  new SizedBox(
-                    height: 10,
+                          ),
+                        ),
+                        widget?.userButtonMsg != null && widget?.userButtonMsg
+                            ? Material(
+                                elevation: 0.0,
+                                child: Container(
+                                    color: Colors.white,
+                                    padding: new EdgeInsets.only(
+                                        top: 20, bottom: 10),
+                                    child: getSetupButtonNewRow(
+                                        callback, "Message", 16,
+                                        newColor: AppColors.colorDarkCyan)),
+                              )
+                            : Container(),
+                        Container(
+                            margin: new EdgeInsets.only(
+                                left: 16, right: 16, top: 22, bottom: 10),
+                            alignment: Alignment.centerLeft,
+                            child: new Text(
+                              "All Posts",
+                              style: TextThemes.blackCirculerMediumHeight,
+                            )),
+                        _buildContestList(),
+                        new SizedBox(
+                          height: 10,
                   )
                 ],
               ),
@@ -744,19 +749,22 @@ class _HomeState extends State<ChatMessageDetails>
                           ),
                         ),
                       ),
-                      Container(
-                        width: 30.0,
-                        height: 30.0,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
+                      Offstage(
+                        offstage: true,
+                        child: Container(
+                          width: 30.0,
+                          height: 30.0,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                          ),
+                          child: GestureDetector(
+                              onTapDown: (TapDownDetails details) {},
+                              child: new Icon(
+                                Icons.more_vert,
+                                color: Colors.white,
+                              )),
                         ),
-                        child: GestureDetector(
-                            onTapDown: (TapDownDetails details) {},
-                            child: new Icon(
-                              Icons.more_vert,
-                              color: Colors.white,
-                            )),
                       )
                     ],
                   ),

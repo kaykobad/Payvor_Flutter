@@ -420,10 +420,11 @@ class _HomeState extends State<MyPosts>
         widget.lauchCallBack(Material(
             child: Material(
                 child: new ChatMessageDetails(
-                  id: data.userId.toString(),
+          id: data.userId.toString(),
           name: data.title,
           hireduserId: data?.hiredUserId?.toString(),
           image: data?.image,
+          userButtonMsg: true,
         ))));
       },
       child: Container(
