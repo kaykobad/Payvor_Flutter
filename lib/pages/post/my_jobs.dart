@@ -357,7 +357,7 @@ class _HomeState extends State<MyJobs>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          new Container(
+        /*  new Container(
             margin: new EdgeInsets.only(top: 10.0),
             child: new Text(
               data?.favour?.title ?? "",
@@ -371,17 +371,16 @@ class _HomeState extends State<MyJobs>
               height: 1.0,
               color: AppColors.dividerColor,
             ),
-          ),
+          ),*/
           Container(
-            margin: new EdgeInsets.only(top: 10.0),
             child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: Container(
                     child: new Text(
-                      data?.favour?.description ?? "",
-                      style: TextThemes.grayNormalSmall,
+                      data?.favour?.title ?? "",
+                      style: TextThemes.blackCirculerMedium,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -433,6 +432,7 @@ class _HomeState extends State<MyJobs>
           name: data.title,
           hireduserId: data?.hiredUserId?.toString(),
           image: data?.image,
+          userButtonMsg: true,
         ))));
       },
       child: Container(

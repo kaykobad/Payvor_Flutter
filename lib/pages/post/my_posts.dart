@@ -113,7 +113,9 @@ class _HomeState extends State<MyPosts>
         if (currentPage == 1) {
           listResult.clear();
 
-          listResult.add("Hired Favors");
+          if (response?.data?.length > 0) {
+            listResult.add("Hired Favors");
+          }
         }
 
         listResult.addAll(response?.data);
@@ -320,6 +322,13 @@ class _HomeState extends State<MyPosts>
     ));
   }
 
+  ValueSetter<int> callback(int type) {
+    currentPage = 1;
+    isPullToRefresh = true;
+    _loadMore = false;
+    hitPostedApi();
+  }
+
   Widget buildItem(DataFavour data) {
     return InkWell(
       onTap: () {
@@ -328,6 +337,7 @@ class _HomeState extends State<MyPosts>
                 child: new OriginalPostData(
           id: data.id.toString(),
           lauchCallBack: widget.lauchCallBack,
+          voidcallback: callback,
         ))));
       },
       child: Container(
@@ -410,10 +420,11 @@ class _HomeState extends State<MyPosts>
         widget.lauchCallBack(Material(
             child: Material(
                 child: new ChatMessageDetails(
-                  id: data.userId.toString(),
+          id: data.userId.toString(),
           name: data.title,
           hireduserId: data?.hiredUserId?.toString(),
           image: data?.image,
+          userButtonMsg: true,
         ))));
       },
       child: Container(

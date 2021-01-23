@@ -30,8 +30,9 @@ import 'package:share/share.dart';
 class OriginalPostData extends StatefulWidget {
   final String id;
   final ValueChanged<Widget> lauchCallBack;
+  ValueSetter<int> voidcallback;
 
-  OriginalPostData({this.id, this.lauchCallBack});
+  OriginalPostData({this.id, this.lauchCallBack, this.voidcallback});
 
   @override
   _HomeState createState() => _HomeState();
@@ -261,6 +262,7 @@ class _HomeState extends State<OriginalPostData>
 
     if (response is UserHireListResponse) {
       if (response != null && response.status.code == 200) {
+        widget?.voidcallback(1);
         showBottomSheet();
 
         //    list.removeAt(pos);
@@ -277,6 +279,7 @@ class _HomeState extends State<OriginalPostData>
       provider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
+
 
       showInSnackBar(apiError.error);
     }
@@ -524,16 +527,19 @@ class _HomeState extends State<OriginalPostData>
     showModalBottomSheet<void>(
         isScrollControlled: true,
         context: context,
+        isDismissible: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
         ),
         builder: (BuildContext bc) {
           return Padding(
-              padding: MediaQuery.of(context).viewInsets,
+              padding: MediaQuery
+                  .of(context)
+                  .viewInsets,
               child: Container(
                   child: new Column(
-                mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     width: 86.0,
@@ -547,7 +553,7 @@ class _HomeState extends State<OriginalPostData>
                     child: GestureDetector(
                         onTapDown: (TapDownDetails details) {
                           //_showPopupMenu(details.globalPosition);
-                          showBottomSheet();
+                          //showBottomSheet();
                         },
                         child: new SvgPicture.asset(
                           AssetStrings.check,
@@ -642,16 +648,19 @@ class _HomeState extends State<OriginalPostData>
     showModalBottomSheet<void>(
         isScrollControlled: true,
         context: context,
+        isDismissible: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
         ),
         builder: (BuildContext bc) {
           return Padding(
-              padding: MediaQuery.of(context).viewInsets,
+              padding: MediaQuery
+                  .of(context)
+                  .viewInsets,
               child: Container(
                   child: new Column(
-                mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.min,
                 children: [
                   new Container(
                     margin: new EdgeInsets.only(top: 50),
@@ -774,17 +783,17 @@ class _HomeState extends State<OriginalPostData>
           ),
           Align(
               alignment: Alignment.center,
-              child: user?.status == 0
+              child: type == false
                   ? InkWell(
-                      onTap: () {
-                        showBottomSheetHire(user?.userId?.toString(), pos);
-                      },
-                      child: Container(
-                        width: 65,
-                        height: 25,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            borderRadius: new BorderRadius.circular(12.0),
+                onTap: () {
+                  showBottomSheetHire(user?.userId?.toString(), pos);
+                },
+                child: Container(
+                  width: 65,
+                  height: 25,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: new BorderRadius.circular(12.0),
                             color: AppColors.colorDarkCyan),
                         child: new Text(
                           "Hire",
