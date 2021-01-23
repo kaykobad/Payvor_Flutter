@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:payvor/filter/refer_response.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/pages/chat/chat_user.dart';
 import 'package:payvor/pages/chat/private_chat.dart';
@@ -34,11 +33,13 @@ class _HomeState extends State<SearchMessage>
   bool offstagenodata = true;
   bool loader = false;
   String title = "";
-  List<DataRefer> listResult = List();
+  List<ChatUser> listResult = List();
+  List<ChatUser> mainList = List();
   String userId;
   var _firstTimeChatUser = true;
-  var _userName ;
- var  _userProfilePic ;
+  var _userName;
+
+  var _userProfilePic;
 
   TextEditingController _controller = new TextEditingController();
   ScrollController scrollController = new ScrollController();
@@ -155,14 +156,18 @@ class _HomeState extends State<SearchMessage>
           if (result.hasData) {
             if (result.data.length == 0) {
               return _getEmptyWidget;
+            } else {
+              mainList = result.data;
+              listResult = result.data;
             }
+
             // widget.countCallBack(result.data.length);
             return Expanded(
               child: Container(
                 child: new ListView.builder(
                   padding: new EdgeInsets.all(0.0),
                   itemBuilder: (BuildContext context, int index) {
-                    var data = result.data[index];
+                    var data = listResult[index];
                     unreadMessageCount =
                         unreadMessageCount + data.unreadMessageCount;
                     firebaseProvider.notificationStreamController
@@ -170,7 +175,7 @@ class _HomeState extends State<SearchMessage>
 
                     return buildItemMain(data);
                   },
-                  itemCount: result.data.length,
+                  itemCount: listResult.length,
                 ),
               ),
             );
@@ -285,19 +290,38 @@ class _HomeState extends State<SearchMessage>
                   style: TextThemes.blackTextFieldNormal,
                   keyboardType: TextInputType.text,
                   onSubmitted: (String value) {
-                    /*  _loadMore = false;
-                    isPullToRefresh = false;
-                    currentPage = 1;
-                    title = value;
+                    if (value.isNotEmpty) {
+                      listResult.clear();
+                      for (var data in mainList) {
+                        if (data.username.startsWith(value)) {
+                          listResult.add(data);
+                        }
+                      }
+                    }
+                    else {
+                      listResult.clear();
+                      listResult.addAll(mainList);
+                    }
+                    setState(() {
 
-                    hitSearchApi(title);*/
+                    });
                   },
                   onChanged: (String value) {
-                    /*   _loadMore = false;
-                    isPullToRefresh = false;
-                    currentPage = 1;
-                    title = value;
-                    hitSearchApi(title);*/
+                    if (value.isNotEmpty) {
+                      listResult.clear();
+                      for (var data in mainList) {
+                        if (data.username.startsWith(value)) {
+                          listResult.add(data);
+                        }
+                      }
+                    }
+                    else {
+                      listResult.clear();
+                      listResult.addAll(mainList);
+                    }
+                    setState(() {
+
+                    });
                   },
                   decoration: new InputDecoration(
                     enabledBorder: InputBorder.none,
@@ -313,12 +337,10 @@ class _HomeState extends State<SearchMessage>
               ),
               InkWell(
                 onTap: () {
-                  /*   _loadMore = false;
-                  isPullToRefresh = false;
                   _controller.text = "";
-                  currentPage = 1;
-                  hitSearchApi("");
-                  setState(() {});*/
+                  listResult.clear();
+                  listResult.addAll(mainList);
+                  setState(() {});
                 },
                 child: new Image.asset(
                   AssetStrings.clean,

@@ -420,7 +420,9 @@ class _HomeState extends State<ChatMessageDetails>
               // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
               child: getCachedNetworkImageWithurl(
-                  url: "", fit: BoxFit.fill, size: 40),
+                  url: userResponse?.user?.profilePic ?? "",
+                  fit: BoxFit.fill,
+                  size: 40),
             ),
           ),
           Expanded(
@@ -432,17 +434,19 @@ class _HomeState extends State<ChatMessageDetails>
                     child: Row(
                       children: [
                         new Text(
-                          "User Name",
+                          userResponse?.user?.name ?? "",
                           style: TextThemes.blackCirculerMedium,
                         ),
                         new SizedBox(
                           width: 8,
                         ),
-                        new Image.asset(
-                          AssetStrings.verify,
-                          width: 16,
-                          height: 16,
-                        ),
+                        datas?.isActive == 1
+                            ? new Image.asset(
+                                AssetStrings.verify,
+                                width: 16,
+                                height: 16,
+                              )
+                            : Container(),
                       ],
                     )),
                 Container(
@@ -459,8 +463,8 @@ class _HomeState extends State<ChatMessageDetails>
                       ),
                       Expanded(
                           child: new Text(
-                        "Mohali",
-                        style: TextThemes.greyDarkTextHomeLocation,
+                            userResponse?.user?.location ?? "",
+                            style: TextThemes.greyDarkTextHomeLocation,
                       )),
                     ],
                   ),
@@ -471,7 +475,7 @@ class _HomeState extends State<ChatMessageDetails>
           Align(
               alignment: Alignment.center,
               child: new Text(
-                "€5",
+                "€${datas?.price ?? "0"}",
                 style: TextThemes.blackDarkHeaderSub,
               )),
         ],
@@ -502,7 +506,7 @@ class _HomeState extends State<ChatMessageDetails>
                 color: AppColors.dividerColor,
               ),
             ),
-            new Container(
+            datas?.image != null ? new Container(
               height: 147,
               width: double.infinity,
               margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
@@ -515,7 +519,7 @@ class _HomeState extends State<ChatMessageDetails>
                   fit: BoxFit.cover,
                 ),
               ),
-            ),
+            ) : Container(),
             Container(
                 width: double.infinity,
                 color: Colors.white,

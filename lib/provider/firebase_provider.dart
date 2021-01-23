@@ -11,8 +11,6 @@ import 'package:payvor/pages/chat/payvor_group_chat.dart';
 import 'package:payvor/pages/payment/firebase_constants.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseProvider with ChangeNotifier {
   var _isLoading = false;
@@ -48,7 +46,7 @@ class FirebaseProvider with ChangeNotifier {
         .snapshots();
 
     StreamController<List<ChatUser>> controller =
-    new StreamController<List<ChatUser>>();
+        new StreamController<List<ChatUser>>();
 
     //get the data and convert to list
     firestore.listen((QuerySnapshot snapshot) {
