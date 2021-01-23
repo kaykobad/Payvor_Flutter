@@ -19,6 +19,7 @@ import 'package:payvor/model/favour_posted_by_user.dart';
 import 'package:payvor/model/forgot_password/forgot_password_request.dart';
 import 'package:payvor/model/forgot_password/forgot_password_response.dart';
 import 'package:payvor/model/hiew/hire_list.dart';
+import 'package:payvor/model/hired_user_response_details/hired_user_response-details.dart';
 import 'package:payvor/model/logged_in_user/logged_in_user_response.dart';
 import 'package:payvor/model/login/loginrequest.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
@@ -500,8 +501,25 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      ResendOtpResponse resendOtpResponse = new ResendOtpResponse.fromJson(
-          response);
+      ResendOtpResponse resendOtpResponse =
+          new ResendOtpResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> getHiredFavorDetails(BuildContext context, String id) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(
+        context: context, url: APIs.hiFavIdDetails + id?.toString());
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      HiredUserDetailsResponse resendOtpResponse =
+          new HiredUserDetailsResponse.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;
@@ -510,9 +528,8 @@ class AuthProvider with ChangeNotifier {
 
   Future<dynamic> getFavorPostDetails(BuildContext context, String id) async {
     Completer<dynamic> completer = new Completer<dynamic>();
-    var response = await APIHandler.get(
-        context: context, url: APIs.favoeDetails + id);
-
+    var response =
+        await APIHandler.get(context: context, url: APIs.favoeDetails + id);
 
     print(APIs.favoeDetails + id);
 

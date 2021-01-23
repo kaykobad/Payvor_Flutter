@@ -7,15 +7,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/current_user_hired_by_favor/current_user_favor_hire.dart';
 import 'package:payvor/model/apierror.dart';
-import 'package:payvor/model/favour_details_response/favour_details_response.dart';
+import 'package:payvor/model/hired_user_response_details/hired_user_response-details.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
 import 'package:payvor/pages/chat_message_details.dart';
-import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/rating/rating_bar.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
-import 'package:payvor/shimmers/shimmer_details.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
@@ -60,7 +58,7 @@ class _HomeState extends State<PayFeebackDetails>
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
   FocusNode _DescriptionField = new FocusNode();
 
-  FavourDetailsResponse favoriteResponse;
+  HiredUserDetailsResponse hiredUserDetailsResponse;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
@@ -81,7 +79,7 @@ class _HomeState extends State<PayFeebackDetails>
 
 
     Future.delayed(const Duration(milliseconds: 300), () {
-      // hitApi();
+      hitApi();
     });
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
@@ -106,15 +104,16 @@ class _HomeState extends State<PayFeebackDetails>
       return;
     }
 
-    var response = await provider.getFavorPostDetails(context, "1");
+    var response = await provider.getHiredFavorDetails(
+        context, widget?.data?.id?.toString());
 
-    if (response is FavourDetailsResponse) {
+    if (response is HiredUserDetailsResponse) {
       provider.hideLoader();
 
       if (response != null && response.data != null) {
-        favoriteResponse = response;
+        hiredUserDetailsResponse = response;
 
-        var userid = favoriteResponse?.data?.userId.toString();
+        var userid = hiredUserDetailsResponse?.data?.userId.toString();
 
         if (userid == ids) {
           isCurrentUser = true;
@@ -157,7 +156,7 @@ class _HomeState extends State<PayFeebackDetails>
       return;
     }
     var reportrequest = new ReportPostRequest(
-        favour_id: favoriteResponse?.data?.id?.toString());
+        favour_id: hiredUserDetailsResponse?.data?.id?.toString());
 
     var response = await provider.reportUser(reportrequest, context);
 
@@ -202,7 +201,7 @@ class _HomeState extends State<PayFeebackDetails>
     //  var reportrequest=new ReportPostRequest(favour_id: favoriteResponse?.data?.id?.toString());
 
     var response = await provider.deletePost(
-        favoriteResponse?.data?.id?.toString(), context);
+        hiredUserDetailsResponse?.data?.id?.toString(), context);
 
     offstageLoader = false;
 
@@ -239,7 +238,7 @@ class _HomeState extends State<PayFeebackDetails>
   }
 
   redirect() async {
-    Navigator.push(
+    /*  Navigator.push(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {
         return Material(
@@ -248,7 +247,7 @@ class _HomeState extends State<PayFeebackDetails>
           isEdit: true,
         ));
       }),
-    );
+    );*/
   }
 
   Widget buildItemRating(int type, String first) {
@@ -358,7 +357,8 @@ class _HomeState extends State<PayFeebackDetails>
                 Container(
                   margin: new EdgeInsets.only(left: 10.0, right: 10.0),
                   child: new Text(
-                    "ggjgjgjgjg",
+                    "${hiredUserDetailsResponse?.data?.postedbyuser?.name
+                        ?.toString() ?? ""}",
                     style: TextThemes.blackCirculerMedium,
                   ),
                 ),
@@ -485,17 +485,17 @@ class _HomeState extends State<PayFeebackDetails>
           new Container(
             color: AppColors.whiteGray,
             height: screenSize.height,
-            child: favoriteResponse == null
+            child: hiredUserDetailsResponse != null
                 ? SingleChildScrollView(
-                    child: new Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        new Container(
-                          height: 30,
-                          width: double.infinity,
-                          color: Colors.transparent,
-                        ),
-                        Container(
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  new Container(
+                    height: 30,
+                    width: double.infinity,
+                    color: Colors.transparent,
+                  ),
+                  Container(
                           color: Colors.white,
                           alignment: Alignment.center,
                           child: Stack(
@@ -580,18 +580,20 @@ class _HomeState extends State<PayFeebackDetails>
                             ),
                           ),
                         ),
-                        buildItemUser(),
-                        buildItemRating(2, "02 Jan 2021"),
-                        Container(
-                            color: Colors.white,
-                            padding: new EdgeInsets.only(
-                                left: 16.0, right: 16.0, top: 16),
-                            margin: new EdgeInsets.only(top: 4),
-                            alignment: Alignment.centerLeft,
-                            child: new Text(
-                              ResString().get('payment_brkdown'),
-                              style: TextThemes.blackCirculerMediumHeight,
-                            )),
+                  buildItemUser(),
+                  buildItemRating(2,
+                      "${hiredUserDetailsResponse?.data?.hiredUser?.createdAt
+                          ?.toString() ?? ""}"),
+                  Container(
+                      color: Colors.white,
+                      padding: new EdgeInsets.only(
+                          left: 16.0, right: 16.0, top: 16),
+                      margin: new EdgeInsets.only(top: 4),
+                      alignment: Alignment.centerLeft,
+                      child: new Text(
+                        ResString().get('payment_brkdown'),
+                        style: TextThemes.blackCirculerMediumHeight,
+                      )),
                         buildPaymentType(1, "Hand Cash",
                             "You can Pay to the receiver by handcash. Receiver will cost 0% fee."),
                         Opacity(
@@ -615,18 +617,21 @@ class _HomeState extends State<PayFeebackDetails>
                               "Payment Method",
                               style: TextThemes.blackCirculerMediumHeight,
                             )),
-                        getRowsPayment(
-                            ResString().get('job_payment'), "€5", 23.0),
-                        getRowsPayment(
-                            ResString().get('payvor_service_fee') + "(20%)",
-                            "€20",
-                            9.0),
-                        new Container(
-                          height: 13,
-                          color: Colors.white,
-                        ),
-                        Opacity(
-                          opacity: 0.12,
+                  getRowsPayment(
+                      ResString().get('job_payment'),
+                      "€${hiredUserDetailsResponse?.data?.price?.toString() ??
+                          ""}", 23.0),
+                  getRowsPayment(
+                      ResString().get('payvor_service_fee') + "(20%)",
+                      "€${hiredUserDetailsResponse?.data?.serviceFee
+                          ?.toString() ?? ""}",
+                      9.0),
+                  new Container(
+                    height: 13,
+                    color: Colors.white,
+                  ),
+                  Opacity(
+                    opacity: 0.12,
                           child: new Container(
                             height: 1.0,
                             margin:
@@ -650,7 +655,8 @@ class _HomeState extends State<PayFeebackDetails>
                                 textAlign: TextAlign.center,
                               ),
                               new Text(
-                                "€10",
+                                "€${hiredUserDetailsResponse?.data?.receiving
+                                    ?.toString() ?? ""}",
                                 style: new TextStyle(
                                     fontFamily: AssetStrings.circulerBoldStyle,
                                     color: AppColors.bluePrimary,
@@ -722,7 +728,7 @@ class _HomeState extends State<PayFeebackDetails>
                   ),
                 ),
               )),
-          favoriteResponse == null
+          hiredUserDetailsResponse != null
               ? Positioned(
                   bottom: 0.0,
                   left: 0.0,
@@ -740,11 +746,10 @@ class _HomeState extends State<PayFeebackDetails>
               : Container(),
           new Center(
             child: getHalfScreenLoader(
-              status: offstageLoader,
+              status: provider.getLoading(),
               context: context,
             ),
           ),
-          Visibility(visible: provider.getLoading(), child: ShimmerDetails())
           /* new Center(
             child: _getLoader,
           ),*/

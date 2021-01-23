@@ -22,6 +22,7 @@ class APIs {
   static const String forgotPassword = "$baseUrl/auth/reset-pas-mail";
   static const String createPassword = "$baseUrl/auth/update-profile";
   static const String getOtpUrl = "$baseUrl/auth/send-otp-ph/";
+  static const String hiFavIdDetails = "$baseUrl/hired-favour-detail/";
   static const String getFavorList = "$baseUrl/list-favour";
   static const String favoeDetails = "$baseUrl/favour-detail/";
   static const String getPromotionData = "$baseUrl/promo-list";
