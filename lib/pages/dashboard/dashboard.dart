@@ -157,6 +157,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   @override
   void initState() {
     // TODO: implement initState
+
+    print("dashboard");
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     Future.delayed(Duration(milliseconds: 200), () {

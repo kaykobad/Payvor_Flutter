@@ -30,6 +30,7 @@ class ChatScreenState extends State<PostScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    print("post");
     tabBarController =
         new TabController(initialIndex: _tabIndex, length: 2, vsync: this);
   }

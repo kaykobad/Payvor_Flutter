@@ -336,7 +336,8 @@ class _HomeState extends State<PostFavorDetails>
   bool get wantKeepAlive => true;
 
   void callback() async {
-    if (!widget.isButtonDesabled) {
+    if ((widget.isButtonDesabled != null && !widget.isButtonDesabled) ||
+        favoriteResponse?.data?.is_user_applied != 1) {
       hitApplyFavApi();
     }
 

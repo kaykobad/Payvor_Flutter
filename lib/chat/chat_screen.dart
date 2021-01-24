@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:payvor/chat/decorator_view.dart';
 import 'package:payvor/notifications/notification.dart';
 import 'package:payvor/pages/payment/search_message.dart';
 import 'package:payvor/utils/AssetStrings.dart';
-import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
   final VoidCallback logoutCallBack;
@@ -32,6 +30,7 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    print("chat");
     tabBarController =
         new TabController(initialIndex: _tabIndex, length: 2, vsync: this);
   }

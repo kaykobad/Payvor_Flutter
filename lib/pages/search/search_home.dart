@@ -61,6 +61,7 @@ class _HomeState extends State<SearchCompany>
 
   @override
   void initState() {
+    print("search");
     Future.delayed(const Duration(milliseconds: 300), () {
       hitApi(filterRequest);
     });
