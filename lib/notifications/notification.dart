@@ -51,13 +51,13 @@ class _HomeState extends State<Notifications>
   @override
   void initState() {
     Future.delayed(const Duration(milliseconds: 300), () {
-      hitSearchApi("");
+      hitSearchApi();
     });
     _setScrollListener();
     super.initState();
   }
 
-  hitSearchApi(String data) async {
+  hitSearchApi() async {
     bool gotInternetConnection = await hasInternetConnection(
       context: context,
       mounted: mounted,
@@ -134,7 +134,7 @@ class _HomeState extends State<Notifications>
           scrollController.offset) {
         if (listResult.length >= (Constants.PAGINATION_SIZE * currentPage)) {
           isPullToRefresh = true;
-          hitSearchApi(title);
+          hitSearchApi();
           showInSnackBar("Loading data...");
         }
       }
@@ -219,16 +219,17 @@ class _HomeState extends State<Notifications>
         child: RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: () async {
-        /* isPullToRefresh = true;
-            _loadMore = false;
-            currentPage = 1;
+        isPullToRefresh = true;
+        _loadMore = false;
+        currentPage = 1;
 
-            await hitSearchApi(title);*/
+        await hitSearchApi();
       },
       child: Container(
         color: Colors.white,
         child: new ListView.builder(
           padding: new EdgeInsets.all(0.0),
+          controller: scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             return buildItemMain(listResult[index]);

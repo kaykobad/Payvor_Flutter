@@ -12,7 +12,6 @@ import 'package:payvor/utils/autocomplete_text_field.dart';
 
 import 'AppColors.dart';
 import 'AssetStrings.dart';
-import 'memory_management.dart';
 
 List<Predictions> list = new List();
 
@@ -175,6 +174,42 @@ Widget getSetupButtonNew(VoidCallback callback, String text, double margin,
   );
 }
 
+Widget getSetupButtonColor(VoidCallback callback, String text, double margin,
+    {Color newColor}) {
+  return Container(
+    height: 58.0,
+    margin: new EdgeInsets.only(left: margin, right: margin),
+    decoration: new BoxDecoration(
+      borderRadius: new BorderRadius.circular(8.0),
+    ),
+    child: Material(
+      borderRadius: new BorderRadius.circular(8.0),
+      child: Ink(
+        decoration: new BoxDecoration(
+            borderRadius: new BorderRadius.circular(8.0),
+            color: (newColor == null) ? AppColors.kPrimaryBlue : newColor),
+        child: InkWell(
+          borderRadius: new BorderRadius.circular(8.0),
+          splashColor: (newColor == null) ? AppColors.kPrimaryBlue : newColor,
+          onTap: () {
+            callback();
+          },
+          child: new Container(
+            alignment: Alignment.center,
+            child: new Text(
+              text,
+              style: new TextStyle(
+                fontFamily: AssetStrings.circulerMedium,
+                fontSize: 16,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
 
 Widget getSetupButtonNewRow(VoidCallback callback, String text, double margin,
     {Color newColor}) {

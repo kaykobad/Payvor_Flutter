@@ -33,8 +33,9 @@ import 'package:share/share.dart';
 class PostFavorDetails extends StatefulWidget {
   final String id;
   ValueSetter<int> voidcallback;
+  final bool isButtonDesabled;
 
-  PostFavorDetails({this.id, this.voidcallback});
+  PostFavorDetails({this.id, this.voidcallback, this.isButtonDesabled});
 
   @override
   _HomeState createState() => _HomeState();
@@ -335,12 +336,14 @@ class _HomeState extends State<PostFavorDetails>
   bool get wantKeepAlive => true;
 
   void callback() async {
-    hitApplyFavApi();
+    if (!widget.isButtonDesabled) {
+      hitApplyFavApi();
+    }
+
     /* await Future.delayed(Duration(milliseconds: 200));
     showInSnackBar("Favour applied successfully");
     await Future.delayed(Duration(milliseconds: 1500));
     Navigator.pop(context); //back to previous screen*/
-
   }
 
   void callbackPromote() async {
@@ -1220,9 +1223,11 @@ class _HomeState extends State<PostFavorDetails>
               child: Container(
                   color: Colors.white,
                   padding: new EdgeInsets.only(top: 9, bottom: 28),
-                  child: getSetupButtonNew(
+                  child: getSetupButtonColor(
                       callback, ResString().get('apply_for_fav'), 16,
-                      newColor: AppColors.colorDarkCyan)),
+                      newColor: widget.isButtonDesabled != null &&
+                          widget.isButtonDesabled ? AppColors
+                          .kAppIntroLeftRightStand : AppColors.colorDarkCyan)),
             ),
           ) : Positioned(
             bottom: 0.0,

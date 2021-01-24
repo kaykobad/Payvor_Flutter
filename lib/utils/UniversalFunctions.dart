@@ -286,8 +286,10 @@ Widget getCachedNetworkImageWithurl(
           height: size,
           decoration: new BoxDecoration(
             shape: BoxShape.circle,
-            color: AppColors.kGrey,
-          ),
+              color: AppColors.kGrey.withOpacity(0.2),
+            ),
+            child: new Icon(
+              Icons.person, color: Colors.lightBlueAccent, size: size - 28,)
         ),
 //          child: new SvgPicture.asset(
 //        AssetStrings.imageFirst,

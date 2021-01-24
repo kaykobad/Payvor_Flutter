@@ -13,6 +13,7 @@ import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
 import 'package:payvor/model/update_profile/user_hired_favor_response.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
+import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
@@ -384,29 +385,18 @@ class _HomeState extends State<ChatMessageDetails>
 
       Container(
         color: Colors.white,
-        child: Expanded(
-          child: new ListView.builder(
-            padding: new EdgeInsets.all(0.0),
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return buildItemMain(list[index]);
-            },
-            itemCount: list?.length,
-          ),
-        ),
-    );
-  }
-
-  Widget buildItemMain(DataUserFavour datas) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          buildItemNew(datas),
-        ],
+      child: new ListView.builder(
+        padding: new EdgeInsets.all(0.0),
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return buildItemNew(list[index]);
+        },
+        itemCount: list?.length,
       ),
     );
   }
+
 
   Widget buildItemSecondNew(DataUserFavour datas) {
     return Container(
@@ -487,7 +477,18 @@ class _HomeState extends State<ChatMessageDetails>
 
   Widget buildItemNew(DataUserFavour datas) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return Material(
+                child: new PostFavorDetails(
+                  id: datas?.id?.toString(),
+                  isButtonDesabled: true,
+                ));
+          }),
+        );
+      },
       child: Container(
         color: Colors.white,
         child: Column(
@@ -682,19 +683,33 @@ class _HomeState extends State<ChatMessageDetails>
                                     child: getSetupButtonNewRow(
                                         callback, "Message", 16,
                                         newColor: AppColors.colorDarkCyan)),
-                              )
+                        )
                             : Container(),
-                        Container(
-                            margin: new EdgeInsets.only(
-                                left: 16, right: 16, top: 22, bottom: 10),
-                            alignment: Alignment.centerLeft,
-                            child: new Text(
-                              "All Posts",
-                              style: TextThemes.blackCirculerMediumHeight,
-                            )),
-                        _buildContestList(),
-                        new SizedBox(
-                          height: 10,
+                  list.length > 0 ? Container(
+                      margin: new EdgeInsets.only(
+                          left: 16, right: 16, top: 22, bottom: 10),
+                      alignment: Alignment.centerLeft,
+                      child: new Text(
+                        "All Posts",
+                        style: TextThemes.blackCirculerMediumHeight,
+                      )) : Container(
+
+                    margin: new EdgeInsets.only(top: 100),
+                    child: new Center(
+
+                      child: new Text(
+                        "No Favors Found",
+                        style: new TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0),
+                      ),
+                    ),
+
+                  ),
+                  _buildContestList(),
+                  new SizedBox(
+                    height: 10,
                   )
                 ],
               ),

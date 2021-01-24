@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:payvor/current_user_hired_by_favor/current_user_favor_hire.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/hired_user_response_details/hired_user_response-details.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
+import 'package:payvor/model/update_status/update_status_request.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/rating/rating_bar.dart';
 import 'package:payvor/provider/auth_provider.dart';
@@ -180,6 +182,57 @@ class _HomeState extends State<PayFeebackDetails>
     setState(() {});
   }
 
+  updateUserPaymentStatus() async {
+    provider.setLoading();
+    setState(() {});
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        offstageLoader = false;
+        setState(() {});
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+    var reportrequest = new UpdateStatusRequest(
+        favour_id: hiredUserDetailsResponse?.data?.id?.toString(),
+        status: "2",
+        payment_type: type?.toString());
+
+    var response = await provider.updateFavStatus(reportrequest, context);
+
+    provider.hideLoader();
+
+    offstageLoader = false;
+
+    if (response is ReportResponse) {
+      if (response != null && response.status.code == 200) {
+        widget.lauchCallBack(Material(
+            child: Material(
+                child: new RatingBarNew(
+          id: widget?.data?.id?.toString(),
+        ))));
+      }
+
+      print(response);
+      try {} catch (ex) {}
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
+
+    setState(() {});
+  }
+
   hitDeletePostApi() async {
     offstageLoader = true;
     setState(() {});
@@ -227,8 +280,14 @@ class _HomeState extends State<PayFeebackDetails>
   bool get wantKeepAlive => true;
 
   void callback() async {
-    widget.lauchCallBack(Material(child: Material(
-        child: new RatingBarNew(id: widget?.data?.id?.toString(),))));
+    if (type == 0) {
+      showInSnackBar("Please select payment type");
+
+      return;
+    }
+
+    updateUserPaymentStatus();
+
 
     /*  await Future.delayed(Duration(milliseconds: 200));
     showInSnackBar("Favour applied successfully");
@@ -250,12 +309,24 @@ class _HomeState extends State<PayFeebackDetails>
     );*/
   }
 
+
+  String formatDateString(String dateString) {
+    try {
+      DateTime dateTime = DateTime.parse(dateString);
+
+      return DateFormat('dd MMM yyyy').format(dateTime);
+    } catch (e) {
+      print("date error ${e.toString()}");
+      return "";
+    }
+  }
+
   Widget buildItemRating(int type, String first) {
     return InkWell(
       onTap: () {},
       child: Container(
         padding:
-            new EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
+        new EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
         color: Colors.white,
         margin: new EdgeInsets.only(top: 4),
         child: Row(
@@ -519,7 +590,8 @@ class _HomeState extends State<PayFeebackDetails>
                                     width: 96.0,
                                     child: ClipOval(
                                       child: getCachedNetworkImageWithurl(
-                                        url: "",
+                                        url: hiredUserDetailsResponse?.data
+                                            ?.image ?? "",
                                         size: 96,
                                         fit: BoxFit.cover,
                                       ),
@@ -581,9 +653,10 @@ class _HomeState extends State<PayFeebackDetails>
                           ),
                         ),
                   buildItemUser(),
-                  buildItemRating(2,
-                      "${hiredUserDetailsResponse?.data?.hiredUser?.createdAt
-                          ?.toString() ?? ""}"),
+                  buildItemRating(2, formatDateString(
+                      hiredUserDetailsResponse?.data?.hiredUser?.createdAt
+                          ?.toString() ?? "")),
+
                   Container(
                       color: Colors.white,
                       padding: new EdgeInsets.only(
@@ -666,7 +739,7 @@ class _HomeState extends State<PayFeebackDetails>
                             ],
                           ),
                         ),
-                        buildItemRating(1, "Favor Ended"),
+                  //     buildItemRating(1, "Favor Ended"),
                         new SizedBox(
                           height: 150.0,
                         ),

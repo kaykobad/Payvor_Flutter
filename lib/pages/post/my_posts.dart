@@ -160,7 +160,9 @@ class _HomeState extends State<MyPosts>
 
       if (response != null && response.data != null) {
         if (currentPage == 1) {
-          listResult.add("Posted Favors");
+          if (response?.data?.length > 0) {
+            listResult.add("Posted Favors");
+          }
         }
 
         listResult.addAll(response?.data);
@@ -419,13 +421,11 @@ class _HomeState extends State<MyPosts>
       onTap: () {
         widget.lauchCallBack(Material(
             child: Material(
-                child: new ChatMessageDetails(
-          id: data.userId.toString(),
-          name: data.title,
-          hireduserId: data?.hiredUserId?.toString(),
-          image: data?.image,
-          userButtonMsg: true,
-        ))));
+                child: new PayFeebackDetails(
+                  lauchCallBack: widget?.lauchCallBack,
+                  userId: data?.hiredUserId?.toString(),
+                  data: data,
+                ))));
       },
       child: Container(
         padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
@@ -485,10 +485,12 @@ class _HomeState extends State<MyPosts>
               onTap: () {
                 widget.lauchCallBack(Material(
                     child: Material(
-                        child: new PayFeebackDetails(
-                          lauchCallBack: widget?.lauchCallBack,
-                          userId: data?.hiredUserId?.toString(),
-                          data: data,
+                        child: new ChatMessageDetails(
+                          id: data.userId.toString(),
+                          name: data.title,
+                          hireduserId: data?.hiredUserId?.toString(),
+                          image: data?.image,
+                          userButtonMsg: true,
                         ))));
               },
               child: Container(

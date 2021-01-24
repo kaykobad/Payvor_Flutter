@@ -9,6 +9,7 @@ import 'package:payvor/current_user_hired_by_favor/current_user_hire_favor.dart'
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/applied_user/favour_applied_user.dart';
 import 'package:payvor/pages/chat_message_details.dart';
+import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -111,8 +112,9 @@ class _HomeState extends State<MyJobs>
         if (currentPage == 1) {
           listResult.clear();
 
-
-          listResult.add("Next Jobs");
+          if (response?.data?.length > 0) {
+            listResult.add("Next Jobs");
+          }
         }
 
         listResult.addAll(response?.data);
@@ -183,7 +185,9 @@ class _HomeState extends State<MyJobs>
 
       if (response != null && response.data != null) {
         if (currentPage == 1) {
-          listResult.add("Applied Jobs");
+          if (response?.data?.data.length > 0) {
+            listResult.add("Applied Jobs");
+          }
         }
 
         listResult.addAll(response?.data?.data);
@@ -346,58 +350,85 @@ class _HomeState extends State<MyJobs>
     ));
   }
 
+  String getStatus(int type) {
+    String data = "";
+
+    if (type == 1) {
+      data = "have hired you";
+    } else if (type == 2) {
+      data = "have paid & Ended Favor";
+    } else if (type == 3) {
+      data = "have completed Favor";
+    }
+    return data;
+  }
+
   Widget buildItem(int index, Datas data) {
-    return Container(
-      padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
-      margin: new EdgeInsets.only(top: 8.0),
-      decoration: new BoxDecoration(
-        borderRadius: new BorderRadius.circular(5.0),
-        color: Colors.white,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-        /*  new Container(
-            margin: new EdgeInsets.only(top: 10.0),
-            child: new Text(
-              data?.favour?.title ?? "",
-              style: TextThemes.blackCirculerMedium,
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return Material(
+                child: new PostFavorDetails(
+              id: data?.favourId?.toString(),
+              isButtonDesabled: true,
+            ));
+          }),
+        );
+      },
+      child: Container(
+        padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
+        margin: new EdgeInsets.only(top: 8.0),
+        decoration: new BoxDecoration(
+          borderRadius: new BorderRadius.circular(5.0),
+          color: Colors.white,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            /*  new Container(
+              margin: new EdgeInsets.only(top: 10.0),
+              child: new Text(
+                data?.favour?.title ?? "",
+                style: TextThemes.blackCirculerMedium,
+              ),
             ),
-          ),
-          Opacity(
-            opacity: 0.12,
-            child: new Container(
-              margin: new EdgeInsets.only(top: 30.0),
-              height: 1.0,
-              color: AppColors.dividerColor,
-            ),
-          ),*/
-          Container(
-            child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Container(
-                    child: new Text(
-                      data?.favour?.title ?? "",
-                      style: TextThemes.blackCirculerMedium,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
+            Opacity(
+              opacity: 0.12,
+              child: new Container(
+                margin: new EdgeInsets.only(top: 30.0),
+                height: 1.0,
+                color: AppColors.dividerColor,
+              ),
+            ),*/
+            Container(
+              child: new Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Container(
+                      child: new Text(
+                        data?.favour?.title ?? "",
+                        style: TextThemes.blackCirculerMedium,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  margin: new EdgeInsets.only(left: 7.0),
-                  child: new Icon(
-                    Icons.arrow_forward_ios,
-                    size: 13,
-                    color: Color.fromRGBO(183, 183, 183, 1),
-                  ),
-                )
-              ],
+                  Container(
+                    margin: new EdgeInsets.only(left: 7.0),
+                    child: new Icon(
+                      Icons.arrow_forward_ios,
+                      size: 13,
+                      color: Color.fromRGBO(183, 183, 183, 1),
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -495,7 +526,7 @@ class _HomeState extends State<MyJobs>
                 children: [
                   Container(
                     child: new Text(
-                      data?.hiredBy?.name ?? "",
+                      data?.hiredBy?.name ?? "someone",
                       style: TextThemes.cyanTextSmallMedium,
                     ),
                   ),
@@ -503,7 +534,7 @@ class _HomeState extends State<MyJobs>
                     child: Container(
                       margin: new EdgeInsets.only(left: 1.0),
                       child: new Text(
-                        data?.description ?? "",
+                        getStatus(data?.status),
                         style: TextThemes.grayNormalSmall,
                       ),
                     ),
