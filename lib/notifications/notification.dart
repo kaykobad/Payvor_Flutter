@@ -184,7 +184,7 @@ class _HomeState extends State<Notifications>
                       ),
                     ),
                     Container(
-                      margin: new EdgeInsets.only(top: 9),
+                      margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
                       child: new Text(
                         "You didn’t recieve any notifications yet",
                         style: new TextStyle(
