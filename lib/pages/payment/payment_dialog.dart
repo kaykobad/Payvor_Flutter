@@ -101,207 +101,205 @@ class _PaymentDialogState extends State<PaymentDialog> {
             borderRadius: new BorderRadius.circular(10.0),
             child: Form(
               key: _fieldKey,
-              child: Expanded(
-                child: new ListView(
-                  children: [
-                    Container(
-                      margin: new EdgeInsets.only(top: 32, left: 24),
-                      alignment: Alignment.topLeft,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: new Padding(
-                          padding: const EdgeInsets.all(1.0),
-                          child: new SvgPicture.asset(
-                            AssetStrings.cross,
-                          ),
+              child: new ListView(
+                children: [
+                  Container(
+                    margin: new EdgeInsets.only(top: 32, left: 24),
+                    alignment: Alignment.topLeft,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: new Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: new SvgPicture.asset(
+                          AssetStrings.cross,
                         ),
                       ),
                     ),
-                    new Container(
-                      margin: new EdgeInsets.only(
-                        top: 9,
-                      ),
-                      alignment: Alignment.center,
-                      child: new Text(
-                        "Payment Details",
-                        style: new TextStyle(
-                            fontFamily: AssetStrings.circulerMedium,
-                            fontSize: 20,
-                            color: Colors.black),
+                  ),
+                  new Container(
+                    margin: new EdgeInsets.only(
+                      top: 9,
+                    ),
+                    alignment: Alignment.center,
+                    child: new Text(
+                      "Payment Details",
+                      style: new TextStyle(
+                          fontFamily: AssetStrings.circulerMedium,
+                          fontSize: 20,
+                          color: Colors.black),
+                    ),
+                  ),
+                  new Container(
+                    margin: new EdgeInsets.only(top: 5),
+                    alignment: Alignment.center,
+                    child: new Text(
+                      "Add a Card details here or Pay with Paypal",
+                      style: new TextStyle(
+                        fontFamily: AssetStrings.circulerNormal,
+                        fontSize: 16,
+                        color: Color.fromRGBO(103, 99, 99, 1),
                       ),
                     ),
-                    new Container(
-                      margin: new EdgeInsets.only(top: 5),
-                      alignment: Alignment.center,
-                      child: new Text(
-                        "Add a Card details here or Pay with Paypal",
-                        style: new TextStyle(
-                          fontFamily: AssetStrings.circulerNormal,
-                          fontSize: 16,
-                          color: Color.fromRGBO(103, 99, 99, 1),
+                  ),
+                  new SizedBox(
+                    height: 24.0,
+                  ),
+                  getTextField(
+                      validatorCard,
+                      ResString().get('card_number'),
+                      _AccountController,
+                      _AccountField,
+                      _NameField,
+                      0,
+                      mCardEmpty,
+                      listCardNumber,
+                      TextInputType.number),
+                  mCardEmpty
+                      ? new Container(
+                          margin: new EdgeInsets.only(top: 6, left: 24),
+                          alignment: Alignment.centerLeft,
+                          child: new Text(
+                            textAccount,
+                            style: new TextStyle(
+                              fontFamily: AssetStrings.circulerNormal,
+                              fontSize: 13,
+                              color: Color.fromRGBO(205, 107, 102, 1),
+                            ),
+                          ),
+                        )
+                      : Container(),
+                  new SizedBox(
+                    height: 16.0,
+                  ),
+                  getTextField(
+                      validatorCvv,
+                      ResString().get('card_name'),
+                      _NameController,
+                      _NameField,
+                      _MonthField,
+                      0,
+                      mNameEmpty,
+                      listNormalText,
+                      TextInputType.text),
+                  mNameEmpty
+                      ? new Container(
+                          margin: new EdgeInsets.only(top: 6, left: 24),
+                          alignment: Alignment.centerLeft,
+                          child: new Text(
+                            textName,
+                            style: new TextStyle(
+                              fontFamily: AssetStrings.circulerNormal,
+                              fontSize: 13,
+                              color: Color.fromRGBO(205, 107, 102, 1),
+                            ),
+                          ),
+                        )
+                      : Container(),
+                  new Container(
+                    height: 58,
+                    margin: new EdgeInsets.only(right: 24, left: 24, top: 16),
+                    child: new Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: getTextField(
+                              validatorCvv,
+                              ResString().get('mm/yy'),
+                              _MonthController,
+                              _MonthField,
+                              _CvvField,
+                              1,
+                              mMonthEmpty,
+                              listExpDate,
+                              TextInputType.number),
                         ),
-                      ),
+                        new SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: getTextField(
+                              validatorCvv,
+                              ResString().get('cvv'),
+                              _CvvController,
+                              _CvvField,
+                              _CvvField,
+                              1,
+                              mCvvEmpty,
+                              listcvv,
+                              TextInputType.number),
+                        ),
+                      ],
                     ),
-                    new SizedBox(
-                      height: 24.0,
-                    ),
-                    getTextField(
-                        validatorCard,
-                        ResString().get('card_number'),
-                        _AccountController,
-                        _AccountField,
-                        _NameField,
-                        0,
-                        mCardEmpty,
-                        listCardNumber,
-                        TextInputType.number),
-                    mCardEmpty
-                        ? new Container(
-                            margin: new EdgeInsets.only(top: 6, left: 24),
-                            alignment: Alignment.centerLeft,
-                            child: new Text(
-                              textAccount,
-                              style: new TextStyle(
-                                fontFamily: AssetStrings.circulerNormal,
-                                fontSize: 13,
-                                color: Color.fromRGBO(205, 107, 102, 1),
-                              ),
-                            ),
-                          )
-                        : Container(),
-                    new SizedBox(
-                      height: 16.0,
-                    ),
-                    getTextField(
-                        validatorCvv,
-                        ResString().get('card_name'),
-                        _NameController,
-                        _NameField,
-                        _MonthField,
-                        0,
-                        mNameEmpty,
-                        listNormalText,
-                        TextInputType.text),
-                    mNameEmpty
-                        ? new Container(
-                            margin: new EdgeInsets.only(top: 6, left: 24),
-                            alignment: Alignment.centerLeft,
-                            child: new Text(
-                              textName,
-                              style: new TextStyle(
-                                fontFamily: AssetStrings.circulerNormal,
-                                fontSize: 13,
-                                color: Color.fromRGBO(205, 107, 102, 1),
-                              ),
-                            ),
-                          )
-                        : Container(),
-                    new Container(
-                      height: 58,
-                      margin: new EdgeInsets.only(right: 24, left: 24, top: 16),
-                      child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: getTextField(
-                                validatorCvv,
-                                ResString().get('mm/yy'),
-                                _MonthController,
-                                _MonthField,
-                                _CvvField,
-                                1,
-                                mMonthEmpty,
-                                listExpDate,
-                                TextInputType.number),
-                          ),
-                          new SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: getTextField(
-                                validatorCvv,
-                                ResString().get('cvv'),
-                                _CvvController,
-                                _CvvField,
-                                _CvvField,
-                                1,
-                                mCvvEmpty,
-                                listcvv,
-                                TextInputType.number),
-                          ),
-                        ],
-                      ),
-                    ),
-                    new Container(
-                      child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: mMonthEmpty
-                                ? new Container(
-                                    margin:
-                                        new EdgeInsets.only(top: 16, left: 24),
-                                    alignment: Alignment.centerLeft,
-                                    child: new Text(
-                                      textMonth,
-                                      style: new TextStyle(
-                                        fontFamily: AssetStrings.circulerNormal,
-                                        fontSize: 13,
-                                        color: Color.fromRGBO(205, 107, 102, 1),
-                                      ),
+                  ),
+                  new Container(
+                    child: new Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: mMonthEmpty
+                              ? new Container(
+                                  margin:
+                                      new EdgeInsets.only(top: 16, left: 24),
+                                  alignment: Alignment.centerLeft,
+                                  child: new Text(
+                                    textMonth,
+                                    style: new TextStyle(
+                                      fontFamily: AssetStrings.circulerNormal,
+                                      fontSize: 13,
+                                      color: Color.fromRGBO(205, 107, 102, 1),
                                     ),
-                                  )
-                                : Container(),
-                          ),
-                          new SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: mCvvEmpty
-                                ? new Container(
-                                    margin:
-                                        new EdgeInsets.only(top: 16, right: 24),
-                                    alignment: Alignment.centerLeft,
-                                    child: new Text(
-                                      textCvv,
-                                      style: new TextStyle(
-                                        fontFamily: AssetStrings.circulerNormal,
-                                        fontSize: 13,
-                                        color: Color.fromRGBO(205, 107, 102, 1),
-                                      ),
+                                  ),
+                                )
+                              : Container(),
+                        ),
+                        new SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: mCvvEmpty
+                              ? new Container(
+                                  margin:
+                                      new EdgeInsets.only(top: 16, right: 24),
+                                  alignment: Alignment.centerLeft,
+                                  child: new Text(
+                                    textCvv,
+                                    style: new TextStyle(
+                                      fontFamily: AssetStrings.circulerNormal,
+                                      fontSize: 13,
+                                      color: Color.fromRGBO(205, 107, 102, 1),
                                     ),
-                                  )
-                                : Container(),
-                          ),
-                        ],
-                      ),
+                                  ),
+                                )
+                              : Container(),
+                        ),
+                      ],
                     ),
-                    Container(
-                      margin: new EdgeInsets.only(top: 24, left: 16, right: 16),
-                      child: getSetupButtonNew(callback, "Pay Now", 0,
-                          newColor: AppColors.colorDarkCyan),
+                  ),
+                  Container(
+                    margin: new EdgeInsets.only(top: 24, left: 16, right: 16),
+                    child: getSetupButtonNew(callback, "Pay Now", 0,
+                        newColor: AppColors.colorDarkCyan),
+                  ),
+                  new Container(
+                    height: 24,
+                  ),
+                  Opacity(
+                    opacity: 0.12,
+                    child: new Container(
+                      height: 1.0,
+                      color: AppColors.dividerColor,
                     ),
-                    new Container(
-                      height: 24,
-                    ),
-                    Opacity(
-                      opacity: 0.12,
-                      child: new Container(
-                        height: 1.0,
-                        color: AppColors.dividerColor,
-                      ),
-                    ),
-                    Container(
-                      margin: new EdgeInsets.only(top: 24, left: 16, right: 16),
-                      child: getSetupButtonNew(callback, "Pay with Paypal", 0),
-                    ),
-                    Container(
-                      height: 26,
-                    )
-                  ],
-                ),
+                  ),
+                  Container(
+                    margin: new EdgeInsets.only(top: 24, left: 16, right: 16),
+                    child: getSetupButtonNew(callback, "Pay with Paypal", 0),
+                  ),
+                  Container(
+                    height: 26,
+                  )
+                ],
               ),
             ),
           )),

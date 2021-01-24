@@ -29,9 +29,9 @@ import 'chat/private_chat.dart';
 
 class ChatMessageDetails extends StatefulWidget {
   final String id;
-  final String name;
+  String name;
   final String hireduserId;
-  final String image;
+  String image;
   final bool userButtonMsg;
 
   ChatMessageDetails(
@@ -117,7 +117,8 @@ class _HomeState extends State<ChatMessageDetails>
       return;
     }
 
-    var response = await provider.getFavorPostDetails(context, widget.id);
+    var response =
+        await provider.getFavorPostDetails(context, widget.hireduserId);
 
     if (response is FavourDetailsResponse) {
       provider.hideLoader();
@@ -130,13 +131,10 @@ class _HomeState extends State<ChatMessageDetails>
         if (userid == ids) {
           isCurrentUser = true;
         }
-
-        print("user $userid");
-        print("usermain $ids");
       }
 
       print(response);
-      try {} catch (ex) {}
+
     } else {
       provider.hideLoader();
       APIError apiError = response;
@@ -179,15 +177,15 @@ class _HomeState extends State<ChatMessageDetails>
 
     if (response is UserProfileFavorResponse) {
       isPullToRefresh = false;
-
-      print("res $response");
-
       if (response != null && response.data != null) {
         if (currentPage == 1) {
           list.clear();
         }
 
         userResponse = response;
+        print("user_data ${userResponse.user.toJson()}");
+        widget.image = response.user.profilePic;
+        widget.name = response.user.name;
 
         list.addAll(response.data.data);
 
@@ -340,8 +338,8 @@ class _HomeState extends State<ChatMessageDetails>
         currentUserId=userResponse.user.id.toString();
       }
       var screen = PrivateChat(
-        peerId: widget.id,
-        peerAvatar: "",
+        peerId: widget.hireduserId,
+        peerAvatar: widget.image,
         userName: widget.name,
         isGroup: false,
         currentUserId: currentUserId,

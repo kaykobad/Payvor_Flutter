@@ -49,74 +49,72 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
             borderRadius: new BorderRadius.circular(10.0),
             child: Form(
               key: _fieldKey,
-              child: Expanded(
-                child: new ListView(
-                  children: [
-                    Container(
-                      margin: new EdgeInsets.only(top: 32, left: 24),
-                      alignment: Alignment.topLeft,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: new Padding(
-                          padding: const EdgeInsets.all(1.0),
-                          child: new SvgPicture.asset(
-                            AssetStrings.cross,
-                          ),
+              child: new ListView(
+                children: [
+                  Container(
+                    margin: new EdgeInsets.only(top: 32, left: 24),
+                    alignment: Alignment.topLeft,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: new Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: new SvgPicture.asset(
+                          AssetStrings.cross,
                         ),
                       ),
                     ),
-                    new Container(
-                      margin: new EdgeInsets.only(top: 9, left: 24, right: 24),
-                      alignment: Alignment.center,
-                      child: new Text(
-                        "Promote your Post",
-                        style: new TextStyle(
-                            fontFamily: AssetStrings.circulerMedium,
-                            fontSize: 20,
-                            color: Colors.black),
+                  ),
+                  new Container(
+                    margin: new EdgeInsets.only(top: 9, left: 24, right: 24),
+                    alignment: Alignment.center,
+                    child: new Text(
+                      "Promote your Post",
+                      style: new TextStyle(
+                          fontFamily: AssetStrings.circulerMedium,
+                          fontSize: 20,
+                          color: Colors.black),
+                    ),
+                  ),
+                  new Container(
+                    margin: new EdgeInsets.only(top: 5, left: 24, right: 24),
+                    alignment: Alignment.center,
+                    child: new Text(
+                      "Buy a Package to promote your post to be appeared higher up in the feed",
+                      textAlign: TextAlign.center,
+                      style: new TextStyle(
+                        fontFamily: AssetStrings.circulerNormal,
+                        fontSize: 16,
+                        height: 1.5,
+                        color: Color.fromRGBO(103, 99, 99, 1),
                       ),
                     ),
-                    new Container(
-                      margin: new EdgeInsets.only(top: 5, left: 24, right: 24),
-                      alignment: Alignment.center,
-                      child: new Text(
-                        "Buy a Package to promote your post to be appeared higher up in the feed",
-                        textAlign: TextAlign.center,
-                        style: new TextStyle(
-                          fontFamily: AssetStrings.circulerNormal,
-                          fontSize: 16,
-                          height: 1.5,
-                          color: Color.fromRGBO(103, 99, 99, 1),
-                        ),
+                  ),
+                  Container(
+                    height: 280,
+                    margin: new EdgeInsets.only(top: 25),
+                    child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (_, index) => Padding(
+                        padding: const EdgeInsets.only(top: 0.0),
+                        child: getData(list[index]),
                       ),
+                      itemCount: list.length,
                     ),
-                    Container(
-                      height: 280,
-                      margin: new EdgeInsets.only(top: 25),
-                      child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (_, index) => Padding(
-                          padding: const EdgeInsets.only(top: 0.0),
-                          child: getData(list[index]),
-                        ),
-                        itemCount: list.length,
-                      ),
-                    ),
-                    new SizedBox(
-                      height: 24.0,
-                    ),
-                    Container(
-                      margin: new EdgeInsets.only(top: 24, left: 24, right: 24),
-                      child: getSetupButtonNew(callback, "Try Now", 0,
-                          newColor: AppColors.colorDarkCyan),
-                    ),
-                    new Container(
-                      height: 24,
-                    ),
-                  ],
-                ),
+                  ),
+                  new SizedBox(
+                    height: 24.0,
+                  ),
+                  Container(
+                    margin: new EdgeInsets.only(top: 24, left: 24, right: 24),
+                    child: getSetupButtonNew(callback, "Try Now", 0,
+                        newColor: AppColors.colorDarkCyan),
+                  ),
+                  new Container(
+                    height: 24,
+                  ),
+                ],
               ),
             ),
           )),
