@@ -1220,15 +1220,19 @@ class _HomeState extends State<PostFavorDetails>
             right: 0.0,
             child: Material(
               elevation: 18.0,
-              child: Container(
-                  color: Colors.white,
-                  padding: new EdgeInsets.only(top: 9, bottom: 28),
-                  child: getSetupButtonColor(
-                      callback, ResString().get('apply_for_fav'), 16,
-                      newColor: widget.isButtonDesabled != null &&
-                          widget.isButtonDesabled ? AppColors
-                          .kAppIntroLeftRightStand : AppColors.colorDarkCyan)),
-            ),
+                        child: Container(
+                            color: Colors.white,
+                            padding: new EdgeInsets.only(top: 9, bottom: 28),
+                            child: getSetupButtonColor(
+                                callback, ResString().get('apply_for_fav'), 16,
+                                newColor: (widget.isButtonDesabled != null &&
+                                            widget.isButtonDesabled) ||
+                                        favoriteResponse
+                                                ?.data?.is_user_applied ==
+                                            1
+                                    ? AppColors.lightGrey
+                                    : AppColors.colorDarkCyan)),
+                      ),
           ) : Positioned(
             bottom: 0.0,
             left: 0.0,

@@ -63,6 +63,7 @@ class Data {
   int ratingAvg;
   num service_fee;
   num receiving;
+  int is_user_applied;
 
   Data(
       {this.id,
@@ -82,7 +83,8 @@ class Data {
       this.ratingCount,
       this.ratingAvg,
       this.service_fee,
-      this.receiving});
+      this.receiving,
+      this.is_user_applied});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -109,6 +111,7 @@ class Data {
     ratingAvg = json['rating_avg'];
     service_fee = json['service_fee'];
     receiving = json['receiving'];
+    is_user_applied = json['is_user_applied'];
   }
 
   Map<String, dynamic> toJson() {
@@ -135,6 +138,7 @@ class Data {
     data['rating_count'] = this.ratingCount;
     data['rating_avg'] = this.ratingAvg;
     data['receiving'] = this.receiving;
+    data['is_user_applied'] = this.is_user_applied;
     return data;
   }
 }

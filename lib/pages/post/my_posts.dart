@@ -375,7 +375,7 @@ class _HomeState extends State<MyPosts>
                   Expanded(
                     child: Container(
                       child: new Text(
-                        "${data?.applied_count.toString() ?? "0"} Peoples applied",
+                        "${data?.applied_count.toString() ?? "0"} People applied",
                         style: TextThemes.grayNormalSmall,
                       ),
                     ),
@@ -419,13 +419,26 @@ class _HomeState extends State<MyPosts>
     var dates = formatDateString(data?.createdAt ?? "");
     return InkWell(
       onTap: () {
-        widget.lauchCallBack(Material(
-            child: Material(
-                child: new PayFeebackDetails(
-                  lauchCallBack: widget?.lauchCallBack,
-                  userId: data?.hiredUserId?.toString(),
-                  data: data,
-                ))));
+        if (data?.status != 3) {
+          widget.lauchCallBack(Material(
+              child: Material(
+                  child: new PayFeebackDetails(
+                    lauchCallBack: widget?.lauchCallBack,
+                    userId: data?.hiredUserId?.toString(),
+                    data: data,
+                  ))));
+        }
+        else {
+          widget.lauchCallBack(Material(
+              child: Material(
+                  child: new ChatMessageDetails(
+                    id: data.userId.toString(),
+                    name: data.title,
+                    hireduserId: data?.hiredUserId?.toString(),
+                    image: data?.image,
+                    userButtonMsg: true,
+                  ))));
+        }
       },
       child: Container(
         padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
@@ -500,7 +513,9 @@ class _HomeState extends State<MyPosts>
                   children: [
                     Container(
                       child: new Text(
-                        "You have hired ",
+                        data?.status == 3
+                            ? "Ypu have paid and Ended Favor"
+                            : "You have hired ",
                         style: TextThemes.grayNormalSmall,
                       ),
                     ),
