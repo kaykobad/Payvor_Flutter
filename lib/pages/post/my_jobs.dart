@@ -354,11 +354,11 @@ class _HomeState extends State<MyJobs>
     String data = "";
 
     if (type == 1) {
-      data = "have hired you";
+      data = "has hired you";
     } else if (type == 2) {
-      data = "have paid & Ended Favor";
+      data = "has paid & Ended Favor";
     } else if (type == 3) {
-      data = "have completed Favor";
+      data = "has paid & Ended Favor";
     }
     return data;
   }

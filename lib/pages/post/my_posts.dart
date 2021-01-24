@@ -514,7 +514,7 @@ class _HomeState extends State<MyPosts>
                     Container(
                       child: new Text(
                         data?.status == 3
-                            ? "Ypu have paid and Ended Favor"
+                            ? "You have paid & Ended Favor"
                             : "You have hired ",
                         style: TextThemes.grayNormalSmall,
                       ),

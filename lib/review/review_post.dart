@@ -97,7 +97,7 @@ class _HomeState extends State<ReviewPost>
                           margin: new EdgeInsets.only(right: 20),
                           alignment: Alignment.center,
                           child: new Text(
-                            "Reviews (19)",
+                            "Reviews (0)",
                             style: TextThemes.darkBlackMedium,
                             textAlign: TextAlign.center,
                           ),
@@ -124,10 +124,10 @@ class _HomeState extends State<ReviewPost>
             ),
           ),
           Offstage(
-            offstage: true,
+            offstage: false,
             child: new Center(
               child: new Text(
-                "No Favors Found",
+                "No reviews Found",
                 style: new TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
@@ -155,7 +155,7 @@ class _HomeState extends State<ReviewPost>
           itemBuilder: (BuildContext context, int index) {
             return buildItemMain(index);
           },
-          itemCount: 5,
+          itemCount: 0,
         ),
       ),
     );

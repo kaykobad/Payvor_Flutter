@@ -23,6 +23,7 @@ import 'package:payvor/review/review_post.dart';
 import 'package:payvor/shimmers/shimmer_details.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
+import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/memory_management.dart';
@@ -33,9 +34,9 @@ import 'package:share/share.dart';
 class PostFavorDetails extends StatefulWidget {
   final String id;
   ValueSetter<int> voidcallback;
-  final bool isButtonDesabled;
+  bool isButtonDesabled;
 
-  PostFavorDetails({this.id, this.voidcallback, this.isButtonDesabled});
+  PostFavorDetails({this.id, this.voidcallback, this.isButtonDesabled = false});
 
   @override
   _HomeState createState() => _HomeState();
@@ -73,7 +74,7 @@ class _HomeState extends State<PostFavorDetails>
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+        .showSnackBar(new SnackBar(content: new Text(value??"Favour Already Applied By This User")));
   }
 
 
@@ -123,8 +124,8 @@ class _HomeState extends State<PostFavorDetails>
           isCurrentUser = true;
         }
 
-        print("user $userid");
-        print("usermain $ids");
+//        print(" is applied already"
+//            " ${favoriteResponse?.data?.is_user_applied}");
       }
 
       print(response);
@@ -137,7 +138,7 @@ class _HomeState extends State<PostFavorDetails>
       showInSnackBar(apiError.error);
     }
 
-    setState(() {});
+
   }
 
 
@@ -336,8 +337,9 @@ class _HomeState extends State<PostFavorDetails>
   bool get wantKeepAlive => true;
 
   void callback() async {
-    if ((widget.isButtonDesabled != null && !widget.isButtonDesabled) ||
-        favoriteResponse?.data?.is_user_applied != 1) {
+    if ((favoriteResponse?.data?.is_user_applied != 1) &&
+        (widget.isButtonDesabled != null && !widget.isButtonDesabled)
+    ) {
       hitApplyFavApi();
     }
 
