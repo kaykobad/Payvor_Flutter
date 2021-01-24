@@ -103,9 +103,9 @@ class User {
   int id;
   String name;
   String email;
-  Null phone;
+  String phone;
   String profilePic;
-  Null location;
+  String location;
 
   User(
       {this.id,

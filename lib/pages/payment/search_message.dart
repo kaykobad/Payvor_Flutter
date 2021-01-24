@@ -78,8 +78,15 @@ class _HomeState extends State<SearchMessage>
 
   void _hitApi() async {
     _chatUserList = await firebaseProvider.getChatFriendsList(userId: userId);
-
     _checkUnreadMessageCount();
+  }
+
+  void sortList()
+  {
+    _chatUserList.sort((a,b) => b.lastMessageTime.compareTo(a.lastMessageTime));
+    setState(() {
+
+    });
   }
 
   void _checkUnreadMessageCount() {
@@ -131,8 +138,8 @@ class _HomeState extends State<SearchMessage>
       }
       if (!isOldUser) {
         _chatUserList.add(newChatUser);
-
       }
+      sortList();
       setState(() {});
     } else {
       _chatUserList.add(newChatUser);
@@ -150,14 +157,10 @@ class _HomeState extends State<SearchMessage>
       currentUserName: _userName,
       currentUserProfilePic: _userProfilePic,
     );
+    firebaseProvider.changeScreen(screen);
     //move to private chat screen
     //widget.fullScreenWidget(screen);
-    Navigator.push(
-      context,
-      new CupertinoPageRoute(builder: (BuildContext context) {
-        return Material(child: screen);
-      }),
-    );
+
   }
   Widget _buildContestList() {
     return Expanded(

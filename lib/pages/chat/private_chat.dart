@@ -1022,7 +1022,9 @@ class PrivateChatScreenState extends State<PrivateChat> {
               index++;
 
             }
-            messageList.add(_timeSectionWidget(_timeSection));
+             if(messageList.length>0)
+             messageList.add(_timeSectionWidget(_timeSection));
+
             _timeSection="Today";
             return ListView.builder(
               padding: EdgeInsets.all(10.0),

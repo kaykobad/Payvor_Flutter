@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/pages/chat/chat_user.dart';
 import 'package:payvor/pages/chat/payvor_firebase_user.dart';
@@ -14,16 +15,31 @@ import 'package:payvor/utils/memory_management.dart';
 
 class FirebaseProvider with ChangeNotifier {
   var _isLoading = false;
-   StreamController<bool> notificationStreamController;
+  StreamController<bool> notificationStreamController;
+  BuildContext _homeContext;
+
+  void setHomeContext(BuildContext context) {
+    _homeContext = context;
+  }
+
+  void changeScreen(Widget screen)
+  {
+    Navigator.push(
+      _homeContext,
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return Material(child: screen);
+      }),
+    );
+  }
+
 //  final List<dynamic> userList = List();
 //  var groupUserList = new Map<String, List<PayvorFirebaseUser>>();
 //  var firebaseUserList = new Map<String, PayvorFirebaseUser>();
 //
 //  final List<int> myFriendsIdList = List();
 
-  void setStreamNotifier(StreamController<bool> streamController)
-  {
-    notificationStreamController=streamController;
+  void setStreamNotifier(StreamController<bool> streamController) {
+    notificationStreamController = streamController;
   }
 
   getLoading() => _isLoading;

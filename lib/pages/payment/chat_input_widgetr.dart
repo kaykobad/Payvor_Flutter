@@ -25,7 +25,7 @@ class ChatInputWidget extends StatelessWidget {
         ),
       ),
       padding:
-          new EdgeInsets.only(bottom: 50.0, left: 12.0, right: 12.0, top: 16.0),
+          new EdgeInsets.only(bottom: 20.0, left: 12.0, right: 12.0, top: 16.0),
       child: new Row(
         children: <Widget>[
           new Expanded(
