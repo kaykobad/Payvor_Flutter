@@ -305,12 +305,11 @@ class _HomeState extends State<SearchMessage>
                   style: TextThemes.blackTextFieldNormal,
                   keyboardType: TextInputType.text,
                   onSubmitted: (String value) {
-                    print("search key2 $value");
-
+                     print("search key2 $value");
                     _searchChatUser(value);
                   },
                   onChanged: (String value) {
-                    print("search key1 $value");
+                     print("search key1 $value");
                     _searchChatUser(value);
                   },
                   decoration: new InputDecoration(

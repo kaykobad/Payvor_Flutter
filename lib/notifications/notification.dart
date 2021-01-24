@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/notifications/notification_response.dart';
+import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
@@ -256,29 +257,37 @@ class _HomeState extends State<Notifications>
             ),
           ),
           Expanded(
-            child: Container(
-              margin: new EdgeInsets.only(left: 14.0),
-              child: new RichText(
-                text: new TextSpan(
-                  text: data?.user?.name ?? "",
-                  style: new TextStyle(
-                      fontSize: 16.0,
-                      fontFamily: AssetStrings.circulerBoldStyle,
-                      color: Color.fromRGBO(23, 23, 23, 1)),
-                  children: <TextSpan>[
-                    new TextSpan(
-                        text: data?.favour?.description ?? "",
-                        style: new TextStyle(
-                            fontFamily: AssetStrings.circulerNormal,
-                            color: Color.fromRGBO(103, 99, 99, 1))),
-                    new TextSpan(
-                        text: data?.favour?.title ?? "",
-                        style: new TextStyle(
-                            fontFamily: AssetStrings.circulerNormal,
-                            color: Color.fromRGBO(255, 107, 102, 1))),
-                  ],
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: new EdgeInsets.only(left: 14.0),
+                  child: new RichText(
+                    text: new TextSpan(
+                      text: data?.user?.name ?? "",
+                      style: new TextStyle(
+                          fontSize: 16.0,
+                          fontFamily: AssetStrings.circulerBoldStyle,
+                          color: Color.fromRGBO(23, 23, 23, 1)),
+                      children: <TextSpan>[
+                        new TextSpan(
+                            text: " ${data?.description ?? ""}",
+                            style: new TextStyle(
+                                fontFamily: AssetStrings.circulerNormal,
+                                color: Color.fromRGBO(103, 99, 99, 1))),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                Container(
+                  margin: new EdgeInsets.only(left: 14.0),
+                  child: new Text("\"${data?.favour?.title ?? ""}\" ",
+                      style: new TextStyle(
+                          fontFamily: AssetStrings.circulerNormal,
+                          color: Color.fromRGBO(255, 107, 102, 1))),
+                ),
+              ],
             ),
           ),
         ],
@@ -289,16 +298,18 @@ class _HomeState extends State<Notifications>
   @override
   bool get wantKeepAlive => true;
 
-  Widget buildItemMain(Data index) {
+  Widget buildItemMain(Data data) {
     return Container(
       child: Column(
         children: <Widget>[
-          index != 0
-              ? new SizedBox(
-                  height: 14.0,
-                )
-              : new Container(),
-          buildItem(index),
+          InkWell(
+              onTap: () {
+                print("called");
+                if (data.type == 4) {
+                  _redirectToFavourDetailScreen(data.favourId);
+                }
+              },
+              child: buildItem(data)),
           Opacity(
             opacity: 1,
             child: new Container(
@@ -309,6 +320,18 @@ class _HomeState extends State<Notifications>
           ),
         ],
       ),
+    );
+  }
+
+  void _redirectToFavourDetailScreen(int favourId) {
+    Navigator.push(
+      context,
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return Material(
+            child: new PostFavorDetails(
+          id: favourId.toString(),
+        ));
+      }),
     );
   }
 }

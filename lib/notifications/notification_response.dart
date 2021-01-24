@@ -53,6 +53,7 @@ class Data {
   int id;
   int userId;
   int favourId;
+  int type;
   String description;
   String createdAt;
   String updatedAt;
@@ -63,6 +64,7 @@ class Data {
       {this.id,
       this.userId,
       this.favourId,
+      this.type,
       this.description,
       this.createdAt,
       this.updatedAt,
@@ -71,6 +73,7 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    type = json['type'];
     userId = json['user_id'];
     favourId = json['favour_id'];
     description = json['description'];
@@ -78,7 +81,7 @@ class Data {
     updatedAt = json['updated_at'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     favour =
-        json['favour'] != null ? new Favour.fromJson(json['favour']) : null;
+    json['favour'] != null ? new Favour.fromJson(json['favour']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -89,6 +92,7 @@ class Data {
     data['description'] = this.description;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['type']=type;
     if (this.user != null) {
       data['user'] = this.user.toJson();
     }
