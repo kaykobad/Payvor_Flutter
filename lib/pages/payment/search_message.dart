@@ -198,37 +198,35 @@ class _HomeState extends State<SearchMessage>
 //        });
   }
   get _getEmptyWidget {
-    return Expanded(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            new SvgPicture.asset(
-              AssetStrings.chat_empty,
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          new SvgPicture.asset(
+            AssetStrings.chat_empty,
+          ),
+          Container(
+            margin: new EdgeInsets.only(top: 61),
+            child: new Text(
+              "No Messages",
+              style: new TextStyle(
+                  color: Colors.black,
+                  fontFamily: AssetStrings.circulerMedium,
+                  fontSize: 17.0),
             ),
-            Container(
-              margin: new EdgeInsets.only(top: 61),
-              child: new Text(
-                "No Messages",
-                style: new TextStyle(
-                    color: Colors.black,
-                    fontFamily: AssetStrings.circulerMedium,
-                    fontSize: 17.0),
-              ),
+          ),
+          Container(
+            margin: new EdgeInsets.only(top: 9),
+            child: new Text(
+              "You don’t have any conversation yet",
+              style: new TextStyle(
+                  color: Color.fromRGBO(103, 99, 99, 1.0),
+                  fontFamily: AssetStrings.circulerNormal,
+                  fontSize: 15.0),
             ),
-            Container(
-              margin: new EdgeInsets.only(top: 9),
-              child: new Text(
-                "You don’t have any conversation yet",
-                style: new TextStyle(
-                    color: Color.fromRGBO(103, 99, 99, 1.0),
-                    fontFamily: AssetStrings.circulerNormal,
-                    fontSize: 15.0),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
