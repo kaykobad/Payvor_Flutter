@@ -217,7 +217,7 @@ class _HomeState extends State<SearchMessage>
             ),
           ),
           Container(
-            margin: new EdgeInsets.only(top: 9),
+            margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
             child: new Text(
               "You don’t have any conversation yet",
               style: new TextStyle(

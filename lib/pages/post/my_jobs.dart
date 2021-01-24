@@ -287,7 +287,7 @@ class _HomeState extends State<MyJobs>
                       ),
                     ),
                     Container(
-                      margin: new EdgeInsets.only(top: 9),
+                      margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
                       child: new Text(
                         "You don’t have any job yet.Once you’re hired it will show up here.",
                         style: new TextStyle(
