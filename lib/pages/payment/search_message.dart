@@ -1,11 +1,11 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:payvor/filter/refer_response.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/pages/chat/chat_user.dart';
 import 'package:payvor/pages/chat/private_chat.dart';
@@ -17,8 +17,6 @@ import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:payvor/utils/timeago.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class SearchMessage extends StatefulWidget {
   @override
@@ -29,28 +27,20 @@ class _HomeState extends State<SearchMessage>
     with AutomaticKeepAliveClientMixin<SearchMessage> {
   var screenSize;
 
-  String searchkey = null;
   FirebaseProvider firebaseProvider;
-  int currentPage = 1;
-  bool isPullToRefresh = false;
-  bool offstagenodata = true;
   bool loader = false;
   String title = "";
-  List<DataRefer> listResult = List();
   String userId;
   var _firstTimeChatUser = true;
   var _userName;
-
   var _userProfilePic;
-
   var _chatUserList = List<ChatUser>();
+  var _chatUserListBackList = List<ChatUser>();
+
   TextEditingController _controller = new TextEditingController();
   ScrollController scrollController = new ScrollController();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-  new GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
@@ -78,6 +68,8 @@ class _HomeState extends State<SearchMessage>
 
   void _hitApi() async {
     _chatUserList = await firebaseProvider.getChatFriendsList(userId: userId);
+    _chatUserListBackList
+        .addAll(_chatUserList); //create a chat user backup list
     _checkUnreadMessageCount();
   }
 
@@ -313,19 +305,13 @@ class _HomeState extends State<SearchMessage>
                   style: TextThemes.blackTextFieldNormal,
                   keyboardType: TextInputType.text,
                   onSubmitted: (String value) {
-                    /*  _loadMore = false;
-                    isPullToRefresh = false;
-                    currentPage = 1;
-                    title = value;
+                    print("search key2 $value");
 
-                    hitSearchApi(title);*/
+                    _searchChatUser(value);
                   },
                   onChanged: (String value) {
-                    /*   _loadMore = false;
-                    isPullToRefresh = false;
-                    currentPage = 1;
-                    title = value;
-                    hitSearchApi(title);*/
+                    print("search key1 $value");
+                    _searchChatUser(value);
                   },
                   decoration: new InputDecoration(
                     enabledBorder: InputBorder.none,
@@ -341,12 +327,8 @@ class _HomeState extends State<SearchMessage>
               ),
               InkWell(
                 onTap: () {
-                  /*   _loadMore = false;
-                  isPullToRefresh = false;
-                  _controller.text = "";
-                  currentPage = 1;
-                  hitSearchApi("");
-                  setState(() {});*/
+                  _controller.clear();
+                  _searchChatUser("");
                 },
                 child: new Image.asset(
                   AssetStrings.clean,
@@ -362,6 +344,19 @@ class _HomeState extends State<SearchMessage>
         ),
       ),
     );
+  }
+
+  void _searchChatUser(String searchKey) async {
+    if (searchKey.isNotEmpty) {
+      var searchedData = _chatUserListBackList
+          .where((chatUser) => (chatUser.username.contains(searchKey)));
+      _chatUserList.clear();
+      _chatUserList.addAll(searchedData);
+    } else {
+      _chatUserList.clear();
+      _chatUserList.addAll(_chatUserListBackList);
+    }
+    setState(() {});
   }
 
 //  _buildContestList() {
