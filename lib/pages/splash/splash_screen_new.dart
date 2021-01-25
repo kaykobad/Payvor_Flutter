@@ -205,7 +205,9 @@ class FadeIn extends State<SplashScreen> {
         Navigator.pushAndRemoveUntil(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
-            return new PhoneNumberAdd();
+            return new PhoneNumberAdd(
+              type: true,
+            );
           }),
           (route) => false,
         );
@@ -213,7 +215,7 @@ class FadeIn extends State<SplashScreen> {
         Navigator.pushAndRemoveUntil(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
-            return CreateCredential();
+            return CreateCredential(type: true,);
           }),
           (route) => false,
         );

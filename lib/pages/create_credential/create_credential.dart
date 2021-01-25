@@ -8,11 +8,9 @@ import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/common_response/common_success_response.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/update_profile/update_profile_request.dart';
-import 'package:payvor/pages/chat/payvor_firebase_user.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/privacypolicy/webview_page.dart';
 import 'package:payvor/provider/auth_provider.dart';
-import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -24,6 +22,10 @@ import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class CreateCredential extends StatefulWidget {
+  final bool type;
+
+  CreateCredential({this.type});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -316,6 +318,19 @@ class _LoginScreenState extends State<CreateCredential> {
         .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
+  Widget getAppBarNewBlank(BuildContext context) {
+    return PreferredSize(
+        preferredSize: Size.fromHeight(80.0),
+        child: Material(
+          color: Colors.white,
+          child: Container(
+            alignment: Alignment.topLeft,
+            margin: new EdgeInsets.only(left: 17.0, top: 47),
+            child: InkWell(),
+          ),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     var screensize = MediaQuery.of(context).size;
@@ -326,7 +341,8 @@ class _LoginScreenState extends State<CreateCredential> {
         children: [
           Scaffold(
             key: _scaffoldKeys,
-            appBar: getAppBarNew(context),
+            appBar: widget.type ? getAppBarNewBlank(context) : getAppBarNew(
+                context),
             backgroundColor: Colors.white,
             body: new SingleChildScrollView(
               child: Container(

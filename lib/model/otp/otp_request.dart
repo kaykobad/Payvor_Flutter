@@ -1,18 +1,21 @@
 class OtpRequest {
   String otp;
-  String phone;
+  String id;
+  String type;
 
-  OtpRequest({this.otp, this.phone});
+  OtpRequest({this.otp, this.id, this.type});
 
   OtpRequest.fromJson(Map<String, dynamic> json) {
     otp = json['otp'];
-    phone = json['phone'];
+    id = json['id'];
+    type = json['type'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['otp'] = this.otp;
-    data['phone'] = this.phone;
+    data['id'] = this.id;
+    data['type'] = this.type;
     return data;
   }
 }

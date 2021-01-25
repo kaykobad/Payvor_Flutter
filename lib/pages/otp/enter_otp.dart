@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,7 @@ class _LoginScreenState extends State<OtoVerification> {
   int _current = 0;
   String pinText;
   double offstage = 1.0;
+  String noPhone = "";
 
   Widget space() {
     return new SizedBox(
@@ -58,10 +60,15 @@ class _LoginScreenState extends State<OtoVerification> {
     super.initState();
 
     if (widget.type == 0) {
+      noPhone = widget.phoneNumber != null
+          ? "+" + widget.countryCode + widget.phoneNumber
+          : "";
       startTimer();
       Future.delayed(Duration(milliseconds: 300), () {
         hitResendApi();
       });
+    } else {
+      noPhone = widget.phoneNumber != null ? widget.phoneNumber : "";
     }
   }
 
@@ -125,18 +132,23 @@ class _LoginScreenState extends State<OtoVerification> {
     if (!gotInternetConnection) {
       return;
     }
+    var infoData = jsonDecode(MemoryManagement.getUserInfo());
+    var userinfo = LoginSignupResponse.fromJson(infoData);
+
 
     OtpRequest loginRequest =
-        new OtpRequest(otp: pinText, phone: widget.phoneNumber ?? "");
+    new OtpRequest(
+        otp: pinText, id: userinfo?.user?.id?.toString() ?? "", type: "id");
     var response = await provider.verifyOtp(loginRequest, context);
     provider.hideLoader();
     if (response is OtpVerification) {
+      MemoryManagement.setScreenType(type: "2");
       var data = MemoryManagement.getSocialMediaStatus();
       if (data == "0") {
         Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
-            return Material(child: new CreateCredential());
+            return Material(child: new CreateCredential(type: false,));
           }),
         );
       } else {
@@ -146,7 +158,7 @@ class _LoginScreenState extends State<OtoVerification> {
           new CupertinoPageRoute(builder: (BuildContext context) {
             return DashBoardScreen();
           }),
-          (route) => false,
+              (route) => false,
         );
       }
     } else {
@@ -179,6 +191,7 @@ class _LoginScreenState extends State<OtoVerification> {
     var response = await provider.verifyEmailVerify(loginRequest, context);
     provider.hideLoader();
     if (response is LoginSignupResponse) {
+      MemoryManagement.setAccessToken(accessToken: response?.data);
       Navigator.push(
         context,
         new CupertinoPageRoute(builder: (BuildContext context) {
@@ -277,11 +290,7 @@ class _LoginScreenState extends State<OtoVerification> {
                               style: TextThemes.grayNormal,
                               children: <TextSpan>[
                                 new TextSpan(
-                                  text: widget.phoneNumber != null
-                                      ? widget.type == 0 ? "+" : "" +
-                                      widget.countryCode +
-                                      widget.phoneNumber
-                                      : "",
+                                  text: noPhone,
                                   style: TextThemes.blackTextFieldNormal,
                                 ),
                               ],

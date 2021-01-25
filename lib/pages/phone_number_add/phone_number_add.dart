@@ -22,6 +22,10 @@ import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class PhoneNumberAdd extends StatefulWidget {
+  final bool type;
+
+  PhoneNumberAdd({this.type});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -53,6 +57,18 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
     );
   }
 
+  Widget getAppBarNewBlank(BuildContext context) {
+    return PreferredSize(
+        preferredSize: Size.fromHeight(80.0),
+        child: Material(
+          color: Colors.white,
+          child: Container(
+            alignment: Alignment.topLeft,
+            margin: new EdgeInsets.only(left: 17.0, top: 47),
+            child: InkWell(),
+          ),
+        ));
+  }
 
   @override
   void dispose() {
@@ -350,7 +366,7 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
     if (response is UpdateProfileResponse) {
       provider.hideLoader();
 
-      MemoryManagement.setScreenType(type: "2");
+
 
       print(response);
       try {
@@ -391,7 +407,8 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
         child: Stack(
           children: [
             Scaffold(
-              appBar: getAppBarNew(context),
+              appBar: widget.type != null && widget.type ? getAppBarNewBlank(
+                  context) : getAppBarNew(context),
               key: _scaffoldKeys,
               backgroundColor: Colors.white,
               body: new SingleChildScrollView(
