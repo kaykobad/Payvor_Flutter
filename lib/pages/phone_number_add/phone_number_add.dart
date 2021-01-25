@@ -350,6 +350,8 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
     if (response is UpdateProfileResponse) {
       provider.hideLoader();
 
+      MemoryManagement.setScreenType(type: "2");
+
       print(response);
       try {
         Navigator.push(

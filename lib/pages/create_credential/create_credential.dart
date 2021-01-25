@@ -101,14 +101,14 @@ class _LoginScreenState extends State<CreateCredential> {
       var infoData = jsonDecode(MemoryManagement.getUserInfo());
       var userinfo = LoginSignupResponse.fromJson(infoData);
 
-
+      MemoryManagement.setScreenType(type: "3");
       MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
       Navigator.pushAndRemoveUntil(
         context,
         new CupertinoPageRoute(builder: (BuildContext context) {
           return DashBoardScreen();
         }),
-            (route) => false,
+        (route) => false,
       );
     } else {
       APIError apiError = response;

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/forgot_password/forgot_password_request.dart';
 import 'package:payvor/model/forgot_password/forgot_password_response.dart';
+import 'package:payvor/model/otp/otp_verification_response.dart';
+import 'package:payvor/pages/otp/enter_otp.dart';
 import 'package:payvor/pages/reset_password/reset_password.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
@@ -69,7 +71,11 @@ class _LoginScreenState extends State<ForgotPassword> {
         Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
-            return new ResetPassword();
+            return new OtoVerification(
+              phoneNumber: _EmailController.text,
+              type: 1,
+              countryCode: "",
+            );
           }),
         );
       } catch (ex) {}

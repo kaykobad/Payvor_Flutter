@@ -473,6 +473,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
 
     if (response is LoginSignupResponse) {
       provider.setLoading();
+
       MemoryManagement.setAccessToken(accessToken: response.data);
       MemoryManagement.setUserInfo(userInfo: json.encode(response));
 
@@ -501,14 +502,12 @@ class _LoginScreenState extends State<JoinCommunityNew> {
         var firebaseId = await firebaseProvider.signUp(
             email, Constants.FIREBASE_USER_PASSWORD);
 
-        await firebaseProvider.createFirebaseUser(
-            getUser(response, firebaseId, email));
-      }
-      catch(ex)
-    {
-
-    }
+        await firebaseProvider
+            .createFirebaseUser(getUser(response, firebaseId, email));
+      } catch (ex) {}
       provider.hideLoader();
+
+      MemoryManagement.setScreenType(type: "1");
 
       if (response.isnew == null || response.isnew) {
         Navigator.push(

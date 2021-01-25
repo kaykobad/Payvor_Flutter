@@ -16,6 +16,7 @@ import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/forgot_password/forgot_password.dart';
 import 'package:payvor/pages/join_community/join_community.dart';
 import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
+import 'package:payvor/pages/reset_password/reset_password.dart';
 import 'package:payvor/pages/social_login.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
@@ -220,10 +221,44 @@ class _LoginScreenState extends State<LoginScreenNew> {
 
     if (response is LoginSignupResponse) {
       provider.setLoading();
+
       LoginSignupResponse loginSignupResponse = response;
-      MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
       MemoryManagement.setAccessToken(accessToken: loginSignupResponse.data);
       MemoryManagement.setUserInfo(userInfo: json.encode(response));
+
+      if (type == "0") {
+        if (response?.user != null && response?.user.is_location == 0) {
+          Navigator.push(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return new PhoneNumberAdd();
+            }),
+          );
+
+          return;
+        } else if (response?.user != null && response?.user.is_password == 0) {
+          Navigator.push(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return new ResetPassword();
+            }),
+          );
+
+          return;
+        }
+      } else {
+        if (response?.user != null && response?.user.is_location == 0) {
+          Navigator.push(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return new PhoneNumberAdd();
+            }),
+          );
+          return;
+        }
+      }
+
+      MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
 
       var email = _EmailController.text;
 

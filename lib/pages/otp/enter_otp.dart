@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
+import 'package:payvor/model/otp/otp_forgot_request.dart';
 import 'package:payvor/model/otp/otp_request.dart';
 import 'package:payvor/model/otp/otp_verification_response.dart';
 import 'package:payvor/model/otp/resendotpresponse.dart';
 import 'package:payvor/pages/create_credential/create_credential.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
+import 'package:payvor/pages/reset_password/reset_password.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/Messages.dart';
@@ -54,10 +57,12 @@ class _LoginScreenState extends State<OtoVerification> {
   void initState() {
     super.initState();
 
-    startTimer();
-    Future.delayed(Duration(milliseconds: 300), () {
-    hitResendApi();
-    });
+    if (widget.type == 0) {
+      startTimer();
+      Future.delayed(Duration(milliseconds: 300), () {
+        hitResendApi();
+      });
+    }
   }
 
   Widget getView() {
@@ -152,6 +157,42 @@ class _LoginScreenState extends State<OtoVerification> {
     }
   }
 
+  hitForgotApi() async {
+    provider.setLoading();
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    OtpForgotRequest loginRequest = new OtpForgotRequest(
+        otp: pinText, email: widget.phoneNumber ?? "", type: "email");
+    var response = await provider.verifyEmailVerify(loginRequest, context);
+    provider.hideLoader();
+    if (response is LoginSignupResponse) {
+      Navigator.push(
+        context,
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return Material(child: new ResetPassword());
+        }),
+      );
+    } else {
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.messag);
+    }
+  }
+
   hitResendApi() async {
     provider.setLoading();
 
@@ -219,7 +260,9 @@ class _LoginScreenState extends State<OtoVerification> {
                       Container(
                           margin: new EdgeInsets.only(left: 20.0),
                           child: new Text(
-                            ResString().get('verify_number'),
+                            widget.type == 0
+                                ? ResString().get('verify_number')
+                                : ResString().get('verify_email'),
                             style: TextThemes.extraBold,
                           )),
                       Container(
@@ -228,15 +271,17 @@ class _LoginScreenState extends State<OtoVerification> {
                         child: new RichText(
                             text: new TextSpan(
                               text:
-                              ResString().get('enter_code_that'),
+                              widget.type == 0 ? ResString().get(
+                                  'enter_code_that') : ResString().get(
+                                  'enter_code_that_email'),
                               style: TextThemes.grayNormal,
                               children: <TextSpan>[
                                 new TextSpan(
                                   text: widget.phoneNumber != null
-                                  ? "+" +
+                                      ? widget.type == 0 ? "+" : "" +
                                       widget.countryCode +
                                       widget.phoneNumber
-                                  : "",
+                                      : "",
                                   style: TextThemes.blackTextFieldNormal,
                                 ),
                               ],
@@ -279,23 +324,28 @@ class _LoginScreenState extends State<OtoVerification> {
                               pinText = pin;
                               print(pin);
 
-                              hitApi();
+                              if (widget.type == 0) {
+                                hitApi();
+                              }
+                              else {
+                                hitForgotApi();
+                              }
                             }),
                       ),
                       new SizedBox(
                         height: 85.0,
                       ),
-                      offstage == 1.0
+                      widget.type == 0 ? offstage == 1.0
                           ? Container()
                           : Container(
-                              alignment: Alignment.center,
-                              margin: new EdgeInsets.only(left: 20.0),
-                              child: new Text(
-                                ResString().get('verify_code') +
-                                    "$_current",
-                                style: TextThemes.greyDarkTextFieldItalic,
-                              )),
-                      Opacity(
+                          alignment: Alignment.center,
+                          margin: new EdgeInsets.only(left: 20.0),
+                          child: new Text(
+                            ResString().get('verify_code') +
+                                "$_current",
+                            style: TextThemes.greyDarkTextFieldItalic,
+                          )) : Container(),
+                      widget.type == 0 ? Opacity(
                         opacity: offstage,
                         child: InkWell(
                           onTap: () {
@@ -312,7 +362,7 @@ class _LoginScreenState extends State<OtoVerification> {
                                 style: TextThemes.redTextSmallMedium,
                               )),
                         ),
-                      ),
+                      ) : Container(),
                       new SizedBox(
                         height: 25.0,
                       ),

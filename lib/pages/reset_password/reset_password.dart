@@ -226,6 +226,7 @@ class _LoginScreenState extends State<ResetPassword> {
         showInSnackBar(response.success);
         Navigator.pop(context);
         Navigator.pop(context);
+        Navigator.pop(context);
       } catch (ex) {}
 
       provider.hideLoader();

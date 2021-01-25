@@ -17,6 +17,7 @@ class APIs {
   static const String looggedinUser = "$baseUrl/auth/me";
   static const String logoutUser = "$baseUrl/auth/logout";
   static const String otpVerifyUrl = "$baseUrl/auth/verify-otp-ph";
+  static const String otpVerifyForgotUrl = "$baseUrl/auth/verify-otp-ph";
   static const String update_profile = "$baseUrl/auth/update-profile";
   static const String resetPassword = "$baseUrl/auth/change-password";
   static const String forgotPassword = "$baseUrl/auth/reset-pas-mail";

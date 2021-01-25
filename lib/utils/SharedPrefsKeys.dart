@@ -6,6 +6,7 @@ class SharedPrefsKeys {
   static const String ACCESS_TOKEN = "access_token";
   static const String DEVICE_ID = "device_id";
   static const String USER_TYPE = "user_type";
+  static const String SCREEN_TYPE = "screen_type";
   static const String USER_TYPE_SCREEN = "user_type_screen";
   static const String IS_USER_LOGGED_IN = "is_user_logged_in";
   static const String LANGUAGE_CODE = "language_code";

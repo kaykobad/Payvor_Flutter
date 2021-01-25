@@ -23,6 +23,7 @@ import 'package:payvor/model/hired_user_response_details/hired_user_response-det
 import 'package:payvor/model/logged_in_user/logged_in_user_response.dart';
 import 'package:payvor/model/login/loginrequest.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
+import 'package:payvor/model/otp/otp_forgot_request.dart';
 import 'package:payvor/model/otp/otp_request.dart';
 import 'package:payvor/model/otp/otp_verification_response.dart';
 import 'package:payvor/model/otp/resendotpresponse.dart';
@@ -352,10 +353,36 @@ class AuthProvider with ChangeNotifier {
       OtpVerification otpVerification =
           new OtpVerification.fromJson(response);
       //if wrong otp
-      if(!otpVerification.status.status)
-        {
-          var apiError=APIError(messag: "Wrong OTP",status: 400);
-          completer.complete(apiError);
+      if (!otpVerification.status.status) {
+        var apiError = APIError(messag: "Wrong OTP", status: 400);
+        completer.complete(apiError);
+      } else {
+        completer.complete(otpVerification);
+      }
+
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> verifyEmailVerify(
+      OtpForgotRequest request, BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.post(
+        context: context,
+        url: APIs.otpVerifyForgotUrl,
+        requestBody: request.toJson());
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      LoginSignupResponse otpVerification =
+          new LoginSignupResponse.fromJson(response);
+      //if wrong otp
+      if (!otpVerification?.status?.status) {
+        var apiError = APIError(messag: "Wrong OTP", status: 400);
+        completer.complete(apiError);
       } else {
         completer.complete(otpVerification);
       }

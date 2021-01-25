@@ -146,6 +146,14 @@ class MemoryManagement {
     return prefs?.getString(SharedPrefsKeys.DEVICE_ID);
   }
 
+  static Future<void> setScreenType({@required String type}) async {
+    prefs.setString(SharedPrefsKeys.SCREEN_TYPE, type);
+  }
+
+  static String getScreenType() {
+    return prefs?.getString(SharedPrefsKeys.SCREEN_TYPE);
+  }
+
   static void setUserInfo({@required String userInfo}) {
     prefs.setString(SharedPrefsKeys.USER_INFO, userInfo);
   }
@@ -294,19 +302,6 @@ class MemoryManagement {
   static String getAssetRoasters() {
     return prefs.getString(SharedPrefsKeys.ASSET_ROASTERS);
   }
-
-
-  static void setScreen({@required int screen}) {
-    prefs.setInt(SharedPrefsKeys.USER_TYPE_SCREEN, screen);
-  }
-
-  static int getScreen() {
-    return prefs?.getInt(SharedPrefsKeys.USER_TYPE_SCREEN);
-  }
-
-
-
-
 
   static void setAccessGrant() {
     prefs.setBool(SharedPrefsKeys.GRANT_ACCESS, true);

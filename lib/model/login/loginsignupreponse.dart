@@ -67,24 +67,28 @@ class User {
   String location;
   String createdAt;
   String updatedAt;
+  int is_password;
+  int is_location;
 
   User(
       {this.id,
-        this.name,
-        this.email,
-        this.phone,
-        this.otp,
-        this.type,
-        this.countryCode,
-        this.lat,
-        this.long,
-        this.userType,
-        this.isActive,
-        this.snsId,
-        this.profilePic,
-        this.location,
-        this.createdAt,
-        this.updatedAt});
+      this.name,
+      this.email,
+      this.phone,
+      this.otp,
+      this.type,
+      this.countryCode,
+      this.lat,
+      this.long,
+      this.userType,
+      this.isActive,
+      this.snsId,
+      this.profilePic,
+      this.location,
+      this.createdAt,
+      this.updatedAt,
+      this.is_password,
+      this.is_location});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -103,6 +107,8 @@ class User {
     location = json['location'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    is_password = json['is_password'];
+    is_location = json['is_location'];
   }
 
   Map<String, dynamic> toJson() {
@@ -123,6 +129,8 @@ class User {
     data['location'] = this.location;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['is_password'] = this.is_password;
+    data['is_location'] = this.is_location;
     return data;
   }
 }
