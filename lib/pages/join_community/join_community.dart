@@ -445,7 +445,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
 
       case "2":
         {
-          types = "Go";
+          types = "tw";
         }
         break;
 
@@ -481,28 +481,33 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       switch (type) {
         case "1":
           {
-            email = "${response?.user?.id?.toString()}@facebook.com ";
+            email = "fb_$snsId@facebook.com";
           }
           break;
 
         case "2":
           {
-            email = "${response?.user?.id?.toString()}@twitter.com ";
+            email = "tw_$snsId@twitter.com";
           }
           break;
 
         case "3":
           {
-            email = "${response?.user?.id?.toString()}@instagram.com ";
+            email = "in_$snsId@instagram.com";
           }
       }
 
-      var firebaseId = await firebaseProvider.signUp(
-          email, Constants.FIREBASE_USER_PASSWORD);
+      try {
+        var firebaseId = await firebaseProvider.signUp(
+            email, Constants.FIREBASE_USER_PASSWORD);
 
-      await firebaseProvider.createFirebaseUser(
-          getUser(response, firebaseId, email));
+        await firebaseProvider.createFirebaseUser(
+            getUser(response, firebaseId, email));
+      }
+      catch(ex)
+    {
 
+    }
       provider.hideLoader();
 
       if (response.isnew == null || response.isnew) {

@@ -496,11 +496,14 @@ class _HomeState extends State<MyPosts>
             InkWell(
 
               onTap: () {
+                print("owner id ${data.userId}");
+                print("hired user  id ${data?.hiredUserId}");
+
                 widget.lauchCallBack(Material(
                     child: Material(
                         child: new ChatMessageDetails(
                           id: data.userId.toString(),
-                          name: data.title,
+                          name: data.hired.name,
                           hireduserId: data?.hiredUserId?.toString(),
                           image: data?.image,
                           userButtonMsg: true,

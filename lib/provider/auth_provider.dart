@@ -773,23 +773,19 @@ class AuthProvider with ChangeNotifier {
 
   Future<dynamic> userProfileDetails(
       BuildContext context, int page, String userID) async {
-    print("fave");
-    var infoData = jsonDecode(MemoryManagement.getUserInfo());
-    var userinfo = LoginSignupResponse.fromJson(infoData);
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.get(
         context: context, url: APIs.userProfileDetails + userID);
 
-    print(APIs.userProfileDetails);
-    print(APIs.userProfileDetails);
 
     if (response is APIError) {
       completer.complete(response);
       return completer.future;
     } else {
-      print("res $jsonDecode($response)");
       UserProfileFavorResponse resendOtpResponse =
           new UserProfileFavorResponse.fromJson(response);
+      print("other profile response ${resendOtpResponse.toJson()}");
+
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;

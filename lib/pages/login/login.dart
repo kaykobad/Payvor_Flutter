@@ -231,21 +231,22 @@ class _LoginScreenState extends State<LoginScreenNew> {
         switch (type) {
           case "1":
             {
-              email = "${response?.user?.id?.toString()}@facebook.com ";
+              email = "fb_$snsId@facebook.com";
             }
             break;
 
           case "2":
             {
-              email = "${response?.user?.id?.toString()}@twitter.com ";
+              email = "tw_$snsId@twitter.com";
             }
             break;
 
           case "3":
             {
-              email = "${response?.user?.id?.toString()}@instagram.com ";
+              email = "in_$snsId@instagram.com";
             }
         }
+        print("email $email");
         //firebase login
         var firebaseId = await firebaseProvider.signIn(
             email, Constants.FIREBASE_USER_PASSWORD);

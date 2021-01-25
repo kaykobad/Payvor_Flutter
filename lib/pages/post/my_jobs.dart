@@ -456,11 +456,12 @@ class _HomeState extends State<MyJobs>
 
     return InkWell(
       onTap: () {
+
         widget.lauchCallBack(Material(
             child: Material(
                 child: new ChatMessageDetails(
                   id: data.userId.toString(),
-          name: data.title,
+          name: data.hiredBy.name,
           hireduserId: data?.hiredUserId?.toString(),
           image: data?.image,
           userButtonMsg: true,
