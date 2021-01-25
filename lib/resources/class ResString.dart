@@ -111,6 +111,7 @@ class ResString {
     'card_name': 'Card Name',
     'mm/yy': 'MM/YY',
     'cvv': 'CVV',
+    'you_get': 'You’ll Get',
   };
   String get(String key){
     return data[key];

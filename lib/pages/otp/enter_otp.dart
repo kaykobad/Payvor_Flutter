@@ -165,7 +165,7 @@ class _LoginScreenState extends State<OtoVerification> {
       APIError apiError = response;
       print(apiError.error);
 
-      showInSnackBar(apiError.messag);
+      showInSnackBar("Invalid Otp");
     }
   }
 

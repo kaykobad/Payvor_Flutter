@@ -349,7 +349,7 @@ class FirebaseProvider with ChangeNotifier {
                   .now()
                   .millisecondsSinceEpoch
             });
-//TODO: Uncomment
+
         }
 
         document.updateData(dataMap);

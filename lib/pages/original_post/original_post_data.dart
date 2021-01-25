@@ -211,10 +211,7 @@ class _HomeState extends State<OriginalPostData>
     offstageLoader = false;
 
     if (response is UserHireListResponse) {
-      if (response != null && response.status.code == 200) {
-        //  showInSnackBar(response.status.message);
 
-      }
 
       if (response?.data != null && response?.data?.data?.length > 0) {
         list.addAll(response?.data?.data);

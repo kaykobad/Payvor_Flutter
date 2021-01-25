@@ -465,8 +465,7 @@ class AuthProvider with ChangeNotifier {
     } else {
       UserHireListResponse otpVerification =
           new UserHireListResponse.fromJson(response);
-      //if wrong otp
-
+      print("hired user list ${otpVerification.toJson()}");
       completer.complete(otpVerification);
     }
 

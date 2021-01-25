@@ -53,7 +53,7 @@ class _HomeState extends State<PayFeebackDetails>
   var isCurrentUser = false;
 
   bool offstageLoader = false;
-  int type = 0;
+  int type = 1;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -464,11 +464,14 @@ class _HomeState extends State<PayFeebackDetails>
           ),
           Align(
             alignment: Alignment.center,
-            child: Container(
-              child: Icon(
-                Icons.arrow_forward_ios_rounded,
-                color: Color.fromRGBO(183, 183, 183, 1.0),
-                size: 13,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Container(
+                child: Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: Color.fromRGBO(183, 183, 183, 1.0),
+                  size: 13,
+                ),
               ),
             ),
           ),
@@ -562,10 +565,10 @@ class _HomeState extends State<PayFeebackDetails>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   new Container(
-                    height: 30,
-                    width: double.infinity,
-                    color: Colors.transparent,
-                  ),
+                    height: 40,
+                          width: double.infinity,
+                          color: Colors.transparent,
+                        ),
                   Container(
                           color: Colors.white,
                           alignment: Alignment.center,
@@ -602,12 +605,22 @@ class _HomeState extends State<PayFeebackDetails>
                               Align(
                                 alignment: Alignment.center,
                                 child: new Container(
-                                    margin: new EdgeInsets.only(top: 31),
-                                    decoration: new BoxDecoration(
-                                        color: Colors.green,
-                                        shape: BoxShape.circle),
-                                    width: 30,
-                                    height: 30),
+                                  margin: new EdgeInsets.only(top: 31),
+                                  decoration: new BoxDecoration(
+                                      color: AppColors.colorCyanPrimary,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          width: 1, color: AppColors.kWhite)
+                                  ),
+                                  width: 32,
+                                  height: 32,
+                                  child: Icon(
+                                    Icons.shopping_bag,
+                                    color: AppColors.kWhite,
+                                    size: 20,
+                                  ),
+
+                                ),
                               )
                             ],
                           ),
@@ -667,7 +680,7 @@ class _HomeState extends State<PayFeebackDetails>
                         ResString().get('payment_brkdown'),
                         style: TextThemes.blackCirculerMediumHeight,
                       )),
-                        buildPaymentType(1, "Hand Cash",
+                        buildPaymentType(1, "HandCash",
                             "You can Pay to the receiver by handcash. Receiver will cost 0% fee."),
                         Opacity(
                           opacity: 0.12,
@@ -720,7 +733,7 @@ class _HomeState extends State<PayFeebackDetails>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               new Text(
-                                ResString().get('you_all_receive'),
+                                ResString().get('you_get'),
                                 style: new TextStyle(
                                     fontFamily: AssetStrings.circulerBoldStyle,
                                     color: AppColors.bluePrimary,
