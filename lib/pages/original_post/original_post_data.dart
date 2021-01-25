@@ -846,16 +846,14 @@ class _HomeState extends State<OriginalPostData>
       child: Container(
         color: Colors.white,
         padding: new EdgeInsets.only(top: 10),
-        child: Expanded(
-          child: new ListView.builder(
-            padding: new EdgeInsets.all(0.0),
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return buildItemMain(list[index], index);
-            },
-            itemCount: list?.length,
-          ),
+        child: new ListView.builder(
+          padding: new EdgeInsets.all(0.0),
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) {
+            return buildItemMain(list[index], index);
+          },
+          itemCount: list?.length,
         ),
       ),
     );
