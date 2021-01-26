@@ -335,11 +335,10 @@ Widget buildItem(DataRating rating) {
           alignment: Alignment.center,
           decoration: new BoxDecoration(
             shape: BoxShape.circle,
-            gradient: LinearGradient(
-              colors: [const Color(0xFF177FBE), const Color(0xFF00BBA6)],
-              end: Alignment.centerRight,
-              begin: Alignment.centerLeft,
-            ),
+          ),
+          child: new ClipOval(
+            child: getCachedNetworkImageWithurl(
+                url: rating?.profilePic ?? "", fit: BoxFit.cover, size: 32),
           ),
         ),
         Expanded(
