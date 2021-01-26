@@ -752,6 +752,23 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<dynamic> reportPostApi(
+      GiveRatingRequest requests, BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.post(
+        context: context, url: APIs.giveRating, requestBody: requests.toJson());
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      ReportResponse resendOtpResponse = new ReportResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
   Future<dynamic> updateFavStatus(
       UpdateStatusRequest requests, BuildContext context) async {
     Completer<dynamic> completer = new Completer<dynamic>();
