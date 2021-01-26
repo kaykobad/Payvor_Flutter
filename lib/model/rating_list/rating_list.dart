@@ -54,7 +54,7 @@ class DataRating {
   int userId;
   int favourId;
   int ratedBy;
-  int rating;
+  num rating;
   String description;
   int isActive;
   String createdAt;

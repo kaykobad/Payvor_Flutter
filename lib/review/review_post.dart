@@ -277,6 +277,8 @@ class _HomeState extends State<ReviewPost>
     return Container(
       color: Colors.white,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           buildItem(rating),
           Container(
