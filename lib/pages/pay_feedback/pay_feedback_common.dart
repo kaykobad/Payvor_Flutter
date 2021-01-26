@@ -762,7 +762,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                         buildItemRating(
                             2,
                             formatDateString(hiredUserDetailsResponse
-                                    ?.data?.hiredUser?.createdAt
+                                    ?.data?.hireDate
                                     ?.toString() ??
                                 "")),
                         Container(

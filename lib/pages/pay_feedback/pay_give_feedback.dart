@@ -755,8 +755,9 @@ class _HomeState extends State<PayFeebackDetails>
                         ),
                   buildItemUser(),
                   buildItemRating(2, formatDateString(
-                      hiredUserDetailsResponse?.data?.hiredUser?.createdAt
-                          ?.toString() ?? "")),
+                      hiredUserDetailsResponse
+                                    ?.data?.hireDate
+                                    ?.toString() ?? "")),
 
                   widget.type == 0 ? Container(
                       color: Colors.white,
