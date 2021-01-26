@@ -31,6 +31,7 @@ import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
 import 'package:payvor/model/promotion/promotion_response.dart';
 import 'package:payvor/model/rating/give_rating_request.dart';
+import 'package:payvor/model/rating_list/rating_list.dart';
 import 'package:payvor/model/reset_password/reset_pass_request.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signuprequest.dart';
@@ -797,12 +798,37 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<dynamic> reviewList(
+    BuildContext context,
+    int page,
+  ) async {
+    print("fave");
+
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(context: context, url: APIs.ratingList);
+
+    print(APIs.ratingList);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      print("res $jsonDecode($response)");
+
+      RatingReviewResponse resendOtpResponse =
+          new RatingReviewResponse.fromJson(response);
+
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
   Future<dynamic> userProfileDetails(
       BuildContext context, int page, String userID) async {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.get(
         context: context, url: APIs.userProfileDetails + userID);
-
 
     if (response is APIError) {
       completer.complete(response);

@@ -587,29 +587,23 @@ class _HomeState extends State<ChatMessageDetails>
                       ),
                       Positioned(
                         bottom: 0.0,
-                        left: 0.0,
-                        right: 0.0,
-                        child: Container(
-                          decoration: new BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: new Border.all(
-                                  width: 2, color: Colors.white)),
-                          child: new Container(
-                            height: 89,
-                            width: double.infinity,
-                            child: ClipRRect(
-                              // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                              borderRadius:
-                              new BorderRadius.circular(0.0),
+                              width: getScreenSize(context: context).width,
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: new BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: new Border.all(
+                                        width: 2, color: Colors.white)),
+                                child: ClipOval(
+                                  // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
-                              child: getCachedNetworkImageWithurl(
-                                url: userResponse?.user?.profilePic ?? "",
-                                size: 89,
-                                fit: BoxFit.cover,
+                                  child: getCachedNetworkImageWithurl(
+                                    url: userResponse?.user?.profilePic ?? "",
+                                    size: 89,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
                       ),
                     ],
                   ),

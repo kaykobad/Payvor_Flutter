@@ -4,10 +4,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/rating_list/rating_list.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
+import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
+import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
+import 'package:provider/provider.dart';
 
 class ReviewPost extends StatefulWidget {
   @override
@@ -25,6 +32,11 @@ class _HomeState extends State<ReviewPost>
   ScrollController scrollController = new ScrollController();
   bool _loadMore = false;
   bool isPullToRefresh = false;
+  bool offstagenodata = true;
+  int currentPage = 1;
+  AuthProvider provider;
+
+  List<DataRating> list = List<DataRating>();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -38,29 +50,100 @@ class _HomeState extends State<ReviewPost>
 
   @override
   void initState() {
+    print("search");
+    Future.delayed(const Duration(milliseconds: 300), () {
+      hitApi();
+    });
     _setScrollListener();
+
     super.initState();
   }
 
   void _setScrollListener() {
-    //scrollController.position.isScrollingNotifier.addListener(() { print("called");});
-/*
     scrollController = new ScrollController();
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
-        if (_listGame.length >= (PAGINATION_SIZE * _currentPageNumber)) {
-          isPullToRefresh=true;
-          _loadHomeData();
+        if (list.length >= (Constants.PAGINATION_SIZE * currentPage)) {
+          isPullToRefresh = true;
+          hitApi();
           showInSnackBar("Loading data...");
         }
       }
-    });*/
+    });
   }
+
+
+  hitApi() async {
+    if (!isPullToRefresh) {
+      provider.setLoading();
+    }
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+
+    if (_loadMore) {
+      currentPage++;
+    } else {
+      currentPage = 1;
+    }
+
+    var response = await provider.reviewList(
+        context, currentPage);
+
+    if (response is RatingReviewResponse) {
+      isPullToRefresh = false;
+
+      print("res $response");
+
+      if (response != null && response.data != null) {
+        if (currentPage == 1) {
+          list.clear();
+        }
+
+        list.addAll(response.data);
+
+        if (response.data != null &&
+            response.data.length < Constants.PAGINATION_SIZE) {
+          _loadMore = false;
+        } else {
+          _loadMore = true;
+        }
+
+        if (list.length > 0) {
+          offstagenodata = true;
+        } else {
+          offstagenodata = false;
+        }
+      }
+    } else {
+      APIError apiError = response;
+
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
+    provider.hideLoader();
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    screenSize = MediaQuery.of(context).size;
+    provider = Provider.of<AuthProvider>(context);
+    screenSize = MediaQuery
+        .of(context)
+        .size;
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
@@ -72,7 +155,7 @@ class _HomeState extends State<ReviewPost>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 new SizedBox(
-                  height: 36.0,
+                  height: 13.0,
                 ),
                 Container(
                   margin: new EdgeInsets.only(left: 17.0, top: 35.0, right: 16),
@@ -97,7 +180,7 @@ class _HomeState extends State<ReviewPost>
                           margin: new EdgeInsets.only(right: 20),
                           alignment: Alignment.center,
                           child: new Text(
-                            "Reviews (0)",
+                            "Reviews (${list.length})",
                             style: TextThemes.darkBlackMedium,
                             textAlign: TextAlign.center,
                           ),
@@ -123,15 +206,24 @@ class _HomeState extends State<ReviewPost>
               ],
             ),
           ),
-          Offstage(
-            offstage: false,
-            child: new Center(
-              child: new Text(
-                "No reviews Found",
-                style: new TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0),
+          new Center(
+            child: getHalfScreenLoader(
+              status: provider.getLoading(),
+              context: context,
+            ),
+          ),
+          Visibility(
+            visible: !offstagenodata,
+            child: Container(
+              margin: new EdgeInsets.only(top: 170),
+              child: new Center(
+                child: new Text(
+                  "No reviews Found",
+                  style: new TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0),
+                ),
               ),
             ),
           ),
@@ -145,37 +237,52 @@ class _HomeState extends State<ReviewPost>
 
   void callback() {}
 
+
   _buildContestList() {
     return Expanded(
-      child: Container(
-        color: Colors.white,
-        child: new ListView.builder(
-          padding: new EdgeInsets.all(0.0),
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) {
-            return buildItemMain(index);
+      child: NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: (overscroll) {
+            overscroll.disallowGlow();
           },
-          itemCount: 0,
-        ),
-      ),
+          child: RefreshIndicator(
+            key: _refreshIndicatorKey,
+            onRefresh: () async {
+              isPullToRefresh = true;
+              _loadMore = false;
+              currentPage = 1;
+
+              await hitApi();
+            },
+            child: Container(
+              color: AppColors.kAppScreenBackGround,
+              child: new ListView.builder(
+                padding: new EdgeInsets.all(0.0),
+                controller: scrollController,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  return buildItemMain(index, list[index]);
+                },
+                itemCount: list.length,
+              ),
+            ),
+          )),
     );
   }
+
 
   @override
   bool get wantKeepAlive => true;
 
-  Widget buildItemMain(int pos) {
-    var index = pos % 2 == 0 ? true : false;
-
+  Widget buildItemMain(int pos, DataRating rating) {
     return Container(
       color: Colors.white,
       child: Column(
         children: <Widget>[
-          buildItem(),
+          buildItem(rating),
           Container(
             margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 12.0),
             child: ReadMoreText(
-              "I need help moving out of my flat as there are many things to carry. Can someone help me out? It should not take more than 2 hours since I don’t have that many belongings,I need help moving out of my flat as there are many things to carry.",
+              rating?.description ?? "",
               trimLines: 8,
               colorClickableText: AppColors.colorDarkCyan,
               trimMode: TrimMode.Line,
@@ -206,7 +313,18 @@ class _HomeState extends State<ReviewPost>
   }
 }
 
-Widget buildItem() {
+String formatDateString(String dateString) {
+  try {
+    DateTime dateTime = DateTime.parse(dateString);
+
+    return DateFormat('dd MMM yyyy').format(dateTime);
+  } catch (e) {
+    print("date error ${e.toString()}");
+    return "";
+  }
+}
+
+Widget buildItem(DataRating rating) {
   return Container(
     margin: new EdgeInsets.only(left: 16.0, right: 16.0),
     child: Row(
@@ -231,13 +349,13 @@ Widget buildItem() {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 new Text(
-                  "Jonathan Dore",
+                  rating?.name ?? "",
                   style: TextThemes.blackCirculerMedium,
                 ),
                 Container(
                     child: new Text(
-                  "29 May 2020",
-                  style: TextThemes.lightGrey,
+                      formatDateString(rating?.createdAt),
+                      style: TextThemes.lightGrey,
                 )),
               ],
             ),
@@ -261,7 +379,7 @@ Widget buildItem() {
                 Container(
                   margin: new EdgeInsets.only(top: 1.2),
                   child: new Text(
-                    "5",
+                    rating?.rating?.toString(),
                     style: TextThemes.blackPreview,
                   ),
                 ),

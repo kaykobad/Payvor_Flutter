@@ -53,6 +53,7 @@ class AssetStrings {
   static const String phone = 'assets/png/phone.png';
   static const String locationHome = 'assets/png/location_home.png';
   static const String fullname = 'assets/png/fullname.png';
+  static const String combine_shape = 'assets/png/combine_shape.png';
   static const String spice = 'assets/png/spice.png';
   static const String imagePlaceholder = 'assets/png/shape.png';
   static const String facebook = 'assets/svg/facebook.svg';

@@ -10,6 +10,7 @@ import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/favour_posted_by_user.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/original_post/original_post_data.dart';
+import 'package:payvor/pages/pay_feedback/pay_feedback_common.dart';
 import 'package:payvor/pages/pay_feedback/pay_give_feedback.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
@@ -420,16 +421,39 @@ class _HomeState extends State<MyPosts>
     return InkWell(
       onTap: () {
         if (data?.status != 3) {
+          if (data?.status == 1) {
+            widget.lauchCallBack(Material(
+                child: Material(
+                    child: new PayFeebackDetails(
+              lauchCallBack: widget?.lauchCallBack,
+              userId: data?.hiredUserId?.toString(),
+              postId: data?.id?.toString(),
+              type: 0,
+            ))));
+          } else {
+            widget.lauchCallBack(Material(
+                child: Material(
+                    child: new PayFeebackDetailsCommon(
+              lauchCallBack: widget?.lauchCallBack,
+              userId: data?.hiredUserId?.toString(),
+              postId: data?.id?.toString(),
+              status: 0,
+              type: 0,
+            ))));
+          }
+        } else {
           widget.lauchCallBack(Material(
               child: Material(
-                  child: new PayFeebackDetails(
+                  child: new PayFeebackDetailsCommon(
                     lauchCallBack: widget?.lauchCallBack,
                     userId: data?.hiredUserId?.toString(),
-                    data: data,
+                    postId: data?.id?.toString(),
+                    status: 1,
+                    type: 0
+                    ,
                   ))));
-        }
-        else {
-          widget.lauchCallBack(Material(
+
+          /* widget.lauchCallBack(Material(
               child: Material(
                   child: new ChatMessageDetails(
                     id: data.userId.toString(),
@@ -437,7 +461,7 @@ class _HomeState extends State<MyPosts>
                     hireduserId: data?.hiredUserId?.toString(),
                     image: data?.image,
                     userButtonMsg: true,
-                  ))));
+                  ))));*/
         }
       },
       child: Container(

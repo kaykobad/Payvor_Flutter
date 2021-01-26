@@ -9,6 +9,8 @@ import 'package:payvor/current_user_hired_by_favor/current_user_hire_favor.dart'
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/applied_user/favour_applied_user.dart';
 import 'package:payvor/pages/chat_message_details.dart';
+import 'package:payvor/pages/pay_feedback/pay_feedback_common.dart';
+import 'package:payvor/pages/pay_feedback/pay_give_feedback.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
@@ -456,16 +458,49 @@ class _HomeState extends State<MyJobs>
 
     return InkWell(
       onTap: () {
+        if (data?.status != 3) {
+          if (data?.status == 1) {
+            widget.lauchCallBack(Material(
+                child: Material(
+                    child: new PayFeebackDetails(
+              lauchCallBack: widget?.lauchCallBack,
+              userId: data?.hiredUserId?.toString(),
+              postId: data?.id?.toString(),
+              type: 1,
+            ))));
+          } else {
+            widget.lauchCallBack(Material(
+                child: Material(
+                    child: new PayFeebackDetailsCommon(
+              lauchCallBack: widget?.lauchCallBack,
+              userId: data?.hiredUserId?.toString(),
+              postId: data?.id?.toString(),
+              status: 0,
+              type: 1,
+            ))));
+          }
+        } else {
+          widget.lauchCallBack(Material(
+              child: Material(
+                  child: new PayFeebackDetailsCommon(
+            lauchCallBack: widget?.lauchCallBack,
+            userId: data?.hiredUserId?.toString(),
+            postId: data?.id?.toString(),
+            status: 1,
+            type: 1,
+          ))));
 
-        widget.lauchCallBack(Material(
-            child: Material(
-                child: new ChatMessageDetails(
-                  id: data.userId.toString(),
-          name: data.hiredBy.name,
-          hireduserId: data?.hiredUserId?.toString(),
-          image: data?.image,
-          userButtonMsg: true,
-        ))));
+          /*
+          widget.lauchCallBack(Material(
+              child: Material(
+                  child: new ChatMessageDetails(
+                    id: data.userId.toString(),
+                    name: data.title,
+                    hireduserId: data?.hiredUserId?.toString(),
+                    image: data?.image,
+                    userButtonMsg: true,
+                  ))));*/
+        }
       },
       child: Container(
         padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
@@ -520,35 +555,48 @@ class _HomeState extends State<MyJobs>
                 color: AppColors.dividerColor,
               ),
             ),
-            Container(
-              margin: new EdgeInsets.only(top: 10.0),
-              child: new Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    child: new Text(
-                      data?.hiredBy?.name ?? "someone",
-                      style: TextThemes.cyanTextSmallMedium,
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: new EdgeInsets.only(left: 1.0),
+            InkWell(
+              onTap: () {
+                widget.lauchCallBack(Material(
+                    child: Material(
+                        child: new ChatMessageDetails(
+                          id: data.userId.toString(),
+                          name: data.hiredBy.name,
+                          hireduserId: data?.hiredUserId?.toString(),
+                          image: data?.image,
+                          userButtonMsg: true,
+                        ))));
+              },
+              child: Container(
+                margin: new EdgeInsets.only(top: 10.0),
+                child: new Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
                       child: new Text(
-                        getStatus(data?.status),
-                        style: TextThemes.grayNormalSmall,
+                        data?.hiredBy?.name ?? "someone",
+                        style: TextThemes.cyanTextSmallMedium,
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: new EdgeInsets.only(left: 7.0),
-                    child: new Icon(
-                      Icons.arrow_forward_ios,
-                      size: 13,
-                      color: Color.fromRGBO(183, 183, 183, 1),
+                    Expanded(
+                      child: Container(
+                        margin: new EdgeInsets.only(left: 1.0),
+                        child: new Text(
+                          getStatus(data?.status),
+                          style: TextThemes.grayNormalSmall,
+                        ),
+                      ),
                     ),
-                  )
-                ],
+                    Container(
+                      margin: new EdgeInsets.only(left: 7.0),
+                      child: new Icon(
+                        Icons.arrow_forward_ios,
+                        size: 13,
+                        color: Color.fromRGBO(183, 183, 183, 1),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ],

@@ -23,7 +23,6 @@ import 'package:payvor/review/review_post.dart';
 import 'package:payvor/shimmers/shimmer_details.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
-import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/memory_management.dart';
@@ -1083,7 +1082,8 @@ class _HomeState extends State<PostFavorDetails>
                         getRowsPayment(ResString().get('job_payment'),
                             "€${favoriteResponse?.data?.price}", 23.0),
                         getRowsPayment(
-                            ResString().get('payvor_service_fee') + "(20%)",
+                            ResString().get('payvor_service_fee') +
+                                "(${favoriteResponse?.data?.service_perc?.toString()}%)",
                             "€${favoriteResponse?.data?.service_fee}",
                             9.0),
                         new Container(
@@ -1240,14 +1240,16 @@ class _HomeState extends State<PostFavorDetails>
             bottom: 0.0,
             left: 0.0,
             right: 0.0,
-            child: Material(
+            child: widget.isButtonDesabled != null && !widget.isButtonDesabled
+                ? Material(
               elevation: 18.0,
               child: Container(
                   color: Colors.white,
                   padding: new EdgeInsets.only(top: 9, bottom: 28),
                   child: getSetupButtonNew(
                       callbackPromote, "Promote your Favor", 16)),
-            ),
+            )
+                : Container(),
           )
               : Container(),
 

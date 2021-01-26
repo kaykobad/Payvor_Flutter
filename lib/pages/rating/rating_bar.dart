@@ -21,8 +21,21 @@ import 'package:provider/provider.dart';
 
 class RatingBarNew extends StatefulWidget {
   final String id;
+  final int type;
+  final String image;
+  final String name;
+  final String userd;
+  final String paymentType;
+  final String paymentAmount;
 
-  RatingBarNew({@required this.id});
+  RatingBarNew(
+      {@required this.id,
+      this.type,
+      this.image,
+      this.name,
+      this.userd,
+      this.paymentType,
+      this.paymentAmount});
 
   @override
   _HomeState createState() => _HomeState();
@@ -208,14 +221,14 @@ class _HomeState extends State<RatingBarNew>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           new Text(
-            "Hand Cash",
+            widget?.paymentType ?? "",
             style: new TextStyle(
                 color: Color.fromRGBO(114, 117, 122, 1),
                 fontFamily: AssetStrings.circulerNormal,
                 fontSize: 15),
           ),
           new Text(
-            "€20",
+            "€${widget?.paymentAmount ?? ""}",
             style: new TextStyle(
                 color: Color.fromRGBO(114, 117, 122, 1),
                 fontFamily: AssetStrings.circulerNormal,
@@ -268,14 +281,14 @@ class _HomeState extends State<RatingBarNew>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
+                    alignment: Alignment.center,
                     margin: new EdgeInsets.only(top: 21),
-                    width: double.infinity,
                     child: new Container(
                       height: 70.0,
                       width: 70.0,
                       child: ClipOval(
                         child: getCachedNetworkImageWithurl(
-                          url: "",
+                          url: widget?.image ?? "",
                           size: 70,
                           fit: BoxFit.cover,
                         ),
@@ -286,7 +299,7 @@ class _HomeState extends State<RatingBarNew>
                     alignment: Alignment.center,
                     margin: new EdgeInsets.only(top: 10),
                     child: new Text(
-                      "Jonathan dev",
+                      widget?.name ?? "",
                       style: new TextStyle(
                           fontFamily: AssetStrings.circulerMedium,
                           fontSize: 18,
@@ -296,7 +309,7 @@ class _HomeState extends State<RatingBarNew>
                   new Container(
                     height: 25,
                   ),
-                  /*   new Column(
+                  widget?.type == 0 ? new Column(
                     children: [
                       getRowTop(),
                       getRowBottom(),
@@ -310,7 +323,7 @@ class _HomeState extends State<RatingBarNew>
                         ),
                       ),
                     ],
-                  ),*/
+                  ) : Container(),
                   Container(
                     margin: new EdgeInsets.only(left: 18, right: 18.0, top: 20),
                     alignment: Alignment.centerLeft,

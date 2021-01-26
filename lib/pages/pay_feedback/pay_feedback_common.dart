@@ -23,14 +23,19 @@ import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
-class PayFeebackDetails extends StatefulWidget {
+class PayFeebackDetailsCommon extends StatefulWidget {
   final ValueChanged<Widget> lauchCallBack;
   final String userId;
   final String postId;
+  final int status;
   final int type;
 
-  PayFeebackDetails(
-      {@required this.lauchCallBack, this.userId, this.postId, this.type});
+  PayFeebackDetailsCommon(
+      {@required this.lauchCallBack,
+      this.userId,
+      this.postId,
+      this.status,
+      this.type});
 
 /*  final String id;
 
@@ -40,8 +45,8 @@ class PayFeebackDetails extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<PayFeebackDetails>
-    with AutomaticKeepAliveClientMixin<PayFeebackDetails> {
+class _HomeState extends State<PayFeebackDetailsCommon>
+    with AutomaticKeepAliveClientMixin<PayFeebackDetailsCommon> {
   var screenSize;
 
   final StreamController<bool> _loaderStreamController =
@@ -81,7 +86,6 @@ class _HomeState extends State<PayFeebackDetails>
     ids = userinfo?.user?.id.toString() ?? "";
 */
 
-
     Future.delayed(const Duration(milliseconds: 300), () {
       hitApi();
     });
@@ -89,7 +93,6 @@ class _HomeState extends State<PayFeebackDetails>
 
     super.initState();
   }
-
 
   hitApi() async {
     provider.setLoading();
@@ -139,7 +142,6 @@ class _HomeState extends State<PayFeebackDetails>
 
     setState(() {});
   }
-
 
   hitReportApi() async {
     offstageLoader = true;
@@ -218,24 +220,21 @@ class _HomeState extends State<PayFeebackDetails>
         widget.lauchCallBack(Material(
             child: Material(
                 child: new RatingBarNew(
-                  id: widget?.postId?.toString(),
-                  type: widget?.type,
-                  image: widget.type == 0 ? hiredUserDetailsResponse?.data
-                      ?.hiredUser?.profilePic ?? "" : hiredUserDetailsResponse
-                      ?.data?.postedbyuser?.profilePic ?? "",
-                  name: widget.type == 0 ? hiredUserDetailsResponse?.data
-                      ?.hiredUser?.name ?? "" : hiredUserDetailsResponse?.data
-                      ?.postedbyuser?.name ?? "",
-                  userd: widget.type == 0
-                      ? hiredUserDetailsResponse?.data?.hiredUser?.id
-                      ?.toString() ?? ""
-                      : hiredUserDetailsResponse?.data?.postedbyuser?.id
-                      ?.toString() ?? "",
-                  paymentAmount: hiredUserDetailsResponse?.data?.receiving
-                      ?.toString(),
-                  paymentType: type == 1 ? "Hand Cash" : "Card/Paypal",
-
-                ))));
+          id: widget?.postId?.toString(),
+          type: 1,
+          image: widget.type == 0
+              ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? ""
+              : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
+          name: widget.type == 0
+              ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
+              : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
+          userd: widget.type == 0
+              ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
+              : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ??
+                  "",
+          paymentAmount: hiredUserDetailsResponse?.data?.receiving?.toString(),
+          paymentType: type == 1 ? "Hand Cash" : "Card/Paypal",
+        ))));
       }
 
       print(response);
@@ -307,25 +306,22 @@ class _HomeState extends State<PayFeebackDetails>
     widget.lauchCallBack(Material(
         child: Material(
             child: new RatingBarNew(
-              id: widget?.postId?.toString(),
-              type: widget?.type,
-              image: widget.type == 0 ? hiredUserDetailsResponse?.data
-                  ?.hiredUser?.profilePic ?? "" : hiredUserDetailsResponse?.data
-                  ?.postedbyuser?.profilePic ?? "",
-              name: widget.type == 0 ? hiredUserDetailsResponse?.data?.hiredUser
-                  ?.name ?? "" : hiredUserDetailsResponse?.data?.postedbyuser
-                  ?.name ?? "",
-              userd: widget.type == 0 ? hiredUserDetailsResponse?.data
-                  ?.hiredUser?.id?.toString() ?? "" : hiredUserDetailsResponse
-                  ?.data?.postedbyuser?.id?.toString() ?? "",
-              paymentAmount: hiredUserDetailsResponse?.data?.receiving
-                  ?.toString(),
-              paymentType: type == 1 ? "Hand Cash" : "Card/Paypal",
-
-            ))));
+      id: widget?.postId?.toString(),
+      type: widget?.type,
+      image: widget.type == 0
+          ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? ""
+          : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
+      name: widget.type == 0
+          ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
+          : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
+      userd: widget.type == 0
+          ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
+          : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ?? "",
+      paymentAmount: hiredUserDetailsResponse?.data?.receiving?.toString(),
+      paymentType: type == 1 ? "Hand Cash" : "Card/Paypal",
+    ))));
 
     //updateUserPaymentStatus();
-
 
     /*  await Future.delayed(Duration(milliseconds: 200));
     showInSnackBar("Favour applied successfully");
@@ -347,7 +343,6 @@ class _HomeState extends State<PayFeebackDetails>
     );*/
   }
 
-
   String formatDateString(String dateString) {
     try {
       DateTime dateTime = DateTime.parse(dateString);
@@ -364,7 +359,7 @@ class _HomeState extends State<PayFeebackDetails>
       onTap: () {},
       child: Container(
         padding:
-        new EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
+            new EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
         color: Colors.white,
         margin: new EdgeInsets.only(top: 4),
         child: Row(
@@ -449,18 +444,19 @@ class _HomeState extends State<PayFeebackDetails>
           new CupertinoPageRoute(builder: (BuildContext context) {
             return Material(
                 child: new ChatMessageDetails(
-                  hireduserId: widget.type == 0 ? hiredUserDetailsResponse?.data
-                      ?.hiredUser?.id?.toString() : hiredUserDetailsResponse
-                      ?.data?.postedbyuser?.id?.toString(),
-                  userButtonMsg: true,
-                ));
+              hireduserId: widget.type == 0
+                  ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString()
+                  : hiredUserDetailsResponse?.data?.postedbyuser?.id
+                      ?.toString(),
+              userButtonMsg: false,
+            ));
           }),
         );
       },
       child: Container(
         color: Colors.white,
         padding:
-        new EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
+            new EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
         margin: new EdgeInsets.only(top: 4),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -471,9 +467,13 @@ class _HomeState extends State<PayFeebackDetails>
               alignment: Alignment.center,
               child: new ClipOval(
                 child: getCachedNetworkImageWithurl(
-                    url: widget.type == 0 ? hiredUserDetailsResponse?.data
-                        ?.hiredUser?.profilePic ?? "" : hiredUserDetailsResponse
-                        ?.data?.postedbyuser?.profilePic ?? "",
+                    url: widget.type == 0
+                        ? hiredUserDetailsResponse
+                                ?.data?.hiredUser?.profilePic ??
+                            ""
+                        : hiredUserDetailsResponse
+                                ?.data?.postedbyuser?.profilePic ??
+                            "",
                     fit: BoxFit.fill,
                     size: 50),
               ),
@@ -485,24 +485,24 @@ class _HomeState extends State<PayFeebackDetails>
                   Container(
                     margin: new EdgeInsets.only(left: 10.0, right: 10.0),
                     child: new Text(
-                      widget.type == 0 ? hiredUserDetailsResponse?.data
-                          ?.hiredUser?.name : hiredUserDetailsResponse?.data
-                          ?.postedbyuser?.name,
+                      widget.type == 0
+                          ? hiredUserDetailsResponse?.data?.hiredUser?.name
+                          : hiredUserDetailsResponse?.data?.postedbyuser?.name,
                       style: TextThemes.blackCirculerMedium,
                     ),
                   ),
                   Container(
-                    margin: new EdgeInsets.only(
-                        left: 10.0, right: 10.0, top: 5),
+                    margin:
+                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 5),
                     child: Row(
                       children: [
                         Container(
                             child: new Text(
-                              widget?.type == 0
-                                  ? "You have hired the person"
-                                  : "Favor Post Owner",
-                              style: TextThemes.greyTextFieldNormalNw,
-                            )),
+                          widget?.type == 0
+                              ? "You have hired the person"
+                              : "Favor Post Owner",
+                          style: TextThemes.greyTextFieldNormalNw,
+                        )),
                         /*   Container(
                           width: 3,
                           height: 3,
@@ -620,29 +620,30 @@ class _HomeState extends State<PayFeebackDetails>
             height: screenSize.height,
             child: hiredUserDetailsResponse != null
                 ? SingleChildScrollView(
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Container(
-                    height: 40,
-                    width: double.infinity,
-                    color: Colors.white,
-                  ),
-                  Container(
-                    color: Colors.white,
-                    alignment: Alignment.center,
-                    child: Stack(
-                      children: [
-                        new Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            new Container(
-                              height: 96.0,
+                    child: new Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        new Container(
+                          height: 40,
+                          width: double.infinity,
+                          color: Colors.white,
+                        ),
+                        Container(
+                          color: Colors.white,
+                          alignment: Alignment.center,
+                          child: Stack(
+                            children: [
+                              new Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  new Container(
+                                    height: 96.0,
                                     width: 96.0,
                                     child: ClipOval(
                                       child: getCachedNetworkImageWithurl(
                                         url: hiredUserDetailsResponse?.data
-                                            ?.postedbyuser?.profilePic ?? "",
+                                                ?.postedbyuser?.profilePic ??
+                                            "",
                                         size: 96,
                                         fit: BoxFit.cover,
                                       ),
@@ -653,8 +654,9 @@ class _HomeState extends State<PayFeebackDetails>
                                     width: 96.0,
                                     child: ClipOval(
                                       child: getCachedNetworkImageWithurl(
-                                        url: hiredUserDetailsResponse?.data
-                                            ?.hiredUser?.profilePic ?? "",
+                                        url: hiredUserDetailsResponse
+                                                ?.data?.hiredUser?.profilePic ??
+                                            "",
                                         size: 96,
                                         fit: BoxFit.cover,
                                       ),
@@ -672,8 +674,8 @@ class _HomeState extends State<PayFeebackDetails>
                                           child: InkWell(
                                             onTap: () {},
                                             child: new Padding(
-                                              padding: const EdgeInsets.all(
-                                                  1.5),
+                                              padding:
+                                                  const EdgeInsets.all(1.5),
                                               child: new Image.asset(
                                                 AssetStrings.chatSend,
                                                 width: 32,
@@ -682,15 +684,14 @@ class _HomeState extends State<PayFeebackDetails>
                                             ),
                                           ),
                                         ),
-
                                         Positioned(
                                           left: 0.0,
                                           right: 0.0,
                                           child: InkWell(
                                             onTap: () {},
                                             child: new Container(
-                                              margin: new EdgeInsets.only(
-                                                  top: 5),
+                                              margin:
+                                                  new EdgeInsets.only(top: 5),
                                               child: new Image.asset(
                                                 AssetStrings.passPng,
                                                 width: 20,
@@ -706,9 +707,7 @@ class _HomeState extends State<PayFeebackDetails>
                                         color: Colors.white,
                                         shape: BoxShape.circle),
                                     width: 32,
-                                    height: 32
-
-                                ),
+                                    height: 32),
                               )
                             ],
                           ),
@@ -742,12 +741,12 @@ class _HomeState extends State<PayFeebackDetails>
                               context,
                               new CupertinoPageRoute(
                                   builder: (BuildContext context) {
-                                    return Material(
-                                        child: new PostFavorDetails(
-                                          id: widget?.postId,
-                                          isButtonDesabled: true,
-                                        ));
-                                  }),
+                                return Material(
+                                    child: new PostFavorDetails(
+                                  id: widget?.postId,
+                                  isButtonDesabled: true,
+                                ));
+                              }),
                             );
                           },
                           child: new Container(
@@ -761,66 +760,38 @@ class _HomeState extends State<PayFeebackDetails>
                             ),
                           ),
                         ),
-                  buildItemUser(),
-                  buildItemRating(2, formatDateString(
-                      hiredUserDetailsResponse?.data?.hiredUser?.createdAt
-                          ?.toString() ?? "")),
-
-                  widget.type == 0 ? Container(
-                      color: Colors.white,
-                      padding: new EdgeInsets.only(
-                          left: 16.0, right: 16.0, top: 16),
-                      margin: new EdgeInsets.only(top: 4),
-                      alignment: Alignment.centerLeft,
-                      child: new Text(
-                        "Payment Method"
-                        ,
-                        style: TextThemes.blackCirculerMediumHeight,
-                      )) : Container(),
-                  widget?.type == 0
-                      ? buildPaymentType(1, "Hand Cash",
-                      "You can Pay to the receiver by handcash. Receiver will cost 0% fee.")
-                      : Container(),
-                  widget?.type == 0 ? Opacity(
-                    opacity: 0.12,
-                    child: new Container(
-                      height: 1.0,
-                      margin:
-                      new EdgeInsets.only(left: 17.0, right: 17.0),
-                      color: AppColors.dividerColor,
-                    ),
-                  ) : Container(),
-                  widget?.type == 0
-                      ? buildPaymentType(2, "Card/Paypal",
-                      "You can Pay to the receiver by debit/credit/paypal. Receiver will cost 3% fee.")
-                      : Container(),
-                  Container(
-                      color: Colors.white,
-                      padding: new EdgeInsets.only(
-                          left: 16.0, right: 16.0, top: 16),
-                      margin: new EdgeInsets.only(top: 4),
-                      alignment: Alignment.centerLeft,
-                      child: new Text(
-                        ResString().get('payment_brkdown'),
-                        style: TextThemes.blackCirculerMediumHeight,
-                      )),
-                  getRowsPayment(
-                      ResString().get('job_payment'),
-                      "€${hiredUserDetailsResponse?.data?.price?.toString() ??
-                          ""}", 23.0),
-                  getRowsPayment(
-                      ResString().get('payvor_service_fee') +
-                          "(${hiredUserDetailsResponse?.data?.serviceFee
-                              ?.toString()}%)",
-                      "€${hiredUserDetailsResponse?.data?.serviceFee
-                          ?.toString() ?? ""}",
-                      9.0),
-                  new Container(
-                    height: 13,
-                    color: Colors.white,
-                  ),
-                  Opacity(
-                    opacity: 0.12,
+                        buildItemUser(),
+                        buildItemRating(
+                            2,
+                            formatDateString(hiredUserDetailsResponse
+                                    ?.data?.hiredUser?.createdAt
+                                    ?.toString() ??
+                                "")),
+                        Container(
+                            color: Colors.white,
+                            padding: new EdgeInsets.only(
+                                left: 16.0, right: 16.0, top: 16),
+                            margin: new EdgeInsets.only(top: 4),
+                            alignment: Alignment.centerLeft,
+                            child: new Text(
+                              ResString().get('payment_brkdown'),
+                              style: TextThemes.blackCirculerMediumHeight,
+                            )),
+                        getRowsPayment(
+                            ResString().get('job_payment'),
+                            "€${hiredUserDetailsResponse?.data?.price?.toString() ?? ""}",
+                            23.0),
+                        getRowsPayment(
+                            ResString().get('payvor_service_fee') +
+                                "(${hiredUserDetailsResponse?.data?.servicePerc?.toString()}%)",
+                            "€${hiredUserDetailsResponse?.data?.serviceFee?.toString() ?? ""}",
+                            9.0),
+                        new Container(
+                          height: 13,
+                          color: Colors.white,
+                        ),
+                        Opacity(
+                          opacity: 0.12,
                           child: new Container(
                             height: 1.0,
                             margin:
@@ -844,8 +815,7 @@ class _HomeState extends State<PayFeebackDetails>
                                 textAlign: TextAlign.center,
                               ),
                               new Text(
-                                "€${hiredUserDetailsResponse?.data?.receiving
-                                    ?.toString() ?? ""}",
+                                "€${hiredUserDetailsResponse?.data?.receiving?.toString() ?? ""}",
                                 style: new TextStyle(
                                     fontFamily: AssetStrings.circulerBoldStyle,
                                     color: AppColors.bluePrimary,
@@ -855,13 +825,10 @@ class _HomeState extends State<PayFeebackDetails>
                             ],
                           ),
                         ),
-                  widget?.type == 1
-                      ? buildItemRating(1, "Favor Ended")
-                      : Container(),
-                  new SizedBox(
-                    height: 150.0,
-                  ),
-                ],
+                        new SizedBox(
+                          height: 150.0,
+                        ),
+                      ],
                     ),
                   )
                 : Container(),
@@ -919,7 +886,7 @@ class _HomeState extends State<PayFeebackDetails>
                   ),
                 ),
               )),
-          hiredUserDetailsResponse != null
+          widget?.status == 0
               ? Positioned(
                   bottom: 0.0,
                   left: 0.0,
@@ -929,10 +896,7 @@ class _HomeState extends State<PayFeebackDetails>
                     child: Container(
                         color: Colors.white,
                         padding: new EdgeInsets.only(top: 9, bottom: 28),
-                        child: getSetupButtonNew(
-                            callback, widget.type == 0
-                            ? "Pay and Give Feedback"
-                            : "Give Feedback", 16,
+                        child: getSetupButtonNew(callback, "Give Feedback", 16,
                             newColor: AppColors.colorDarkCyan)),
                   ),
                 )
