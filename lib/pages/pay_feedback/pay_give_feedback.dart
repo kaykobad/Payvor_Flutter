@@ -28,9 +28,14 @@ class PayFeebackDetails extends StatefulWidget {
   final String userId;
   final String postId;
   final int type;
+  final ValueSetter<int> voidcallback;
 
   PayFeebackDetails(
-      {@required this.lauchCallBack, this.userId, this.postId, this.type});
+      {@required this.lauchCallBack,
+      this.userId,
+      this.postId,
+      this.type,
+      this.voidcallback});
 
 /*  final String id;
 
@@ -45,7 +50,7 @@ class _HomeState extends State<PayFeebackDetails>
   var screenSize;
 
   final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
+  new StreamController<bool>();
   ScrollController scrollController = new ScrollController();
 
   AuthProvider provider;
@@ -55,7 +60,7 @@ class _HomeState extends State<PayFeebackDetails>
   var isCurrentUser = false;
 
   bool offstageLoader = false;
-  int type = 0;
+  int type = 1;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -65,7 +70,7 @@ class _HomeState extends State<PayFeebackDetails>
   HiredUserDetailsResponse hiredUserDetailsResponse;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+  new GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
@@ -88,6 +93,11 @@ class _HomeState extends State<PayFeebackDetails>
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
     super.initState();
+  }
+
+
+  ValueSetter<int> callbackApi(int type) {
+    widget.voidcallback(1);
   }
 
 
@@ -234,6 +244,7 @@ class _HomeState extends State<PayFeebackDetails>
                   paymentAmount: hiredUserDetailsResponse?.data?.receiving
                       ?.toString(),
                   paymentType: type == 1 ? "Hand Cash" : "Card/Paypal",
+                  voidcallback: callbackApi,
 
                 ))));
       }
@@ -304,27 +315,8 @@ class _HomeState extends State<PayFeebackDetails>
       return;
     }
 
-    widget.lauchCallBack(Material(
-        child: Material(
-            child: new RatingBarNew(
-              id: widget?.postId?.toString(),
-              type: widget?.type,
-              image: widget.type == 0 ? hiredUserDetailsResponse?.data
-                  ?.hiredUser?.profilePic ?? "" : hiredUserDetailsResponse?.data
-                  ?.postedbyuser?.profilePic ?? "",
-              name: widget.type == 0 ? hiredUserDetailsResponse?.data?.hiredUser
-                  ?.name ?? "" : hiredUserDetailsResponse?.data?.postedbyuser
-                  ?.name ?? "",
-              userd: widget.type == 0 ? hiredUserDetailsResponse?.data
-                  ?.hiredUser?.id?.toString() ?? "" : hiredUserDetailsResponse
-                  ?.data?.postedbyuser?.id?.toString() ?? "",
-              paymentAmount: hiredUserDetailsResponse?.data?.receiving
-                  ?.toString(),
-              paymentType: type == 1 ? "Hand Cash" : "Card/Paypal",
 
-            ))));
-
-    //updateUserPaymentStatus();
+    updateUserPaymentStatus();
 
 
     /*  await Future.delayed(Duration(milliseconds: 200));
@@ -690,11 +682,11 @@ class _HomeState extends State<PayFeebackDetails>
                                             onTap: () {},
                                             child: new Container(
                                               margin: new EdgeInsets.only(
-                                                  top: 5),
+                                                  top: 7.3),
                                               child: new Image.asset(
-                                                AssetStrings.passPng,
-                                                width: 20,
-                                                height: 20,
+                                                AssetStrings.combineUser,
+                                                width: 16,
+                                                height: 16,
                                                 color: Colors.white,
                                               ),
                                             ),
@@ -810,7 +802,7 @@ class _HomeState extends State<PayFeebackDetails>
                           ""}", 23.0),
                   getRowsPayment(
                       ResString().get('payvor_service_fee') +
-                          "(${hiredUserDetailsResponse?.data?.serviceFee
+                          "(${hiredUserDetailsResponse?.data?.servicePerc
                               ?.toString()}%)",
                       "€${hiredUserDetailsResponse?.data?.serviceFee
                           ?.toString() ?? ""}",

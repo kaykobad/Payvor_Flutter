@@ -425,20 +425,22 @@ class _HomeState extends State<MyPosts>
             widget.lauchCallBack(Material(
                 child: Material(
                     child: new PayFeebackDetails(
-              lauchCallBack: widget?.lauchCallBack,
-              userId: data?.hiredUserId?.toString(),
-              postId: data?.id?.toString(),
-              type: 0,
+                      lauchCallBack: widget?.lauchCallBack,
+                      userId: data?.hiredUserId?.toString(),
+                      postId: data?.id?.toString(),
+                      type: 0,
+                      voidcallback: callback,
             ))));
           } else {
             widget.lauchCallBack(Material(
                 child: Material(
                     child: new PayFeebackDetailsCommon(
-              lauchCallBack: widget?.lauchCallBack,
-              userId: data?.hiredUserId?.toString(),
-              postId: data?.id?.toString(),
-              status: 0,
-              type: 0,
+                      lauchCallBack: widget?.lauchCallBack,
+                      userId: data?.hiredUserId?.toString(),
+                      postId: data?.id?.toString(),
+                      status: 0,
+                      type: 0,
+                      voidcallback: callback,
             ))));
           }
         } else {
@@ -449,8 +451,8 @@ class _HomeState extends State<MyPosts>
                     userId: data?.hiredUserId?.toString(),
                     postId: data?.id?.toString(),
                     status: 1,
-                    type: 0
-                    ,
+                    type: 0,
+                    voidcallback: callback,
                   ))));
 
           /* widget.lauchCallBack(Material(
@@ -478,8 +480,8 @@ class _HomeState extends State<MyPosts>
               child: new Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  new SvgPicture.asset(
-                    AssetStrings.referIcon,
+                  new Image.asset(
+                    AssetStrings.combine_shape,
                     height: 18,
                     width: 18,
                   ),
@@ -541,7 +543,7 @@ class _HomeState extends State<MyPosts>
                     Container(
                       child: new Text(
                         data?.status == 3
-                            ? "You have paid & Ended Favor"
+                            ? "You have paid & Ended Favor "
                             : "You have hired ",
                         style: TextThemes.grayNormalSmall,
                       ),

@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/Messages.dart';
 
 import 'AppColors.dart';
@@ -282,15 +283,12 @@ Widget getCachedNetworkImageWithurl(
       print("errro $error");
       return new Center(
         child: Container(
-          width: size,
-          height: size,
-          decoration: new BoxDecoration(
-            shape: BoxShape.circle,
-              color: AppColors.kGrey.withOpacity(0.2),
+            width: size,
+            height: size,
+            decoration: new BoxDecoration(
+              shape: BoxShape.circle,
             ),
-            child: new Icon(
-              Icons.person, color: Colors.lightBlueAccent, size: size - 28,)
-        ),
+            child: new Image.asset(AssetStrings.noPhoto)),
 //          child: new SvgPicture.asset(
 //        AssetStrings.imageFirst,
 //        fit: BoxFit.fill,

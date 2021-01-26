@@ -29,13 +29,15 @@ class PayFeebackDetailsCommon extends StatefulWidget {
   final String postId;
   final int status;
   final int type;
+  final ValueSetter<int> voidcallback;
 
   PayFeebackDetailsCommon(
       {@required this.lauchCallBack,
       this.userId,
       this.postId,
       this.status,
-      this.type});
+      this.type,
+      this.voidcallback});
 
 /*  final String id;
 
@@ -225,15 +227,20 @@ class _HomeState extends State<PayFeebackDetailsCommon>
           image: widget.type == 0
               ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? ""
               : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
-          name: widget.type == 0
-              ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
-              : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
-          userd: widget.type == 0
-              ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
-              : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ??
-                  "",
-          paymentAmount: hiredUserDetailsResponse?.data?.receiving?.toString(),
-          paymentType: type == 1 ? "Hand Cash" : "Card/Paypal",
+                  name: widget.type == 0
+                      ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
+                      : hiredUserDetailsResponse?.data?.postedbyuser?.name ??
+                      "",
+                  userd: widget.type == 0
+                      ? hiredUserDetailsResponse?.data?.hiredUser?.id
+                      ?.toString() ?? ""
+                      : hiredUserDetailsResponse?.data?.postedbyuser?.id
+                      ?.toString() ??
+                      "",
+                  paymentAmount: hiredUserDetailsResponse?.data?.receiving
+                      ?.toString(),
+                  paymentType: type == 1 ? "Hand Cash" : "Card/Paypal",
+                  voidcallback: callbackApi,
         ))));
       }
 
@@ -249,6 +256,12 @@ class _HomeState extends State<PayFeebackDetailsCommon>
 
     setState(() {});
   }
+
+
+  ValueSetter<int> callbackApi(int type) {
+    widget.voidcallback(1);
+  }
+
 
   hitDeletePostApi() async {
     offstageLoader = true;
@@ -303,25 +316,8 @@ class _HomeState extends State<PayFeebackDetailsCommon>
       return;
     }
 
-    widget.lauchCallBack(Material(
-        child: Material(
-            child: new RatingBarNew(
-      id: widget?.postId?.toString(),
-      type: widget?.type,
-      image: widget.type == 0
-          ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? ""
-          : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
-      name: widget.type == 0
-          ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
-          : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
-      userd: widget.type == 0
-          ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
-          : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ?? "",
-      paymentAmount: hiredUserDetailsResponse?.data?.receiving?.toString(),
-      paymentType: type == 1 ? "Hand Cash" : "Card/Paypal",
-    ))));
 
-    //updateUserPaymentStatus();
+    updateUserPaymentStatus();
 
     /*  await Future.delayed(Duration(milliseconds: 200));
     showInSnackBar("Favour applied successfully");
@@ -486,8 +482,10 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                     margin: new EdgeInsets.only(left: 10.0, right: 10.0),
                     child: new Text(
                       widget.type == 0
-                          ? hiredUserDetailsResponse?.data?.hiredUser?.name
-                          : hiredUserDetailsResponse?.data?.postedbyuser?.name,
+                          ? hiredUserDetailsResponse?.data?.hiredUser?.name ??
+                          ""
+                          : hiredUserDetailsResponse?.data?.postedbyuser
+                          ?.name ?? "",
                       style: TextThemes.blackCirculerMedium,
                     ),
                   ),
@@ -691,11 +689,11 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                                             onTap: () {},
                                             child: new Container(
                                               margin:
-                                                  new EdgeInsets.only(top: 5),
+                                              new EdgeInsets.only(top: 7.3),
                                               child: new Image.asset(
-                                                AssetStrings.passPng,
-                                                width: 20,
-                                                height: 20,
+                                                AssetStrings.combineUser,
+                                                width: 16,
+                                                height: 16,
                                                 color: Colors.white,
                                               ),
                                             ),
