@@ -356,11 +356,11 @@ class _HomeState extends State<MyJobs>
     String data = "";
 
     if (type == 1) {
-      data = "has hired you";
+      data = " has hired you";
     } else if (type == 2) {
-      data = "has paid & Ended Favor";
+      data = " has paid & Ended Favor";
     } else if (type == 3) {
-      data = "has paid & Ended Favor";
+      data = " has paid & Ended Favor";
     }
     return data;
   }
@@ -453,42 +453,40 @@ class _HomeState extends State<MyJobs>
     }
   }
 
+  ValueSetter<int> callback(int type) {
+    currentPage = 1;
+    isPullToRefresh = true;
+    _loadMore = false;
+    hitJobsPost();
+  }
+
   Widget buildItemMain(int index, DataNextJob data) {
     var dates = formatDateString(data?.createdAt ?? "");
 
     return InkWell(
       onTap: () {
         if (data?.status != 3) {
-          if (data?.status == 1) {
-            widget.lauchCallBack(Material(
-                child: Material(
-                    child: new PayFeebackDetails(
-              lauchCallBack: widget?.lauchCallBack,
-              userId: data?.hiredUserId?.toString(),
-              postId: data?.id?.toString(),
-              type: 1,
-            ))));
-          } else {
-            widget.lauchCallBack(Material(
-                child: Material(
-                    child: new PayFeebackDetailsCommon(
-              lauchCallBack: widget?.lauchCallBack,
-              userId: data?.hiredUserId?.toString(),
-              postId: data?.id?.toString(),
-              status: 0,
-              type: 1,
-            ))));
-          }
-        } else {
           widget.lauchCallBack(Material(
               child: Material(
                   child: new PayFeebackDetailsCommon(
-            lauchCallBack: widget?.lauchCallBack,
-            userId: data?.hiredUserId?.toString(),
-            postId: data?.id?.toString(),
-            status: 1,
-            type: 1,
-          ))));
+                      lauchCallBack: widget?.lauchCallBack,
+                      userId: data?.hiredUserId?.toString(),
+                      postId: data?.id?.toString(),
+                      status: 1,
+                      type: 1,
+                      voidcallback: callback,
+            ))));
+
+        } else {
+          widget.lauchCallBack(Material(
+              child: Material(
+                  child: new PayFeebackDetails(
+                    lauchCallBack: widget?.lauchCallBack,
+                    userId: data?.hiredUserId?.toString(),
+                    postId: data?.id?.toString(),
+                    type: 1,
+                    voidcallback: callback,
+                  ))));
 
           /*
           widget.lauchCallBack(Material(
@@ -516,8 +514,8 @@ class _HomeState extends State<MyJobs>
               child: new Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  new SvgPicture.asset(
-                    AssetStrings.referIcon,
+                  new Image.asset(
+                    AssetStrings.combine_shape,
                     height: 18,
                     width: 18,
                   ),

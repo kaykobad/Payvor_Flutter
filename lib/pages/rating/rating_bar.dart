@@ -27,6 +27,7 @@ class RatingBarNew extends StatefulWidget {
   final String userd;
   final String paymentType;
   final String paymentAmount;
+  final ValueSetter<int> voidcallback;
 
   RatingBarNew(
       {@required this.id,
@@ -35,7 +36,8 @@ class RatingBarNew extends StatefulWidget {
       this.name,
       this.userd,
       this.paymentType,
-      this.paymentAmount});
+      this.paymentAmount,
+      this.voidcallback});
 
   @override
   _HomeState createState() => _HomeState();
@@ -426,6 +428,8 @@ class _HomeState extends State<RatingBarNew>
   }
 
   void callbackDone() async {
+    widget.voidcallback(1);
+    Navigator.pop(context);
     Navigator.pop(context);
     Navigator.pop(context);
   }
@@ -531,6 +535,7 @@ class _HomeState extends State<RatingBarNew>
   void showBottomSheetSuccesss() {
     showModalBottomSheet<void>(
         isScrollControlled: true,
+        isDismissible: false,
         context: context,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -538,7 +543,9 @@ class _HomeState extends State<RatingBarNew>
         ),
         builder: (BuildContext bc) {
           return Padding(
-              padding: MediaQuery.of(context).viewInsets,
+              padding: MediaQuery
+                  .of(context)
+                  .viewInsets,
               child: Container(
                   child: new Column(
                 mainAxisSize: MainAxisSize.min,
