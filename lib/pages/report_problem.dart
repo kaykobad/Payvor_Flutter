@@ -5,21 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:payvor/filter/search_item.dart';
-import 'package:payvor/localdb/DatabaseHelper.dart';
-import 'package:payvor/model/apierror.dart';
-import 'package:payvor/model/recentsearch.dart';
-import 'package:payvor/model/suggest/suggest_response.dart';
-import 'package:payvor/pages/get_favor_list/favor_list_response.dart';
-import 'package:payvor/pages/post_details/post_details.dart';
-import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
-import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
@@ -260,6 +251,8 @@ class _HomeState extends State<ReportProblems>
   }
 
   void callbackDone() async {
+    Navigator.pop(context);
+    Navigator.pop(context);
     Navigator.pop(context);
     Navigator.pop(context);
   }
