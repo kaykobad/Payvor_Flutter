@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/filter/search_item.dart';
+import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/post_details/report_post_response.dart';
+import 'package:payvor/model/rating/give_rating_request.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -257,6 +260,53 @@ class _HomeState extends State<ReportProblems>
     Navigator.pop(context);
   }
 
+  hitReportApi() async {
+    /* if (_rating < 1.0) {
+      showInSnackBar("Please give a rating");
+      return;
+    }*/
+    provider.setLoading();
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    var request = new GiveRatingRequest(
+        favour_id: "1",
+        rating: "1",
+        description: _DescriptionController.text.toString());
+
+    var response = await provider.reportPostApi(request, context);
+
+    if (response is ReportResponse) {
+      provider.hideLoader();
+
+      if (response != null && response?.status?.code == 200) {
+        showBottomSheetSuccesss();
+      }
+
+      setState(() {});
+
+      print(response);
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
+  }
+
   @override
   bool get wantKeepAlive => true;
 
@@ -346,16 +396,19 @@ class _HomeState extends State<ReportProblems>
     showModalBottomSheet<void>(
         isScrollControlled: true,
         context: context,
+        isDismissible: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
         ),
         builder: (BuildContext bc) {
           return Padding(
-              padding: MediaQuery.of(context).viewInsets,
+              padding: MediaQuery
+                  .of(context)
+                  .viewInsets,
               child: Container(
                   child: new Column(
-                mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     width: 86.0,
