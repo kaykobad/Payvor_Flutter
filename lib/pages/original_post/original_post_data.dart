@@ -72,7 +72,7 @@ class _HomeState extends State<OriginalPostData>
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+        .showSnackBar(new SnackBar(content: new Text(value??"Favour deleted")));
   }
 
   String hireUserid = "";

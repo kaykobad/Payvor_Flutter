@@ -14,6 +14,7 @@ import 'package:payvor/pages/report_problem.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
+import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/themes_styles.dart';
@@ -66,7 +67,7 @@ class _HomeState extends State<RatingBarNew>
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+        .showSnackBar(new SnackBar(content: new Text(value??Messages.genericError)));
   }
 
   @override
