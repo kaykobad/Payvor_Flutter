@@ -559,11 +559,11 @@ class _HomeState extends State<MyJobs>
                     child: Material(
                         child: new ChatMessageDetails(
                           id: data.userId.toString(),
-                          name: data.hiredBy.name,
-                          hireduserId: data?.hiredUserId?.toString(),
-                          image: data?.image,
-                          userButtonMsg: true,
-                        ))));
+                  name: data.hiredBy.name,
+                  hireduserId: data?.userId?.toString(),
+                  image: data?.image,
+                  userButtonMsg: true,
+                ))));
               },
               child: Container(
                 margin: new EdgeInsets.only(top: 10.0),
