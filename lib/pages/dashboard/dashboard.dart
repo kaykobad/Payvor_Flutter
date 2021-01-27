@@ -135,7 +135,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       }),
     );
     print("callback $value");
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    (currentTab == 0)
+        ? SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light)
+        : SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
   }
 
   VoidCallback logoutCallBack() {

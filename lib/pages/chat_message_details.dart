@@ -84,18 +84,12 @@ class _HomeState extends State<ChatMessageDetails>
 
   @override
   void initState() {
-/*
-
-    var infoData = jsonDecode(MemoryManagement.getUserInfo());
-    var userinfo = LoginSignupResponse.fromJson(infoData);
-    ids = userinfo?.user?.id.toString() ?? "";
-*/
 
     Future.delayed(const Duration(milliseconds: 300), () {
       hitUserApi();
     });
     _setScrollListener();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
     super.initState();
   }
