@@ -313,9 +313,9 @@ class _HomeState extends State<ReportProblems>
     } else {
       provider.hideLoader();
       APIError apiError = response;
-      print(apiError.error);
+      print(apiError.messag);
 
-      showInSnackBar(apiError.error);
+      showInSnackBar(apiError.messag["message"]);
     }
   }
 
