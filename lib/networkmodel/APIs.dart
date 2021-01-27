@@ -35,8 +35,10 @@ class APIs {
   static const String updateFavStatus = "$baseUrl/update-fav-status";
   static const String referUser = "$baseUrl/refer-user";
   static const String notiUser = "$baseUrl/noti-user";
+  static const String reportFavor = "$baseUrl/report-hired-favour";
   static const String favorPostedByUser = "$baseUrl/myfavour";
   static const String favorHiredByUser = "$baseUrl/hiredfavour";
+  static const String gettingReportReason = "$baseUrl/rating-reasons";
   static const String ratingList = "$baseUrl/auth/rating-list";
   static const String userProfileDetails = "$baseUrl/userfavours/";
   static const String favorAppliedByUser = "$baseUrl/favourapplybyuser";

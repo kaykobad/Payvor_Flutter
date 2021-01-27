@@ -442,7 +442,10 @@ class _HomeState extends State<RatingBarNew>
     Navigator.push(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {
-        return Material(child: new ReportProblems());
+        return Material(
+            child: new ReportProblems(
+          id: widget?.id?.toString(),
+        ));
       }),
     );
   }

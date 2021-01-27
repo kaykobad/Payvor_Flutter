@@ -5,10 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:payvor/filter/search_item.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/rating/give_rating_request.dart';
+import 'package:payvor/model/report_reason/report_reason_response.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -18,6 +18,10 @@ import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class ReportProblems extends StatefulWidget {
+  final String id;
+
+  ReportProblems({@required this.id});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -29,7 +33,7 @@ class _HomeState extends State<ReportProblems>
   TextEditingController _DescriptionController = new TextEditingController();
   FocusNode _DesField = new FocusNode();
 
-  List<DataModelReport> listRecent = List();
+  List<DataReport> listRecent = List();
 
   Widget widgets;
 
@@ -47,22 +51,9 @@ class _HomeState extends State<ReportProblems>
 
   @override
   void initState() {
-    DataModelReport report0 =
-        new DataModelReport(isSelect: false, sendTitle: "");
-    DataModelReport report1 = new DataModelReport(
-        isSelect: false, sendTitle: "The person was absent");
-    DataModelReport report2 = new DataModelReport(
-        isSelect: false, sendTitle: "The person was a fraudster");
-    DataModelReport report3 = new DataModelReport(
-        isSelect: false, sendTitle: "Asked for money outside of Payvor");
-    DataModelReport report4 =
-        new DataModelReport(isSelect: false, sendTitle: "Something Else");
-
-    listRecent.add(report0);
-    listRecent.add(report1);
-    listRecent.add(report2);
-    listRecent.add(report3);
-    listRecent.add(report4);
+    Future.delayed(const Duration(milliseconds: 300), () {
+      getReportReasonApi();
+    });
 
     super.initState();
   }
@@ -102,9 +93,10 @@ class _HomeState extends State<ReportProblems>
   _buildContestListSearch() {
     return Container(
       color: Colors.white,
-      height: 240,
+
       child: new ListView.builder(
         padding: new EdgeInsets.all(0.0),
+        shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
           return buildItemRecent(index, listRecent[index]);
@@ -187,9 +179,10 @@ class _HomeState extends State<ReportProblems>
       backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
-          SingleChildScrollView(
+          listRecent?.length > 0 ? SingleChildScrollView(
             child: new Container(
               color: Colors.white,
+              height: getScreenSize(context: context).height,
               child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -198,7 +191,7 @@ class _HomeState extends State<ReportProblems>
                     children: [
                       Container(
                         margin: new EdgeInsets.only(
-                            left: 16.0, right: 16.0, top: 30),
+                            left: 16.0, right: 16.0, top: 60),
                         alignment: Alignment.centerLeft,
                         child: new Text(
                           "Write your Problem",
@@ -234,10 +227,9 @@ class _HomeState extends State<ReportProblems>
                 ],
               ),
             ),
-          ),
+          ) : Container(),
           new Center(
             child: Container(
-              margin: new EdgeInsets.only(top: 50),
               child: getHalfScreenLoader(
                 status: provider.getLoading(),
                 context: context,
@@ -250,7 +242,7 @@ class _HomeState extends State<ReportProblems>
   }
 
   void callback() async {
-    showBottomSheetSuccesss();
+    hitReportApi();
   }
 
   void callbackDone() async {
@@ -261,10 +253,28 @@ class _HomeState extends State<ReportProblems>
   }
 
   hitReportApi() async {
+    var typeId = "";
+    var selected = false;
+
+
+    for (var datareport in listRecent) {
+      if (datareport?.isSelected ?? false) {
+        selected = true;
+        typeId = datareport?.id?.toString();
+        break;
+      }
+    }
+
+    if (!selected) {
+      showInSnackBar("Please select a reason");
+      return;
+    }
+
     /* if (_rating < 1.0) {
       showInSnackBar("Please give a rating");
       return;
     }*/
+
     provider.setLoading();
 
     bool gotInternetConnection = await hasInternetConnection(
@@ -281,10 +291,12 @@ class _HomeState extends State<ReportProblems>
       return;
     }
 
-    var request = new GiveRatingRequest(
-        favour_id: "1",
-        rating: "1",
-        description: _DescriptionController.text.toString());
+    var request = new GiveReportRequest(
+        favour_id: widget?.id?.toString(),
+        type: typeId,
+        description: _DescriptionController.text?.isNotEmpty
+            ? _DescriptionController.text.toString()
+            : "");
 
     var response = await provider.reportPostApi(request, context);
 
@@ -307,43 +319,100 @@ class _HomeState extends State<ReportProblems>
     }
   }
 
+
+  getReportReasonApi() async {
+    /* if (_rating < 1.0) {
+      showInSnackBar("Please give a rating");
+      return;
+    }*/
+    provider.setLoading();
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+
+    var response = await provider.getReportReason(context);
+
+    if (response is GettingReportReason) {
+      provider.hideLoader();
+
+      if (response != null && response?.status?.code == 200) {
+        listRecent?.addAll(response?.data);
+      }
+
+      setState(() {});
+
+      print(response);
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
+  }
+
   @override
   bool get wantKeepAlive => true;
 
-  Widget buildItemRecent(int pos, DataModelReport report) {
+  Widget buildItemRecent(int pos, DataReport report) {
     return Container(
       child: Column(
         children: [
           pos == 0
               ? Container(
-                  margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 30),
-                  alignment: Alignment.centerLeft,
-                  child: new Text(
-                    "Select a reason",
-                    style: new TextStyle(
-                        color: Colors.black,
-                        fontFamily: AssetStrings.circulerMedium,
-                        fontSize: 18.0),
-                  ),
-                )
+            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 30),
+            alignment: Alignment.centerLeft,
+            child: new Text(
+              "Select a reason",
+              style: new TextStyle(
+                  color: Colors.black,
+                  fontFamily: AssetStrings.circulerMedium,
+                  fontSize: 18.0),
+            ),
+          )
               : buildItemRecentSearch(pos, report),
+
+
+          pos != 0 ? Opacity(
+            opacity: 0.12,
+            child: new Container(
+              height: 1.0,
+              margin:
+              new EdgeInsets.only(left: 18.0, right: 18.0, top: 12),
+              color: AppColors.dividerColor,
+            ),
+          ) : Container(
+            height: 12,
+          ),
         ],
       ),
     );
   }
 
-  Widget buildItemRecentSearch(int pos, DataModelReport repor) {
+  Widget buildItemRecentSearch(int pos, DataReport repor) {
     return InkWell(
       onTap: () {
         for (int i = 0; i < listRecent.length; i++) {
-          listRecent[i].isSelect = false;
+          listRecent[i].isSelected = false;
         }
 
-        repor?.isSelect = true;
+        repor?.isSelected = true;
         setState(() {});
       },
       child: Container(
-        padding: new EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
+        padding: new EdgeInsets.only(left: 16.0, right: 16.0, top: 12),
         child: Container(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -353,7 +422,7 @@ class _HomeState extends State<ReportProblems>
                 height: 19,
                 decoration: new BoxDecoration(
                     shape: BoxShape.circle,
-                    color: repor?.isSelect
+                    color: repor?.isSelected ?? false
                         ? Color.fromRGBO(255, 107, 102, 1)
                         : Color.fromRGBO(103, 99, 99, 0.3)),
                 child: new Icon(
@@ -368,9 +437,9 @@ class _HomeState extends State<ReportProblems>
               Expanded(
                 child: Container(
                   child: new Text(
-                    repor?.sendTitle ?? "",
+                    repor?.title ?? "",
                     style: new TextStyle(
-                      color: repor?.isSelect
+                      color: repor?.isSelected ?? false
                           ? Colors.black
                           : Color.fromRGBO(103, 99, 99, 1),
                       fontFamily: AssetStrings.circulerNormal,

@@ -32,6 +32,7 @@ import 'package:payvor/model/post_details/report_request.dart';
 import 'package:payvor/model/promotion/promotion_response.dart';
 import 'package:payvor/model/rating/give_rating_request.dart';
 import 'package:payvor/model/rating_list/rating_list.dart';
+import 'package:payvor/model/report_reason/report_reason_response.dart';
 import 'package:payvor/model/reset_password/reset_pass_request.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signuprequest.dart';
@@ -753,10 +754,12 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<dynamic> reportPostApi(
-      GiveRatingRequest requests, BuildContext context) async {
+      GiveReportRequest requests, BuildContext context) async {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.post(
-        context: context, url: APIs.giveRating, requestBody: requests.toJson());
+        context: context,
+        url: APIs.reportFavor,
+        requestBody: requests.toJson());
 
     if (response is APIError) {
       completer.complete(response);
@@ -788,10 +791,30 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<dynamic> hiredFavourPost(
-    BuildContext context,
-    int page,
-  ) async {
+
+  Future<dynamic> getReportReason(BuildContext context,) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response =
+    await APIHandler.get(context: context, url: APIs.gettingReportReason);
+
+    print(APIs.gettingReportReason);
+    print(APIs.gettingReportReason);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      print("res $jsonDecode($response)");
+      GettingReportReason resendOtpResponse =
+      new GettingReportReason.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> hiredFavourPost(BuildContext context,
+      int page,) async {
     print("fave");
     var infoData = jsonDecode(MemoryManagement.getUserInfo());
     var userinfo = LoginSignupResponse.fromJson(infoData);
