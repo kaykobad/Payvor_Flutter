@@ -158,12 +158,14 @@ class _HomeState extends State<RatingBarNew>
     return PreferredSize(
         preferredSize: Size.fromHeight(53.0),
         child: Container(
+          color: Colors.white,
           child: Column(
             children: [
               new SizedBox(
                 height: 20,
               ),
               Material(
+                color: Colors.white,
                 child: Container(
                   margin: new EdgeInsets.only(top: 15),
                   child: Row(
@@ -171,7 +173,7 @@ class _HomeState extends State<RatingBarNew>
                     children: [
                       Container(
                         alignment: Alignment.topLeft,
-                        margin: new EdgeInsets.only(left: 17.0, top: 7),
+                        margin: new EdgeInsets.only(left: 17.0, top: 10),
                         child: InkWell(
                           onTap: () {
                             Navigator.pop(context);
@@ -180,8 +182,8 @@ class _HomeState extends State<RatingBarNew>
                             padding: const EdgeInsets.all(3.0),
                             child: new SvgPicture.asset(
                               AssetStrings.back,
-                              width: 21.0,
-                              height: 21.0,
+                              width: 16.0,
+                              height: 16.0,
                             ),
                           ),
                         ),

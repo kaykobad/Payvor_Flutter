@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -6,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/chat/chat_screen.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
+import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/dummy.dart';
-import 'package:payvor/pages/login/login.dart';
+import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/pages/post/post_home.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/search/search_home.dart';
@@ -45,6 +48,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   double selectedDotSize = 0;
   FirebaseProvider _firebaseProvider;
   bool _isNewActivityFound = false;
+
+  String userName = "";
+  String userId = "";
+  String profile = "";
 
   Future<bool> _onBackPressed() async {
     bool canPop = false;
@@ -150,7 +157,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     Navigator.pushAndRemoveUntil(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {
-        return new LoginScreenNew();
+        return new SplashIntroScreenNew();
       }),
       (route) => false,
     );
@@ -168,6 +175,15 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     Future.delayed(Duration(milliseconds: 200), () {
       _setupCounterChangeListener();
     });
+
+    var userData = MemoryManagement.getUserInfo();
+    if (userData != null) {
+      Map<String, dynamic> data = jsonDecode(userData);
+      LoginSignupResponse userResponse = LoginSignupResponse.fromJson(data);
+      userName = userResponse.user.name ?? "";
+      profile = userResponse.user.profilePic ?? "";
+      userId = userResponse.user.id.toString();
+    }
   }
 
   @override
@@ -237,13 +253,17 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               key: _profileScreen,
               onGenerateRoute: (route) => MaterialPageRoute(
                 settings: route,
-                builder: (context) =>
-                    Dummy(logoutCallBack:logoutCallBack),
+                builder: (context) => ChatMessageDetails(
+                  hireduserId: userId,
+                  image: profile,
+                  name: userName,
+                ),
               ),
             ),
           ],
         ),
         floatingActionButton: FloatingActionButton(
+          elevation: 0.0,
           child: CustomFloatingButton(),
           onPressed: () {
             redirect();
@@ -352,17 +372,28 @@ class CustomFloatingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-
-      width: 85,
-      height: 85,
-      child: Icon(
-        Icons.add,
-        size: 30,
-      ),
+      width: 87,
+      height: 87,
+      padding: new EdgeInsets.all(3),
       decoration: BoxDecoration(
-          color: Colors.transparent,
-          shape: BoxShape.circle,
-          gradient: LinearGradient(colors: [AppColors.colorDarkCyan, AppColors.colorDarkCyan])),
+          color: Colors.white,
+          shape: BoxShape.circle),
+
+
+      child: Container(
+
+        width: 85,
+        height: 85,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: new SvgPicture.asset(
+            AssetStrings.plushome,
+          ),
+        ),
+        decoration: BoxDecoration(
+            color: AppColors.colorDarkCyan,
+            shape: BoxShape.circle),
+      ),
     );
   }
 

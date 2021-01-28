@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:payvor/pages/post_details/cardformatter.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
-import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
-import 'package:flutter_svg/svg.dart';
 
 class PaymentDialog extends StatefulWidget {
   ValueSetter<int> voidcallback;
@@ -95,7 +94,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                 topLeft: Radius.circular(26.0),
                 topRight: Radius.circular(26.0)),
           ),
-          height: MediaQuery.of(context).size.height - 50,
+          height: MediaQuery.of(context).size.height,
           child: ClipRRect(
             // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
             borderRadius: new BorderRadius.circular(10.0),
@@ -104,34 +103,49 @@ class _PaymentDialogState extends State<PaymentDialog> {
               child: new ListView(
                 children: [
                   Container(
-                    margin: new EdgeInsets.only(top: 32, left: 24),
-                    alignment: Alignment.topLeft,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: new Padding(
-                        padding: const EdgeInsets.all(1.0),
-                        child: new SvgPicture.asset(
-                          AssetStrings.cross,
+                    margin: new EdgeInsets.only(top: 48, left: 24, right: 24),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          alignment: Alignment.topLeft,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: new Padding(
+                              padding: const EdgeInsets.all(1.0),
+                              child: new SvgPicture.asset(
+                                AssetStrings.cross,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        Expanded(
+                          child: new Container(
+                            alignment: Alignment.center,
+                            child: new Text(
+                              "Payment Details",
+                              style: new TextStyle(
+                                  fontFamily: AssetStrings.circulerBoldStyle,
+                                  fontSize: 20,
+                                  color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  new Container(
-                    margin: new EdgeInsets.only(
-                      top: 9,
-                    ),
-                    alignment: Alignment.center,
-                    child: new Text(
-                      "Payment Details",
-                      style: new TextStyle(
-                          fontFamily: AssetStrings.circulerMedium,
-                          fontSize: 20,
-                          color: Colors.black),
+                  Opacity(
+                    opacity: 0.12,
+                    child: new Container(
+                      margin: new EdgeInsets.only(top: 16),
+                      height: 1.0,
+                      color: AppColors.dividerColor,
                     ),
                   ),
-                  new Container(
+
+                  /*    new Container(
                     margin: new EdgeInsets.only(top: 5),
                     alignment: Alignment.center,
                     child: new Text(
@@ -142,7 +156,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                         color: Color.fromRGBO(103, 99, 99, 1),
                       ),
                     ),
-                  ),
+                  ),*/
                   new SizedBox(
                     height: 24.0,
                   ),

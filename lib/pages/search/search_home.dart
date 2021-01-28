@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:payvor/filter/filter.dart';
 import 'package:payvor/filter/filter_request.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/get_favor_list/favor_list_response.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
@@ -70,6 +71,94 @@ class _HomeState extends State<SearchCompany>
     super.initState();
   }
 
+  Widget buildItem(Datas data) {
+    return InkWell(
+      onTap: () {
+        widget.lauchCallBack(Material(
+            child: new ChatMessageDetails(
+          id: data?.id?.toString(),
+          name: data?.user?.name,
+          image: data?.user?.profilePic,
+          hireduserId: data?.userId?.toString(),
+        )));
+      },
+      child: Container(
+        margin: new EdgeInsets.only(left: 16.0, right: 16.0),
+        child: Row(
+          children: <Widget>[
+            new Container(
+              width: 40.0,
+              height: 40.0,
+              decoration: BoxDecoration(shape: BoxShape.circle),
+              alignment: Alignment.center,
+              child: ClipOval(
+                // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+
+                child: getCachedNetworkImageWithurl(
+                    url: data.user?.profilePic ?? "",
+                    fit: BoxFit.fill,
+                    size: 40),
+              ),
+            ),
+            Expanded(
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+                      child: Row(
+                        children: [
+                          new Text(
+                            data.user.name,
+                            style: TextThemes.blackCirculerMedium,
+                          ),
+                          new SizedBox(
+                            width: 8,
+                          ),
+                          data?.user?.isActive == 1
+                              ? new Image.asset(
+                                  AssetStrings.verify,
+                                  width: 16,
+                                  height: 16,
+                                )
+                              : Container(),
+                        ],
+                      )),
+                  Container(
+                    margin:
+                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                    child: Row(
+                      children: [
+                        new Image.asset(
+                          AssetStrings.locationHome,
+                          width: 11,
+                          height: 14,
+                        ),
+                        new SizedBox(
+                          width: 6,
+                        ),
+                        Expanded(
+                            child: new Text(
+                          data?.location ?? "",
+                          style: TextThemes.greyDarkTextHomeLocation,
+                        )),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Align(
+                alignment: Alignment.center,
+                child: new Text(
+                  "€${data.price ?? "0"}",
+                  style: TextThemes.blackDarkHeaderSub,
+                )),
+          ],
+        ),
+      ),
+    );
+  }
 
   hitApi(FilterRequest filterRequest) async {
     if (!isPullToRefresh) {
@@ -471,82 +560,3 @@ class _HomeState extends State<SearchCompany>
   }
 }
 
-Widget buildItem(Datas data) {
-  return Container(
-    margin: new EdgeInsets.only(left: 16.0, right: 16.0),
-    child: Row(
-      children: <Widget>[
-        new Container(
-          width: 40.0,
-          height: 40.0,
-          decoration: BoxDecoration(
-
-              shape: BoxShape.circle
-          ),
-          alignment: Alignment.center,
-          child: ClipOval(
-            // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-
-            child: getCachedNetworkImageWithurl(
-                url:
-                data.user?.profilePic ?? "",
-                fit: BoxFit.fill,
-                size: 40
-            ),
-          ),
-        ),
-        Expanded(
-          child: new Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                  margin: new EdgeInsets.only(left: 10.0, right: 10.0),
-                  child: Row(
-                    children: [
-                      new Text(
-                        data.user.name,
-                        style: TextThemes.blackCirculerMedium,
-                      ),
-                      new SizedBox(
-                        width: 8,
-                      ),
-                      data?.user?.isActive == 1 ? new Image.asset(
-                        AssetStrings.verify,
-                        width: 16,
-                        height: 16,
-                      ) : Container(),
-                    ],
-                  )),
-              Container(
-                margin: new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
-                child: Row(
-                  children: [
-                    new Image.asset(
-                      AssetStrings.locationHome,
-                      width: 11,
-                      height: 14,
-                    ),
-                    new SizedBox(
-                      width: 6,
-                    ),
-                    Expanded(
-                        child: new Text(
-                          data?.location ?? "",
-                          style: TextThemes.greyDarkTextHomeLocation,
-                        )),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-        Align(
-            alignment: Alignment.center,
-            child: new Text(
-              "€${data.price ?? "0"}",
-              style: TextThemes.blackDarkHeaderSub,
-            )),
-      ],
-    ),
-  );
-}

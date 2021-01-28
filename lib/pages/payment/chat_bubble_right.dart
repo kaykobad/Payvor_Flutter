@@ -24,10 +24,10 @@ class ChatBubbleRight extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: Colors.transparent,
       child: Container(
         margin: const EdgeInsets.only(left: 20, right: 20.0, top: 25),
-        color: Colors.white,
+        color: Colors.transparent,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[

@@ -3,7 +3,7 @@ class Constants{
 
   static const double padding = 20;
   static const double avatarRadius = 45;
-  static const double bottomIconSize = 26;
+  static const double bottomIconSize = 24;
   static const double backIconsSpace = 10;
   static const double textFieldHeight = 58;
 

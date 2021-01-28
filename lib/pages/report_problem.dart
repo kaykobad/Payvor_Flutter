@@ -108,14 +108,16 @@ class _HomeState extends State<ReportProblems>
 
   Widget getAppBarNew(BuildContext context) {
     return PreferredSize(
-        preferredSize: Size.fromHeight(55.0),
+        preferredSize: Size.fromHeight(53.0),
         child: Container(
+          color: Colors.white,
           child: Column(
             children: [
               new SizedBox(
                 height: 20,
               ),
               Material(
+                color: Colors.white,
                 child: Container(
                   margin: new EdgeInsets.only(top: 10),
                   child: Row(
@@ -132,8 +134,8 @@ class _HomeState extends State<ReportProblems>
                             padding: const EdgeInsets.all(3.0),
                             child: new SvgPicture.asset(
                               AssetStrings.back,
-                              width: 21.0,
-                              height: 21.0,
+                              width: 16.0,
+                              height: 16.0,
                             ),
                           ),
                         ),
@@ -417,7 +419,7 @@ class _HomeState extends State<ReportProblems>
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              new Container(
+              /* new Container(
                 width: 19,
                 height: 19,
                 decoration: new BoxDecoration(
@@ -429,6 +431,23 @@ class _HomeState extends State<ReportProblems>
                   Icons.check,
                   color: Colors.white,
                   size: 14,
+                ),
+              ),
+*/
+              Container(
+                decoration: new BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: repor?.isSelected ?? false
+                      ? Colors.white
+                      : Colors.transparent,
+                ),
+                child: Image.asset(
+                  AssetStrings.checkTick,
+                  width: 21,
+                  height: 21,
+                  color: repor?.isSelected ?? false
+                      ? Color.fromRGBO(255, 107, 102, 1)
+                      : Color.fromRGBO(103, 99, 99, 0.3),
                 ),
               ),
               new SizedBox(

@@ -34,6 +34,8 @@ class _HomeState extends State<SearchMessage>
   var _firstTimeChatUser = true;
   var _userName;
   var _userProfilePic;
+
+  var offstageData = false;
   var _chatUserList = List<ChatUser>();
   var _chatUserListBackList = List<ChatUser>();
 
@@ -198,35 +200,38 @@ class _HomeState extends State<SearchMessage>
 //        });
   }
   get _getEmptyWidget {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          new SvgPicture.asset(
-            AssetStrings.chat_empty,
-          ),
-          Container(
-            margin: new EdgeInsets.only(top: 61),
-            child: new Text(
-              "No Messages",
-              style: new TextStyle(
-                  color: Colors.black,
-                  fontFamily: AssetStrings.circulerMedium,
-                  fontSize: 17.0),
+    return Container(
+      padding: new EdgeInsets.only(bottom: 40),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            new SvgPicture.asset(
+              AssetStrings.chat_empty,
             ),
-          ),
-          Container(
-            margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
-            child: new Text(
-              "You don’t have any conversation yet",
-              style: new TextStyle(
-                  color: Color.fromRGBO(103, 99, 99, 1.0),
-                  fontFamily: AssetStrings.circulerNormal,
-                  fontSize: 15.0),
+            Container(
+              margin: new EdgeInsets.only(top: 42),
+              child: new Text(
+                "No Messages",
+                style: new TextStyle(
+                    color: Colors.black,
+                    fontFamily: AssetStrings.circulerMedium,
+                    fontSize: 17.0),
+              ),
             ),
-          ),
-        ],
+            Container(
+              margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
+              child: new Text(
+                "You don’t have any conversation yet",
+                style: new TextStyle(
+                    color: Color.fromRGBO(103, 99, 99, 1.0),
+                    fontFamily: AssetStrings.circulerNormal,
+                    fontSize: 15.0),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -270,17 +275,14 @@ class _HomeState extends State<SearchMessage>
   }
 
   Widget getTextField() {
-    return Container(
-      margin: new EdgeInsets.only(left: 16.0, right: 16.0),
-      padding: new EdgeInsets.all(1),
+    return _chatUserListBackList.length > 0 ? Container(
+      margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 20),
       decoration: new BoxDecoration(
           borderRadius: new BorderRadius.circular(3.0),
-          border: new Border.all(color: Color.fromRGBO(224, 224, 244, 1)),
-          color: AppColors.kWhite),
+          border: new Border.all(color: Color.fromRGBO(224, 224, 244, 1))),
       child: Container(
         decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(3.0),
-            color: AppColors.lightWhite),
+            color: Color.fromRGBO(243, 243, 243, 1)),
         child: Container(
           height: 46.0,
           child: Row(
@@ -340,7 +342,7 @@ class _HomeState extends State<SearchMessage>
           ),
         ),
       ),
-    );
+    ) : Container();
   }
 
   void _searchChatUser(String searchKey) async {
@@ -422,8 +424,10 @@ class _HomeState extends State<SearchMessage>
                           new EdgeInsets.only(left: 10.0, right: 10.0, top: 6),
                       child: Container(
                           child: new Text(
-                       chatUser.lastMessage,
-                        style: TextThemes.greyDarkTextHomeLocation,
+                              chatUser.lastMessage,
+                              style: TextThemes.greyDarkTextHomeLocation,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis
                       )),
                     )
                   ],
@@ -436,10 +440,10 @@ class _HomeState extends State<SearchMessage>
                 alignment: Alignment.center,
                 child: Container(
                   padding:
-                      new EdgeInsets.only(top: 2, bottom: 2, left: 5, right: 5),
+                  new EdgeInsets.all(7),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                      borderRadius: new BorderRadius.circular(12.0),
+                      shape: BoxShape.circle,
                       color: AppColors.colorDarkCyan),
                   child: new Text(
                     "${chatUser.unreadMessageCount}",

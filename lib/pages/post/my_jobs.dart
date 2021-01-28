@@ -260,7 +260,6 @@ class _HomeState extends State<MyJobs>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 _buildContestList(),
-                new SizedBox(height: 30),
               ],
             ),
           ),
@@ -268,6 +267,7 @@ class _HomeState extends State<MyJobs>
             offstage: offstagenodata,
             child: Container(
               height: screenSize.height,
+              padding: new EdgeInsets.only(bottom: 40),
               child: new Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -279,7 +279,7 @@ class _HomeState extends State<MyJobs>
                       ),
                     ),
                     Container(
-                      margin: new EdgeInsets.only(top: 61),
+                      margin: new EdgeInsets.only(top: 42),
                       child: new Text(
                         "No Jobs",
                         style: new TextStyle(
@@ -510,7 +510,7 @@ class _HomeState extends State<MyJobs>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Container(
+            /* Container(
               child: new Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -537,9 +537,8 @@ class _HomeState extends State<MyJobs>
                   )
                 ],
               ),
-            ),
+            ),*/
             new Container(
-              margin: new EdgeInsets.only(top: 10.0),
               child: new Text(
                 data?.title ?? "",
                 style: TextThemes.blackCirculerMedium,
@@ -548,7 +547,7 @@ class _HomeState extends State<MyJobs>
             Opacity(
               opacity: 0.12,
               child: new Container(
-                margin: new EdgeInsets.only(top: 30.0),
+                margin: new EdgeInsets.only(top: 16.0),
                 height: 1.0,
                 color: AppColors.dividerColor,
               ),

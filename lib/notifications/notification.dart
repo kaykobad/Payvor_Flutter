@@ -8,6 +8,7 @@ import 'package:payvor/model/apierror.dart';
 import 'package:payvor/notifications/notification_response.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
@@ -24,6 +25,7 @@ class _HomeState extends State<Notifications>
 
   String searchkey = null;
   AuthProvider provider;
+  FirebaseProvider providerFirebase;
   int currentPage = 1;
   bool isPullToRefresh = false;
   bool offstagenodata = true;
@@ -143,8 +145,11 @@ class _HomeState extends State<Notifications>
 
   @override
   Widget build(BuildContext context) {
-    screenSize = MediaQuery.of(context).size;
+    screenSize = MediaQuery
+        .of(context)
+        .size;
     provider = Provider.of<AuthProvider>(context);
+    providerFirebase = Provider.of<FirebaseProvider>(context);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -163,6 +168,7 @@ class _HomeState extends State<Notifications>
             offstage: offstagenodata,
             child: Container(
               height: screenSize.height,
+              padding: new EdgeInsets.only(bottom: 40),
               child: new Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -174,7 +180,7 @@ class _HomeState extends State<Notifications>
                       ),
                     ),
                     Container(
-                      margin: new EdgeInsets.only(top: 61),
+                      margin: new EdgeInsets.only(top: 42),
                       child: new Text(
                         "No Notifications",
                         style: new TextStyle(
@@ -242,7 +248,7 @@ class _HomeState extends State<Notifications>
 
   Widget buildItem(Data data) {
     return Container(
-      margin: new EdgeInsets.only(left: 16.0, right: 16.0),
+      margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 14),
       child: Row(
         children: <Widget>[
           new Container(
@@ -325,7 +331,7 @@ class _HomeState extends State<Notifications>
   }
 
   void _redirectToFavourDetailScreen(int favourId) {
-    Navigator.push(
+    /* Navigator.push(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {
         return Material(
@@ -333,6 +339,10 @@ class _HomeState extends State<Notifications>
           id: favourId.toString(),
         ));
       }),
-    );
+    );*/
+
+    providerFirebase?.changeScreen(new PostFavorDetails(
+      id: favourId.toString(),
+    ));
   }
 }

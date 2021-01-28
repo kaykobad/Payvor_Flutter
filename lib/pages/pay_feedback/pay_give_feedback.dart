@@ -371,7 +371,7 @@ class _HomeState extends State<PayFeebackDetails>
                   shape: BoxShape.circle),
               alignment: Alignment.center,
               child: new Image.asset(
-                AssetStrings.combine_shape,
+              type == 1 ? AssetStrings.checkTick : AssetStrings.combine_shape,
                 height: 18,
                 width: 18,
               ),
@@ -805,8 +805,7 @@ class _HomeState extends State<PayFeebackDetails>
                       ResString().get('payvor_service_fee') +
                           "(${hiredUserDetailsResponse?.data?.servicePerc
                               ?.toString()}%)",
-                      "€${hiredUserDetailsResponse?.data?.serviceFee
-                          ?.toString() ?? ""}",
+                      "-€${hiredUserDetailsResponse?.data?.serviceFee?.toString() ?? ""}",
                       9.0),
                   new Container(
                     height: 13,
@@ -829,7 +828,8 @@ class _HomeState extends State<PayFeebackDetails>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               new Text(
-                                ResString().get('you_all_receive'),
+                                widget?.type == 0 ? "You’ll Pay" : ResString()
+                                    .get('you_all_receive'),
                                 style: new TextStyle(
                                     fontFamily: AssetStrings.circulerBoldStyle,
                                     color: AppColors.bluePrimary,

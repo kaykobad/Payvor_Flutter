@@ -313,18 +313,18 @@ Widget getCachedNetworkImageRect(
     },
     errorWidget: (BuildContext context, String error, Object obj) {
       print("errro $error");
-      return new Center(
-        child: Container(
-          width: double.infinity,
-          height: size,
-          decoration: new BoxDecoration(
-            color: AppColors.kGrey,
-          ),
+      return Container(
+        width: double.infinity,
+        height: size,
+        alignment: Alignment.center,
+        decoration: new BoxDecoration(
+          color: AppColors.greyProfile,
         ),
-//          child: new SvgPicture.asset(
-//        AssetStrings.imageFirst,
-//        fit: BoxFit.fill,
-//      )
+        child: new Image.asset(
+          AssetStrings.emailPngnew,
+          width: 20,
+          height: 20,
+        ),
       );
     },
   );

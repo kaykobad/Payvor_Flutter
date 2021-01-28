@@ -844,19 +844,14 @@ class _HomeState extends State<PostFavorDetails>
                 topLeft: const Radius.circular(25.0),
                 topRight: const Radius.circular(25.0)),
             child: Container(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height / 1.4,
+              height: MediaQuery.of(context).size.height,
               decoration: new BoxDecoration(
                   color: Colors.black,
                   borderRadius: new BorderRadius.only(
                       topLeft: const Radius.circular(10.0),
                       topRight: const Radius.circular(10.0))),
               child: Padding(
-                  padding: MediaQuery
-                      .of(context)
-                      .viewInsets,
+                  padding: MediaQuery.of(context).viewInsets,
                   child: PaymentDialog(voidcallback: voidCallBacks)),
             ),
           );
@@ -1083,8 +1078,9 @@ class _HomeState extends State<PostFavorDetails>
                             "€${favoriteResponse?.data?.price}", 23.0),
                         getRowsPayment(
                             ResString().get('payvor_service_fee') +
-                                "(${favoriteResponse?.data?.service_perc?.toString()}%)",
-                            "€${favoriteResponse?.data?.service_fee}",
+                                "(${favoriteResponse?.data?.service_perc
+                                    ?.toString()}%)",
+                            "-€${favoriteResponse?.data?.service_fee}",
                             9.0),
                         new Container(
                           height: 13,
@@ -1107,10 +1103,10 @@ class _HomeState extends State<PostFavorDetails>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               new Text(
-                                ResString().get('you_all_receive'),
+                                "You’ll Pay",
                                 style: new TextStyle(
                                     fontFamily:
-                                        AssetStrings.circulerBoldStyle,
+                                    AssetStrings.circulerBoldStyle,
                                     color: AppColors.bluePrimary,
                                     fontSize: 15),
                                 textAlign: TextAlign.center,
@@ -1169,8 +1165,8 @@ class _HomeState extends State<PostFavorDetails>
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.grey.withOpacity(0.4),
-                                  blurRadius: .5,
+                                  color: Colors.black.withOpacity(0.9),
+                                  blurRadius: .4,
                                 ),
                               ]),
                           child: InkWell(
@@ -1195,8 +1191,8 @@ class _HomeState extends State<PostFavorDetails>
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.4),
-                                blurRadius: .5,
+                                color: Colors.black.withOpacity(0.9),
+                                blurRadius: .4,
                               ),
                             ]),
                         child: GestureDetector(

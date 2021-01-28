@@ -23,10 +23,10 @@ class ChatBubbleLeft extends StatelessWidget {
   Widget build(BuildContext context) {
     // firebaseProvider = Provider.of<FirebaseProvider>(context);
     return Material(
-      color: Colors.white,
+      color: Colors.transparent,
       child: Container(
         margin: const EdgeInsets.only(left: 20, right: 20.0, top: 25),
-        color: Colors.white,
+        color: Colors.transparent,
         alignment: Alignment.centerLeft,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

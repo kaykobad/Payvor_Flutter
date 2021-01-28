@@ -782,7 +782,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                         getRowsPayment(
                             ResString().get('payvor_service_fee') +
                                 "(${hiredUserDetailsResponse?.data?.servicePerc?.toString()}%)",
-                            "€${hiredUserDetailsResponse?.data?.serviceFee?.toString() ?? ""}",
+                            "-€${hiredUserDetailsResponse?.data?.serviceFee?.toString() ?? ""}",
                             9.0),
                         new Container(
                           height: 13,
@@ -805,7 +805,8 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               new Text(
-                                ResString().get('you_all_receive'),
+                                widget?.type == 0 ? "You’ll Pay" : ResString()
+                                    .get('you_all_receive'),
                                 style: new TextStyle(
                                     fontFamily: AssetStrings.circulerBoldStyle,
                                     color: AppColors.bluePrimary,

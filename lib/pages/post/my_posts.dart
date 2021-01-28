@@ -228,11 +228,11 @@ class _HomeState extends State<MyPosts>
         children: <Widget>[
           new Container(
             color: AppColors.whiteGray,
+            height: getScreenSize(context: context).height,
             child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 _buildContestList(),
-                new SizedBox(height: 30),
               ],
             ),
           ),
@@ -240,6 +240,7 @@ class _HomeState extends State<MyPosts>
             offstage: offstagenodata,
             child: Container(
               height: screenSize.height,
+              padding: new EdgeInsets.only(bottom: 40),
               child: new Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -251,7 +252,7 @@ class _HomeState extends State<MyPosts>
                       ),
                     ),
                     Container(
-                      margin: new EdgeInsets.only(top: 61),
+                      margin: new EdgeInsets.only(top: 42),
                       child: new Text(
                         "No Favors",
                         style: new TextStyle(
@@ -354,7 +355,6 @@ class _HomeState extends State<MyPosts>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             new Container(
-              margin: new EdgeInsets.only(top: 10.0),
               child: new Text(
                 data?.title,
                 style: TextThemes.blackCirculerMedium,
@@ -363,7 +363,7 @@ class _HomeState extends State<MyPosts>
             Opacity(
               opacity: 0.12,
               child: new Container(
-                margin: new EdgeInsets.only(top: 30.0),
+                margin: new EdgeInsets.only(top: 16.0),
                 height: 1.0,
                 color: AppColors.dividerColor,
               ),
@@ -476,7 +476,7 @@ class _HomeState extends State<MyPosts>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Container(
+            /* Container(
               child: new Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -503,9 +503,8 @@ class _HomeState extends State<MyPosts>
                   )
                 ],
               ),
-            ),
+            ),*/
             new Container(
-              margin: new EdgeInsets.only(top: 10.0),
               child: new Text(
                 data?.title ?? "",
                 style: TextThemes.blackCirculerMedium,
@@ -514,7 +513,7 @@ class _HomeState extends State<MyPosts>
             Opacity(
               opacity: 0.12,
               child: new Container(
-                margin: new EdgeInsets.only(top: 30.0),
+                margin: new EdgeInsets.only(top: 16.0),
                 height: 1.0,
                 color: AppColors.dividerColor,
               ),
@@ -543,7 +542,7 @@ class _HomeState extends State<MyPosts>
                     Container(
                       child: new Text(
                         data?.status == 3
-                            ? "You have paid & Ended Favor "
+                            ? "You’ve ended job of "
                             : "You have hired ",
                         style: TextThemes.grayNormalSmall,
                       ),

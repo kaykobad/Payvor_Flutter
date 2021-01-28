@@ -55,7 +55,7 @@ class ChatScreenState extends State<PostScreen> with TickerProviderStateMixin {
               Material(
                 child: Container(
                   decoration: new BoxDecoration(color: Colors.white),
-                  padding: new EdgeInsets.only(top: 20.0),
+                  padding: new EdgeInsets.only(top: 6.0),
                   child: Row(
                     children: <Widget>[
                       Expanded(

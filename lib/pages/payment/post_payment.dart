@@ -72,7 +72,7 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
                     child: new Text(
                       "Promote your Post",
                       style: new TextStyle(
-                          fontFamily: AssetStrings.circulerMedium,
+                          fontFamily: AssetStrings.circulerBoldStyle,
                           fontSize: 20,
                           color: Colors.black),
                     ),
@@ -132,7 +132,8 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
       },
       child: Container(
         height: 78,
-        margin: new EdgeInsets.only(top: 15, left: 24, right: 24),
+        margin: new EdgeInsets.only(top: 10, left: 24, right: 24),
+        padding: new EdgeInsets.only(left: 16, right: 16),
         decoration: new BoxDecoration(
             borderRadius: new BorderRadius.circular(10.0),
             border: new Border.all(color: Color.fromRGBO(227, 227, 227, 1)),
@@ -141,42 +142,39 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
                 : Colors.white),
         child: new Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CircleAvatar(
-              backgroundColor: payment?.isSelect ?? false
-                  ? AppColors.colorDarkCyan
-                  : Color.fromRGBO(227, 227, 227, 1),
-              radius: 13,
-              child: IconButton(
-                padding: EdgeInsets.zero,
-                icon: Icon(
-                  Icons.check,
-                  size: 17,
-                ),
-                color: Colors.white,
-                onPressed: () {},
+            Container(
+              decoration: new BoxDecoration(
+                shape: BoxShape.circle,
+                color: payment?.isSelect ?? false
+                    ? Colors.white
+                    : Colors.transparent,
+              ),
+              child: Image.asset(
+                AssetStrings.checkTick,
+                width: 21,
+                height: 21,
+                color: payment?.isSelect ?? false
+                    ? AppColors.colorDarkCyan
+                    : Color.fromRGBO(103, 99, 99, 0.3),
               ),
             ),
             new Container(
-              margin: new EdgeInsets.only(
-                top: 9,
-              ),
               alignment: Alignment.center,
               child: new Text(
                 payment?.price.toString() ?? "",
                 style: new TextStyle(
                     fontFamily: AssetStrings.circulerMedium,
                     fontSize: 20,
-                    color: payment.isSelect ?? false ? Colors.white : Colors
-                        .black),
+                    color: payment.isSelect ?? false
+                        ? Colors.white
+                        : Colors.black),
               ),
             ),
             new Container(
               width: 110,
-              margin: new EdgeInsets.only(
-                top: 9,
-              ),
+
               alignment: Alignment.center,
               child: new Text(
                 payment?.title ?? "",
@@ -191,10 +189,8 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
             ),
             payment?.isSelect ?? false
                 ? new Container(
-                    margin: new EdgeInsets.only(
-                      top: 9,
-                    ),
-                    width: 83,
+
+            width: 83,
                     height: 30,
                     alignment: Alignment.center,
                     decoration: new BoxDecoration(

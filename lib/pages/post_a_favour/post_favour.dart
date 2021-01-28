@@ -623,7 +623,7 @@ class _HomeState extends State<PostFavour>
                   Container(
                     color: Colors.white,
                     padding:
-                        new EdgeInsets.only(top: 36.0, left: 17, right: 17),
+                        new EdgeInsets.only(top: 14.0, left: 17, right: 17),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -633,7 +633,6 @@ class _HomeState extends State<PostFavour>
                           child: InkWell(
                             onTap: () {
                               Navigator.pop(context);
-
                             },
                             child: new Padding(
                               padding: const EdgeInsets.all(1.0),
@@ -645,7 +644,9 @@ class _HomeState extends State<PostFavour>
                         ),
                         Container(
                           child: new Text(
-                            ResString().get('post_favour'),
+                            widget.isEdit != null && widget.isEdit
+                                ? "Edit Favor"
+                                : ResString().get('post_favour'),
                             style: TextThemes.darkBlackMedium,
                             textAlign: TextAlign.center,
                           ),
@@ -907,15 +908,7 @@ class _HomeState extends State<PostFavour>
             right: 0.0,
             child: Material(
               elevation: 18.0,
-              child: widget.isEdit != null && widget.isEdit ? Container(
-                color: Colors.white,
-                margin: new EdgeInsets.only(left: 16, right: 16),
-                padding: new EdgeInsets.only(
-                    top: 28, bottom: 28, left: 16, right: 16),
-                child: getSetupButtonNew(
-                    callbackMain, ResString().get('update_favor'), 0,
-                    newColor: AppColors.colorDarkCyan),
-              ) : Container(
+              child: Container(
                   color: Colors.white,
                   padding: new EdgeInsets.only(
                       top: 9, bottom: 28, left: 16, right: 16),
@@ -934,7 +927,12 @@ class _HomeState extends State<PostFavour>
                       ),
                       Expanded(
                         child: getSetupButtonNew(
-                            callback, ResString().get('post_favor'), 0,
+                            widget.isEdit != null && widget.isEdit
+                                ? callbackMain
+                                : callback,
+                            widget.isEdit != null && widget.isEdit
+                                ? "Update Favor"
+                                : ResString().get('post_favor'), 0,
                             newColor: AppColors.colorDarkCyan),
                       ),
                     ],

@@ -31,22 +31,33 @@ void main() {
       ),
       ChangeNotifierProvider<LanguageProvider>(
         create: (context) => LanguageProvider(),
+        ),
+        ChangeNotifierProvider<AuthProvider>(
+          create: (context) => AuthProvider(),
+        ),
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (context) => ThemeProvider(),
+        ),
+        ChangeNotifierProvider<FirebaseProvider>(
+          create: (context) => FirebaseProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(),
+        home: new SplashScreen(),
+//          home: ShowCaseWidget(
+//            builder: Builder(
+//                builder: (context) => MailPage()
+//            ),
+//          ),
       ),
-      ChangeNotifierProvider<AuthProvider>(
-        create: (context) => AuthProvider(),
-      ),
-      ChangeNotifierProvider<ThemeProvider>(
-        create: (context) => ThemeProvider(),
-      ),
-      ChangeNotifierProvider<FirebaseProvider>(
-        create: (context) => FirebaseProvider(),
-      ),
-    ], child: Payvor()),
+    ),
   );
   //});
 }
 
-class Payvor extends StatelessWidget {
+/*class Payvor extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -58,4 +69,4 @@ class Payvor extends StatelessWidget {
         // home: new ChatBubbleRight(message: "sample message",profilePic: "sahfhasifhiahsf",isGroup: false,isLiked: false,time: "15:20",chatId: "101",messageId: "555",userName: "user data",),
         home: new SplashScreen());
   }
-}
+}*/

@@ -685,7 +685,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
       },
       child: Container(
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               alignment: Alignment.topLeft,
@@ -736,7 +736,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
                   Container(
                       margin: new EdgeInsets.only(top: 43, left: 27),
                       child: getBottomText(
-                          AssetStrings.share, "View Profile", 22)),
+                          AssetStrings.view_profile, "View Profile", 14)),
                   Container(
                       margin: new EdgeInsets.only(top: 35, left: 27),
                       child: getBottomText(
@@ -780,6 +780,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
   _getAppbar(String userName) {
     return new AppBar(
       backgroundColor: Colors.white,
+      elevation: 0.5,
       iconTheme: IconThemeData(
         color: Colors.black, //change your color here
       ),
@@ -789,8 +790,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
         children: <Widget>[
           new Text(
             userName,
-            style: TextThemes.blackTextFieldNormal,
-
+            style: TextThemes.darkBlackMedium,
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -832,26 +832,26 @@ class PrivateChatScreenState extends State<PrivateChat> {
   Widget build(BuildContext context) {
     firebaseProvider = Provider.of<FirebaseProvider>(context);
 
-    return SafeArea(
-      child: new Scaffold(
-        backgroundColor: AppColors.kWhite,
-        key: _scaffoldKey,
-        appBar: _getAppbar(widget.userName),
-        body: new SafeArea(
-          top: false,
-          child: new Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-
-              Container(
-                height: 1,
-                color: AppColors.dividerColor.withOpacity(0.5),
-              ),
-              new Expanded(
-                child: _getBodyWidget(),
-              ),
-            ],
-          ),
+    return new Scaffold(
+      backgroundColor: Colors.white,
+      key: _scaffoldKey,
+      appBar: _getAppbar(widget.userName),
+      body: new SafeArea(
+        top: false,
+        child: new Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+/*
+            Container(
+              height: 1,
+              color: AppColors.dividerColor.withOpacity(0.5),
+            ),*/
+            new Expanded(
+              child: Container(
+                  color: Color.fromRGBO(248, 248, 250, 1),
+                  child: _getBodyWidget()),
+            ),
+          ],
         ),
       ),
     );

@@ -241,10 +241,13 @@ Widget getSetupButtonNewRow(VoidCallback callback, String text, double margin,
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                new Icon(Icons.message, color: Colors.white, size: 18,),
-
+                new Image.asset(
+                  AssetStrings.imageMessage,
+                  width: 16,
+                  height: 16,
+                ),
                 new SizedBox(
-                  width: 7,
+                  width: 10,
                 ),
                 new Text(
                   text,
