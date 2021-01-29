@@ -601,6 +601,7 @@ class _HomeState extends State<PayFeebackDetails>
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<AuthProvider>(context);
+
     screenSize = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
@@ -900,7 +901,7 @@ class _HomeState extends State<PayFeebackDetails>
                             },
                             child: new SvgPicture.asset(
                               AssetStrings.back,
-                              width: 21.0,
+                              width: 18.0,
                               height: 18.0,
                               color: Colors.black87,
                             ),

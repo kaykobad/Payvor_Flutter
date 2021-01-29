@@ -368,11 +368,10 @@ Widget buildItem(DataRating rating) {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                new Padding(
-                  padding: const EdgeInsets.all(1.0),
-                  child: new SvgPicture.asset(
-                    AssetStrings.star,
-                  ),
+                new Image.asset(
+                  AssetStrings.rating,
+                  width: 13,
+                  height: 13,
                 ),
                 new SizedBox(
                   width: 3,

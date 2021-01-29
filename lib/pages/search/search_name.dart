@@ -10,6 +10,7 @@ import 'package:payvor/filter/refer_response.dart';
 import 'package:payvor/filter/refer_user.dart';
 import 'package:payvor/filter/refer_user_response.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/shimmers/refer_shimmer_loader.dart';
 import 'package:payvor/utils/AppColors.dart';
@@ -429,128 +430,143 @@ class _HomeState extends State<SearchHomeByName>
 
 
   Widget buildItem(DataRefer dataTile) {
-    return Container(
-      margin: new EdgeInsets.only(left: 16.0, right: 16.0),
-      child: Row(
-        children: <Widget>[
-          new Container(
-            width: 40.0,
-            height: 40.0,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return Material(
+                child: new ChatMessageDetails(
+              id: "",
+              name: dataTile?.name ?? "",
+              image: dataTile?.profilePic ?? "",
+              hireduserId: dataTile?.id?.toString(),
+            ));
+          }),
+        );
+      },
+      child: Container(
+        margin: new EdgeInsets.only(left: 16.0, right: 16.0),
+        child: Row(
+          children: <Widget>[
+            new Container(
+              width: 40.0,
+              height: 40.0,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(shape: BoxShape.circle),
+              child: ClipOval(
+                // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
-                shape: BoxShape.circle
-            ),
-            child: ClipOval(
-              // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-
-              child: getCachedNetworkImageWithurl(
-                  url: dataTile?.profilePic ?? "",
-                  fit: BoxFit.fill,
-                  size: 40
+                child: getCachedNetworkImageWithurl(
+                    url: dataTile?.profilePic ?? "",
+                    fit: BoxFit.fill,
+                    size: 40),
               ),
             ),
-          ),
-          Expanded(
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: new EdgeInsets.only(left: 10.0, right: 10.0),
-                  child: new Text(
-                    dataTile?.name ?? "",
-                    style: TextThemes.greyTextFielMedium,
+            Expanded(
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: new Text(
+                      dataTile?.name ?? "",
+                      style: TextThemes.greyTextFielMedium,
+                    ),
                   ),
-                ),
-                Container(
-                  margin: new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
-                  child: Row(
-                    children: [
-                      new SvgPicture.asset(
-                        AssetStrings.star,
-                      ),
-                      new SizedBox(
-                        width: 3,
-                      ),
-                      Container(
-                          child: new Text(
-                            dataTile?.rating_avg?.toString() ?? "",
-                            style: TextThemes.greyTextFieldNormal,
-                          )),
-                      Container(
-                        width: 5,
-                        height: 5,
-                        margin: new EdgeInsets.only(left: 4, right: 4),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.darkgrey,
+                  Container(
+                    margin:
+                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                    child: Row(
+                      children: [
+                        new Image.asset(
+                          AssetStrings.rating,
+                          width: 13,
+                          height: 13,
                         ),
-                      ),
-                      Container(
-                          child: new Text(
-                            "${dataTile?.rating_avg?.toString() ?? ""} Reviews",
-                            style: TextThemes.greyTextFieldNormal,
-                          )),
-                    ],
-                  ),
-                )
-              ],
+                        new SizedBox(
+                          width: 3,
+                        ),
+                        Container(
+                            child: new Text(
+                          dataTile?.rating_avg?.toString() ?? "",
+                          style: TextThemes.greyTextFieldNormal,
+                        )),
+                        Container(
+                          width: 5,
+                          height: 5,
+                          margin: new EdgeInsets.only(left: 4, right: 4),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.darkgrey,
+                          ),
+                        ),
+                        Container(
+                            child: new Text(
+                          "${dataTile?.rating_avg?.toString() ?? ""} Reviews",
+                          style: TextThemes.greyTextFieldNormal,
+                        )),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-          Align(
-              alignment: Alignment.center,
-              child: dataTile?.isSelect == null || dataTile?.isSelect == false
-                  ? InkWell(
-                onTap: () {
-                  hitApi(dataTile?.id?.toString(), dataTile);
-                },
-                child: Container(
-                  width: 65,
-                  height: 25,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      borderRadius: new BorderRadius.circular(12.0),
-                      color: AppColors.colorDarkCyan),
-                  child: new Text(
-                          "Refer",
-                          style: new TextStyle(
-                            color: Colors.white,
-                            fontFamily: AssetStrings.circulerNormal,
-                            fontSize: 13,
+            Align(
+                alignment: Alignment.center,
+                child: dataTile?.isSelect == null || dataTile?.isSelect == false
+                    ? InkWell(
+                        onTap: () {
+                          hitApi(dataTile?.id?.toString(), dataTile);
+                        },
+                        child: Container(
+                          width: 65,
+                          height: 25,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: new BorderRadius.circular(12.0),
+                              color: AppColors.colorDarkCyan),
+                          child: new Text(
+                            "Refer",
+                            style: new TextStyle(
+                              color: Colors.white,
+                              fontFamily: AssetStrings.circulerNormal,
+                              fontSize: 13,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
-                      ),
-                    )
-                  : InkWell(
-                      onTap: () {
-                       // loader = true;
-                       // setState(() {});
+                      )
+                    : InkWell(
+                        onTap: () {
+                          // loader = true;
+                          // setState(() {});
 
-                        Future.delayed(const Duration(milliseconds: 300), () {
-                          dataTile?.isSelect = false;
-                          setState(() {});
-                        });
-                      },
-                      child: Container(
-                        width: 65,
-                        height: 25,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            borderRadius: new BorderRadius.circular(12.0),
-                            color: AppColors.lightReferred),
-                        child: new Text(
-                          "Referred",
-                          style: new TextStyle(
-                            color: AppColors.colorCyanPrimary,
-                            fontFamily: AssetStrings.circulerNormal,
-                            fontSize: 13,
+                          Future.delayed(const Duration(milliseconds: 300), () {
+                            dataTile?.isSelect = false;
+                            setState(() {});
+                          });
+                        },
+                        child: Container(
+                          width: 65,
+                          height: 25,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: new BorderRadius.circular(12.0),
+                              color: AppColors.lightReferred),
+                          child: new Text(
+                            "Referred",
+                            style: new TextStyle(
+                              color: AppColors.colorCyanPrimary,
+                              fontFamily: AssetStrings.circulerNormal,
+                              fontSize: 13,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
-                      ),
-                    )),
-        ],
+                      )),
+          ],
+        ),
       ),
     );
   }

@@ -18,6 +18,7 @@ import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/pages/search/search_name.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/review/review_post.dart';
 import 'package:payvor/shimmers/shimmer_details.dart';
@@ -60,6 +61,8 @@ class _HomeState extends State<PostFavorDetails>
   var isCurrentUser = false;
 
   bool offstageLoader = false;
+
+  FirebaseProvider providerFirebase;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -424,8 +427,12 @@ class _HomeState extends State<PostFavorDetails>
     Navigator.push(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {
-        return Material(child: new PostFavour(
-          favourDetailsResponse: favoriteResponse, isEdit: true,));
+        return Material(
+            child: new PostFavour(
+          favourDetailsResponse: favoriteResponse,
+          isEdit: true,
+          voidcallback: voidCallBackUpdateSearch,
+        ));
       }),
     );
   }
@@ -661,16 +668,19 @@ class _HomeState extends State<PostFavorDetails>
                     child: type == 1
                         ? Row(
                             children: [
-                              new SvgPicture.asset(
-                                AssetStrings.star,
+                              new Image.asset(
+                                AssetStrings.rating,
+                                width: 13,
+                                height: 13,
                               ),
                               new SizedBox(
                                 width: 3,
                               ),
                               Container(
                                   child: new Text(
-                                    favoriteResponse?.data?.ratingAvg.toString() ?? "",
-                                    style: TextThemes.greyTextFieldNormalNw,
+                                favoriteResponse?.data?.ratingAvg.toString() ??
+                                    "",
+                                style: TextThemes.greyTextFieldNormalNw,
                               )),
                               Container(
                                 width: 3,
@@ -816,15 +826,20 @@ class _HomeState extends State<PostFavorDetails>
     );
   }
 
+  Future<ValueSetter> voidCallBackUpdateSearch(int type) async {
+    print("update favor");
+    widget?.voidcallback(1);
+  }
 
   Future<ValueSetter> voidCallBacks(int type) async {
     if (type == 1) {
       showPaymentDialog();
-    }
-    else {
-      showBottomSuccessPayment("Successful!",
+    } else {
+      showBottomSuccessPayment(
+          "Successful!",
           "Payment is Successful! It will take some time to be appeared higher up in the feed.",
-          "I Understand", 1);
+          "I Understand",
+          1);
     }
   }
 
@@ -996,6 +1011,7 @@ class _HomeState extends State<PostFavorDetails>
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<AuthProvider>(context);
+    providerFirebase = Provider.of<FirebaseProvider>(context);
     screenSize = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,

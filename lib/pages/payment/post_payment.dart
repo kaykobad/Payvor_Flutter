@@ -163,7 +163,7 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
             new Container(
               alignment: Alignment.center,
               child: new Text(
-                payment?.price.toString() ?? "",
+                  "€ ${payment?.price ?? "0"}",
                 style: new TextStyle(
                     fontFamily: AssetStrings.circulerMedium,
                     fontSize: 20,

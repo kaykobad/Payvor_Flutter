@@ -873,8 +873,8 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                             },
                             child: new SvgPicture.asset(
                               AssetStrings.back,
-                              width: 21.0,
-                              height: 18.0,
+                              width: 19.0,
+                              height: 19.0,
                               color: Colors.black87,
                             ),
                           ),

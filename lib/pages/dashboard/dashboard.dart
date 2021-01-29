@@ -133,6 +133,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     _redirect(screen);
   }
 
+  ValueChanged<int> callbackChangePage(int type) {
+    currentTab = type;
+    setState(() {});
+  }
+
   void _redirect(Widget screen) async {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     var value = await Navigator.push(
@@ -215,9 +220,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   MaterialPageRoute(
                     settings: route,
                     builder: (context) =>
-                        SearchCompany(lauchCallBack: homeCallBack,),
-                  ),
-            ),
+                        SearchCompany(
+                        lauchCallBack: homeCallBack,
+                        callbackmyid: callbackChangePage,
+                        userid: userId?.toString(),
+                      ),
+                  )),
             Navigator(
               key: _chatScreen,
               onGenerateRoute: (route) =>

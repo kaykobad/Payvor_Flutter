@@ -265,6 +265,7 @@ class _HomeState extends State<MyPosts>
                       margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
                       child: new Text(
                         "You haven’t asked for any favors yet.Once you create a favor it will show up here.",
+                        textAlign: TextAlign.center,
                         style: new TextStyle(
                             color: Color.fromRGBO(103, 99, 99, 1.0),
                             fontFamily: AssetStrings.circulerNormal,
@@ -432,7 +433,7 @@ class _HomeState extends State<MyPosts>
                       voidcallback: callback,
             ))));
           } else {
-            widget.lauchCallBack(Material(
+            /*  widget.lauchCallBack(Material(
                 child: Material(
                     child: new PayFeebackDetailsCommon(
                       lauchCallBack: widget?.lauchCallBack,
@@ -441,6 +442,16 @@ class _HomeState extends State<MyPosts>
                       status: 0,
                       type: 0,
                       voidcallback: callback,
+            ))));*/
+
+            widget.lauchCallBack(Material(
+                child: Material(
+                    child: new PayFeebackDetails(
+              lauchCallBack: widget?.lauchCallBack,
+              userId: data?.hiredUserId?.toString(),
+              postId: data?.id?.toString(),
+              type: 0,
+              voidcallback: callback,
             ))));
           }
         } else {

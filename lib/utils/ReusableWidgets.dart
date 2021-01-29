@@ -214,7 +214,7 @@ Widget getSetupButtonColor(VoidCallback callback, String text, double margin,
 Widget getSetupButtonNewRow(VoidCallback callback, String text, double margin,
     {Color newColor}) {
   return Container(
-    height: 58.0,
+    height: 48.0,
     margin: new EdgeInsets.only(left: margin, right: margin),
     decoration: new BoxDecoration(
       borderRadius: new BorderRadius.circular(8.0),
@@ -247,7 +247,7 @@ Widget getSetupButtonNewRow(VoidCallback callback, String text, double margin,
                   height: 16,
                 ),
                 new SizedBox(
-                  width: 10,
+                  width: 7,
                 ),
                 new Text(
                   text,

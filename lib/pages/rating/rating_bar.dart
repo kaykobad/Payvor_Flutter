@@ -341,7 +341,7 @@ class _HomeState extends State<RatingBarNew>
                     ),
                   ),
                   Container(
-                    margin: new EdgeInsets.only(left: 9, right: 18.0, top: 15),
+                    margin: new EdgeInsets.only(left: 9, right: 1.0, top: 15),
                     child: RatingBar.builder(
                       initialRating: 0,
                       minRating: 0,
@@ -350,11 +350,16 @@ class _HomeState extends State<RatingBarNew>
                       allowHalfRating: true,
                       unratedColor: Color.fromRGBO(183, 183, 183, 1),
                       itemCount: 5,
-                      itemSize: 40.0,
+                      itemSize: 44.0,
                       itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                      itemBuilder: (context, _) => Icon(
-                        _selectedIcon ?? Icons.star_rate_rounded,
-                        color: Color.fromRGBO(255, 171, 0, 1),
+                      itemBuilder: (context, _) => Padding(
+                        padding: const EdgeInsets.all(7.0),
+                        child: Image.asset(
+                          _selectedIcon ?? AssetStrings.rating,
+                          color: Color.fromRGBO(255, 171, 0, 1),
+                          width: 30,
+                          height: 30,
+                        ),
                       ),
                       onRatingUpdate: (rating) {
                         setState(() {

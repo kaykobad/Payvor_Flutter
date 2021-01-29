@@ -27,8 +27,9 @@ import 'package:provider/provider.dart';
 class PostFavour extends StatefulWidget {
   final FavourDetailsResponse favourDetailsResponse;
   final bool isEdit;
+  ValueSetter<int> voidcallback;
 
-  PostFavour({this.favourDetailsResponse, this.isEdit});
+  PostFavour({this.favourDetailsResponse, this.isEdit, this.voidcallback});
 
   @override
   _HomeState createState() => _HomeState();
@@ -518,15 +519,14 @@ class _HomeState extends State<PostFavour>
     showModalBottomSheet<void>(
         isScrollControlled: true,
         context: context,
+        isDismissible: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
         ),
         builder: (BuildContext bc) {
           return Padding(
-              padding: MediaQuery
-                  .of(context)
-                  .viewInsets,
+              padding: MediaQuery.of(context).viewInsets,
               child: Container(
                   child: new Column(
                     mainAxisSize: MainAxisSize.min,
@@ -561,11 +561,15 @@ class _HomeState extends State<PostFavour>
                       new Container(
                         margin: new EdgeInsets.only(top: 10),
                         child: new Text(
-                          "You have created a favor successfully.",
-                          style: new TextStyle(
-                            fontFamily: AssetStrings.circulerNormal,
-                            fontSize: 16,
-                            color: Color.fromRGBO(114, 117, 112, 1),),),
+                          widget?.isEdit ?? false
+                          ? "You have updated favor successfully."
+                          : "You have created a favor successfully.",
+                      style: new TextStyle(
+                        fontFamily: AssetStrings.circulerNormal,
+                        fontSize: 16,
+                        color: Color.fromRGBO(114, 117, 112, 1),
+                      ),
+                    ),
 
 
                       ),
@@ -574,8 +578,12 @@ class _HomeState extends State<PostFavour>
                         margin: new EdgeInsets.only(
                             top: 60, left: 16, right: 16),
                         child: getSetupButtonNew(
-                            callbackFavourPage, "Go to Favor Page", 0,
-                            newColor: AppColors.colorDarkCyan),
+                            callbackFavourPage,
+                        widget?.isEdit ?? false
+                            ? "Go to Home Page"
+                            : "Go to Favor Page",
+                        0,
+                        newColor: AppColors.colorDarkCyan),
                       ),
 
 
@@ -588,10 +596,13 @@ class _HomeState extends State<PostFavour>
   }
 
   void callbackFavourPage() async {
+    if (widget?.isEdit && widget?.voidcallback != null) {
+      widget?.voidcallback(1);
+      Navigator.pop(context);
+    }
     Navigator.pop(context);
     Navigator.pop(context);
   }
-
 
   Future<ValueSetter> voidCallBackDialog(int type) async {
     print("calllll");

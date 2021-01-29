@@ -630,19 +630,21 @@ class _HomeState extends State<ChatMessageDetails>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        new SvgPicture.asset(
-                          AssetStrings.star,
-                        ),
-                        new SizedBox(
-                          width: 4,
-                        ),
-                        Container(
-                            child: new Text(
-                              userResponse?.user?.ratingAvg?.toString() ?? "",
-                              style: TextThemes.blackTextSmallMedium,
-                            )),
-                        Container(
-                          width: 3,
+                              new Image.asset(
+                                AssetStrings.rating,
+                                width: 13,
+                                height: 13,
+                              ),
+                              new SizedBox(
+                                width: 4,
+                              ),
+                              Container(
+                                  child: new Text(
+                                userResponse?.user?.ratingAvg?.toString() ?? "",
+                                style: TextThemes.blackTextSmallMedium,
+                              )),
+                              Container(
+                                width: 3,
                           height: 3,
                           margin: new EdgeInsets.only(left: 5, right: 5),
                           decoration: BoxDecoration(
@@ -729,7 +731,7 @@ class _HomeState extends State<ChatMessageDetails>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
+                      /*  Container(
                         child: Container(
                           width: 30.0,
                           height: 30.0,
@@ -737,6 +739,34 @@ class _HomeState extends State<ChatMessageDetails>
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                           ),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: new SvgPicture.asset(
+                              AssetStrings.back,
+                              width: 21.0,
+                              height: 18.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+*/
+                      Container(
+                        child: Container(
+                          width: 30.0,
+                          height: 30.0,
+                          padding: new EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              color: AppColors.greyProfile.withOpacity(0.4),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.9),
+                                  blurRadius: .4,
+                                ),
+                              ]),
                           child: InkWell(
                             onTap: () {
                               Navigator.pop(context);

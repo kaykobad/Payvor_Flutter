@@ -12,6 +12,7 @@ import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/pages/suggestion_search/suggestion_search.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/shimmers/home_shimmer_loader.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -22,14 +23,16 @@ import 'package:provider/provider.dart';
 
 class SearchCompany extends StatefulWidget {
   final ValueChanged<Widget> lauchCallBack;
+  final ValueChanged<int> callbackmyid;
+  final String userid;
 
-  SearchCompany({@required this.lauchCallBack});
+  SearchCompany({@required this.lauchCallBack, this.callbackmyid, this.userid});
 
   @override
-  _HomeState createState() => _HomeState();
+  HomeState createState() => HomeState();
 }
 
-class _HomeState extends State<SearchCompany>
+class HomeState extends State<SearchCompany>
     with AutomaticKeepAliveClientMixin<SearchCompany> {
   var screenSize;
 
@@ -37,10 +40,13 @@ class _HomeState extends State<SearchCompany>
 
   List<Datas> list = List<Datas>();
 
+  GlobalKey<HomeState> myKey = GlobalKey();
+
   TextEditingController _controller = new TextEditingController();
   ScrollController _scrollController = new ScrollController();
   bool _loadMore = false;
   AuthProvider provider;
+  FirebaseProvider providerFirebase;
   bool isPullToRefresh = false;
 
   bool offstagenodata = true;
@@ -74,13 +80,24 @@ class _HomeState extends State<SearchCompany>
   Widget buildItem(Datas data) {
     return InkWell(
       onTap: () {
-        widget.lauchCallBack(Material(
-            child: new ChatMessageDetails(
-          id: data?.id?.toString(),
-          name: data?.user?.name,
-          image: data?.user?.profilePic,
-          hireduserId: data?.userId?.toString(),
-        )));
+        print("userid ${data?.userId}");
+        print("main ${widget.userid}");
+
+        // ignore: unrelated_type_equality_checks
+        if (widget.userid == data?.userId?.toString()) {
+          print("true");
+
+          widget.callbackmyid(4);
+        } else {
+          print("flase");
+          widget.lauchCallBack(Material(
+              child: new ChatMessageDetails(
+            id: data?.id?.toString(),
+            name: data?.user?.name,
+            image: data?.user?.profilePic,
+            hireduserId: data?.userId?.toString(),
+          )));
+        }
       },
       child: Container(
         margin: new EdgeInsets.only(left: 16.0, right: 16.0),
@@ -251,9 +268,9 @@ class _HomeState extends State<SearchCompany>
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<AuthProvider>(context);
-    screenSize = MediaQuery
-        .of(context)
-        .size;
+    providerFirebase = Provider.of<FirebaseProvider>(context);
+    providerFirebase?.setHomeContextKey(myKey);
+    screenSize = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: AppColors.bluePrimary,

@@ -747,8 +747,10 @@ class _HomeState extends State<OriginalPostData>
                   margin: new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
                   child: Row(
                     children: [
-                      new SvgPicture.asset(
-                        AssetStrings.star,
+                      new Image.asset(
+                        AssetStrings.rating,
+                        width: 13,
+                        height: 13,
                       ),
                       new SizedBox(
                         width: 3,
@@ -1032,8 +1034,8 @@ class _HomeState extends State<OriginalPostData>
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.grey.withOpacity(0.4),
-                                  blurRadius: .5,
+                                  color: Colors.black.withOpacity(0.9),
+                                  blurRadius: .4,
                                 ),
                               ]),
                           child: InkWell(
@@ -1058,8 +1060,8 @@ class _HomeState extends State<OriginalPostData>
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.4),
-                                blurRadius: .5,
+                                color: Colors.black.withOpacity(0.9),
+                                blurRadius: .4,
                               ),
                             ]),
                         child: GestureDetector(

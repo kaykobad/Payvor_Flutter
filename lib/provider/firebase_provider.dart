@@ -10,6 +10,7 @@ import 'package:payvor/pages/chat/chat_user.dart';
 import 'package:payvor/pages/chat/payvor_firebase_user.dart';
 import 'package:payvor/pages/chat/payvor_group_chat.dart';
 import 'package:payvor/pages/payment/firebase_constants.dart';
+import 'package:payvor/pages/search/search_home.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 
@@ -18,12 +19,21 @@ class FirebaseProvider with ChangeNotifier {
   StreamController<bool> notificationStreamController;
   BuildContext _homeContext;
 
+  GlobalKey<HomeState> myKey;
+
+  void setHomeContextKey(Key key) {
+    myKey = key;
+  }
+
+  GlobalKey<HomeState> getHomeKey() {
+    return myKey;
+  }
+
   void setHomeContext(BuildContext context) {
     _homeContext = context;
   }
 
-  void changeScreen(Widget screen)
-  {
+  void changeScreen(Widget screen) {
     Navigator.push(
       _homeContext,
       new CupertinoPageRoute(builder: (BuildContext context) {
