@@ -14,6 +14,7 @@ import 'package:payvor/pages/chat/payvor_firebase_user.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
+import 'package:payvor/pages/reset_password/reset_password.dart';
 import 'package:payvor/pages/social_login.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
@@ -356,8 +357,10 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       Navigator.push(
         context,
         new CupertinoPageRoute(builder: (BuildContext context) {
-          return new WebviewInsta(
-            callback: voidCallBackLike,
+          return Material(
+            child: new WebviewInsta(
+              callback: voidCallBackLike,
+            ),
           );
         }),
       );
@@ -506,8 +509,42 @@ class _LoginScreenState extends State<JoinCommunityNew> {
             .createFirebaseUser(getUser(response, firebaseId, email));
       } catch (ex) {}
       provider.hideLoader();
-
       MemoryManagement.setScreenType(type: "1");
+
+      if (type == "0") {
+
+        if (response?.user != null && response?.user.is_location == 0) {
+          Navigator.push(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return new PhoneNumberAdd();
+            }),
+          );
+
+          return;
+        } else if (response?.user != null && response?.user.is_password == 0) {
+
+          Navigator.push(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return new ResetPassword();
+            }),
+          );
+
+          return;
+        }
+      } else {
+        if (response?.user != null && response?.user.is_location == 0) {
+          Navigator.push(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return new PhoneNumberAdd();
+            }),
+          );
+          return;
+        }
+      }
+
 
       if (response.isnew == null || response.isnew) {
         Navigator.push(

@@ -226,40 +226,6 @@ class _LoginScreenState extends State<LoginScreenNew> {
       MemoryManagement.setAccessToken(accessToken: loginSignupResponse.data);
       MemoryManagement.setUserInfo(userInfo: json.encode(response));
 
-      if (type == "0") {
-        if (response?.user != null && response?.user.is_location == 0) {
-          Navigator.push(
-            context,
-            new CupertinoPageRoute(builder: (BuildContext context) {
-              return new PhoneNumberAdd();
-            }),
-          );
-
-          return;
-        } else if (response?.user != null && response?.user.is_password == 0) {
-          Navigator.push(
-            context,
-            new CupertinoPageRoute(builder: (BuildContext context) {
-              return new ResetPassword();
-            }),
-          );
-
-          return;
-        }
-      } else {
-        if (response?.user != null && response?.user.is_location == 0) {
-          Navigator.push(
-            context,
-            new CupertinoPageRoute(builder: (BuildContext context) {
-              return new PhoneNumberAdd();
-            }),
-          );
-          return;
-        }
-      }
-
-      MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
-
       var email = _EmailController.text;
 
       try {
@@ -288,6 +254,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
         //update user info to fire store user collection
         await firebaseProvider
             .updateFirebaseUser(getUser(response, firebaseId, email));
+
       } catch (ex) {
         print("error ${ex.toString()}");
         //for old filmshape users
@@ -299,9 +266,47 @@ class _LoginScreenState extends State<LoginScreenNew> {
         user.created = DateTime.now()
             .toIso8601String(); //if user is not registered with firebase
         await firebaseProvider.createFirebaseUser(user);
+
       }
 
-      firebaseProvider.hideLoader();
+      provider.hideLoader();
+
+
+      if (type == "0") {
+
+        if (response?.user != null && response?.user.is_location == 0) {
+          Navigator.push(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return new PhoneNumberAdd();
+            }),
+          );
+
+          return;
+        } else if (response?.user != null && response?.user.is_password == 0) {
+
+          Navigator.push(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return new ResetPassword();
+            }),
+          );
+
+          return;
+        }
+      } else {
+         if (response?.user != null && response?.user.is_location == 0) {
+          Navigator.push(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return new PhoneNumberAdd();
+            }),
+          );
+          return;
+        }
+      }
+
+      MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
       if ((loginSignupResponse.isnew == null || loginSignupResponse.isnew) &&
           typse != 0) {
         Navigator.push(
@@ -311,7 +316,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
           }),
         );
       } else {
-        MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
+
         Navigator.pushAndRemoveUntil(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
@@ -320,6 +325,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
               (route) => false,
         );
       }
+
     } else {
       firebaseProvider.hideLoader();
       APIError apiError = response;
@@ -646,12 +652,13 @@ class _LoginScreenState extends State<LoginScreenNew> {
     await Navigator.push(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {
-        return new WebviewInsta(
-          callback: voidCallBackLike,
+        return Material(
+          child: new WebviewInsta(
+            callback: voidCallBackLike,
+          ),
         );
       }),
     );
-
 
   }
 

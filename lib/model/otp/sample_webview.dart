@@ -34,9 +34,7 @@ class _WebviewInstaState extends State<WebviewInsta> {
 
   @override
   void initState() {
-    super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-
     url =
         "https://api.instagram.com/oauth/authorize?client_id=$appId&redirect_uri=https://github.com/login&scope=user_profile,user_media&response_type=code";
 
@@ -103,36 +101,41 @@ class _WebviewInstaState extends State<WebviewInsta> {
         }
       }
     });
+
+    super.initState();
+
   }
 
   @override
   Widget build(BuildContext context) {
-    return WebviewScaffold(
-      url: url,
-      javascriptChannels: jsChannels,
-      mediaPlaybackRequiresUserGesture: false,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        leading: InkWell(
-          onTap: () {
-            flutterWebViewPlugin.close();
-            Navigator.pop(context);
-          },
-          child: new Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-            size: 28.0,
+    return SafeArea(
+      child: WebviewScaffold(
+        url: url,
+        javascriptChannels: jsChannels,
+        mediaPlaybackRequiresUserGesture: false,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+          leading: InkWell(
+            onTap: () {
+              flutterWebViewPlugin.close();
+              Navigator.pop(context);
+            },
+            child: new Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+              size: 28.0,
+            ),
           ),
         ),
-      ),
-      withZoom: true,
-      withLocalStorage: true,
-      hidden: true,
-      initialChild: Container(
-        color: Colors.white,
-        child: const Center(
-          child: Text('Loading.....'),
+        withZoom: true,
+        withLocalStorage: true,
+        hidden: true,
+        initialChild: Container(
+          color: Colors.white,
+          child: const Center(
+            child: Text('Loading.....'),
+          ),
         ),
       ),
     );
