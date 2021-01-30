@@ -502,22 +502,34 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       }
 
       try {
+        //firebase login
+        var firebaseId = await firebaseProvider.signIn(
+            email, Constants.FIREBASE_USER_PASSWORD);
+        //update user info to fire store user collection
+        await firebaseProvider
+            .updateFirebaseUser(getUser(response, firebaseId, email));
+      } catch (ex) {
+        print("error ${ex.toString()}");
+        //for old filmshape users
+        //firebase signup for later use in chat
         var firebaseId = await firebaseProvider.signUp(
             email, Constants.FIREBASE_USER_PASSWORD);
+        //save user info to fire store user collection
+        var user = getUser(response, firebaseId, email);
+        user.created = DateTime.now()
+            .toIso8601String(); //if user is not registered with firebase
+        await firebaseProvider.createFirebaseUser(user);
+      }
 
-        await firebaseProvider
-            .createFirebaseUser(getUser(response, firebaseId, email));
-      } catch (ex) {}
-      provider.hideLoader();
-      MemoryManagement.setScreenType(type: "1");
+    provider.hideLoader();
+    MemoryManagement.setScreenType(type: "1");
 
-      if (type == "0") {
-
-        if (response?.user != null && response?.user.is_location == 0) {
-          Navigator.push(
-            context,
-            new CupertinoPageRoute(builder: (BuildContext context) {
-              return new PhoneNumberAdd();
+    if (type == "0") {
+      if (response?.user != null && response?.user.is_location == 0) {
+        Navigator.push(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return new PhoneNumberAdd();
             }),
           );
 

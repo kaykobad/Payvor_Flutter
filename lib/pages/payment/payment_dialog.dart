@@ -308,7 +308,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                   ),
                   Container(
                     margin: new EdgeInsets.only(top: 24, left: 16, right: 16),
-                    child: getSetupButtonNew(callback, "Pay with Paypal", 0),
+                    child: getSetupButtonNew(callback, "Pay with Paypal", 0,imagePath: AssetStrings.paypal),
                   ),
                   Container(
                     height: 26,

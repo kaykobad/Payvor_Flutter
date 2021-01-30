@@ -134,7 +134,7 @@ Widget getSetupButtonNewBorder(
 }
 
 Widget getSetupButtonNew(VoidCallback callback, String text, double margin,
-    {Color newColor}) {
+    {Color newColor,String imagePath}) {
   return Container(
     height: 58.0,
     margin: new EdgeInsets.only(left: margin, right: margin),
@@ -157,16 +157,22 @@ Widget getSetupButtonNew(VoidCallback callback, String text, double margin,
           onTap: () {
             callback();
           },
-          child: new Container(
-            alignment: Alignment.center,
-            child: new Text(
-              text,
-              style: new TextStyle(
-                fontFamily: AssetStrings.circulerMedium,
-                fontSize: 16,
-                color: Colors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              (imagePath!=null)?Image.asset(imagePath,width: 18,height: 18,):Container(),
+              (imagePath!=null)?SizedBox(width: 5,):Container(),
+              new Text(
+                text,
+                style: new TextStyle(
+                  fontFamily: AssetStrings.circulerMedium,
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+
               ),
-            ),
+            ],
           ),
         ),
       ),

@@ -35,8 +35,6 @@ class _HomeState extends State<Notifications>
 
   List<Data> listResult = List();
 
-  final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
   TextEditingController _controller = new TextEditingController();
   ScrollController scrollController = new ScrollController();
   bool _loadMore = false;
@@ -314,10 +312,9 @@ class _HomeState extends State<Notifications>
         children: <Widget>[
           InkWell(
               onTap: () {
-                print("called");
-                if (data.type == 4) {
+                print("called ${data.type}");
                   _redirectToFavourDetailScreen(data.favourId);
-                }
+
               },
               child: buildItem(data)),
           Opacity(

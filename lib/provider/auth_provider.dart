@@ -440,7 +440,7 @@ class AuthProvider with ChangeNotifier {
   Future<dynamic> deletePost(String id, BuildContext context) async {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.get(
-        context: context, url: APIs.deletePost + id + "/0");
+        context: context, url: APIs.deletePost + id + "/1");
 
     if (response is APIError) {
       completer.complete(response);

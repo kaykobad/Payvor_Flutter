@@ -83,6 +83,8 @@ class AssetStrings {
   static const String check = 'assets/svg/check.svg';
   static const String notification = 'assets/svg/notification_empty.svg';
   static const String chat_empty = 'assets/svg/empty_chat.svg';
+  static const String nopostnojob = 'assets/svg/nopost_nojobs.svg';
+  static const String paypal = 'assets/png/paypal_icon.png';
 
   //bottom navigation bar
   static const String home_active = 'assets/svg/bottom_tab_home_active.svg';

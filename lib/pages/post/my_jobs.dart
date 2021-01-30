@@ -275,7 +275,7 @@ class _HomeState extends State<MyJobs>
                     InkWell(
                       onTap: () {},
                       child: new SvgPicture.asset(
-                        AssetStrings.notification,
+                        AssetStrings.nopostnojob,
                       ),
                     ),
                     Container(
