@@ -261,11 +261,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               key: _profileScreen,
               onGenerateRoute: (route) => MaterialPageRoute(
                 settings: route,
-                builder: (context) => ChatMessageDetails(
-                  hireduserId: userId,
-                  image: profile,
-                  name: userName,
-                ),
+                builder: (context) => Dummy(logoutCallBack: logoutCallBack),
               ),
             ),
           ],
