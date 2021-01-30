@@ -615,7 +615,7 @@ class _HomeState extends State<PostFavorDetails>
             new CupertinoPageRoute(builder: (BuildContext context) {
               return Material(
                   child: new ReviewPost(
-                id: widget?.id ?? "",
+                id: favoriteResponse?.data?.userId?.toString() ?? "",
               ));
             }),
           );

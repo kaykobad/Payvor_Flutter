@@ -309,9 +309,9 @@ class _HomeState extends State<ReviewPost>
               color: AppColors.dividerColor,
             ),
           ),
-          new SizedBox(
+         /* new SizedBox(
             height: 16.0,
-          ),
+          ),*/
         ],
       ),
     );
@@ -331,7 +331,7 @@ String formatDateString(String dateString) {
 
 Widget buildItem(DataRating rating) {
   return Container(
-    margin: new EdgeInsets.only(left: 16.0, right: 16.0),
+    margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 12),
     child: Row(
       children: <Widget>[
         new Container(
