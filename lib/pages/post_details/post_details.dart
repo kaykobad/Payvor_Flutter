@@ -613,7 +613,10 @@ class _HomeState extends State<PostFavorDetails>
           Navigator.push(
             context,
             new CupertinoPageRoute(builder: (BuildContext context) {
-              return Material(child: new ReviewPost());
+              return Material(
+                  child: new ReviewPost(
+                id: widget?.id ?? "",
+              ));
             }),
           );
         } else {
@@ -1119,10 +1122,11 @@ class _HomeState extends State<PostFavorDetails>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               new Text(
-                                "You’ll Pay",
+                                !isCurrentUser
+                                    ? ResString().get('you_all_receive')
+                                    : "You’ll Pay",
                                 style: new TextStyle(
-                                    fontFamily:
-                                    AssetStrings.circulerBoldStyle,
+                                    fontFamily: AssetStrings.circulerBoldStyle,
                                     color: AppColors.bluePrimary,
                                     fontSize: 15),
                                 textAlign: TextAlign.center,

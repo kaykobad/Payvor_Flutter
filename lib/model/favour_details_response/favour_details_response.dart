@@ -59,8 +59,8 @@ class Data {
   String updatedAt;
   User user;
   List<Rating> rating;
-  int ratingCount;
-  int ratingAvg;
+  num ratingCount;
+  num ratingAvg;
   num service_fee;
   num receiving;
   num service_perc;

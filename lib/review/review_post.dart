@@ -17,6 +17,10 @@ import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class ReviewPost extends StatefulWidget {
+  final String id;
+
+  ReviewPost({this.id});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -92,15 +96,13 @@ class _HomeState extends State<ReviewPost>
       return;
     }
 
-
     if (_loadMore) {
       currentPage++;
     } else {
       currentPage = 1;
     }
 
-    var response = await provider.reviewList(
-        context, currentPage);
+    var response = await provider.reviewList(context, currentPage, widget.id);
 
     if (response is RatingReviewResponse) {
       isPullToRefresh = false;
@@ -199,9 +201,10 @@ class _HomeState extends State<ReviewPost>
                     color: AppColors.dividerColor,
                   ),
                 ),
-                new SizedBox(
+                /*  new SizedBox(
                   height: 16.0,
-                ),
+
+                ),*/
                 _buildContestList(),
               ],
             ),

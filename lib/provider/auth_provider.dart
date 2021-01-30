@@ -841,11 +841,12 @@ class AuthProvider with ChangeNotifier {
   Future<dynamic> reviewList(
     BuildContext context,
     int page,
-  ) async {
+      String id) async {
     print("fave");
 
     Completer<dynamic> completer = new Completer<dynamic>();
-    var response = await APIHandler.get(context: context, url: APIs.ratingList);
+    var response =
+        await APIHandler.get(context: context, url: APIs.ratingList + "/$id");
 
     print(APIs.ratingList);
 
