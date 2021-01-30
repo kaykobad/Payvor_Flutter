@@ -643,24 +643,16 @@ class _LoginScreenState extends State<LoginScreenNew> {
   }
 
   void getInstaUserInfo() async {
-    /* var googleSignInAccount = await new SocialLogin().getToken(
-        "671655060202677",
-        "015b739c9f1a115c79f0b7c7288c9cd2",
-        voidCallBackLike);*/
+    await Navigator.push(
+      context,
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return new WebviewInsta(
+          callback: voidCallBackLike,
+        );
+      }),
+    );
 
-    try {
-      Navigator.push(
-        context,
-        new CupertinoPageRoute(builder: (BuildContext context) {
-          return new WebviewInsta(
-            callback: voidCallBackLike,
-          );
-        }),
-      );
-      /*  showInSnackBar(response.data);
-        Navigator.pop(context);
-        Navigator.pop(context);*/
-    } catch (ex) {}
+
   }
 
   void getTwitterInfo() async {

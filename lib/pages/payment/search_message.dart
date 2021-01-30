@@ -266,10 +266,6 @@ class _HomeState extends State<SearchMessage>
               ),
             ),
           ),
-
-          /* new Center(
-            child: _getLoader,
-          ),*/
         ],
       ),
     );
@@ -389,9 +385,7 @@ class _HomeState extends State<SearchMessage>
               alignment: Alignment.center,
               decoration: BoxDecoration(shape: BoxShape.circle),
               child: ClipOval(
-                // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-
-                child: getCachedNetworkImageWithurl(
+                 child: getCachedNetworkImageWithurl(
                     url: "", fit: BoxFit.fill, size: 49),
               ),
             ),
@@ -408,7 +402,7 @@ class _HomeState extends State<SearchMessage>
                           ),
                           child: new Text(
                             chatUser.username,
-                            style: TextThemes.greyTextFielBold,
+                            style: TextThemes.chatUUserTextBold,
                           ),
                         ),
                         Container(
@@ -426,7 +420,9 @@ class _HomeState extends State<SearchMessage>
                       child: Container(
                           child: new Text(
                               chatUser.lastMessage,
-                              style: TextThemes.greyDarkTextHomeLocation,
+                              style: (chatUser.unreadMessageCount > 0)
+                                  ? TextThemes.chatMessageThemeActive
+                                  : TextThemes.chatMessageThemeInActive,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis
                       )),

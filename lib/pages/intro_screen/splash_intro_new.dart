@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:payvor/pages/join_community/join_community.dart';
 import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/resources/class%20ResString.dart';
@@ -15,6 +16,8 @@ class FadeIn extends State<SplashIntroScreenNew> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+
   }
 
   @override

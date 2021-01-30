@@ -43,25 +43,12 @@ String readTimestamp(String timestamp) {
   var time = '';
  try {
    var now = new DateTime.now();
-   var format = new DateFormat('hh:mm a');
+   var format = new DateFormat('HH:MM');
    var date =
 
    new DateTime.fromMicrosecondsSinceEpoch(num.parse(timestamp) * 1000);
    time = format.format(date);
-//   var diff = date.difference(now);
-//
-//   if (diff.inSeconds <= 0 ||
-//       diff.inSeconds > 0 && diff.inMinutes == 0 ||
-//       diff.inMinutes > 0 && diff.inHours == 0 ||
-//       diff.inHours > 0 && diff.inDays == 0) {
-//
-//   } else {
-//     if (diff.inDays == 1) {
-//       time = diff.inDays.toString() + 'DAY AGO';
-//     } else {
-//       time = diff.inDays.toString() + 'DAYS AGO';
-//     }
-//   }
+
  }
  catch(ex)
   {

@@ -5,4 +5,5 @@ const String ITEMS = "items";
 const String MESSAGES = "messages";
 const String CHATFRIENDS = "chatfriends";
 const String FRIENDS = "friends";
+const String FAVOURS = "favours";
 

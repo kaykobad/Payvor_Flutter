@@ -32,4 +32,10 @@ class Constants{
   static const int HOME_LAUCH_DETAILS_SCREEN = 1;
   static const int HOME_LAUCH_SEARCH_SCREEN = 2;
   static const int HOME_LAUCH_FILTER_SCREEN = 3;
+
+  //chat profile pic size
+  static const double CHAT_PROFILE_PIC_SIZE = 40;
+
+
+
 }

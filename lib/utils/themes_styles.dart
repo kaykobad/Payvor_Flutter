@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 
 class TextThemes {
@@ -134,11 +135,7 @@ class TextThemes {
   );
 
 
-  static final TextStyle greyTextFielBold = TextStyle(
-    fontFamily: AssetStrings.circulerBoldStyle,
-    fontSize: 16,
-    color: Colors.black,
-  );
+
 
 
   static final TextStyle greyDarkTextFieldMedium = TextStyle(
@@ -243,4 +240,38 @@ class TextThemes {
     fontWeight: FontWeight.w500,
     color: Color.fromRGBO(2, 43, 91, 1.0),
   );
+
+  //theme for chat section
+  //for message theme
+  static final TextStyle chatMessageThemeActive = TextStyle(
+    fontFamily: AssetStrings.circulerNormal,
+    fontSize: 14,
+    color:AppColors.kBlack,
+  );
+
+  static final TextStyle chatMessageThemeInActive = TextStyle(
+    fontFamily: AssetStrings.circulerNormal,
+    fontSize: 14,
+    color:Color.fromRGBO(103, 99, 99, 1.0),
+  );
+  //chat user name
+  static final TextStyle chatUUserTextBold = TextStyle(
+    fontFamily: AssetStrings.circulerBoldStyle,
+    fontSize: 16,
+    color: Colors.black,
+  );
+
+  //CHAT TIME
+  static final TextStyle chatMessageTimeStyle = TextStyle(
+    fontFamily: AssetStrings.circulerNormal,
+    fontSize: 12,
+    color: Color.fromRGBO(103, 99, 99, 1.0),
+  );
+  //chat seciton theme
+  static final TextStyle chatSectionItemTheme = TextStyle(
+    fontFamily: AssetStrings.circulerMedium,
+    fontSize: 12,
+    color: Colors.black,
+  );
+
 }

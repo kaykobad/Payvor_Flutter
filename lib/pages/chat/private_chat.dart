@@ -5,9 +5,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
+import 'package:payvor/model/post_for_chat.dart';
 import 'package:payvor/pages/chat/chat_user.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/payment/chat_bubble_image_left.dart';
@@ -51,6 +52,7 @@ class PrivateChat extends StatefulWidget {
   final String currentUserProfilePic;
   String bio;
   bool isOnline;
+  String postId;
 
   PrivateChat(
       {Key key,
@@ -62,7 +64,8 @@ class PrivateChat extends StatefulWidget {
       @required this.currentUserName,
       @required this.currentUserProfilePic,
       this.bio,
-      this.isOnline})
+      this.isOnline,
+      this.postId})
       : super(key: key);
 
   @override
@@ -120,7 +123,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
   void initState() {
     MemoryManagement.init();
     focusNode.addListener(onFocusChange);
-
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     groupChatId = '';
 
     isLoading = false;
@@ -130,6 +133,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
     readLocal();
     Future.delayed(const Duration(milliseconds: 300), () {
       resetCount();
+      updatePostInfo();
     });
     super.initState();
   }
@@ -154,6 +158,29 @@ class PrivateChatScreenState extends State<PrivateChat> {
   Future<Null> resetCount() async {
     firebaseProvider.resetUnreadMessageCount(
         userId: currentUseerId, chatUserId: peerId);
+  }
+
+  //update post info
+  Future<void> updatePostInfo() async {
+    try {
+      if (widget.postId != null) {
+        var postForChatRequest = PostForChat(postId: widget.postId,
+            userId: widget.currentUserId,
+            updatedAt: DateTime
+                .now()
+                .millisecondsSinceEpoch);
+        firebaseProvider.insertPostInfoForChat(
+            documentId: groupChatId, request: postForChatRequest);
+      }
+      else {
+        var response = await firebaseProvider.getPostInfoForChat(
+            documentId: groupChatId);
+        widget.postId = response.postId;
+      }
+    }catch(ex)
+    {
+
+    }
   }
 
   readLocal() async {
@@ -480,39 +507,39 @@ class PrivateChatScreenState extends State<PrivateChat> {
                 ? _otherChatMessageBubble(
                     document['content'], document['timestamp'], index)
                 : document['type'] == 1
-                    ? Container(
-                        child: _otherChatImageBubble(
-                            document['content'], document['timestamp'], index),
-                        margin: EdgeInsets.only(left: 10.0),
-                      )
-                    : Container(
+                ? Container(
+              child: _otherChatImageBubble(
+                  document['content'], document['timestamp'], index),
+              margin: EdgeInsets.only(left: 10.0),
+            )
+                : Container(
 //                  child: new Image.asset(
 //                    'images/${document['content']}.gif',
 //                    width: 100.0,
 //                    height: 100.0,
 //                    fit: BoxFit.cover,
 //                  ),
-                        margin: EdgeInsets.only(
-                            bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                            right: 10.0),
-                      ),
+              margin: EdgeInsets.only(
+                  bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                  right: 10.0),
+            ),
 
             // Time
-            isLastMessageLeft(index)
-                ? Container(
-                    child: Text(
-                      DateFormat('dd MMM kk:mm').format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              document['timestamp'])),
-                      style: TextStyle(
-                          color: AppColors.kGrey,
-                          fontSize: 12.0,
-                          fontStyle: FontStyle.italic,
-                          fontFamily: "RobotoRegular"),
-                    ),
-                    margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
-                  )
-                : Container()
+//            isLastMessageLeft(index)
+//                ? Container(
+//                    child: Text(
+//                      DateFormat('dd MMM kk:mm').format(
+//                          DateTime.fromMillisecondsSinceEpoch(
+//                              document['timestamp'])),
+//                      style: TextStyle(
+//                          color: AppColors.kGrey,
+//                          fontSize: 12.0,
+//                          fontStyle: FontStyle.italic,
+//                          fontFamily: "RobotoRegular"),
+//                    ),
+//                    margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
+//                  )
+//                : Container()
           ],
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
@@ -790,7 +817,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
         children: <Widget>[
           new Text(
             userName,
-            style: TextThemes.darkBlackMedium,
+            style: TextThemes.chatUUserTextBold,
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -832,13 +859,12 @@ class PrivateChatScreenState extends State<PrivateChat> {
   Widget build(BuildContext context) {
     firebaseProvider = Provider.of<FirebaseProvider>(context);
 
-    return new Scaffold(
-      backgroundColor: Colors.white,
-      key: _scaffoldKey,
-      appBar: _getAppbar(widget.userName),
-      body: new SafeArea(
-        top: false,
-        child: new Column(
+    return SafeArea(
+      child: new Scaffold(
+        backgroundColor: Colors.white,
+        key: _scaffoldKey,
+        appBar: _getAppbar(widget.userName),
+        body: new Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
 /*
@@ -1043,19 +1069,25 @@ class PrivateChatScreenState extends State<PrivateChat> {
 
   Widget _timeSectionWidget(String text) {
     return Center(
-      child: Container(
-          width: 100,
-          decoration: BoxDecoration(
-              border: Border.all(
-                color: AppColors.colorGray,
+      child: Wrap(
+        direction: Axis.vertical,
+        children: [
+          Container(
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Color.fromRGBO(143, 146, 161, 1.0),
+                      width: 0.5
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(20))
               ),
-              borderRadius: BorderRadius.all(Radius.circular(20))
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(child: Text(
+                    text.toUpperCase(),
+                    style: TextThemes.chatSectionItemTheme)),
+              )
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Center(child: Text(
-                text.toUpperCase(), style: TextThemes.blackTextSmallNormal)),
-          )
+        ],
       ),
     );
   }

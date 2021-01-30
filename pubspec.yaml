@@ -65,6 +65,7 @@ dev_dependencies:
   firebase_messaging:
   firebase_auth:
   firebase_core:
+  url_launcher: ^5.7.10
 
 
 

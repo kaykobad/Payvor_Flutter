@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
+import 'package:payvor/model/post_for_chat.dart';
 import 'package:payvor/pages/chat/chat_user.dart';
 import 'package:payvor/pages/chat/payvor_firebase_user.dart';
 import 'package:payvor/pages/chat/payvor_group_chat.dart';
@@ -539,6 +540,21 @@ class FirebaseProvider with ChangeNotifier {
     }
   }
 
+  @override
+  Future<bool> insertPostInfoForChat(
+      {@required PostForChat request, @required String documentId}) async {
+    await Firestore.instance
+        .collection(FAVOURS)
+        .document(documentId)
+        .setData(request.toJson());
+    return true;
+  }
+
+  Future<PostForChat> getPostInfoForChat({@required String documentId}) async {
+    var document = Firestore.instance.collection(FAVOURS).document(documentId);
+    var documentData = await document.get();
+    return PostForChat.fromJson(documentData.data);
+  }
 
   void hideLoader() {
     print(_isLoading);

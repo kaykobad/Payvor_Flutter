@@ -4,7 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatBubbleRight extends StatelessWidget {
   final String message;
@@ -26,7 +28,7 @@ class ChatBubbleRight extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: Container(
-        margin: const EdgeInsets.only(left: 20, right: 20.0, top: 25),
+        margin: const EdgeInsets.only(left: 20, right: 10.0, top: 25),
         color: Colors.transparent,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -42,7 +44,7 @@ class ChatBubbleRight extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Color.fromRGBO(255, 255, 255, 1),
                     border: new Border.all(
-                      color: Color.fromRGBO(151, 151, 151, 0.2),
+                      color: Color.fromRGBO(230, 230, 230, 0.2),
                       width: 1,
                     ),
                     borderRadius: BorderRadius.only(
@@ -50,50 +52,39 @@ class ChatBubbleRight extends StatelessWidget {
                         bottomLeft: Radius.circular(12),
                         bottomRight: Radius.circular(12)),
                   ),
-                  child: Stack(
-                    children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          Linkify(
-                              onOpen: (link) async {
-                                /* if (await canLaunch(link.url)) {
-                                  await launch(link.url);
-                                } else {
-                                  throw 'Could not launch $link';
-                                }*/
-                              },
-                              text: message ?? "",
-                              linkStyle: TextStyle(color: Colors.blue),
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: Color.fromRGBO(23, 23, 23, 1),
-                                  fontFamily: AssetStrings.circulerNormal)),
-                        ],
-                      ),
-                    ],
-                  ),
+                  child: Linkify(
+                      onOpen: (link) async {
+                         if (await canLaunch(link.url)) {
+                          await launch(link.url);
+                        } else {
+                          throw 'Could not launch $link';
+                        }
+                      },
+                      text: message ?? "",
+                      linkStyle: TextStyle(color: Colors.blue),
+                      style: TextThemes.chatMessageThemeActive),
                 ),
                 Positioned(
                   right: 0.0,
                   top: 0.0,
+
                   child: Column(
                     children: [
                       new Container(
-                          width: 38.0,
-                          height: 38.0,
+                          width: Constants.CHAT_PROFILE_PIC_SIZE,
+                          height: Constants.CHAT_PROFILE_PIC_SIZE,
                           decoration: new BoxDecoration(
                             shape: BoxShape.circle,
                           ),
                           child: ClipOval(
                             child: getCachedNetworkImageWithurl(
-                                url: profilePic ?? "", size: 38),
+                                url: profilePic ?? "", size: Constants.CHAT_PROFILE_PIC_SIZE),
                           )),
                       Container(
                           margin: const EdgeInsets.only(top: 4.0),
                           child: new Text(
                             time,
-                            style: TextThemes.chatTimeStampblackTextSmallNormal,
+                            style: TextThemes.chatMessageTimeStyle,
                           ))
                     ],
                   ),

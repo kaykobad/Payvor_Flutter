@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:http/http.dart' as http;
 import 'package:payvor/model/login/media_request.dart';
@@ -33,6 +34,9 @@ class _WebviewInstaState extends State<WebviewInsta> {
 
   @override
   void initState() {
+    super.initState();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+
     url =
         "https://api.instagram.com/oauth/authorize?client_id=$appId&redirect_uri=https://github.com/login&scope=user_profile,user_media&response_type=code";
 
@@ -121,7 +125,6 @@ class _WebviewInstaState extends State<WebviewInsta> {
             size: 28.0,
           ),
         ),
-        title: const Text('Webview'),
       ),
       withZoom: true,
       withLocalStorage: true,
@@ -129,7 +132,7 @@ class _WebviewInstaState extends State<WebviewInsta> {
       initialChild: Container(
         color: Colors.white,
         child: const Center(
-          child: Text('Waiting.....'),
+          child: Text('Loading.....'),
         ),
       ),
     );
