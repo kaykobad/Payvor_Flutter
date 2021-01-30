@@ -159,10 +159,11 @@ class _HomeState extends State<SearchMessage>
   Widget _buildContestList() {
     return Expanded(
       child: Container(
+        color: AppColors.whiteGray,
         child: new ListView.builder(
           padding: new EdgeInsets.all(0.0),
           itemBuilder: (BuildContext context, int index) {
-            return buildItemMain(_chatUserList[index],index);
+            return buildItemMain(_chatUserList[index], index);
           },
           itemCount: _chatUserList.length,
         ),

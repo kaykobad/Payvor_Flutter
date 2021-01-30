@@ -291,9 +291,10 @@ class _HomeState extends State<MyJobs>
                     Container(
                       margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
                       child: new Text(
-                        "You don’t have any job yet.Once you’re hired it will show up here.",
+                        "You don’t have any job yet.\nOnce you’re hired it will show up here.",
                         textAlign: TextAlign.center,
                         style: new TextStyle(
+                            height: 1.5,
                             color: Color.fromRGBO(103, 99, 99, 1.0),
                             fontFamily: AssetStrings.circulerNormal,
                             fontSize: 15.0),

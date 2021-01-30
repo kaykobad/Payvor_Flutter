@@ -9,6 +9,7 @@ import 'package:payvor/notifications/notification_response.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
+import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
@@ -233,7 +234,7 @@ class _HomeState extends State<Notifications>
         await hitSearchApi();
       },
       child: Container(
-        color: Colors.white,
+        color: AppColors.whiteGray,
         child: new ListView.builder(
           padding: new EdgeInsets.all(0.0),
           controller: scrollController,
@@ -308,6 +309,7 @@ class _HomeState extends State<Notifications>
 
   Widget buildItemMain(Data data) {
     return Container(
+      color: Colors.white,
       child: Column(
         children: <Widget>[
           InkWell(

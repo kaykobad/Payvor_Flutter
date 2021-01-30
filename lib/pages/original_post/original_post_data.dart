@@ -1034,7 +1034,7 @@ class _HomeState extends State<OriginalPostData>
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.9),
+                                  color: Colors.black.withOpacity(0.45),
                                   blurRadius: .4,
                                 ),
                               ]),
@@ -1060,7 +1060,7 @@ class _HomeState extends State<OriginalPostData>
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.9),
+                                color: Colors.black.withOpacity(0.45),
                                 blurRadius: .4,
                               ),
                             ]),

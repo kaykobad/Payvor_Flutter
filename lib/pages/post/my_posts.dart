@@ -264,9 +264,10 @@ class _HomeState extends State<MyPosts>
                     Container(
                       margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
                       child: new Text(
-                        "You haven’t asked for any favors yet.Once you create a favor it will show up here.",
+                        "You haven’t asked for any favors yet.\nOnce you create a favor it will show up here.",
                         textAlign: TextAlign.center,
                         style: new TextStyle(
+                            height: 1.5,
                             color: Color.fromRGBO(103, 99, 99, 1.0),
                             fontFamily: AssetStrings.circulerNormal,
                             fontSize: 15.0),

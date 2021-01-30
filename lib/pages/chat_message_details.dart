@@ -763,7 +763,7 @@ class _HomeState extends State<ChatMessageDetails>
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.9),
+                                  color: Colors.black.withOpacity(0.45),
                                   blurRadius: .4,
                                 ),
                               ]),
