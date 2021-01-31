@@ -350,6 +350,8 @@ class _HomeState extends State<ReportProblems>
       provider.hideLoader();
 
       if (response != null && response?.status?.code == 200) {
+        var report = DataReport(id: 1, title: "");
+        listRecent?.add(report);
         listRecent?.addAll(response?.data);
       }
 
