@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/chat/chat_screen.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
-import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/dummy.dart';
 import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/pages/post/post_home.dart';
@@ -266,17 +265,25 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          elevation: 0.0,
-          child: CustomFloatingButton(),
-          onPressed: () {
-            redirect();
-          },
+        floatingActionButton: Container(
+          margin: const EdgeInsets.only(top: 24),
+          height: Constants.FLOATING_BUTTON_SIZE,
+          width: Constants.FLOATING_BUTTON_SIZE,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.white, width: 4),
+            shape: BoxShape.circle,
+          ),
+          child: FloatingActionButton(
+            elevation: 0.0,
+            child: CustomFloatingButton(),
+            onPressed: () {
+              redirect();
+            },
+          ),
         ),
-        floatingActionButtonLocation:
-        FloatingActionButtonLocation.centerDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: Container(
-          // height: 65,
+          //  height: 90,
           child: BottomNavigationBar(
             showSelectedLabels: false,
             showUnselectedLabels: false,
@@ -284,12 +291,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             backgroundColor: Colors.white,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                  icon: bottomMenuIconWidget( AssetStrings.home_inactive),
-                  activeIcon: bottomMenuIconWidget( AssetStrings.home_active),
+                  icon: bottomMenuIconWidget(AssetStrings.home_inactive,22,23),
+                  activeIcon: bottomMenuIconWidget( AssetStrings.home_active,22,23),
                   label: ""),
               BottomNavigationBarItem(
-                  icon: bottomMenuIconWidget( AssetStrings.job_inactive),
-                  activeIcon: bottomMenuIconWidget( AssetStrings.job_active),
+                  icon: bottomMenuIconWidget( AssetStrings.job_inactive,25,23),
+                  activeIcon: bottomMenuIconWidget( AssetStrings.job_active,25,23),
                   label: ""),
               BottomNavigationBarItem(
                   icon: firstWidget(AppColors.kWhite, AssetStrings.group),
@@ -299,16 +306,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   icon: bottomMenuIconWidget(
                       (_isNewActivityFound) ? AssetStrings
                           .activity_unselected_with_noti : AssetStrings
-                          .activity_not_selected),
+                          .activity_not_selected,26,26),
                   activeIcon: bottomMenuIconWidget(
                       (_isNewActivityFound) ? AssetStrings
                           .activity_selected_with_noti : AssetStrings
-                          .activity_selected),
+                          .activity_selected,26,26),
                   label: ""),
 
               BottomNavigationBarItem(
-                  icon: bottomMenuIconWidget( AssetStrings.profile_inactive),
-                  activeIcon: bottomMenuIconWidget( AssetStrings.profile_active),
+                  icon: bottomMenuIconWidget( AssetStrings.profile_inactive,19,24),
+                  activeIcon: bottomMenuIconWidget( AssetStrings.profile_active,19,24),
                   label: ""),
             ],
             currentIndex: currentTab,
@@ -345,9 +352,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         color: color);
   }
 
-  Widget bottomMenuIconWidget(String image) {
-    return SvgPicture.asset(image, width: Constants.bottomIconSize,
-      height: Constants.bottomIconSize,
+  Widget bottomMenuIconWidget(String image,double width,double height) {
+    return Center(
+      child: SvgPicture.asset(
+        image,
+        width: width,
+        height: height,
+      ),
     );
   }
 
@@ -372,33 +383,21 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
 
 class CustomFloatingButton extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-      width: 87,
-      height: 87,
-      padding: new EdgeInsets.all(3),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle),
-
-
-      child: Container(
-
-        width: 85,
-        height: 85,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: new SvgPicture.asset(
-            AssetStrings.plushome,
-          ),
-        ),
+        width: Constants.FLOATING_BUTTON_SIZE,
+        height: Constants.FLOATING_BUTTON_SIZE,
         decoration: BoxDecoration(
-            color: AppColors.colorDarkCyan,
-            shape: BoxShape.circle),
-      ),
-    );
+            color: AppColors.colorDarkCyan, shape: BoxShape.circle),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: new Image.asset(
+            AssetStrings.floatingplushome,
+          ),
+        ));
   }
 
 }

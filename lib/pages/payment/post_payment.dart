@@ -197,10 +197,10 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
                         color: Color.fromRGBO(255, 107, 102, 1),
                         borderRadius: new BorderRadius.circular(15.0)),
                     child: new Text(
-                      payment?.type ?? "",
+                      payment?.type?.toUpperCase() ?? "",
                       style: new TextStyle(
                           fontFamily: AssetStrings.circulerNormal,
-                          fontSize: 12,
+                          fontSize: 14,
                           color: Colors.white),
                     ),
                   )

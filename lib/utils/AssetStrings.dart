@@ -85,6 +85,8 @@ class AssetStrings {
   static const String chat_empty = 'assets/svg/empty_chat.svg';
   static const String nopostnojob = 'assets/svg/nopost_nojobs.svg';
   static const String paypal = 'assets/png/paypal_icon.png';
+  static const String floatingplushome = 'assets/png/floating_button_plus_icon.png';
+
 
   //bottom navigation bar
   static const String home_active = 'assets/svg/bottom_tab_home_active.svg';

@@ -184,8 +184,6 @@ class APIHandler {
         completer.complete(apiError);
       }
       else if (e.response?.statusCode == 400) {
-         print(e.response.data);
-         print(e.response.data[0]);
          APIError apiError = new APIError(
            error: parseError(e.response.data),
            messag: e.response.data,

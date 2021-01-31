@@ -78,30 +78,41 @@ class AuthProvider with ChangeNotifier {
         context: context, url: APIs.signUpUrl, requestBody: requests.toJson());
     print(APIs.signUpUrl);
 
-    var status = response["status"];
-
-    if (status == false) {
-      var data = response["data"]["email"][0];
-
-      APIError apiError = new APIError(
-        error: data,
-        messag: data,
-        status: 400,
-        onAlertPop: () {},
-      );
-      completer.complete(apiError);
+//    var status = response["status"];
+//
+//    if (status == false) {
+//      var data = response["data"]["email"][0];
+//
+//      APIError apiError = new APIError(
+//        error: data,
+//        messag: data,
+//        status: 400,
+//        onAlertPop: () {},
+//      );
+//      completer.complete(apiError);
+//      return completer.future;
+//    } else {
+//      if (response is APIError) {
+//        completer.complete(response);
+//        return completer.future;
+//      } else {
+//        LoginSignupResponse loginResponseData =
+//            new LoginSignupResponse.fromJson(response);
+//        completer.complete(loginResponseData);
+//        notifyListeners();
+//        return completer.future;
+//      }
+//    }
+    if (response is APIError) {
+      response.error="The email has already been taken";
+      completer.complete(response);
       return completer.future;
     } else {
-      if (response is APIError) {
-        completer.complete(response);
-        return completer.future;
-      } else {
-        LoginSignupResponse loginResponseData =
-            new LoginSignupResponse.fromJson(response);
-        completer.complete(loginResponseData);
-        notifyListeners();
-        return completer.future;
-      }
+      LoginSignupResponse loginResponseData =
+      new LoginSignupResponse.fromJson(response);
+      completer.complete(loginResponseData);
+      notifyListeners();
+      return completer.future;
     }
   }
 
