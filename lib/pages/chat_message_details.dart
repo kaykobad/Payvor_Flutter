@@ -16,6 +16,7 @@ import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/review/review_post.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
@@ -645,20 +646,34 @@ class _HomeState extends State<ChatMessageDetails>
                               )),
                               Container(
                                 width: 3,
-                          height: 3,
-                          margin: new EdgeInsets.only(left: 5, right: 5),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.darkgrey,
-                          ),
-                        ),
-                        Container(
-                            child: new Text(
-                              "${userResponse?.user?.ratingCount?.toString() ??
-                                  "0"} Reviews",
-                              style: TextThemes.blueMediumSmall,
-                            )),
-                      ],
+                                height: 3,
+                                margin: new EdgeInsets.only(left: 5, right: 5),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.darkgrey,
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    new CupertinoPageRoute(
+                                        builder: (BuildContext context) {
+                                      return Material(
+                                          child: new ReviewPost(
+                                        id: widget?.hireduserId?.toString() ??
+                                            "",
+                                      ));
+                                    }),
+                                  );
+                                },
+                                child: Container(
+                                    child: new Text(
+                                  "${userResponse?.user?.ratingCount?.toString() ?? "0"} Reviews",
+                                  style: TextThemes.blueMediumSmall,
+                                )),
+                              ),
+                            ],
                           ),
                         ),
                         widget?.userButtonMsg != null && widget?.userButtonMsg

@@ -6,6 +6,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/notifications/notification_response.dart';
+import 'package:payvor/pages/pay_feedback/pay_feedback_common.dart';
+import 'package:payvor/pages/pay_feedback/pay_give_feedback.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
@@ -313,8 +315,31 @@ class _HomeState extends State<Notifications>
           InkWell(
               onTap: () {
                 print("called ${data.type}");
-                  _redirectToFavourDetailScreen(data.favourId);
 
+                if (data?.type == 1) {
+                  //"hire to u
+                  providerFirebase?.changeScreen(new PayFeebackDetailsCommon(
+                    postId: data?.favourId.toString(),
+                    userId: data?.userId.toString(),
+                    type: 1,
+                    status: 1,
+                    voidcallback: null,
+                    lauchCallBack: null,
+                  ));
+                } else if (data?.type == 2) {
+                  // hire and paid favor
+
+                  providerFirebase?.changeScreen(new PayFeebackDetails(
+                    postId: data?.favourId.toString(),
+                    userId: data?.userId.toString(),
+                    type: 1,
+                    voidcallback: null,
+                    lauchCallBack: null,
+                  ));
+                } else {
+                  // for apploed and refered favor( type 3,4 etc)
+                  _redirectToFavourDetailScreen(data.favourId);
+                }
               },
               child: buildItem(data)),
           Opacity(
@@ -331,15 +356,6 @@ class _HomeState extends State<Notifications>
   }
 
   void _redirectToFavourDetailScreen(int favourId) {
-    /* Navigator.push(
-      context,
-      new CupertinoPageRoute(builder: (BuildContext context) {
-        return Material(
-            child: new PostFavorDetails(
-          id: favourId.toString(),
-        ));
-      }),
-    );*/
 
     providerFirebase?.changeScreen(new PostFavorDetails(
       id: favourId.toString(),

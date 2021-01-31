@@ -37,7 +37,9 @@ class AppColors {
   static const Color lightWhite = const Color(0xFFF3F3F3);
   static const Color darkgrey = const Color(0xFF676363);
   static const Color lightGrey = const Color(0xFFB7B7B7);
+  static const Color desabledGray = const Color(0xFFD9D9D9);
   static const Color greyProfile = const Color(0xFFEDEDED);
+  static const Color leftChat = const Color(0xFFf0f0f1);
   static const Color redLight = const Color(0xFFFF6B66); //255,107,102
 
 //intro screen gradient button color

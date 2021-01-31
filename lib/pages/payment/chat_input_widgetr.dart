@@ -25,7 +25,7 @@ class ChatInputWidget extends StatelessWidget {
         ),
       ),
       padding:
-          new EdgeInsets.only(bottom: 16.0, left: 12.0, right: 12.0, top: 16.0),
+          new EdgeInsets.only(bottom: 5.0, left: 12.0, right: 12.0, top: 16.0),
       child: new Row(
         children: <Widget>[
           new Expanded(
@@ -63,9 +63,8 @@ class ChatInputWidget extends StatelessWidget {
                   hintText: "Write a message..",
                   hintStyle: new TextStyle(
                       fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
-                      color: Color.fromRGBO(183, 183, 183, 1)
-                  ),
+                      fontFamily: AssetStrings.circulerNormal,
+                      color: Color.fromRGBO(183, 183, 183, 1)),
 
                 ),
               ),

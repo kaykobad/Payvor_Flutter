@@ -218,7 +218,6 @@ class _HomeState extends State<ReviewPost>
           Visibility(
             visible: !offstagenodata,
             child: Container(
-              margin: new EdgeInsets.only(top: 170),
               child: new Center(
                 child: new Text(
                   "No reviews Found",

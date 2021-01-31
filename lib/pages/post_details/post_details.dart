@@ -12,6 +12,7 @@ import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
 import 'package:payvor/model/promotion/promotion_response.dart';
+import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/payment/payment_dialog.dart';
 import 'package:payvor/pages/payment/post_payment.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
@@ -757,74 +758,96 @@ class _HomeState extends State<PostFavorDetails>
   }
 
   Widget buildItemUser() {
-    return Container(
-      color: Colors.white,
-      padding:
-          new EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
-      margin: new EdgeInsets.only(top: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          new Container(
-            width: 50.0,
-            height: 50.0,
-            alignment: Alignment.center,
-            child: new ClipOval(
-              child: getCachedNetworkImageWithurl(
-                  url: favoriteResponse.data.user.profilePic ?? "",
-                  fit: BoxFit.fill,
-                  size: 50),
-            ),
-          ),
-          Expanded(
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: new EdgeInsets.only(left: 10.0, right: 10.0),
-                  child: new Text(
-                    favoriteResponse?.data?.user?.name??""
-                        ,
-                    style: TextThemes.blackCirculerMedium,
-                  ),
-                ),
-                Container(
-                  margin: new EdgeInsets.only(left: 10.0, right: 10.0, top: 3),
-                  child: Row(
-                    children: [
-                      Container(
-                          child: new Text(
-                            "Favor Post Owner",
-                            style: TextThemes.greyTextFieldNormalNw,
-                          )),
-                      favoriteResponse?.data.isActive == 1 ? Container(
-                        width: 3,
-                        height: 3,
-                        margin: new EdgeInsets.only(left: 4, right: 4),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.darkgrey,
-                        ),
-                      ) : Container(),
-                      favoriteResponse?.data.isActive == 1 ? Container(
-                          child: new Text(
-                            "VERIFIED",
-                            style: TextThemes.blueMediumSmallNew,
-                          )) : Container(),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          Align(
+    return InkWell(
+      onTap: () {
+        if (!isCurrentUser) {
+          Navigator.push(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return Material(
+                  child: new ChatMessageDetails(
+                id: "",
+                name: favoriteResponse.data.user.name ?? "",
+                image: favoriteResponse.data.user.profilePic ?? "",
+                hireduserId: favoriteResponse.data.user.id.toString() ?? "",
+              ));
+            }),
+          );
+        }
+      },
+      child: Container(
+        color: Colors.white,
+        padding:
+            new EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
+        margin: new EdgeInsets.only(top: 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            new Container(
+              width: 50.0,
+              height: 50.0,
               alignment: Alignment.center,
-              child: Container(
-                child: Image.asset(AssetStrings.verify),
-                width: 21,
-                height: 21,
-              )),
-        ],
+              child: new ClipOval(
+                child: getCachedNetworkImageWithurl(
+                    url: favoriteResponse.data.user.profilePic ?? "",
+                    fit: BoxFit.fill,
+                    size: 50),
+              ),
+            ),
+            Expanded(
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: new Text(
+                      favoriteResponse?.data?.user?.name ?? "",
+                      style: TextThemes.blackCirculerMedium,
+                    ),
+                  ),
+                  Container(
+                    margin:
+                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 3),
+                    child: Row(
+                      children: [
+                        Container(
+                            child: new Text(
+                          "Favor Post Owner",
+                          style: TextThemes.greyTextFieldNormalNw,
+                        )),
+                        favoriteResponse?.data.isActive == 1
+                            ? Container(
+                                width: 3,
+                                height: 3,
+                                margin: new EdgeInsets.only(left: 4, right: 4),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.darkgrey,
+                                ),
+                              )
+                            : Container(),
+                        favoriteResponse?.data.isActive == 1
+                            ? Container(
+                                child: new Text(
+                                "VERIFIED",
+                                style: TextThemes.blueMediumSmallNew,
+                              ))
+                            : Container(),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Align(
+                alignment: Alignment.center,
+                child: Container(
+                  child: Image.asset(AssetStrings.verify),
+                  width: 21,
+                  height: 21,
+                )),
+          ],
+        ),
       ),
     );
   }
@@ -1081,8 +1104,12 @@ class _HomeState extends State<PostFavorDetails>
                           ),
                         ),
                         buildItemUser(),
-                        buildItemRating(1, "User Ratings"),
-                        buildItemRating(2, "Refer Others"),
+                        !isCurrentUser
+                            ? buildItemRating(1, "User Ratings")
+                            : Container(),
+                        !isCurrentUser
+                            ? buildItemRating(2, "Refer Others")
+                            : Container(),
                         Container(
                             color: Colors.white,
                             padding: new EdgeInsets.only(
@@ -1097,9 +1124,10 @@ class _HomeState extends State<PostFavorDetails>
                             "€${favoriteResponse?.data?.price}", 23.0),
                         getRowsPayment(
                             ResString().get('payvor_service_fee') +
-                                "(${favoriteResponse?.data?.service_perc
-                                    ?.toString()}%)",
-                            "-€${favoriteResponse?.data?.service_fee}",
+                                "(${favoriteResponse?.data?.service_perc?.toString()}%)",
+                            isCurrentUser
+                                ? "-€0"
+                                : "-€${favoriteResponse?.data?.service_fee}",
                             9.0),
                         new Container(
                           height: 13,
@@ -1132,10 +1160,11 @@ class _HomeState extends State<PostFavorDetails>
                                 textAlign: TextAlign.center,
                               ),
                               new Text(
-                                "€${favoriteResponse?.data?.receiving}",
+                                isCurrentUser
+                                    ? "€${favoriteResponse?.data?.price}"
+                                    : "€${favoriteResponse?.data?.receiving}",
                                 style: new TextStyle(
-                                    fontFamily:
-                                        AssetStrings.circulerBoldStyle,
+                                    fontFamily: AssetStrings.circulerBoldStyle,
                                     color: AppColors.bluePrimary,
                                     fontSize: 15),
                                 textAlign: TextAlign.center,
@@ -1249,7 +1278,7 @@ class _HomeState extends State<PostFavorDetails>
                                         favoriteResponse
                                                 ?.data?.is_user_applied ==
                                             1
-                                    ? AppColors.lightGrey
+                                    ? AppColors.desabledGray
                                     : AppColors.colorDarkCyan)),
                       ),
           ) : Positioned(

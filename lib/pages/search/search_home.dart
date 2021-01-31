@@ -78,32 +78,28 @@ class HomeState extends State<SearchCompany>
   }
 
   Widget buildItem(Datas data) {
-    return InkWell(
-      onTap: () {
-        print("userid ${data?.userId}");
-        print("main ${widget.userid}");
+    return Container(
+      margin: new EdgeInsets.only(left: 16.0, right: 16.0),
+      child: Row(
+        children: <Widget>[
+          InkWell(
+            onTap: () {
+              if (widget.userid == data?.userId?.toString()) {
+                print("true");
 
-        // ignore: unrelated_type_equality_checks
-        if (widget.userid == data?.userId?.toString()) {
-          print("true");
-
-          widget.callbackmyid(4);
-        } else {
-          print("flase");
-          widget.lauchCallBack(Material(
-              child: new ChatMessageDetails(
-            id: data?.id?.toString(),
-            name: data?.user?.name,
-            image: data?.user?.profilePic,
-            hireduserId: data?.userId?.toString(),
-          )));
-        }
-      },
-      child: Container(
-        margin: new EdgeInsets.only(left: 16.0, right: 16.0),
-        child: Row(
-          children: <Widget>[
-            new Container(
+                widget.callbackmyid(4);
+              } else {
+                print("flase");
+                widget.lauchCallBack(Material(
+                    child: new ChatMessageDetails(
+                  id: data?.id?.toString(),
+                  name: data?.user?.name,
+                  image: data?.user?.profilePic,
+                  hireduserId: data?.userId?.toString(),
+                )));
+              }
+            },
+            child: new Container(
               width: 40.0,
               height: 40.0,
               decoration: BoxDecoration(shape: BoxShape.circle),
@@ -117,11 +113,29 @@ class HomeState extends State<SearchCompany>
                     size: 40),
               ),
             ),
-            Expanded(
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
+          ),
+          Expanded(
+            child: new Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: () {
+                    if (widget.userid == data?.userId?.toString()) {
+                      print("true");
+
+                      widget.callbackmyid(4);
+                    } else {
+                      print("flase");
+                      widget.lauchCallBack(Material(
+                          child: new ChatMessageDetails(
+                        id: data?.id?.toString(),
+                        name: data?.user?.name,
+                        image: data?.user?.profilePic,
+                        hireduserId: data?.userId?.toString(),
+                      )));
+                    }
+                  },
+                  child: Container(
                       margin: new EdgeInsets.only(left: 10.0, right: 10.0),
                       child: Row(
                         children: [
@@ -141,38 +155,37 @@ class HomeState extends State<SearchCompany>
                               : Container(),
                         ],
                       )),
-                  Container(
-                    margin:
-                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
-                    child: Row(
-                      children: [
-                        new Image.asset(
-                          AssetStrings.locationHome,
-                          width: 11,
-                          height: 14,
-                        ),
-                        new SizedBox(
-                          width: 6,
-                        ),
-                        Expanded(
-                            child: new Text(
-                          data?.location ?? "",
-                          style: TextThemes.greyDarkTextHomeLocation,
-                        )),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                ),
+                Container(
+                  margin: new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                  child: Row(
+                    children: [
+                      new Image.asset(
+                        AssetStrings.locationHome,
+                        width: 11,
+                        height: 14,
+                      ),
+                      new SizedBox(
+                        width: 6,
+                      ),
+                      Expanded(
+                          child: new Text(
+                        data?.location ?? "",
+                        style: TextThemes.greyDarkTextHomeLocation,
+                      )),
+                    ],
+                  ),
+                )
+              ],
             ),
-            Align(
-                alignment: Alignment.center,
-                child: new Text(
-                  "€${data.price ?? "0"}",
-                  style: TextThemes.blackDarkHeaderSub,
-                )),
-          ],
-        ),
+          ),
+          Align(
+              alignment: Alignment.center,
+              child: new Text(
+                "€${data.price ?? "0"}",
+                style: TextThemes.blackDarkHeaderSub,
+              )),
+        ],
       ),
     );
   }

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
-import 'package:payvor/utils/AssetStrings.dart';
+import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
@@ -64,10 +64,10 @@ class ChatBubbleLeft extends StatelessWidget {
                       ),
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Color.fromRGBO(230, 230, 230, 1),
+                        color: AppColors.leftChat,
                         border: new Border.all(
                           color: Color.fromRGBO(151, 151, 151, 0.2),
-                          width: 1,
+                          width: 0.5,
                         ),
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(12),

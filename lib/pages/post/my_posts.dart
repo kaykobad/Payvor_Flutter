@@ -530,54 +530,50 @@ class _HomeState extends State<MyPosts>
                 color: AppColors.dividerColor,
               ),
             ),
-            InkWell(
-
-              onTap: () {
-                print("owner id ${data.userId}");
-                print("hired user  id ${data?.hiredUserId}");
-
-                widget.lauchCallBack(Material(
-                    child: Material(
-                        child: new ChatMessageDetails(
-                          id: data.userId.toString(),
-                          name: data.hired.name,
-                          hireduserId: data?.hiredUserId?.toString(),
-                          image: data?.image,
-                          userButtonMsg: true,
-                        ))));
-              },
-              child: Container(
-                margin: new EdgeInsets.only(top: 10.0),
-                child: new Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      child: new Text(
-                        data?.status == 3
-                            ? "You’ve ended job of "
-                            : "You have hired ",
-                        style: TextThemes.grayNormalSmall,
-                      ),
+            Container(
+              margin: new EdgeInsets.only(top: 10.0),
+              child: new Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    child: new Text(
+                      data?.status == 3
+                          ? "You’ve ended job of "
+                          : "You have hired ",
+                      style: TextThemes.grayNormalSmall,
                     ),
-                    Expanded(
-                      child: Container(
-                        margin: new EdgeInsets.only(left: 1.0),
+                  ),
+                  Expanded(
+                    child: Container(
+                      margin: new EdgeInsets.only(left: 1.0),
+                      child: InkWell(
+                        onTap: () {
+                          widget.lauchCallBack(Material(
+                              child: Material(
+                                  child: new ChatMessageDetails(
+                            id: data.userId.toString(),
+                            name: data.hired.name,
+                            hireduserId: data?.hiredUserId?.toString(),
+                            image: data?.image,
+                            userButtonMsg: true,
+                          ))));
+                        },
                         child: new Text(
                           data?.hired?.name ?? "",
                           style: TextThemes.cyanTextSmallMedium,
                         ),
                       ),
                     ),
-                    Container(
-                      margin: new EdgeInsets.only(left: 7.0),
-                      child: new Icon(
-                        Icons.arrow_forward_ios,
-                        size: 13,
-                        color: Color.fromRGBO(183, 183, 183, 1),
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                  Container(
+                    margin: new EdgeInsets.only(left: 7.0),
+                    child: new Icon(
+                      Icons.arrow_forward_ios,
+                      size: 13,
+                      color: Color.fromRGBO(183, 183, 183, 1),
+                    ),
+                  )
+                ],
               ),
             ),
           ],

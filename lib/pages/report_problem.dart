@@ -374,16 +374,16 @@ class _HomeState extends State<ReportProblems>
         children: [
           pos == 0
               ? Container(
-            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 30),
-            alignment: Alignment.centerLeft,
-            child: new Text(
-              "Select a reason",
-              style: new TextStyle(
-                  color: Colors.black,
-                  fontFamily: AssetStrings.circulerMedium,
-                  fontSize: 18.0),
-            ),
-          )
+            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 5),
+                  alignment: Alignment.centerLeft,
+                  child: new Text(
+                    "Select a reason",
+                    style: new TextStyle(
+                        color: Colors.black,
+                        fontFamily: AssetStrings.circulerMedium,
+                        fontSize: 18.0),
+                  ),
+                )
               : buildItemRecentSearch(pos, report),
 
 
