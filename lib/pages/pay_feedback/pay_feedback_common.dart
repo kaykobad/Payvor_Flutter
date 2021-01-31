@@ -231,7 +231,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                       ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
                       : hiredUserDetailsResponse?.data?.postedbyuser?.name ??
                       "",
-                  userd: widget.type == 0
+                  userId: widget.type == 0
                       ? hiredUserDetailsResponse?.data?.hiredUser?.id
                       ?.toString() ?? ""
                       : hiredUserDetailsResponse?.data?.postedbyuser?.id
@@ -244,8 +244,6 @@ class _HomeState extends State<PayFeebackDetailsCommon>
         ))));
       }
 
-      print(response);
-      try {} catch (ex) {}
     } else {
       provider.hideLoader();
       APIError apiError = response;

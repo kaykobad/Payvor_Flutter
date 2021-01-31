@@ -15,6 +15,7 @@ import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/rating/rating_bar.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -49,8 +50,8 @@ class _HomeState extends State<PayFeebackDetails>
     with AutomaticKeepAliveClientMixin<PayFeebackDetails> {
   var screenSize;
 
-  final StreamController<bool> _loaderStreamController =
-  new StreamController<bool>();
+  FirebaseProvider firebaseProvider;
+
   ScrollController scrollController = new ScrollController();
 
   AuthProvider provider;
@@ -225,7 +226,8 @@ class _HomeState extends State<PayFeebackDetails>
 
     if (response is ReportResponse) {
       if (response != null && response.status.code == 200) {
-        widget.lauchCallBack(Material(
+
+        firebaseProvider.changeScreen(Material(
             child: Material(
                 child: new RatingBarNew(
                   id: widget?.postId?.toString(),
@@ -236,7 +238,7 @@ class _HomeState extends State<PayFeebackDetails>
                   name: widget.type == 0 ? hiredUserDetailsResponse?.data
                       ?.hiredUser?.name ?? "" : hiredUserDetailsResponse?.data
                       ?.postedbyuser?.name ?? "",
-                  userd: widget.type == 0
+                  userId: widget.type == 0
                       ? hiredUserDetailsResponse?.data?.hiredUser?.id
                       ?.toString() ?? ""
                       : hiredUserDetailsResponse?.data?.postedbyuser?.id
@@ -601,6 +603,7 @@ class _HomeState extends State<PayFeebackDetails>
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<AuthProvider>(context);
+    firebaseProvider = Provider.of<FirebaseProvider>(context);
 
     screenSize = MediaQuery.of(context).size;
     return Scaffold(

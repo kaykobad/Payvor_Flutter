@@ -25,7 +25,7 @@ class RatingBarNew extends StatefulWidget {
   final int type;
   final String image;
   final String name;
-  final String userd;
+  final String userId;
   final String paymentType;
   final String paymentAmount;
   final ValueSetter<int> voidcallback;
@@ -35,7 +35,7 @@ class RatingBarNew extends StatefulWidget {
       this.type,
       this.image,
       this.name,
-      this.userd,
+      this.userId,
       this.paymentType,
       this.paymentAmount,
       this.voidcallback});
@@ -149,8 +149,7 @@ class _HomeState extends State<RatingBarNew>
       provider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
-
-      showInSnackBar(apiError.error);
+      showInSnackBar("Rating already given");
     }
   }
 

@@ -26,10 +26,10 @@ import 'package:provider/provider.dart';
 
 class PostFavour extends StatefulWidget {
   final FavourDetailsResponse favourDetailsResponse;
-  final bool isEdit;
-  ValueSetter<int> voidcallback;
+   bool isEdit;
+   ValueSetter<int> voidcallback;
 
-  PostFavour({this.favourDetailsResponse, this.isEdit, this.voidcallback});
+  PostFavour({this.favourDetailsResponse, this.isEdit=false, this.voidcallback});
 
   @override
   _HomeState createState() => _HomeState();
@@ -596,7 +596,7 @@ class _HomeState extends State<PostFavour>
   }
 
   void callbackFavourPage() async {
-    if (widget?.isEdit && widget?.voidcallback != null) {
+    if ((widget?.isEdit??false) && widget?.voidcallback != null) {
       widget?.voidcallback(1);
       Navigator.pop(context);
     }

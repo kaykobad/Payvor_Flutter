@@ -752,7 +752,7 @@ class AuthProvider with ChangeNotifier {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.post(
         context: context, url: APIs.giveRating, requestBody: requests.toJson());
-
+    print("give_rating ${APIs.giveRating}");
     if (response is APIError) {
       completer.complete(response);
       return completer.future;
