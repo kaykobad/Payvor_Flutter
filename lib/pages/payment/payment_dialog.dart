@@ -8,6 +8,7 @@ import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 class PaymentDialog extends StatefulWidget {
   ValueSetter<int> voidcallback;
@@ -22,6 +23,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   GlobalKey<FormState> _fieldKey = new GlobalKey<FormState>();
+  PaymentMethod _paymentMethod;
 
   TextEditingController _AccountController = new TextEditingController();
   TextEditingController _NameController = new TextEditingController();
@@ -42,7 +44,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
   String textName = "";
   String textMonth = "";
   String textCvv = "";
-
+  Token _paymentToken;
   List<TextInputFormatter> listCardNumber = new List<TextInputFormatter>();
   List<TextInputFormatter> listExpDate = new List<TextInputFormatter>();
   List<TextInputFormatter> listcvv = new List<TextInputFormatter>();
@@ -63,6 +65,11 @@ class _PaymentDialogState extends State<PaymentDialog> {
   @override
   void initState() {
     // TODO: implement initState
+
+    StripePayment.setOptions(StripeOptions(
+        publishableKey: "pk_test_aSaULNS8cJU6Tvo20VAXy6rp",
+        merchantId: "Test",
+        androidPayMode: 'test'));
 
     listCardNumber.addAll([
       WhitelistingTextInputFormatter.digitsOnly,
@@ -422,13 +429,65 @@ class _PaymentDialogState extends State<PaymentDialog> {
         mNameEmpty = false;
         mMonthEmpty = false;
         mCvvEmpty = false;
-        Navigator.pop(context);
+
+        var monthCard = 0;
+        var yearCard = 0;
+
+        var split = month.split("/");
+
+        if (split?.length > 1) {
+          try {
+            monthCard = int.parse(split[0]);
+            yearCard = int.parse(split[1]);
+          } catch (e) {}
+        } else {
+          mCardEmpty = false;
+          mNameEmpty = false;
+          mMonthEmpty = true;
+          mCvvEmpty = false;
+          textMonth = "Please enter valid expiry date";
+          return false;
+        }
+
+        final CreditCard testCard = CreditCard(
+            number: account,
+            expMonth: monthCard,
+            expYear: yearCard,
+            cvc: cvv,
+            name: month);
+
+        StripePayment.createTokenWithCard(
+          testCard,
+        ).then((token) {
+          showInSnackBar(token?.tokenId);
+
+          _paymentToken = token;
+        }).catchError(setError);
+
+        /*  StripePayment.createPaymentMethod(
+          PaymentMethodRequest(
+            card: CreditCard(
+              token: _paymentToken.tokenId,
+            ),
+          ),
+        ).then((paymentMethod) {
+          _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Received ${paymentMethod.id}')));
+          setState(() {
+            _paymentMethod = paymentMethod;
+          });
+        }).catchError(setError);*/
+
+        /*  Navigator.pop(context);
 
         widget.voidcallback(2);
-
+*/
         return true;
       }
     });
+  }
+
+  void setError(dynamic error) {
+    showInSnackBar(error.toString());
   }
 
   void showInSnackBar(String value) {

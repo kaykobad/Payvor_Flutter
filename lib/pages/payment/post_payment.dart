@@ -190,8 +190,8 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
             payment?.isSelect ?? false
                 ? new Container(
 
-            width: 83,
                     height: 30,
+                    padding: new EdgeInsets.only(left: 8, right: 8),
                     alignment: Alignment.center,
                     decoration: new BoxDecoration(
                         color: Color.fromRGBO(255, 107, 102, 1),
