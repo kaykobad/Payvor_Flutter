@@ -181,29 +181,34 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
                 overflow: TextOverflow.ellipsis,
                 style: new TextStyle(
                     fontFamily: AssetStrings.circulerNormal,
-                    fontSize: 14,
+                    fontSize: 16,
                     color: payment?.isSelect ?? false
                         ? Color.fromRGBO(255, 255, 255, 1)
                         : Color.fromRGBO(103, 99, 99, 1)),
               ),
             ),
             payment?.isSelect ?? false
-                ? new Container(
+                ? Wrap(
+                  children: [
+                      new Container(
 
-                    height: 30,
-                    padding: new EdgeInsets.only(left: 8, right: 8),
-                    alignment: Alignment.center,
-                    decoration: new BoxDecoration(
-                        color: Color.fromRGBO(255, 107, 102, 1),
-                        borderRadius: new BorderRadius.circular(15.0)),
-                    child: new Text(
-                      payment?.type?.toUpperCase() ?? "",
-                      style: new TextStyle(
-                          fontFamily: AssetStrings.circulerNormal,
-                          fontSize: 14,
-                          color: Colors.white),
-                    ),
-                  )
+                        alignment: Alignment.center,
+                        decoration: new BoxDecoration(
+                            color: Color.fromRGBO(255, 107, 102, 1),
+                            borderRadius: new BorderRadius.circular(15.0)),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left:10.0,right: 10,top: 5,bottom: 5),
+                          child: new Text(
+                            payment?.type?.toUpperCase() ?? "",
+                            style: new TextStyle(
+                                fontFamily: AssetStrings.circulerNormal,
+                                fontSize: 11,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                )
                 : new Container(
                     margin: new EdgeInsets.only(
                       top: 9,
