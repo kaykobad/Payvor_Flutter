@@ -189,7 +189,7 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
             ),
             payment?.isSelect ?? false
                 ? Wrap(
-                  children: [
+                    children: [
                       new Container(
 
                         alignment: Alignment.center,
