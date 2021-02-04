@@ -25,7 +25,16 @@ class AssetStrings {
   static const String appIntroPage2 = 'assets/png/app_intro_page2.webp';
   static const String appIntroPage3 = 'assets/png/app_intro_page3.webp';
   static const String appIntroPage4 = 'assets/png/app_intro_page4.webp';
+  static const String appSettings = 'assets/png/settings.png';
+  static const String settingEdit = 'assets/png/setting_edit.png';
+  static const String settingNoti = 'assets/png/setting_noti.png';
+  static const String settingHelp = 'assets/png/setting_help.png';
+  static const String settingPrivacy = 'assets/png/setting_privacy.png';
+  static const String settingRate = 'assets/png/setting_rate.png';
+  static const String settingShare = 'assets/png/setting_share.png';
+  static const String settingTerms = 'assets/png/setting_terms.png';
   static const String nextArrowIcon = 'assets/svg/next_arrow.svg';
+  static const String iconTicks = 'assets/png/icon_ticks.png';
 
   //app icon
 
@@ -85,8 +94,13 @@ class AssetStrings {
   static const String chat_empty = 'assets/svg/empty_chat.svg';
   static const String nopostnojob = 'assets/svg/nopost_nojobs.svg';
   static const String paypal = 'assets/png/paypal_icon.png';
-  static const String floatingplushome = 'assets/png/floating_button_plus_icon.png';
-
+  static const String iconTick = 'assets/png/card_tick.png';
+  static const String addPaypal = 'assets/png/add_paypal.png';
+  static const String addCard = 'assets/png/card_normal.png';
+  static const String lockProfile = 'assets/png/lock_profile.png';
+  static const String addPayment = 'assets/png/add_payment.png';
+  static const String floatingplushome =
+      'assets/png/floating_button_plus_icon.png';
 
   //bottom navigation bar
   static const String home_active = 'assets/svg/bottom_tab_home_active.svg';

@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/pages/post_details/cardformatter.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
+import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
-class PaymentDialog extends StatefulWidget {
+class AddCardDetails extends StatefulWidget {
   ValueSetter<int> voidcallback;
 
-  PaymentDialog({this.voidcallback});
+  AddCardDetails({this.voidcallback});
 
   @override
   _PaymentDialogState createState() => _PaymentDialogState();
 }
 
-class _PaymentDialogState extends State<PaymentDialog> {
+class _PaymentDialogState extends State<AddCardDetails> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   GlobalKey<FormState> _fieldKey = new GlobalKey<FormState>();
@@ -66,7 +68,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
   void initState() {
     // TODO: implement initState
 
-  /*  StripePayment.setOptions(StripeOptions(
+    /*  StripePayment.setOptions(StripeOptions(
         publishableKey: "pk_test_aSaULNS8cJU6Tvo20VAXy6rp",
         merchantId: "Test",
         androidPayMode: 'test'));*/
@@ -90,18 +92,82 @@ class _PaymentDialogState extends State<PaymentDialog> {
     super.initState();
   }
 
+
+  Widget getAppBarNew(BuildContext context) {
+    return PreferredSize(
+        preferredSize: Size.fromHeight(53.0),
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              new SizedBox(
+                height: 20,
+              ),
+              Material(
+                color: Colors.white,
+                child: Container(
+                  margin: new EdgeInsets.only(top: 15),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    children: [
+                      Container(
+                        alignment: Alignment.topLeft,
+                        margin: new EdgeInsets.only(left: 17.0, top: 10),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: new Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: new SvgPicture.asset(
+                              AssetStrings.back,
+                              width: 16.0,
+                              height: 16.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.center,
+                          margin: new EdgeInsets.only(right: 25.0, top: 10),
+                          width: getScreenSize(context: context).width,
+                          child: new Text(
+                            "Card Details",
+                            style: new TextStyle(
+                                fontFamily: AssetStrings.circulerMedium,
+                                fontSize: 19,
+                                color: Colors.black),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomPadding: false,
+      appBar: getAppBarNew(context),
+      backgroundColor: Colors.white,
       body: Container(
           decoration: new BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(26.0),
                 topRight: Radius.circular(26.0)),
           ),
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
           child: ClipRRect(
             // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
             borderRadius: new BorderRadius.circular(10.0),
@@ -109,8 +175,9 @@ class _PaymentDialogState extends State<PaymentDialog> {
               key: _fieldKey,
               child: new ListView(
                 children: [
-                  Container(
-                    margin: new EdgeInsets.only(top: 48, left: 24, right: 24),
+                  /*Container(
+                    margin: new EdgeInsets.only(top: 20, left: 16, right: 16),
+                    color: Colors.white,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -123,7 +190,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                             child: new Padding(
                               padding: const EdgeInsets.all(1.0),
                               child: new SvgPicture.asset(
-                                AssetStrings.cross,
+                                AssetStrings.back,
                               ),
                             ),
                           ),
@@ -132,7 +199,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                           child: new Container(
                             alignment: Alignment.center,
                             child: new Text(
-                              "Payment Details",
+                              "Card Details",
                               style: new TextStyle(
                                   fontFamily: AssetStrings.circulerBoldStyle,
                                   fontSize: 20,
@@ -142,14 +209,10 @@ class _PaymentDialogState extends State<PaymentDialog> {
                         ),
                       ],
                     ),
-                  ),
-                  Opacity(
-                    opacity: 0.12,
-                    child: new Container(
-                      margin: new EdgeInsets.only(top: 16),
-                      height: 1.0,
-                      color: AppColors.dividerColor,
-                    ),
+                  ),*/
+                  new Container(
+                    height: 8.0,
+                    color: AppColors.kAppScreenBackGround,
                   ),
 
                   /*    new Container(
@@ -164,6 +227,38 @@ class _PaymentDialogState extends State<PaymentDialog> {
                       ),
                     ),
                   ),*/
+
+                  new Container(
+                    margin: new EdgeInsets.only(left: 16, top: 15),
+                    child: new Text("Add a Credit or Debit Card",
+                      style: TextThemes.darkBlackMedium,),
+                  ),
+
+                  new Container(
+                    margin: new EdgeInsets.only(left: 16, top: 7),
+                    child: Row(
+                      children: [
+                        new Image.asset(
+                          AssetStrings.iconTick, width: 18, height: 22,),
+                        new SizedBox(
+                          width: 5,
+                        ),
+
+                        new Text("We’ll keep your payment details safe",
+                          style: TextThemes.grayNormal,),
+                      ],
+                    ),
+                  ),
+
+                  Opacity(
+                    opacity: 0.12,
+                    child: new Container(
+                      height: 1.0,
+                      margin: new EdgeInsets.only(top: 15, left: 16, right: 16),
+                      color: AppColors.dividerColor,
+                    ),
+                  ),
+
                   new SizedBox(
                     height: 24.0,
                   ),
@@ -179,17 +274,17 @@ class _PaymentDialogState extends State<PaymentDialog> {
                       TextInputType.number),
                   mCardEmpty
                       ? new Container(
-                          margin: new EdgeInsets.only(top: 6, left: 24),
-                          alignment: Alignment.centerLeft,
-                          child: new Text(
-                            textAccount,
-                            style: new TextStyle(
-                              fontFamily: AssetStrings.circulerNormal,
-                              fontSize: 13,
-                              color: Color.fromRGBO(205, 107, 102, 1),
-                            ),
-                          ),
-                        )
+                    margin: new EdgeInsets.only(top: 6, left: 24),
+                    alignment: Alignment.centerLeft,
+                    child: new Text(
+                      textAccount,
+                      style: new TextStyle(
+                        fontFamily: AssetStrings.circulerNormal,
+                        fontSize: 13,
+                        color: Color.fromRGBO(205, 107, 102, 1),
+                      ),
+                    ),
+                  )
                       : Container(),
                   new SizedBox(
                     height: 16.0,
@@ -206,17 +301,17 @@ class _PaymentDialogState extends State<PaymentDialog> {
                       TextInputType.text),
                   mNameEmpty
                       ? new Container(
-                          margin: new EdgeInsets.only(top: 6, left: 24),
-                          alignment: Alignment.centerLeft,
-                          child: new Text(
-                            textName,
-                            style: new TextStyle(
-                              fontFamily: AssetStrings.circulerNormal,
-                              fontSize: 13,
-                              color: Color.fromRGBO(205, 107, 102, 1),
-                            ),
-                          ),
-                        )
+                    margin: new EdgeInsets.only(top: 6, left: 24),
+                    alignment: Alignment.centerLeft,
+                    child: new Text(
+                      textName,
+                      style: new TextStyle(
+                        fontFamily: AssetStrings.circulerNormal,
+                        fontSize: 13,
+                        color: Color.fromRGBO(205, 107, 102, 1),
+                      ),
+                    ),
+                  )
                       : Container(),
                   new Container(
                     height: 58,
@@ -261,18 +356,18 @@ class _PaymentDialogState extends State<PaymentDialog> {
                         Expanded(
                           child: mMonthEmpty
                               ? new Container(
-                                  margin:
-                                      new EdgeInsets.only(top: 16, left: 24),
-                                  alignment: Alignment.centerLeft,
-                                  child: new Text(
-                                    textMonth,
-                                    style: new TextStyle(
-                                      fontFamily: AssetStrings.circulerNormal,
-                                      fontSize: 13,
-                                      color: Color.fromRGBO(205, 107, 102, 1),
-                                    ),
-                                  ),
-                                )
+                            margin:
+                            new EdgeInsets.only(top: 16, left: 24),
+                            alignment: Alignment.centerLeft,
+                            child: new Text(
+                              textMonth,
+                              style: new TextStyle(
+                                fontFamily: AssetStrings.circulerNormal,
+                                fontSize: 13,
+                                color: Color.fromRGBO(205, 107, 102, 1),
+                              ),
+                            ),
+                          )
                               : Container(),
                         ),
                         new SizedBox(
@@ -281,18 +376,18 @@ class _PaymentDialogState extends State<PaymentDialog> {
                         Expanded(
                           child: mCvvEmpty
                               ? new Container(
-                                  margin:
-                                      new EdgeInsets.only(top: 16, right: 24),
-                                  alignment: Alignment.centerLeft,
-                                  child: new Text(
-                                    textCvv,
-                                    style: new TextStyle(
-                                      fontFamily: AssetStrings.circulerNormal,
-                                      fontSize: 13,
-                                      color: Color.fromRGBO(205, 107, 102, 1),
-                                    ),
-                                  ),
-                                )
+                            margin:
+                            new EdgeInsets.only(top: 16, right: 24),
+                            alignment: Alignment.centerLeft,
+                            child: new Text(
+                              textCvv,
+                              style: new TextStyle(
+                                fontFamily: AssetStrings.circulerNormal,
+                                fontSize: 13,
+                                color: Color.fromRGBO(205, 107, 102, 1),
+                              ),
+                            ),
+                          )
                               : Container(),
                         ),
                       ],
@@ -300,23 +395,10 @@ class _PaymentDialogState extends State<PaymentDialog> {
                   ),
                   Container(
                     margin: new EdgeInsets.only(top: 24, left: 16, right: 16),
-                    child: getSetupButtonNew(callback, "Pay Now", 0,
+                    child: getSetupButtonNew(callback, "Add Payment Method", 0,
                         newColor: AppColors.colorDarkCyan),
                   ),
-                  new Container(
-                    height: 24,
-                  ),
-                  Opacity(
-                    opacity: 0.12,
-                    child: new Container(
-                      height: 1.0,
-                      color: AppColors.dividerColor,
-                    ),
-                  ),
-                  Container(
-                    margin: new EdgeInsets.only(top: 24, left: 16, right: 16),
-                    child: getSetupButtonNew(callback, "Pay with Paypal", 0,imagePath: AssetStrings.paypal),
-                  ),
+
                   Container(
                     height: 26,
                   )
@@ -327,8 +409,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
     );
   }
 
-  Widget getTextField(
-      Function validators,
+  Widget getTextField(Function validators,
       String labelText,
       TextEditingController controller,
       FocusNode focusNodeCurrent,
@@ -358,15 +439,15 @@ class _PaymentDialogState extends State<PaymentDialog> {
         decoration: new InputDecoration(
           enabledBorder: card
               ? new OutlineInputBorder(
-                  borderSide: new BorderSide(
-                    color: Colors.red.withOpacity(0.5),
-                  ),
-                  borderRadius: new BorderRadius.circular(8))
+              borderSide: new BorderSide(
+                color: Colors.red.withOpacity(0.5),
+              ),
+              borderRadius: new BorderRadius.circular(8))
               : new OutlineInputBorder(
-                  borderSide: new BorderSide(
-                    color: Colors.grey.withOpacity(0.5),
-                  ),
-                  borderRadius: new BorderRadius.circular(8)),
+              borderSide: new BorderSide(
+                color: Colors.grey.withOpacity(0.5),
+              ),
+              borderRadius: new BorderRadius.circular(8)),
           focusedBorder: new OutlineInputBorder(
               borderSide: new BorderSide(
                 color: AppColors.colorCyanPrimary,
@@ -393,14 +474,20 @@ class _PaymentDialogState extends State<PaymentDialog> {
     var month = _MonthController.text;
     var cvv = _CvvController.text;
 
-    print(account.trim().length);
+    print(account
+        .trim()
+        .length);
     setState(() {
-      if (account.isEmpty || account.trim().length == 0) {
+      if (account.isEmpty || account
+          .trim()
+          .length == 0) {
         mCardEmpty = true;
         textAccount = "Please enter card number ";
         return false;
       }
-      if (account.trim().length != 22) {
+      if (account
+          .trim()
+          .length != 22) {
         mCardEmpty = true;
         textAccount = "Please enter valid card number ";
         return false;

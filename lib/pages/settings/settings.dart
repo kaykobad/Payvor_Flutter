@@ -1,0 +1,281 @@
+import 'dart:async';
+import 'dart:core';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:flutter_switch/flutter_switch.dart';
+import 'package:payvor/pages/edit_profile/edit_user_profile.dart';
+import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
+import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/provider/firebase_provider.dart';
+import 'package:payvor/utils/AppColors.dart';
+import 'package:payvor/utils/AssetStrings.dart';
+import 'package:payvor/utils/Messages.dart';
+import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/memory_management.dart';
+import 'package:provider/provider.dart';
+
+class Settings extends StatefulWidget {
+/*  final String id;
+  final int type;
+  final String image;
+  final String name;
+  final String userId;
+  final String paymentType;
+  final String paymentAmount;
+  final ValueSetter<int> voidcallback;
+
+  RatingBarNew(
+      {@required this.id,
+        this.type,
+        this.image,
+        this.name,
+        this.userId,
+        this.paymentType,
+        this.paymentAmount,
+        this.voidcallback});*/
+
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Settings>
+    with AutomaticKeepAliveClientMixin<Settings> {
+  var screenSize;
+
+  final StreamController<bool> _loaderStreamController =
+      new StreamController<bool>();
+
+  AuthProvider provider;
+  FirebaseProvider firebaseProvider;
+
+  bool _switchValue = true;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  double _rating;
+
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(
+        new SnackBar(content: new Text(value ?? Messages.genericError)));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _logout() async {
+    await MemoryManagement.clearMemory();
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return new SplashIntroScreenNew();
+      }),
+      (route) => false,
+    );
+  }
+
+  Widget getAppBarNew(BuildContext context) {
+    return PreferredSize(
+        preferredSize: Size.fromHeight(53.0),
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              new SizedBox(
+                height: 20,
+              ),
+              Material(
+                color: Colors.white,
+                child: Container(
+                  margin: new EdgeInsets.only(top: 15),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    children: [
+                      Container(
+                        alignment: Alignment.topLeft,
+                        margin: new EdgeInsets.only(left: 17.0, top: 10),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: new Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: new SvgPicture.asset(
+                              AssetStrings.back,
+                              width: 16.0,
+                              height: 16.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.center,
+                          margin: new EdgeInsets.only(right: 25.0, top: 10),
+                          width: getScreenSize(context: context).width,
+                          child: new Text(
+                            "Settings",
+                            style: new TextStyle(
+                                fontFamily: AssetStrings.circulerMedium,
+                                fontSize: 19,
+                                color: Colors.black),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    screenSize = MediaQuery.of(context).size;
+    provider = Provider.of<AuthProvider>(context);
+    firebaseProvider = Provider.of<FirebaseProvider>(context);
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: getAppBarNew(context),
+      backgroundColor: AppColors.whiteGray,
+      body: Stack(
+        children: <Widget>[
+          SingleChildScrollView(
+            child: new Container(
+              color: AppColors.whiteGray,
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  new Container(
+                    height: 8,
+                  ),
+                  buildItemRecentSearch(
+                      1, "Edit Account", AssetStrings.settingEdit),
+                  buildItemRecentSearch(
+                      2, "Push Notifications", AssetStrings.settingNoti),
+                  new Container(
+                    height: 8,
+                  ),
+                  buildItemRecentSearch(
+                      3, "Terms and Condition", AssetStrings.settingTerms),
+                  buildItemRecentSearch(
+                      4, "Privacy and Policy", AssetStrings.settingPrivacy),
+                  buildItemRecentSearch(5, "Help", AssetStrings.settingHelp),
+                  new Container(
+                    height: 8,
+                  ),
+                  buildItemRecentSearch(
+                      6, "Share with Friends", AssetStrings.settingShare),
+                  buildItemRecentSearch(7, "Rate us", AssetStrings.settingRate),
+                  new SizedBox(
+                    height: 120.0,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _logout();
+                    },
+                    child: new Container(
+                      color: Colors.white,
+                      width: screenSize.width,
+                      padding: new EdgeInsets.only(
+                          top: 20, bottom: 20, left: 16, right: 16),
+                      child: new Text(
+                        "Sign Out",
+                        style: new TextStyle(
+                            fontFamily: AssetStrings.circulerMedium,
+                            fontSize: 16,
+                            color: AppColors.colorDarkCyan),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void callbackDone() async {}
+
+  @override
+  bool get wantKeepAlive => true;
+
+  Widget buildItemRecentSearch(int type, String data, String icon) {
+    return InkWell(
+      onTap: () {
+        if (type == 1) {
+          firebaseProvider.changeScreen(Material(child: new EditProfile()));
+        }
+      },
+      child: Container(
+        color: Colors.white,
+        padding:
+            new EdgeInsets.only(left: 16.0, right: 16.0, top: 20, bottom: 20),
+        child: Container(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                icon,
+                height: 20,
+                width: 20,
+              ),
+              new SizedBox(
+                width: 24,
+              ),
+              Expanded(
+                child: Container(
+                  child: new Text(
+                    data,
+                    style: new TextStyle(
+                      color: Colors.black,
+                      fontFamily: AssetStrings.circulerMedium,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+              ),
+              new SizedBox(
+                width: 8,
+              ),
+              type == 2
+                  ? FlutterSwitch(
+                      height: 24.0,
+                      width: 37.0,
+                      toggleSize: 18.0,
+                      borderRadius: 12.0,
+                      padding: 2,
+                      activeColor: AppColors.colorDarkCyan,
+                      value: _switchValue,
+                      onToggle: (value) {
+                        setState(() {
+                          _switchValue = value;
+                        });
+                      },
+                    )
+                  : Container(
+                      margin: new EdgeInsets.only(left: 7.0),
+                      child: new Icon(
+                        Icons.arrow_forward_ios,
+                        size: 12,
+                        color: Color.fromRGBO(183, 183, 183, 1),
+                      ),
+                    )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -2,20 +2,24 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/chat/chat_screen.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/pages/dummy.dart';
 import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
+import 'package:payvor/pages/my_profile/my_profile.dart';
 import 'package:payvor/pages/post/post_home.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/search/search_home.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
+import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +43,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   int currentTab = 0; // to keep track of active tab index
 
   final PageStorageBucket bucket = PageStorageBucket();
+
+  FirebaseMessaging _firebaseMessaging;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   Color selectedColor = AppColors.bluePrimary;
   Color unselectedColor = AppColors.moreText;
@@ -174,6 +181,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     print("dashboard");
 
     MemoryManagement.setScreenType(type: "3");
+    _firebaseMessaging = FirebaseMessaging();
+    configurePushNotification();
+
+    _initPushNotification();
+
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     Future.delayed(Duration(milliseconds: 200), () {
@@ -187,6 +199,144 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       userName = userResponse.user.name ?? "";
       profile = userResponse.user.profilePic ?? "";
       userId = userResponse.user.id.toString();
+    }
+  }
+
+  void showNotification(
+      String title, String body, Map<String, dynamic> data) async {
+    AndroidNotificationDetails androidPlatformChannelSpecifics =
+        new AndroidNotificationDetails(
+            'your channel id', 'your channel name', 'your channel description');
+    IOSNotificationDetails iOSPlatformChannelSpecifics =
+        new IOSNotificationDetails();
+    NotificationDetails platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    int type = int.tryParse(data["data"]["type"]);
+    await flutterLocalNotificationsPlugin.show(
+        100, title, body, platformChannelSpecifics,
+        payload: type.toString());
+  }
+
+  void configurePushNotification() async {
+    print("config Notification");
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("config Notification onMessage");
+        print("onMessage $message");
+        String body = message['notification']['body']?.toString();
+        String title = message['notification']['title']?.toString();
+        showNotification(title, body, message);
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("config Notification onResume");
+        //  print("onResume: ${message}");
+        print("onResume: ${message['data']['type']}");
+
+        String payload = message['data']['type'];
+
+        // moveToScreenFromPush(int.tryParse(payload)); //w
+//        }
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("config Notification onLaunch");
+        print("onLaunch $message");
+        int type = int.tryParse(message["data"]["type"]);
+        //   moveToScreenFromPush(type);
+      },
+    );
+
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
+    _firebaseMessaging.getToken().then((String token) {
+      print("DevToken   $token");
+      if (token != null) {
+        setDeviceToken(token);
+        // updateTokenToFirebase(token); //save to firebase
+      }
+    });
+  }
+
+  void setDeviceToken(String token) async {
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {},
+      onSuccess: () {},
+    );
+
+    if (gotInternetConnection) {
+      // api hit
+      /*var request = new DeviceTokenRequest(deviceToken: token);
+      var response = await _dashBoardBloc.setDeviceToken(
+          context: context, devicetokenRequest: request);
+
+      //logged in successfully
+      if (response != null && (response is ChangePasswordResponse)) {
+        print(response.message);
+      } else {}*/
+    }
+  }
+
+  void _initPushNotification() async {
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+// initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = IOSInitializationSettings(
+        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+    var initializationSettings = InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+  }
+
+  Future onDidReceiveLocalNotification(
+      int id, String title, String body, String payload) async {
+    // display a dialog with the notification details, tap ok to go to another page
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(body),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            child: Text('Ok'),
+            onPressed: () async {
+              Navigator.of(context, rootNavigator: true).pop();
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Future onSelectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: ' + payload);
+//      Map valueMap = json.decode(payload);
+      print("type $payload");
+      moveToScreenFromPush(int.tryParse(payload)); //when click in push
+
+    }
+  }
+
+//screen redirection for chat
+  moveToScreenFromPush(int type) {
+    switch ((type)) {
+      case 1:
+        //moveToLenderScreen();
+        break;
+      case 2:
+        //  movetoBorrowScreen(1);
+        break;
     }
   }
 
@@ -260,7 +410,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               key: _profileScreen,
               onGenerateRoute: (route) => MaterialPageRoute(
                 settings: route,
-                builder: (context) => Dummy(logoutCallBack: logoutCallBack),
+                builder: (context) => MyProfile(
+                  id: userId ?? "",
+                  name: userName ?? "",
+                  hireduserId: userId ?? "",
+                  image: profile ?? "",
+                  userButtonMsg: true,
+                ),
               ),
             ),
           ],

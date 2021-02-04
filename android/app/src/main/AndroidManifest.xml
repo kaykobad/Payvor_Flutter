@@ -12,6 +12,7 @@
         cleartextTrafficPermitted="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Payvor"
+        android:roundIcon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
         <activity
@@ -32,6 +33,11 @@
             <meta-data
                 android:name="flutterEmbedding"
                 android:value="2" />
+
+            <intent-filter>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
 
             <!-- Displays an Android View that continues showing the launch screen
                  Drawable until Flutter paints its first frame, then this splash
