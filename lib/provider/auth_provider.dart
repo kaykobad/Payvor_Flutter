@@ -983,8 +983,8 @@ class AuthProvider with ChangeNotifier {
     print("fave");
 
     Completer<dynamic> completer = new Completer<dynamic>();
-    var response =
-        await APIHandler.get(context: context, url: APIs.endJobs + id);
+    var response = await APIHandler.get(
+        context: context, url: APIs.endJobs + id + "?page=$page");
 
     print(APIs.endJobs);
 
@@ -1006,8 +1006,8 @@ class AuthProvider with ChangeNotifier {
     print("fave");
 
     Completer<dynamic> completer = new Completer<dynamic>();
-    var response =
-        await APIHandler.get(context: context, url: APIs.endFavors + id);
+    var response = await APIHandler.get(
+        context: context, url: APIs.endFavors + id + "?page=$page");
     print(APIs.endFavors);
 
     if (response is APIError) {
