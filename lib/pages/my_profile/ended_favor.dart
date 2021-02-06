@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:payvor/current_user_hired_by_favor/current_user_hire_favor.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/my_profile_job_hire/my_profile_job_hire_response.dart';
 import 'package:payvor/pages/my_profile_details/my_profile_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/provider/auth_provider.dart';
@@ -18,6 +17,10 @@ import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class MyEndedFavor extends StatefulWidget {
+  final String hireduserId;
+
+  MyEndedFavor({this.hireduserId});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -58,7 +61,7 @@ class _HomeState extends State<MyEndedFavor>
   @override
   void initState() {
     Future.delayed(const Duration(milliseconds: 300), () {
-      // hitJobsPost();
+      hitJobsPost();
     });
 
     _setScrollListener();
@@ -90,19 +93,18 @@ class _HomeState extends State<MyEndedFavor>
       currentPage = 1;
     }
 
-    var response = await provider.currentuserhirefavor(context, currentPage);
+    var response = await provider.myprofileendedFavors(
+        context, currentPage, widget.hireduserId);
 
-    if (response is CurrentUserHiredByFavorResponse) {
+    provider.hideLoader();
+
+    if (response is EndedJobHireResponse) {
       print("res $response");
       isPullToRefresh = false;
 
       if (response != null && response.data != null) {
         if (currentPage == 1) {
           listResult.clear();
-
-          if (response?.data?.length > 0) {
-            listResult.add("Next Jobs");
-          }
         }
 
         listResult.addAll(response?.data);
@@ -125,7 +127,6 @@ class _HomeState extends State<MyEndedFavor>
       }
 
       print(response);
-      try {} catch (ex) {}
     } else {
       provider.hideLoader();
       APIError apiError = response;
@@ -184,23 +185,23 @@ class _HomeState extends State<MyEndedFavor>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    InkWell(
+                    /* InkWell(
                       onTap: () {},
                       child: new SvgPicture.asset(
                         AssetStrings.nopostnojob,
                       ),
-                    ),
+                    ),*/
                     Container(
                       margin: new EdgeInsets.only(top: 42),
                       child: new Text(
-                        "No Jobs",
+                        "No Favors Found",
                         style: new TextStyle(
                             color: Colors.black,
                             fontFamily: AssetStrings.circulerMedium,
                             fontSize: 17.0),
                       ),
                     ),
-                    Container(
+                    /* Container(
                       margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
                       child: new Text(
                         "You don’t have any job yet.\nOnce you’re hired it will show up here.",
@@ -211,7 +212,7 @@ class _HomeState extends State<MyEndedFavor>
                             fontFamily: AssetStrings.circulerNormal,
                             fontSize: 15.0),
                       ),
-                    ),
+                    ),*/
                   ],
                 ),
               ),
@@ -233,8 +234,7 @@ class _HomeState extends State<MyEndedFavor>
     );
   }
 
-  Widget buildItemSecondNew() {
-    var data = 1;
+  Widget buildItemSecondNew(Data data) {
     return Container(
       margin: new EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
@@ -248,7 +248,7 @@ class _HomeState extends State<MyEndedFavor>
               // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
               child: getCachedNetworkImageWithurl(
-                  url: "", fit: BoxFit.fill, size: 40),
+                  url: data?.image ?? "", fit: BoxFit.fill, size: 40),
             ),
           ),
           Expanded(
@@ -260,13 +260,13 @@ class _HomeState extends State<MyEndedFavor>
                     child: Row(
                       children: [
                         new Text(
-                          "[po[o[o[",
+                          data?.hired?.name ?? "",
                           style: TextThemes.blackCirculerMedium,
                         ),
                         new SizedBox(
                           width: 8,
                         ),
-                        data == 1
+                        data?.isActive == 1
                             ? new Image.asset(
                                 AssetStrings.verify,
                                 width: 16,
@@ -289,7 +289,7 @@ class _HomeState extends State<MyEndedFavor>
                       ),
                       Expanded(
                           child: new Text(
-                        "mohali",
+                            data?.location ?? "",
                         style: TextThemes.greyDarkTextHomeLocation,
                       )),
                     ],
@@ -301,7 +301,7 @@ class _HomeState extends State<MyEndedFavor>
           Align(
               alignment: Alignment.center,
               child: new Text(
-                "€${"20" ?? "0"}",
+                "€${data?.price ?? "0"}",
                 style: TextThemes.blackDarkHeaderSub,
               )),
         ],
@@ -309,8 +309,7 @@ class _HomeState extends State<MyEndedFavor>
     );
   }
 
-  Widget buildItemNew() {
-    var data = "";
+  Widget buildItemNew(Data data) {
     return InkWell(
       onTap: () {
         providerFirebase.changeScreen(Material(child: new MyProfileDetails()));
@@ -326,7 +325,7 @@ class _HomeState extends State<MyEndedFavor>
             new SizedBox(
               height: 16.0,
             ),
-            buildItemSecondNew(),
+            buildItemSecondNew(data),
             Opacity(
               opacity: 0.12,
               child: new Container(
@@ -335,7 +334,7 @@ class _HomeState extends State<MyEndedFavor>
                 color: AppColors.dividerColor,
               ),
             ),
-            data != null
+            data?.image != null
                 ? new Container(
                     height: 147,
                     width: double.infinity,
@@ -346,7 +345,7 @@ class _HomeState extends State<MyEndedFavor>
                       borderRadius: new BorderRadius.circular(10.0),
 
                       child: getCachedNetworkImageRect(
-                        url: "kk[pkp[kp[kp",
+                        url: data?.image ?? "",
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -358,7 +357,7 @@ class _HomeState extends State<MyEndedFavor>
                 margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
                 alignment: Alignment.centerLeft,
                 child: new Text(
-                  "pjpojpojpojpojpojpojop",
+                  data?.title ?? "",
                   style: TextThemes.blackCirculerMediumHeight,
                 )),
             Container(
@@ -366,7 +365,7 @@ class _HomeState extends State<MyEndedFavor>
               width: double.infinity,
               color: Colors.white,
               child: ReadMoreText(
-                "iuuiiooioiuoiasoihdiohsaiodhoisahdiohasiodhiosahdiohasiodhiohsaidobisabcibsacbkasbckbsakcjbjksbcjkbascjkbajksbcjkbascjkbasjkcjkasbcjkbackjbjkasbcjkbasjkcbjkasbcascuio",
+                data?.description ?? "",
                 trimLines: 4,
                 colorClickableText: AppColors.colorDarkCyan,
                 trimMode: TrimMode.Line,
@@ -405,10 +404,10 @@ class _HomeState extends State<MyEndedFavor>
           padding: new EdgeInsets.only(bottom: 70),
           physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
-            return buildItemNew();
+            return buildItemNew(listResult[index]);
             ;
           },
-          itemCount: 10,
+          itemCount: listResult.length,
         ),
       ),
     ));

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:app_review/app_review.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -16,6 +17,8 @@ import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Settings extends StatefulWidget {
 /*  final String id;
@@ -50,6 +53,7 @@ class _HomeState extends State<Settings>
 
   AuthProvider provider;
   FirebaseProvider firebaseProvider;
+  String output = "";
 
   bool _switchValue = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -64,6 +68,11 @@ class _HomeState extends State<Settings>
   @override
   void initState() {
     super.initState();
+
+    AppReview.getAppID.then((onValue) {
+      setState(() {});
+      print("App ID" + onValue);
+    });
   }
 
   void _logout() async {
@@ -133,6 +142,15 @@ class _HomeState extends State<Settings>
             ],
           ),
         ));
+  }
+
+  _launchURL() async {
+    const url = 'https://flutter.dev';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -213,6 +231,19 @@ class _HomeState extends State<Settings>
       onTap: () {
         if (type == 1) {
           firebaseProvider.changeScreen(Material(child: new EditProfile()));
+        } else if (type == 3) {
+          _launchURL();
+        } else if (type == 4) {
+          _launchURL();
+        } else if (type == 7) {
+          AppReview.writeReview.then((onValue) {
+            setState(() {
+              output = onValue;
+            });
+            print(onValue);
+          });
+        } else if (type == 6) {
+          Share.share('check out my website https://example.com');
         }
       },
       child: Container(

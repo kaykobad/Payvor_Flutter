@@ -11,6 +11,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:payvor/model/create_payvor/payvorcreate.dart';
 import 'package:payvor/model/favour_details_response/favour_details_response.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/networkmodel/APIs.dart';
 import 'package:payvor/pages/preview_post/preview_post.dart';
 import 'package:payvor/provider/auth_provider.dart';
@@ -62,13 +63,14 @@ class _HomeState extends State<EditProfile>
   File _image; //to store profile image
   String profile;
   bool isValid = false;
+  LoginSignupResponse userinfo;
 
   final StreamController<bool> _streamControllerShowLoader =
-      StreamController<bool>();
+  StreamController<bool>();
 
   AuthProvider provider;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+  new GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
@@ -94,6 +96,16 @@ class _HomeState extends State<EditProfile>
       print("long ${widget?.favourDetailsResponse?.data?.long}");
       print("latlong ${ _LatLongController.text}");*/ /*
     }*/
+
+    var infoData = jsonDecode(MemoryManagement.getUserInfo());
+    userinfo = LoginSignupResponse.fromJson(infoData);
+    _EmailController.text = userinfo?.user?.email ?? "";
+    _NameController.text = userinfo?.user?.name ?? "";
+    _PhoneController.text = userinfo?.user?.phone ?? "";
+    _LocationController.text = userinfo?.user?.location ?? "";
+    _LatLongController.text = userinfo?.user?.lat + "," +
+        userinfo?.user?.long;
+
 
     _setScrollListener();
 
@@ -692,9 +704,9 @@ class _HomeState extends State<EditProfile>
                                 fit: BoxFit.cover,
                               )
                             : getCachedNetworkImageWithurl(
-                                url: "",
-                                size: 89,
-                                fit: BoxFit.cover,
+                          url: userinfo?.user?.profilePic ?? "",
+                          size: 89,
+                          fit: BoxFit.cover,
                               ),
                       ),
                     ),
