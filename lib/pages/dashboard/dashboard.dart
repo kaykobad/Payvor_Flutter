@@ -228,6 +228,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         String title = message['notification']['title']?.toString();
         showNotification(title, body, message);
       },
+      onReceive: (Map<String, dynamic> message) async {
+        print("config Notification onReceive");
+        //  print("onResume: ${message}");
+        print("onResume: ${message['data']['type']}");
+
+        String payload = message['data']['type'];
+
+        // moveToScreenFromPush(int.tryParse(payload)); //w
+//        }
+      },
       onResume: (Map<String, dynamic> message) async {
         print("config Notification onResume");
         //  print("onResume: ${message}");
@@ -320,6 +330,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   Future onSelectNotification(String payload) async {
     if (payload != null) {
+      print("noti calllledddddd");
       debugPrint('notification payload: ' + payload);
 //      Map valueMap = json.decode(payload);
       print("type $payload");

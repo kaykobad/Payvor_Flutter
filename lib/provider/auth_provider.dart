@@ -23,6 +23,7 @@ import 'package:payvor/model/hired_user_response_details/hired_user_response-det
 import 'package:payvor/model/logged_in_user/logged_in_user_response.dart';
 import 'package:payvor/model/login/loginrequest.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
+import 'package:payvor/model/my_profile_job_hire/my_profile_job_hire_response.dart';
 import 'package:payvor/model/otp/otp_forgot_request.dart';
 import 'package:payvor/model/otp/otp_request.dart';
 import 'package:payvor/model/otp/otp_verification_response.dart';
@@ -970,23 +971,67 @@ class AuthProvider with ChangeNotifier {
     } else {
       print("res $jsonDecode($response)");
       CurrentUserHiredByFavorResponse resendOtpResponse =
-      new CurrentUserHiredByFavorResponse.fromJson(response);
+          new CurrentUserHiredByFavorResponse.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;
     }
   }
 
+  Future<dynamic> myprofileendedjobs(
+      BuildContext context, int page, String id) async {
+    print("fave");
 
-  Future<dynamic> getNotificationList(BuildContext context,
-      int page,) async {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.get(
-        context: context, url: APIs.notiUser + "?page=$page"
-    );
+        context: context, url: APIs.endJobs + id + "?page=$page");
+
+    print(APIs.endJobs);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      print("res $jsonDecode($response)");
+      EndedJobHireResponse resendOtpResponse =
+          new EndedJobHireResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> myprofileendedFavors(
+      BuildContext context, int page, String id) async {
+    print("fave");
+
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(
+        context: context, url: APIs.endFavors + id + "?page=$page");
+    print(APIs.endFavors);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      print("res $jsonDecode($response)");
+      EndedJobHireResponse resendOtpResponse =
+          new EndedJobHireResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> getNotificationList(
+    BuildContext context,
+    int page,
+  ) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(
+        context: context, url: APIs.notiUser + "?page=$page");
 
     print(APIs.notiUser);
-
 
     if (response is APIError) {
       completer.complete(response);

@@ -47,6 +47,8 @@ class APIs {
   static const String editFavour = "$baseUrl/edit-favour";
   static const String appliedFavor = "$baseUrl/applyfavour";
   static const String userHireFavList = "$baseUrl/appliedfavlist/";
+  static const String endJobs = "$baseUrl/ended-jobs/";
+  static const String endFavors = "$baseUrl/ended-favours/";
   static const String userHire = "$baseUrl/hire-user/";
   static const String deletePost = "$baseUrl/delete-repost-favour/";
 }
