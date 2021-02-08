@@ -166,8 +166,8 @@ class _HomeState extends State<AddPaymentMethodFirst>
                   new Container(
                     height: 6,
                   ),
-                  buildItemRecentSearch(
-                      2, "**** **** **** 8787", AssetStrings.addCard),
+                  /*  buildItemRecentSearch(
+                      2, "**** **** **** 8787", AssetStrings.addCard),*/
                 ],
               ),
             ),

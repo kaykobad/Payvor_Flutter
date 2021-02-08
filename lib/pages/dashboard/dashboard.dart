@@ -10,12 +10,14 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/chat/chat_screen.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
+import 'package:payvor/model/update_firebase_token/update_token_request.dart';
 import 'package:payvor/pages/dummy.dart';
 import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/pages/my_profile/my_profile.dart';
 import 'package:payvor/pages/post/post_home.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/search/search_home.dart';
+import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -53,6 +55,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   // double selectedDotSize = 20;
   double selectedDotSize = 0;
   FirebaseProvider _firebaseProvider;
+  AuthProvider authProvider;
   bool _isNewActivityFound = false;
 
   String userName = "";
@@ -282,8 +285,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     );
 
     if (gotInternetConnection) {
+      var updatetokenrequest =
+          UpdateTokenRequest(user_id: userId ?? "", device_id: token);
+
+      var response =
+          authProvider.updateTokenRequest(updatetokenrequest, context);
       // api hit
-      /*var request = new DeviceTokenRequest(deviceToken: token);
+      /*var request = new DeviceTokenRequest(deviceToken: token);to
       var response = await _dashBoardBloc.setDeviceToken(
           context: context, devicetokenRequest: request);
 
@@ -292,6 +300,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         print(response.message);
       } else {}*/
     }
+  }
+
+  void getDeviceToken() {
+    //  var response=   authProvider.updateTokenRequest( context);
   }
 
   void _initPushNotification() async {
@@ -361,6 +373,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   @override
   Widget build(BuildContext context) {
     _firebaseProvider = Provider.of<FirebaseProvider>(context);
+    authProvider = Provider.of<AuthProvider>(context);
     _firebaseProvider.setHomeContext(context);
     return WillPopScope(
       onWillPop: _onBackPressed,

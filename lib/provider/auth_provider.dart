@@ -38,6 +38,8 @@ import 'package:payvor/model/reset_password/reset_pass_request.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signuprequest.dart';
 import 'package:payvor/model/suggest/suggest_response.dart';
+import 'package:payvor/model/update_firebase_token/update_firebase_token_response.dart';
+import 'package:payvor/model/update_firebase_token/update_token_request.dart';
 import 'package:payvor/model/update_profile/update_profile_request.dart';
 import 'package:payvor/model/update_profile/update_profile_response.dart';
 import 'package:payvor/model/update_profile/user_hired_favor_response.dart';
@@ -716,7 +718,27 @@ class AuthProvider with ChangeNotifier {
     } else {
       print("res $jsonDecode($response)");
       GetFavorListResponse resendOtpResponse =
-      new GetFavorListResponse.fromJson(response);
+          new GetFavorListResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> getDeviceToken(BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response =
+        await APIHandler.get(context: context, url: APIs.getDeviceToken);
+
+    print(APIs.getDeviceToken);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      print("restoken $jsonDecode($response)");
+      GetFavorListResponse resendOtpResponse =
+          new GetFavorListResponse.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;
@@ -742,6 +764,26 @@ class AuthProvider with ChangeNotifier {
       print("res $jsonDecode($response)");
       ReferListResponse resendOtpResponse =
           new ReferListResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> updateTokenRequest(
+      UpdateTokenRequest requests, BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.put(
+        context: context,
+        url: APIs.updatetoken,
+        requestBody: requests.toJson());
+    print("updatetoken ${APIs.updatetoken}");
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      UpdateTokenResponse resendOtpResponse =
+          new UpdateTokenResponse.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;

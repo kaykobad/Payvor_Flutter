@@ -29,9 +29,11 @@ class APIs {
   static const String getPromotionData = "$baseUrl/promo-list";
   static const String createPayvor = "$baseUrl/create-favour";
   static const String seacrhList = "$baseUrl/searchfavour/";
+  static const String getDeviceToken = "$baseUrl/get-token";
   static const String seacrhSuggestList = "$baseUrl/searchtitle/";
   static const String refUsers = "$baseUrl/ref-user";
   static const String giveRating = "$baseUrl/give-rating";
+  static const String updatetoken = "$baseUrl/update-token";
   static const String updateFavStatus = "$baseUrl/update-fav-status";
   static const String referUser = "$baseUrl/refer-user";
   static const String notiUser = "$baseUrl/noti-user";
