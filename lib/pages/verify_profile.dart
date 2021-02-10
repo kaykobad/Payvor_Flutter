@@ -9,6 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/pages/add_payment_method/add_payment_method.dart';
 import 'package:payvor/pages/edit_profile/edit_user_profile.dart';
+import 'package:payvor/pages/forgot_password/forgot_password.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
@@ -190,6 +191,12 @@ class _HomeState extends State<VerifyProfile>
         } else if (type == 3) {
           firebaseProvider.changeScreen(Material(child: new EditProfile()));
         } else if (type == 2 && emailVerify == "0") {
+          Navigator.push(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return new ForgotPassword(type: 2);
+            }),
+          );
           //  verify user email;
         }
       },
@@ -244,7 +251,8 @@ class _HomeState extends State<VerifyProfile>
                                   height: 20,
                                 ),
                           new Container(
-                            margin: new EdgeInsets.only(left: 6),
+                            margin: new EdgeInsets.only(
+                                left: type == 2 && emailVerify == "0" ? 0 : 6),
                             child: new Text(
                               type == 2
                                   ? emailVerify == "1"

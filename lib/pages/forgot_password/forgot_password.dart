@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/forgot_password/forgot_password_request.dart';
 import 'package:payvor/model/forgot_password/forgot_password_response.dart';
-import 'package:payvor/model/otp/otp_verification_response.dart';
 import 'package:payvor/pages/otp/enter_otp.dart';
-import 'package:payvor/pages/reset_password/reset_password.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
@@ -18,6 +16,10 @@ import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class ForgotPassword extends StatefulWidget {
+  final int type;
+
+  ForgotPassword({this.type});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -73,7 +75,7 @@ class _LoginScreenState extends State<ForgotPassword> {
           new CupertinoPageRoute(builder: (BuildContext context) {
             return new OtoVerification(
               phoneNumber: _EmailController.text,
-              type: 1,
+              type: widget?.type ?? 1,
               countryCode: "",
             );
           }),

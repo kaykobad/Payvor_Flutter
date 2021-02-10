@@ -191,13 +191,27 @@ class _LoginScreenState extends State<OtoVerification> {
     var response = await provider.verifyEmailVerify(loginRequest, context);
     provider.hideLoader();
     if (response is LoginSignupResponse) {
-      MemoryManagement.setAccessToken(accessToken: response?.data);
-      Navigator.push(
-        context,
-        new CupertinoPageRoute(builder: (BuildContext context) {
-          return Material(child: new ResetPassword());
-        }),
-      );
+      print("typpppee ${widget?.type?.toString()}");
+
+      if (widget?.type?.toString() == "2") {
+        var infoData = jsonDecode(MemoryManagement.getUserInfo());
+        var userinfo = LoginSignupResponse.fromJson(infoData);
+        userinfo?.user?.is_email_verified = 1;
+
+        MemoryManagement.setUserInfo(userInfo: json.encode(userinfo));
+
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.pop(context);
+      } else {
+        MemoryManagement.setAccessToken(accessToken: response?.data);
+        Navigator.push(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return Material(child: new ResetPassword());
+          }),
+        );
+      }
     } else {
       APIError apiError = response;
       print(apiError.error);

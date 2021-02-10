@@ -864,6 +864,22 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<dynamic> deleteAccount(BuildContext context, String userid) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response =
+        await APIHandler.get(context: context, url: APIs.deleteAccount);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      ReportResponse resendOtpResponse = new ReportResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
   Future<dynamic> getReportReason(
     BuildContext context,
   ) async {

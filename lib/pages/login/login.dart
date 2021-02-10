@@ -498,8 +498,10 @@ class _LoginScreenState extends State<LoginScreenNew> {
                                 context,
                                 new CupertinoPageRoute(
                                     builder: (BuildContext context) {
-                                      return new ForgotPassword();
-                                    }),
+                                      return new ForgotPassword(
+                                    type: 1,
+                                  );
+                                }),
                               );
                             },
                             child: new Text(

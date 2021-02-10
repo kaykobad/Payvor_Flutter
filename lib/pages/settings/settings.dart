@@ -111,6 +111,38 @@ class _HomeState extends State<Settings>
     }
   }
 
+  void deleteAccount() async {
+    provider.setLoading();
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {},
+      onSuccess: () {},
+    );
+
+    if (gotInternetConnection) {
+      var response =
+          await provider.deleteAccount(context, widget?.id?.toString() ?? "");
+
+      provider.hideLoader();
+
+      if (response != null && response is ReportResponse) {
+        await MemoryManagement.clearMemory();
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return new SplashIntroScreenNew();
+          }),
+          (route) => false,
+        );
+      } else {
+        showInSnackBar("Something went wrong, Please try again later!");
+      }
+    }
+  }
+
   Widget getAppBarNew(BuildContext context) {
     return PreferredSize(
         preferredSize: Size.fromHeight(53.0),
@@ -238,6 +270,12 @@ class _HomeState extends State<Settings>
                   )
                 ],
               ),
+            ),
+          ),
+          new Center(
+            child: getFullScreenProviderLoader(
+              status: provider.getLoading(),
+              context: context,
             ),
           ),
         ],

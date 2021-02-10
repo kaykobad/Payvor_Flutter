@@ -207,6 +207,7 @@ class _HomeState extends State<EditProfile>
 
     http.StreamedResponse response = await request.send();
     provider.hideLoader();
+
     if (response.statusCode == 200) {
       final respStr = await response.stream.bytesToString();
       print("respStr: $respStr");
@@ -223,7 +224,12 @@ class _HomeState extends State<EditProfile>
 
       setState(() {});
     } else {
-      showInSnackBar("Something went wrong!!Please try again");
+      var data = await response.stream?.bytesToString();
+      Map dataMap = jsonDecode(data);
+
+      var stringdata = dataMap["data"];
+
+      showInSnackBar(stringdata);
     }
 
 /*
