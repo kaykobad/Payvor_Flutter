@@ -1,3 +1,5 @@
+import 'package:payvor/model/login/loginsignupreponse.dart';
+
 class UserProfileFavorResponse {
   Status status;
   Data data;
@@ -7,7 +9,7 @@ class UserProfileFavorResponse {
 
   UserProfileFavorResponse.fromJson(Map<String, dynamic> json) {
     status =
-    json['status'] != null ? new Status.fromJson(json['status']) : null;
+        json['status'] != null ? new Status.fromJson(json['status']) : null;
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
@@ -187,7 +189,7 @@ class DataUserFavour {
     return data;
   }
 }
-
+/*
 class User {
   int id;
   String name;
@@ -207,6 +209,13 @@ class User {
   String updatedAt;
   num ratingAvg;
   num ratingCount;
+  num perc;
+  num is_email_verified;
+  num is_ph_verified;
+  num payment_method;
+  num profile_pic_type;
+  num is_password;
+  num is_location;
 
   User({this.id,
     this.name,
@@ -225,7 +234,16 @@ class User {
     this.createdAt,
     this.updatedAt,
     this.ratingAvg,
-    this.ratingCount});
+    this.ratingCount,
+    this.perc,
+    this.is_email_verified,
+    this.is_ph_verified,
+    this.payment_method,
+    this.profile_pic_type,
+    this.is_password,
+    this.is_location,
+
+  });
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -246,6 +264,13 @@ class User {
     updatedAt = json['updated_at'];
     ratingAvg = json['rating_avg'];
     ratingCount = json['rating_count'];
+    perc = json['perc'];
+    is_email_verified = json['is_email_verified'];
+    is_ph_verified = json['is_ph_verified'];
+    payment_method = json['payment_method'];
+    profile_pic_type = json['profile_pic_type'];
+    is_password = json['is_password'];
+    is_location = json['is_location'];
   }
 
   Map<String, dynamic> toJson() {
@@ -268,6 +293,12 @@ class User {
     data['updated_at'] = this.updatedAt;
     data['rating_avg'] = this.ratingAvg;
     data['rating_count'] = this.ratingCount;
+    data['perc'] = this.perc;
+    data['is_email_verified'] = this.is_email_verified;
+    data['is_ph_verified'] = this.is_ph_verified;
+    data['payment_method'] = this.payment_method;
+    data['profile_pic_type'] = this.profile_pic_type;
+    data['is_password'] = this.is_password;
+    data['is_location'] = this.is_location;
     return data;
-  }
-}
+  }*/

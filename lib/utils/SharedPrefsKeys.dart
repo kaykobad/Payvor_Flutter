@@ -14,6 +14,7 @@ class SharedPrefsKeys {
   static const String DEEPLINK_TIMESTAMP = "DEEPLINK_TIMESTAMP";
   static const String CONFIRMATION_USER = "confirmation_user";
   static const String YOUTUBE_TOKEN = "youtube_token";
+  static const String PUSH_STATUS = "push_status";
   static const String VIMEO_TOKEN = "vimeo_token";
   static const String USER_DATA = "user_data";
   static const String GRANT_ACCESS = "grant_access";

@@ -170,6 +170,14 @@ class MemoryManagement {
     return prefs.getString(SharedPrefsKeys.YOUTUBE_TOKEN);
   }
 
+  static void setPushStatus({@required String token}) {
+    prefs.setString(SharedPrefsKeys.PUSH_STATUS, token);
+  }
+
+  static String getPushStatus() {
+    return prefs.getString(SharedPrefsKeys.PUSH_STATUS);
+  }
+
   static void setVimeoToken({@required String token}) {
     prefs.setString(SharedPrefsKeys.VIMEO_TOKEN, token);
   }
@@ -177,7 +185,6 @@ class MemoryManagement {
   static String getVimeoToken() {
     return prefs.getString(SharedPrefsKeys.VIMEO_TOKEN);
   }
-
 
   static void setUserLoggedIn({@required bool isUserLoggedin}) {
     prefs.setBool(SharedPrefsKeys.IS_USER_LOGGED_IN, isUserLoggedin);

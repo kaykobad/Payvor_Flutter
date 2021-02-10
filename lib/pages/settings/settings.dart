@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/pages/edit_profile/edit_user_profile.dart';
 import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/provider/auth_provider.dart';
@@ -21,24 +22,9 @@ import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Settings extends StatefulWidget {
-/*  final String id;
-  final int type;
-  final String image;
-  final String name;
-  final String userId;
-  final String paymentType;
-  final String paymentAmount;
-  final ValueSetter<int> voidcallback;
+  final String id;
 
-  RatingBarNew(
-      {@required this.id,
-        this.type,
-        this.image,
-        this.name,
-        this.userId,
-        this.paymentType,
-        this.paymentAmount,
-        this.voidcallback});*/
+  Settings({@required this.id});
 
   @override
   _HomeState createState() => _HomeState();
@@ -69,6 +55,13 @@ class _HomeState extends State<Settings>
   void initState() {
     super.initState();
 
+    var status = MemoryManagement.getPushStatus() ?? "0";
+    print("status $status");
+
+    if (status == "0") {
+      _switchValue = false;
+    }
+
     AppReview.getAppID.then((onValue) {
       setState(() {});
       print("App ID" + onValue);
@@ -85,6 +78,37 @@ class _HomeState extends State<Settings>
       }),
       (route) => false,
     );
+  }
+
+  void updatePushStatus() async {
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {},
+      onSuccess: () {},
+    );
+
+    if (gotInternetConnection) {
+      var response = await provider.updatePushNotiStatus(
+          context, widget?.id?.toString() ?? "");
+
+      if (response != null && response is ReportResponse) {
+        var status = MemoryManagement.getPushStatus() ?? "0";
+
+        print("status $status");
+
+        if (status == "0") {
+          MemoryManagement.setPushStatus(token: "1");
+        } else {
+          MemoryManagement.setPushStatus(token: "0");
+        }
+      } else {
+        _switchValue = !_switchValue;
+
+        setState(() {});
+      }
+    }
   }
 
   Widget getAppBarNew(BuildContext context) {
@@ -293,6 +317,8 @@ class _HomeState extends State<Settings>
                         setState(() {
                           _switchValue = value;
                         });
+
+                        updatePushStatus();
                       },
                     )
                   : Container(

@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/pages/add_payment_method/add_payment_method.dart';
 import 'package:payvor/pages/edit_profile/edit_user_profile.dart';
 import 'package:payvor/provider/auth_provider.dart';
@@ -13,6 +15,7 @@ import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:provider/provider.dart';
 
 class VerifyProfile extends StatefulWidget {
@@ -49,6 +52,8 @@ class _HomeState extends State<VerifyProfile>
   AuthProvider provider;
   FirebaseProvider firebaseProvider;
 
+  String emailVerify = "0";
+
   bool _switchValue = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -62,6 +67,10 @@ class _HomeState extends State<VerifyProfile>
   @override
   void initState() {
     super.initState();
+
+    var infoData = jsonDecode(MemoryManagement.getUserInfo());
+    var userinfo = LoginSignupResponse.fromJson(infoData);
+    emailVerify = userinfo?.user?.is_email_verified?.toString() ?? "0";
   }
 
   Widget getAppBarNew(BuildContext context) {
@@ -180,6 +189,8 @@ class _HomeState extends State<VerifyProfile>
               .changeScreen(Material(child: new AddPaymentMethod()));
         } else if (type == 3) {
           firebaseProvider.changeScreen(Material(child: new EditProfile()));
+        } else if (type == 2 && emailVerify == "0") {
+          //  verify user email;
         }
       },
       child: Container(
@@ -213,22 +224,38 @@ class _HomeState extends State<VerifyProfile>
                       padding: new EdgeInsets.only(
                           left: 8, right: 8, top: 6, bottom: 6),
                       decoration: new BoxDecoration(
-                          color: Color.fromRGBO(221, 242, 255, 1),
+                          color: type == 2 && emailVerify == "0"
+                              ? Color.fromRGBO(255, 237, 237, 1)
+                              : Color.fromRGBO(221, 242, 255, 1),
                           borderRadius: new BorderRadius.circular(2)),
                       child: new Row(
                         children: [
-                          new Image.asset(
-                            AssetStrings.iconTicks,
-                            width: 20,
-                            height: 20,
-                          ),
+                          type == 2
+                              ? emailVerify == "1"
+                                  ? new Image.asset(
+                                      AssetStrings.iconTicks,
+                                      width: 20,
+                                      height: 20,
+                                    )
+                                  : Container()
+                              : new Image.asset(
+                                  AssetStrings.iconTicks,
+                                  width: 20,
+                                  height: 20,
+                                ),
                           new Container(
                             margin: new EdgeInsets.only(left: 6),
                             child: new Text(
-                              "Verified",
+                              type == 2
+                                  ? emailVerify == "1"
+                                      ? "Verified"
+                                      : "Verify"
+                                  : "Verified",
                               style: new TextStyle(
                                   fontSize: 16,
-                                  color: AppColors.colorDarkCyan,
+                                  color: type == 2 && emailVerify == "0"
+                                      ? Color.fromRGBO(255, 107, 102, 1)
+                                      : AppColors.colorDarkCyan,
                                   fontFamily: AssetStrings.circulerMedium),
                             ),
                           )

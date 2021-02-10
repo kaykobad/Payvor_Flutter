@@ -845,11 +845,31 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<dynamic> updatePushNotiStatus(
+      BuildContext context, String userid) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(
+      context: context,
+      url: APIs.updatePushStatus + userid?.toString(),
+    );
 
-  Future<dynamic> getReportReason(BuildContext context,) async {
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      ReportResponse resendOtpResponse = new ReportResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> getReportReason(
+    BuildContext context,
+  ) async {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response =
-    await APIHandler.get(context: context, url: APIs.gettingReportReason);
+        await APIHandler.get(context: context, url: APIs.gettingReportReason);
 
     print(APIs.gettingReportReason);
     print(APIs.gettingReportReason);

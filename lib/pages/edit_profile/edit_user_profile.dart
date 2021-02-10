@@ -9,11 +9,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:payvor/model/create_payvor/payvorcreate.dart';
 import 'package:payvor/model/favour_details_response/favour_details_response.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
+import 'package:payvor/model/update_profile/update_profile_request.dart';
 import 'package:payvor/networkmodel/APIs.dart';
-import 'package:payvor/pages/preview_post/preview_post.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -102,10 +101,10 @@ class _HomeState extends State<EditProfile>
     _EmailController.text = userinfo?.user?.email ?? "";
     _NameController.text = userinfo?.user?.name ?? "";
     _PhoneController.text = userinfo?.user?.phone ?? "";
+    profile = userinfo?.user?.profilePic ?? "";
+    print("profile");
     _LocationController.text = userinfo?.user?.location ?? "";
-    _LatLongController.text = userinfo?.user?.lat + "," +
-        userinfo?.user?.long;
-
+    _LatLongController.text = userinfo?.user?.lat + "," + userinfo?.user?.long;
 
     _setScrollListener();
 
@@ -165,22 +164,19 @@ class _HomeState extends State<EditProfile>
 
     //changed
 
-    if (widget.isEdit != null && widget.isEdit) {
-      request = new http.MultipartRequest("POST", Uri.parse(APIs.editFavour));
-
-      request.fields['id'] = widget.favourDetailsResponse?.data?.id?.toString();
-      print("edit true");
-    } else {
-      request = new http.MultipartRequest("POST", Uri.parse(APIs.createPayvor));
-      print("edit false");
-    }
+    request = new http.MultipartRequest("POST", Uri.parse(APIs.update_profile));
 
     request.headers.addAll(headers);
 
-    request.fields['title'] = _EmailController.text;
+    request.fields['name'] = _NameController.text;
     request.fields['location'] = _LocationController.text;
-    request.fields['description'] = _OldPasswordController.text;
-    request.fields['price'] = _PhoneController.text;
+
+    if (_NewPasswordController.text.length > 0 &&
+        _OldPasswordController.text.length > 0) {
+      request.fields['password'] = _NewPasswordController.text;
+      request.fields['old_password'] = _OldPasswordController.text;
+    }
+
     request.fields['lat'] = lat;
     request.fields['long'] = long;
 
@@ -191,7 +187,7 @@ class _HomeState extends State<EditProfile>
       var bytes = await _image.readAsBytes();
 
       request.files.add(new http.MultipartFile.fromBytes(
-        "image",
+        "profile_pic",
         bytes,
         filename: fileName,
       ));
@@ -215,18 +211,16 @@ class _HomeState extends State<EditProfile>
       final respStr = await response.stream.bytesToString();
       print("respStr: $respStr");
       Map data = jsonDecode(respStr); // Parse data from JSON string
-      String responseData = data['status']['message'];
 
-      _EmailController.text = "";
-      _PhoneController.text = "";
+      LoginSignupResponse dataResponse = new LoginSignupResponse.fromJson(data);
+
+      MemoryManagement.setUserInfo(userInfo: json.encode(dataResponse));
+
       _OldPasswordController.text = "";
-      _LocationController.text = "";
-      _LatLongController.text = "";
-      _image = null;
-      isValid = false;
-      profile = null;
+      _NewPasswordController.text = "";
 
       showBottomSheet();
+
       setState(() {});
     } else {
       showInSnackBar("Something went wrong!!Please try again");
@@ -436,7 +430,6 @@ class _HomeState extends State<EditProfile>
 
   void callback() {
     if (getResult()) {
-      hitApi(1);
     } else {
       setState(() {});
     }
@@ -444,9 +437,19 @@ class _HomeState extends State<EditProfile>
 
   void callbackMain() {
     if (getResult()) {
-      //  hitApi(2);
+      hitApi(2);
     } else {
       setState(() {});
+    }
+  }
+
+  void hitUpdateProfile() {
+    UpdateProfileRequest updateProfileRequest = new UpdateProfileRequest(
+        name: _NameController.text, location: _LocationController.text);
+
+    if (_NewPasswordController.text.length > 0 &&
+        _OldPasswordController.text.length > 0) {
+      updateProfileRequest.password = _NewPasswordController.text;
     }
   }
 
@@ -456,7 +459,10 @@ class _HomeState extends State<EditProfile>
     var newpassword = _NewPasswordController.text;
     var location = _LocationController.text;
 
-    if (location.isEmpty || location.length == 0) {
+    if (name.isEmpty || name.length == 0) {
+      showInSnackBar("Please enter the name");
+      return false;
+    } else if (location.isEmpty || location.length == 0) {
       showInSnackBar("Please enter the location");
       return false;
     } else {
@@ -478,47 +484,7 @@ class _HomeState extends State<EditProfile>
     }
   }
 
-  void callbackPreview() {
-    if (getResult()) {
-      var lat = "0.0";
-      var long = "0.0";
 
-      if (_LatLongController.text.length > 0) {
-        var data = _LatLongController.text.trim().toString().split(",");
-
-        try {
-          lat = data[0];
-          long = data[1];
-        } catch (e) {}
-      } else {
-        showInSnackBar("Please enter valid location");
-        return;
-      }
-
-      PayvorCreateRequest loginRequest = new PayvorCreateRequest(
-          title: _EmailController.text,
-          location: _LocationController.text,
-          description: _OldPasswordController.text,
-          price: _PhoneController.text,
-          lat: lat,
-          long: long);
-
-      Navigator.push(
-        context,
-        new CupertinoPageRoute(builder: (BuildContext context) {
-          return Material(
-              child: new PreviewPost(
-            request: loginRequest,
-            type: 1,
-            file: _image,
-            voidcallback: voidCallBackDialog,
-          ));
-        }),
-      );
-    } else {
-      setState(() {});
-    }
-  }
 
   void showBottomSheet() {
     showModalBottomSheet<void>(
@@ -565,9 +531,7 @@ class _HomeState extends State<EditProfile>
                   new Container(
                     margin: new EdgeInsets.only(top: 10),
                     child: new Text(
-                      widget?.isEdit ?? false
-                          ? "You have updated favor successfully."
-                          : "You have created a favor successfully.",
+                      "You have updated profile successfully.",
                       style: new TextStyle(
                         fontFamily: AssetStrings.circulerNormal,
                         fontSize: 16,
@@ -578,11 +542,7 @@ class _HomeState extends State<EditProfile>
                   Container(
                     margin: new EdgeInsets.only(top: 60, left: 16, right: 16),
                     child: getSetupButtonNew(
-                        callbackFavourPage,
-                        widget?.isEdit ?? false
-                            ? "Go to Home Page"
-                            : "Go to Favor Page",
-                        0,
+                        callbackFavourPage, "Done", 0,
                         newColor: AppColors.colorDarkCyan),
                   ),
                   Container(
@@ -594,10 +554,6 @@ class _HomeState extends State<EditProfile>
   }
 
   void callbackFavourPage() async {
-    if ((widget?.isEdit ?? false) && widget?.voidcallback != null) {
-      widget?.voidcallback(1);
-      Navigator.pop(context);
-    }
     Navigator.pop(context);
     Navigator.pop(context);
   }
@@ -659,6 +615,34 @@ class _HomeState extends State<EditProfile>
             ),
           ),
         ));
+  }
+
+  Future<bool> showDeleteAccount() async {
+    return showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Delete the account?'),
+              content: Text('Do you want to delete your account?'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('NO'),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+                FlatButton(
+                  child: Text('YES'),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
   }
 
   @override
@@ -834,14 +818,19 @@ class _HomeState extends State<EditProfile>
                   new SizedBox(
                     height: 24.0,
                   ),
-                  new Container(
-                    padding: new EdgeInsets.only(
-                        left: 16, right: 5.0, top: 26, bottom: 26),
-                    color: Colors.white,
-                    width: double.infinity,
-                    child: new Text(
-                      "Delete Account",
-                      style: TextThemes.darkRedMediumNewS,
+                  InkWell(
+                    onTap: () {
+                      showDeleteAccount();
+                    },
+                    child: new Container(
+                      padding: new EdgeInsets.only(
+                          left: 16, right: 5.0, top: 26, bottom: 26),
+                      color: Colors.white,
+                      width: double.infinity,
+                      child: new Text(
+                        "Delete Account",
+                        style: TextThemes.darkRedMediumNewS,
+                      ),
                     ),
                   ),
                   new SizedBox(

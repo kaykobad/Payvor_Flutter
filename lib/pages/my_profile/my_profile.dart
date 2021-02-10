@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:payvor/chat/decorator_view.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/favour_details_response/favour_details_response.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/update_profile/user_hired_favor_response.dart';
 import 'package:payvor/pages/add_payment_method_first/add_payment.dart';
 import 'package:payvor/pages/my_profile/ended_favor.dart';
@@ -20,6 +22,7 @@ import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
@@ -134,6 +137,18 @@ class _HomeState extends State<MyProfile>
         widget.image = response.user.profilePic;
         widget.name = response.user.name;
 
+        if (response?.user != null) {
+          var infoData = jsonDecode(MemoryManagement.getUserInfo());
+          var userinfo = LoginSignupResponse.fromJson(infoData);
+
+          userinfo.user = response?.user;
+
+          MemoryManagement.setPushStatus(
+              token: userinfo?.user?.disable_push?.toString() ?? "0");
+
+          MemoryManagement.setUserInfo(userInfo: json.encode(userinfo));
+        }
+
         list.addAll(response.data.data);
 
         if (response.data != null &&
@@ -153,6 +168,10 @@ class _HomeState extends State<MyProfile>
     } else {
       APIError apiError = response;
       print(apiError.error);
+      var infoData = jsonDecode(MemoryManagement.getUserInfo());
+      var userinfo = LoginSignupResponse.fromJson(infoData);
+      MemoryManagement.setPushStatus(
+          token: userinfo?.user?.disable_push?.toString() ?? "0");
 
       showInSnackBar(apiError.error);
     }
@@ -510,7 +529,7 @@ class _HomeState extends State<MyProfile>
                                 //  Navigator.pop(context);
                               },
                               child: new Text(
-                                "50% Verified",
+                                "${userResponse?.user?.perc?.toString() ?? "0"}% Verified",
                                 style: new TextStyle(
                                     fontSize: 13,
                                     color: Colors.white,
@@ -520,8 +539,10 @@ class _HomeState extends State<MyProfile>
                       ),
                       InkWell(
                         onTap: () {
-                          providerFirebase
-                              ?.changeScreen(Material(child: new Settings()));
+                          providerFirebase?.changeScreen(Material(
+                              child: new Settings(
+                            id: widget?.hireduserId,
+                          )));
                         },
                         child: Container(
                             child: new Image.asset(AssetStrings.appSettings,

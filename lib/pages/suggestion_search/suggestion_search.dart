@@ -140,9 +140,9 @@ class _HomeState extends State<SearchHomeByName>
             var date = new DateFormat("yyyy-MM-dd HH:mm:ss");
 
             var createAt = date.format(now);
-
             RecentSearch recentSearch = RecentSearch(
                 createdAt: createAt, keyword: data);
+
             var datas = DatabaseHelper.instance.database;
             DatabaseHelper.instance.insert(recentSearch);
           } catch (e) {
