@@ -38,6 +38,9 @@ class APIs {
   static const String updatePushStatus = "$baseUrl/disable-push/";
   static const String deleteAccount = "$baseUrl/delete_ac/";
   static const String referUser = "$baseUrl/refer-user";
+  static const String addPaypal = "$baseUrl/save-paypal";
+  static const String getPaypal = "$baseUrl/get-paypal";
+  static const String deletePaypal = "$baseUrl/delete-paypal/";
   static const String notiUser = "$baseUrl/noti-user";
   static const String reportFavor = "$baseUrl/report-hired-favour";
   static const String favorPostedByUser = "$baseUrl/myfavour";

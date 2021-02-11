@@ -164,7 +164,10 @@ class _HomeState extends State<AddPaymentMethod>
   Widget buildItemRecentSearch(int type, String data, String icon) {
     return InkWell(
       onTap: () {
-        firebaseProvider.changeScreen(Material(child: new AddCardDetails()));
+        firebaseProvider.changeScreen(Material(
+            child: new AddCardDetails(
+          type: 1,
+        )));
       },
       child: Container(
         color: Colors.white,

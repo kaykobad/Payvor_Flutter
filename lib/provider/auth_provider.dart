@@ -9,6 +9,8 @@ import 'package:payvor/filter/refer_request.dart';
 import 'package:payvor/filter/refer_response.dart';
 import 'package:payvor/filter/refer_user.dart';
 import 'package:payvor/filter/refer_user_response.dart';
+import 'package:payvor/model/add_paypal/add_paypal_request.dart';
+import 'package:payvor/model/add_paypal/get_paypal_data.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/applied_user/favour_applied_user.dart';
 import 'package:payvor/model/common_response/common_success_response.dart';
@@ -229,6 +231,64 @@ class AuthProvider with ChangeNotifier {
     } else {
       ForgotPasswordResponse loginResponseData =
           new ForgotPasswordResponse.fromJson(response);
+      completer.complete(loginResponseData);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> addPaypalMethod(
+      PayPalAddRequest request, BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+
+    var response = await APIHandler.post(
+        context: context, url: APIs.addPaypal, requestBody: request.toJson());
+
+    print(APIs.addPaypal);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      ReportResponse loginResponseData = new ReportResponse.fromJson(response);
+      completer.complete(loginResponseData);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> getPaypalMethod(BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+
+    var response = await APIHandler.get(context: context, url: APIs.getPaypal);
+
+    print(APIs.getPaypal);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      GetPaypalData loginResponseData = new GetPaypalData.fromJson(response);
+      completer.complete(loginResponseData);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> deletePaypalMethod(BuildContext context, String id) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+
+    var response =
+        await APIHandler.get(context: context, url: APIs.deletePaypal + id);
+
+    print(APIs.deletePaypal);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      CommonSuccessResponse loginResponseData =
+          new CommonSuccessResponse.fromJson(response);
       completer.complete(loginResponseData);
       notifyListeners();
       return completer.future;

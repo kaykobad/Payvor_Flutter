@@ -1,21 +1,33 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payvor/model/add_paypal/add_paypal_request.dart';
+import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/forgot_password/forgot_password_request.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
+import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/pages/post_details/cardformatter.dart';
+import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/ValidatorFunctions.dart';
 import 'package:payvor/utils/constants.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:stripe_payment/stripe_payment.dart';
+import 'package:provider/provider.dart';
 
 class AddCardDetails extends StatefulWidget {
   ValueSetter<int> voidcallback;
+  int type;
 
-  AddCardDetails({this.voidcallback});
+  AddCardDetails({this.voidcallback, this.type});
 
   @override
   _PaymentDialogState createState() => _PaymentDialogState();
@@ -47,6 +59,8 @@ class _PaymentDialogState extends State<AddCardDetails> {
   String textMonth = "";
   String textCvv = "";
   Token _paymentToken;
+  AuthProvider provider;
+
   List<TextInputFormatter> listCardNumber = new List<TextInputFormatter>();
   List<TextInputFormatter> listExpDate = new List<TextInputFormatter>();
   List<TextInputFormatter> listcvv = new List<TextInputFormatter>();
@@ -152,6 +166,7 @@ class _PaymentDialogState extends State<AddCardDetails> {
 
   @override
   Widget build(BuildContext context) {
+    provider = Provider.of<AuthProvider>(context);
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomPadding: false,
@@ -171,245 +186,313 @@ class _PaymentDialogState extends State<AddCardDetails> {
           child: ClipRRect(
             // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
             borderRadius: new BorderRadius.circular(10.0),
-            child: Form(
-              key: _fieldKey,
-              child: new ListView(
-                children: [
-                  /*Container(
-                    margin: new EdgeInsets.only(top: 20, left: 16, right: 16),
-                    color: Colors.white,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: new Padding(
-                              padding: const EdgeInsets.all(1.0),
-                              child: new SvgPicture.asset(
-                                AssetStrings.back,
+            child: Stack(
+              children: [
+                Form(
+                  key: _fieldKey,
+                  child: new ListView(
+                    children: [
+                      /*Container(
+                        margin: new EdgeInsets.only(top: 20, left: 16, right: 16),
+                        color: Colors.white,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              alignment: Alignment.topLeft,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: new Padding(
+                                  padding: const EdgeInsets.all(1.0),
+                                  child: new SvgPicture.asset(
+                                    AssetStrings.back,
+                                  ),
+                                ),
                               ),
                             ),
+                            Expanded(
+                              child: new Container(
+                                alignment: Alignment.center,
+                                child: new Text(
+                                  "Card Details",
+                                  style: new TextStyle(
+                                      fontFamily: AssetStrings.circulerBoldStyle,
+                                      fontSize: 20,
+                                      color: Colors.black),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),*/
+                      new Container(
+                        height: 8.0,
+                        color: AppColors.kAppScreenBackGround,
+                      ),
+
+                      /*    new Container(
+                        margin: new EdgeInsets.only(top: 5),
+                        alignment: Alignment.center,
+                        child: new Text(
+                          "Add a Card details here or Pay with Paypal",
+                          style: new TextStyle(
+                            fontFamily: AssetStrings.circulerNormal,
+                            fontSize: 16,
+                            color: Color.fromRGBO(103, 99, 99, 1),
                           ),
                         ),
-                        Expanded(
-                          child: new Container(
-                            alignment: Alignment.center,
-                            child: new Text(
-                              "Card Details",
-                              style: new TextStyle(
-                                  fontFamily: AssetStrings.circulerBoldStyle,
-                                  fontSize: 20,
-                                  color: Colors.black),
+                      ),*/
+
+                      new Container(
+                        margin: new EdgeInsets.only(left: 16, top: 15),
+                        child: new Text(
+                          "Add a Paypal Account",
+                          style: TextThemes.darkBlackMedium,
+                        ),
+                      ),
+                      new Container(
+                        margin: new EdgeInsets.only(left: 16, top: 7),
+                        child: Row(
+                          children: [
+                            new Image.asset(
+                              AssetStrings.iconTick,
+                              width: 18,
+                              height: 22,
                             ),
+                            new SizedBox(
+                              width: 5,
+                            ),
+                            new Text(
+                              "We’ll keep your payment details safe",
+                              style: TextThemes.grayNormal,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Opacity(
+                        opacity: 0.12,
+                        child: new Container(
+                          height: 1.0,
+                          margin:
+                              new EdgeInsets.only(top: 15, left: 16, right: 16),
+                          color: AppColors.dividerColor,
+                        ),
+                      ),
+                      new SizedBox(
+                        height: 24.0,
+                      ),
+                      getTextField(
+                          validatorCard,
+                          "Email",
+                          _AccountController,
+                          _AccountField,
+                          _NameField,
+                          0,
+                          mCardEmpty,
+                          listNormalText,
+                          TextInputType.emailAddress),
+                      mCardEmpty
+                          ? new Container(
+                              margin: new EdgeInsets.only(top: 6, left: 24),
+                              alignment: Alignment.centerLeft,
+                              child: new Text(
+                                textAccount,
+                                style: new TextStyle(
+                                  fontFamily: AssetStrings.circulerNormal,
+                                  fontSize: 13,
+                                  color: Color.fromRGBO(205, 107, 102, 1),
+                                ),
+                              ),
+                            )
+                          : Container(),
+                      new SizedBox(
+                        height: 16.0,
+                      ),
+                      /*     getTextField(
+                          validatorCvv,
+                          ResString().get('card_name'),
+                          _NameController,
+                          _NameField,
+                          _MonthField,
+                          0,
+                          mNameEmpty,
+                          listNormalText,
+                          TextInputType.text),
+                      mNameEmpty
+                          ? new Container(
+                        margin: new EdgeInsets.only(top: 6, left: 24),
+                        alignment: Alignment.centerLeft,
+                        child: new Text(
+                          textName,
+                          style: new TextStyle(
+                            fontFamily: AssetStrings.circulerNormal,
+                            fontSize: 13,
+                            color: Color.fromRGBO(205, 107, 102, 1),
                           ),
                         ),
-                      ],
-                    ),
-                  ),*/
-                  new Container(
-                    height: 8.0,
-                    color: AppColors.kAppScreenBackGround,
-                  ),
-
-                  /*    new Container(
-                    margin: new EdgeInsets.only(top: 5),
-                    alignment: Alignment.center,
-                    child: new Text(
-                      "Add a Card details here or Pay with Paypal",
-                      style: new TextStyle(
-                        fontFamily: AssetStrings.circulerNormal,
-                        fontSize: 16,
-                        color: Color.fromRGBO(103, 99, 99, 1),
-                      ),
-                    ),
-                  ),*/
-
-                  new Container(
-                    margin: new EdgeInsets.only(left: 16, top: 15),
-                    child: new Text("Add a Credit or Debit Card",
-                      style: TextThemes.darkBlackMedium,),
-                  ),
-
-                  new Container(
-                    margin: new EdgeInsets.only(left: 16, top: 7),
-                    child: Row(
-                      children: [
-                        new Image.asset(
-                          AssetStrings.iconTick, width: 18, height: 22,),
-                        new SizedBox(
-                          width: 5,
-                        ),
-
-                        new Text("We’ll keep your payment details safe",
-                          style: TextThemes.grayNormal,),
-                      ],
-                    ),
-                  ),
-
-                  Opacity(
-                    opacity: 0.12,
-                    child: new Container(
-                      height: 1.0,
-                      margin: new EdgeInsets.only(top: 15, left: 16, right: 16),
-                      color: AppColors.dividerColor,
-                    ),
-                  ),
-
-                  new SizedBox(
-                    height: 24.0,
-                  ),
-                  getTextField(
-                      validatorCard,
-                      ResString().get('card_number'),
-                      _AccountController,
-                      _AccountField,
-                      _NameField,
-                      0,
-                      mCardEmpty,
-                      listCardNumber,
-                      TextInputType.number),
-                  mCardEmpty
-                      ? new Container(
-                    margin: new EdgeInsets.only(top: 6, left: 24),
-                    alignment: Alignment.centerLeft,
-                    child: new Text(
-                      textAccount,
-                      style: new TextStyle(
-                        fontFamily: AssetStrings.circulerNormal,
-                        fontSize: 13,
-                        color: Color.fromRGBO(205, 107, 102, 1),
-                      ),
-                    ),
-                  )
-                      : Container(),
-                  new SizedBox(
-                    height: 16.0,
-                  ),
-                  getTextField(
-                      validatorCvv,
-                      ResString().get('card_name'),
-                      _NameController,
-                      _NameField,
-                      _MonthField,
-                      0,
-                      mNameEmpty,
-                      listNormalText,
-                      TextInputType.text),
-                  mNameEmpty
-                      ? new Container(
-                    margin: new EdgeInsets.only(top: 6, left: 24),
-                    alignment: Alignment.centerLeft,
-                    child: new Text(
-                      textName,
-                      style: new TextStyle(
-                        fontFamily: AssetStrings.circulerNormal,
-                        fontSize: 13,
-                        color: Color.fromRGBO(205, 107, 102, 1),
-                      ),
-                    ),
-                  )
-                      : Container(),
-                  new Container(
-                    height: 58,
-                    margin: new EdgeInsets.only(right: 24, left: 24, top: 16),
-                    child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: getTextField(
-                              validatorCvv,
-                              ResString().get('mm/yy'),
-                              _MonthController,
-                              _MonthField,
-                              _CvvField,
-                              1,
-                              mMonthEmpty,
-                              listExpDate,
-                              TextInputType.number),
-                        ),
-                        new SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: getTextField(
-                              validatorCvv,
-                              ResString().get('cvv'),
-                              _CvvController,
-                              _CvvField,
-                              _CvvField,
-                              1,
-                              mCvvEmpty,
-                              listcvv,
-                              TextInputType.number),
-                        ),
-                      ],
-                    ),
-                  ),
-                  new Container(
-                    child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: mMonthEmpty
-                              ? new Container(
-                            margin:
-                            new EdgeInsets.only(top: 16, left: 24),
-                            alignment: Alignment.centerLeft,
-                            child: new Text(
-                              textMonth,
-                              style: new TextStyle(
-                                fontFamily: AssetStrings.circulerNormal,
-                                fontSize: 13,
-                                color: Color.fromRGBO(205, 107, 102, 1),
-                              ),
+                      )
+                          : Container(),*/
+                      /*  new Container(
+                        height: 58,
+                        margin: new EdgeInsets.only(right: 24, left: 24, top: 16),
+                        child: new Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: getTextField(
+                                  validatorCvv,
+                                  ResString().get('mm/yy'),
+                                  _MonthController,
+                                  _MonthField,
+                                  _CvvField,
+                                  1,
+                                  mMonthEmpty,
+                                  listExpDate,
+                                  TextInputType.number),
                             ),
-                          )
-                              : Container(),
-                        ),
-                        new SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: mCvvEmpty
-                              ? new Container(
-                            margin:
-                            new EdgeInsets.only(top: 16, right: 24),
-                            alignment: Alignment.centerLeft,
-                            child: new Text(
-                              textCvv,
-                              style: new TextStyle(
-                                fontFamily: AssetStrings.circulerNormal,
-                                fontSize: 13,
-                                color: Color.fromRGBO(205, 107, 102, 1),
-                              ),
+                            new SizedBox(
+                              width: 10,
                             ),
-                          )
-                              : Container(),
+                            Expanded(
+                              child: getTextField(
+                                  validatorCvv,
+                                  ResString().get('cvv'),
+                                  _CvvController,
+                                  _CvvField,
+                                  _CvvField,
+                                  1,
+                                  mCvvEmpty,
+                                  listcvv,
+                                  TextInputType.number),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
+                      new Container(
+                        child: new Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: mMonthEmpty
+                                  ? new Container(
+                                margin:
+                                new EdgeInsets.only(top: 16, left: 24),
+                                alignment: Alignment.centerLeft,
+                                child: new Text(
+                                  textMonth,
+                                  style: new TextStyle(
+                                    fontFamily: AssetStrings.circulerNormal,
+                                    fontSize: 13,
+                                    color: Color.fromRGBO(205, 107, 102, 1),
+                                  ),
+                                ),
+                              )
+                                  : Container(),
+                            ),
+                            new SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: mCvvEmpty
+                                  ? new Container(
+                                margin:
+                                new EdgeInsets.only(top: 16, right: 24),
+                                alignment: Alignment.centerLeft,
+                                child: new Text(
+                                  textCvv,
+                                  style: new TextStyle(
+                                    fontFamily: AssetStrings.circulerNormal,
+                                    fontSize: 13,
+                                    color: Color.fromRGBO(205, 107, 102, 1),
+                                  ),
+                                ),
+                              )
+                                  : Container(),
+                            ),
+                          ],
+                        ),
+                      ),*/
+                      Container(
+                        margin:
+                            new EdgeInsets.only(top: 24, left: 16, right: 16),
+                        child: getSetupButtonNew(
+                            callback, "Add Payment Method", 0,
+                            newColor: AppColors.colorDarkCyan),
+                      ),
+                      Container(
+                        height: 26,
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  child: new Center(
+                    child: getHalfScreenLoader(
+                      status: provider.getLoading(),
+                      context: context,
                     ),
                   ),
-                  Container(
-                    margin: new EdgeInsets.only(top: 24, left: 16, right: 16),
-                    child: getSetupButtonNew(callback, "Add Payment Method", 0,
-                        newColor: AppColors.colorDarkCyan),
-                  ),
-
-                  Container(
-                    height: 26,
-                  )
-                ],
-              ),
+                ),
+              ],
             ),
           )),
     );
   }
 
-  Widget getTextField(Function validators,
+  hitAddApi() async {
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    provider.setLoading();
+
+    var infoData = jsonDecode(MemoryManagement.getUserInfo());
+    var userinfo = LoginSignupResponse.fromJson(infoData);
+
+    PayPalAddRequest forgotrequest = new PayPalAddRequest(
+        paypal_id: _AccountController.text,
+        user_id: userinfo?.user?.id?.toString());
+
+    var response = await provider.addPaypalMethod(forgotrequest, context);
+
+    if (response is ReportResponse) {
+      provider.hideLoader();
+
+      print("res $response");
+
+      if (response != null && response.status.code == 200) {
+        showInSnackBar("Payment method added successfully");
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.pop(context);
+        setState(() {});
+      }
+
+      print(response);
+      try {} catch (ex) {}
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
+  }
+
+  Widget getTextField(
+      Function validators,
       String labelText,
       TextEditingController controller,
       FocusNode focusNodeCurrent,
@@ -450,7 +533,9 @@ class _PaymentDialogState extends State<AddCardDetails> {
               borderRadius: new BorderRadius.circular(8)),
           focusedBorder: new OutlineInputBorder(
               borderSide: new BorderSide(
-                color: AppColors.colorCyanPrimary,
+                color: card
+                    ? Colors.red.withOpacity(0.5)
+                    : AppColors.colorCyanPrimary,
               ),
               borderRadius: new BorderRadius.circular(8)),
           contentPadding: new EdgeInsets.only(top: 10.0, left: 17),
@@ -470,6 +555,25 @@ class _PaymentDialogState extends State<AddCardDetails> {
 
   Future<bool> callback() async {
     var account = _AccountController.text;
+
+    if (account.isEmpty || account.trim().length == 0) {
+      mCardEmpty = true;
+      textAccount = "Please enter paypal email ";
+      setState(() {});
+      return false;
+    } else if (!isEmailFormatValid(account)) {
+      mCardEmpty = true;
+      textAccount = "Please enter a valid paypal email";
+      setState(() {});
+      return false;
+    }
+
+    mCardEmpty = false;
+    setState(() {});
+
+    hitAddApi();
+
+    /*
     var name = _NameController.text;
     var month = _MonthController.text;
     var cvv = _CvvController.text;
@@ -550,8 +654,8 @@ class _PaymentDialogState extends State<AddCardDetails> {
 
           _paymentToken = token;
         }).catchError(setError);
-
-        /*  StripePayment.createPaymentMethod(
+*/
+    /*  StripePayment.createPaymentMethod(
           PaymentMethodRequest(
             card: CreditCard(
               token: _paymentToken.tokenId,
@@ -564,13 +668,10 @@ class _PaymentDialogState extends State<AddCardDetails> {
           });
         }).catchError(setError);*/
 
-        /*  Navigator.pop(context);
+    /*  Navigator.pop(context);
 
         widget.voidcallback(2);
 */
-        return true;
-      }
-    });
   }
 
   void setError(dynamic error) {

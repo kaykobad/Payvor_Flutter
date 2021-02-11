@@ -11,8 +11,10 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:payvor/model/favour_details_response/favour_details_response.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
+import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/update_profile/update_profile_request.dart';
 import 'package:payvor/networkmodel/APIs.dart';
+import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -116,6 +118,38 @@ class _HomeState extends State<EditProfile>
     _streamControllerShowLoader.close(); //close the stream on dispose
 
     super.dispose();
+  }
+
+  void deleteAccount() async {
+    provider.setLoading();
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {},
+      onSuccess: () {},
+    );
+
+    if (gotInternetConnection) {
+      var response = await provider.deleteAccount(
+          context, userinfo?.user?.id?.toString() ?? "");
+
+      provider.hideLoader();
+
+      if (response != null && response is ReportResponse) {
+        await MemoryManagement.clearMemory();
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return new SplashIntroScreenNew();
+          }),
+          (route) => false,
+        );
+      } else {
+        showInSnackBar("Something went wrong, Please try again later!");
+      }
+    }
   }
 
   hitApi(int type) async {
@@ -642,6 +676,7 @@ class _HomeState extends State<EditProfile>
                   child: Text('YES'),
                   onPressed: () {
                     Navigator.of(context).pop(true);
+                    deleteAccount();
                   },
                 ),
               ],

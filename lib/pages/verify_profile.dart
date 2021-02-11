@@ -6,6 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/forgot_password/forgot_password_request.dart';
+import 'package:payvor/model/forgot_password/forgot_password_response.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/pages/add_payment_method/add_payment_method.dart';
 import 'package:payvor/pages/edit_profile/edit_user_profile.dart';
@@ -188,9 +191,64 @@ class _HomeState extends State<VerifyProfile>
               ),
             ),
           ),
+          Container(
+            child: new Center(
+              child: getHalfScreenLoader(
+                status: provider.getLoading(),
+                context: context,
+              ),
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  hitApi() async {
+    provider.setLoading();
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    ForgotPasswordRequest forgotrequest =
+        new ForgotPasswordRequest(email: email);
+    var response = await provider.forgotPassword(forgotrequest, context);
+
+    if (response is ForgotPasswordResponse) {
+      try {
+        showInSnackBar(response.status.message);
+
+        Navigator.push(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return new OtoVerification(
+              type: 2,
+              phoneNumber: email,
+              countryCode: "",
+            );
+          }),
+        );
+      } catch (ex) {}
+
+      provider.hideLoader();
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
   }
 
   void callbackDone() async {}
@@ -207,16 +265,7 @@ class _HomeState extends State<VerifyProfile>
         } else if (type == 3) {
           firebaseProvider.changeScreen(Material(child: new EditProfile()));
         } else if (type == 2 && emailVerify == "0") {
-          Navigator.push(
-            context,
-            new CupertinoPageRoute(builder: (BuildContext context) {
-              return new OtoVerification(
-                type: 2,
-                phoneNumber: email,
-                countryCode: "",
-              );
-            }),
-          );
+          hitApi();
           //  verify user email;
         }
       },

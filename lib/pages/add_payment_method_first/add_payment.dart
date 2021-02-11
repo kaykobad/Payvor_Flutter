@@ -5,6 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:payvor/model/add_paypal/get_paypal_data.dart';
+import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/common_response/common_success_response.dart';
 import 'package:payvor/pages/add_payment_method/add_payment_method.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
@@ -48,6 +51,8 @@ class _HomeState extends State<AddPaymentMethodFirst>
   AuthProvider provider;
   FirebaseProvider firebaseProvider;
 
+  List<Data> dataList = List<Data>();
+
   bool _switchValue = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -61,6 +66,78 @@ class _HomeState extends State<AddPaymentMethodFirst>
   @override
   void initState() {
     super.initState();
+    Future.delayed(const Duration(milliseconds: 300), () {
+      hitAddApi();
+    });
+  }
+
+  hitAddApi() async {
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    provider.setLoading();
+
+    var response = await provider.getPaypalMethod(context);
+
+    if (response is GetPaypalData) {
+      provider.hideLoader();
+
+      dataList.add(response?.data);
+
+      print(response);
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
+  }
+
+  hitDeleteApi(int index, String id) async {
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    provider.setLoading();
+
+    var response = await provider.deletePaypalMethod(context, id);
+
+    if (response is CommonSuccessResponse) {
+      provider.hideLoader();
+      showInSnackBar("Paypal method deleted successfully");
+
+      dataList?.removeAt(index);
+
+      print(response);
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
   }
 
   Widget getAppBarNew(BuildContext context) {
@@ -140,29 +217,30 @@ class _HomeState extends State<AddPaymentMethodFirst>
                   new Container(
                     height: 7,
                   ),
-                  buildItemItemAddCard(),
+                  dataList?.length == 0 ? buildItemItemAddCard() : Container(),
                   new Container(
                     height: 24,
                   ),
-                  Container(
-                    margin: new EdgeInsets.only(left: 16),
-                    child: new Text(
-                      "Added Methods",
-                      style: new TextStyle(
-                        color: Colors.black,
-                        fontFamily: AssetStrings.circulerMedium,
-                        fontSize: 18,
-                      ),
-                      textAlign: TextAlign.left,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ),
+                  dataList?.length > 0
+                      ? Container(
+                          margin: new EdgeInsets.only(left: 16),
+                          child: new Text(
+                            "Added Methods",
+                            style: new TextStyle(
+                              color: Colors.black,
+                              fontFamily: AssetStrings.circulerMedium,
+                              fontSize: 18,
+                            ),
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        )
+                      : Container(),
                   new Container(
                     height: 24,
                   ),
-                  buildItemRecentSearch(
-                      1, "avii****@gmail.com", AssetStrings.addPaypal),
+                  buildContestListSearch(),
                   new Container(
                     height: 6,
                   ),
@@ -172,7 +250,59 @@ class _HomeState extends State<AddPaymentMethodFirst>
               ),
             ),
           ),
+          Container(
+            child: new Center(
+              child: getHalfScreenLoader(
+                status: provider.getLoading(),
+                context: context,
+              ),
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Future<bool> showDeletePaypal(int index, String id) async {
+    return showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Delete Paypal Method?'),
+              content: Text('Do you want to delete this id?'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('NO'),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+                FlatButton(
+                  child: Text('YES'),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                    hitDeleteApi(index, id?.toString());
+                  },
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
+
+  buildContestListSearch() {
+    return Container(
+      color: Colors.white,
+      child: new ListView.builder(
+        padding: new EdgeInsets.all(0.0),
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return buildItemRecentSearch(index, dataList[index]);
+        },
+        itemCount: dataList.length,
       ),
     );
   }
@@ -240,11 +370,9 @@ class _HomeState extends State<AddPaymentMethodFirst>
     );
   }
 
-  Widget buildItemRecentSearch(int type, String data, String icon) {
+  Widget buildItemRecentSearch(int index, Data data) {
     return InkWell(
-      onTap: () {
-        setState(() {});
-      },
+      onTap: () {},
       child: Container(
         color: Colors.white,
         padding:
@@ -261,7 +389,7 @@ class _HomeState extends State<AddPaymentMethodFirst>
                     color: Color.fromRGBO(238, 238, 238, 1),
                     shape: BoxShape.circle),
                 child: new Image.asset(
-                  icon,
+                  AssetStrings.addPaypal,
                   width: 18,
                   height: 18,
                 ),
@@ -272,7 +400,7 @@ class _HomeState extends State<AddPaymentMethodFirst>
               Expanded(
                 child: Container(
                   child: new Text(
-                    data,
+                    data?.paypalId?.toString() ?? "",
                     style: new TextStyle(
                       color: Colors.black,
                       fontFamily: AssetStrings.circulerMedium,
@@ -287,20 +415,25 @@ class _HomeState extends State<AddPaymentMethodFirst>
               new SizedBox(
                 width: 8,
               ),
-              Container(
-                padding:
-                    new EdgeInsets.only(left: 8, right: 8, top: 6, bottom: 6),
-                decoration: new BoxDecoration(
-                    color: Color.fromRGBO(255, 237, 237, 1),
-                    borderRadius: new BorderRadius.circular(2)),
-                child: new Container(
-                  margin: new EdgeInsets.only(left: 6),
-                  child: new Text(
-                    "Remove",
-                    style: new TextStyle(
-                        fontSize: 16,
-                        color: Color.fromRGBO(255, 107, 102, 1),
-                        fontFamily: AssetStrings.circulerMedium),
+              InkWell(
+                onTap: () {
+                  showDeletePaypal(index, data?.id?.toString());
+                },
+                child: Container(
+                  padding:
+                      new EdgeInsets.only(left: 8, right: 8, top: 6, bottom: 6),
+                  decoration: new BoxDecoration(
+                      color: Color.fromRGBO(255, 237, 237, 1),
+                      borderRadius: new BorderRadius.circular(2)),
+                  child: new Container(
+                    margin: new EdgeInsets.only(left: 6),
+                    child: new Text(
+                      "Remove",
+                      style: new TextStyle(
+                          fontSize: 16,
+                          color: Color.fromRGBO(255, 107, 102, 1),
+                          fontFamily: AssetStrings.circulerMedium),
+                    ),
                   ),
                 ),
               )

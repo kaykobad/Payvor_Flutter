@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:payvor/model/forgot_password/forgot_password_request.dart';
+import 'package:payvor/model/forgot_password/forgot_password_response.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/pages/edit_profile/edit_user_profile.dart';
 import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
@@ -107,38 +109,6 @@ class _HomeState extends State<Settings>
         _switchValue = !_switchValue;
 
         setState(() {});
-      }
-    }
-  }
-
-  void deleteAccount() async {
-    provider.setLoading();
-    bool gotInternetConnection = await hasInternetConnection(
-      context: context,
-      mounted: mounted,
-      canShowAlert: true,
-      onFail: () {},
-      onSuccess: () {},
-    );
-
-    if (gotInternetConnection) {
-      var response =
-          await provider.deleteAccount(context, widget?.id?.toString() ?? "");
-
-      provider.hideLoader();
-
-      if (response != null && response is ReportResponse) {
-        await MemoryManagement.clearMemory();
-
-        Navigator.pushAndRemoveUntil(
-          context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
-            return new SplashIntroScreenNew();
-          }),
-          (route) => false,
-        );
-      } else {
-        showInSnackBar("Something went wrong, Please try again later!");
       }
     }
   }
