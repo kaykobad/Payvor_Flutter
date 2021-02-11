@@ -14,6 +14,7 @@ import 'package:payvor/model/update_status/update_status_request.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/rating/rating_bar.dart';
+import 'package:payvor/paypalpayment/webviewpayment.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
@@ -317,9 +318,25 @@ class _HomeState extends State<PayFeebackDetails>
       return;
     }
 
+    if (widget.type == 0) {
+      var getdata = await Navigator.push(
+        context,
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return new WebviewPayment(
+            type: "favour",
+            itemId: widget?.postId?.toString(),
+          );
+        }),
+      );
 
-    updateUserPaymentStatus();
-
+      if (getdata is bool) {
+        if (getdata == true) {
+          updateUserPaymentStatus();
+        }
+      }
+    } else {
+      updateUserPaymentStatus();
+    }
 
     /*  await Future.delayed(Duration(milliseconds: 200));
     showInSnackBar("Favour applied successfully");

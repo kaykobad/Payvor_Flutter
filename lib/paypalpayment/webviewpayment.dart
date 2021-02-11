@@ -1,14 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
+import 'package:payvor/utils/memory_management.dart';
 
 class WebviewPayment extends StatefulWidget {
-  final String gameId;
+  final String type;
+  final String itemId;
 
   WebviewPayment({
-    @required this.gameId,
+    @required this.type,
+    @required this.itemId,
   });
 
   @override
@@ -26,23 +32,19 @@ class _WebviewState extends State<WebviewPayment> {
 
   @override
   void initState() {
-    userId = "10"; //MemoryManagement.getuserId();
+    var infoData = jsonDecode(MemoryManagement.getUserInfo());
+    var userinfo = LoginSignupResponse.fromJson(infoData);
+
+    userId = userinfo?.user?.id?.toString(); //MemoryManagement.getuserId();
     flutterWebviewPlugin.onUrlChanged.listen((state) async {
       print(state);
-      print("aryan ${widget.gameId}");
-      print("aryan $userId");
 
-      if (state == "http://68.183.154.186/api/payment/success") {
+      if (state == "http://167.172.40.120/sucess/53A83586P81192533") {
         Navigator.pop(context);
-        showdialogPayment(
-            "Payment Successful!. Game credentials sent to your registered email.",
-            "Back To Home",
-            Colors.green,
-            AssetStrings.paypal,
-            1);
+        showdialogPayment("Payment Successful!.", "Back To Home", Colors.green,
+            AssetStrings.paypal, 1);
       } else {
-        if (state !=
-            "http://68.183.154.186/api/payment?account_id=${widget.gameId}&user_id=$userId") {
+        if (state == "http://167.172.40.120/cancel/49232927JB9610232") {
           Navigator.pop(context);
           showdialogPayment("Payment Failed!", "Try Again ", Colors.red,
               AssetStrings.paypal, 0);
@@ -60,8 +62,7 @@ class _WebviewState extends State<WebviewPayment> {
 
       }*/
 
-  void showdialogPayment(
-      String text, String buttonText, Color colorMsg, String image, int type) {
+  void showdialogPayment(String text, String buttonText, Color colorMsg, String image, int type) {
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -73,60 +74,64 @@ class _WebviewState extends State<WebviewPayment> {
                   borderRadius: BorderRadius.circular(8.0)), //this right here
               child: SingleChildScrollView(
                   child: Padding(
-                padding: new EdgeInsets.only(left: 20.0, right: 20.0),
-                child: new Stack(
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    padding: new EdgeInsets.only(left: 20.0, right: 20.0),
+                    child: new Stack(
                       children: <Widget>[
-                        new SizedBox(
-                          height: 30.0,
-                        ),
-                        new Image.asset(
-                          image,
-                          width: 60.0,
-                          height: 60.0,
-                          fit: BoxFit.fill,
-                        ),
-                        new SizedBox(
-                          height: 20.0,
-                        ),
-                        new Text(
-                          text,
-                          style: new TextStyle(color: colorMsg, fontSize: 25.0),
-                        ),
-                        new SizedBox(
-                          height: 20.0,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: new Container(
-                            height: 45.0,
-                            margin:
-                                new EdgeInsets.only(left: 32.0, right: 32.0),
-                            alignment: Alignment.center,
-                            decoration: new BoxDecoration(
-                                borderRadius: new BorderRadius.circular(25.0),
-                                color: AppColors.colorCyanPrimary),
-                            child: new Text(
-                              buttonText,
-                              style: new TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            new SizedBox(
+                              height: 30.0,
                             ),
-                          ),
-                        ),
-                        new SizedBox(
-                          height: 22.0,
+                            new Image.asset(
+                              image,
+                              width: 60.0,
+                              height: 60.0,
+                              fit: BoxFit.fill,
+                            ),
+                            new SizedBox(
+                              height: 20.0,
+                            ),
+                            new Text(
+                              text,
+                              style: new TextStyle(color: colorMsg, fontSize: 25.0),
+                            ),
+                            new SizedBox(
+                              height: 20.0,
+                            ),
+                            InkWell(
+                              onTap: () {
+                            if (type == 1) {
+                              Navigator.of(context).pop(true);
+                            } else {
+                              Navigator.of(context).pop(false);
+                            }
+                          },
+                              child: new Container(
+                                height: 45.0,
+                                margin:
+                                new EdgeInsets.only(left: 32.0, right: 32.0),
+                                alignment: Alignment.center,
+                                decoration: new BoxDecoration(
+                                    borderRadius: new BorderRadius.circular(25.0),
+                                    color: AppColors.colorCyanPrimary),
+                                child: new Text(
+                                  buttonText,
+                                  style: new TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            new SizedBox(
+                              height: 22.0,
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              )),
+                  )),
             ),
           );
         });
@@ -134,8 +139,11 @@ class _WebviewState extends State<WebviewPayment> {
 
   @override
   Widget build(BuildContext context) {
+    http: //167.172.40.120/make-payment/{type}/{user_id}/{item_id}
+    //  var url = "http://68.183.154.186/api/payment?account_id=${widget.gameId}&user_id=$userId";
+
     var url =
-        "http://68.183.154.186/api/payment?account_id=${widget.gameId}&user_id=$userId";
+        "http://167.172.40.120/make-payment/${widget.type}/$userId/${widget.itemId}";
     print("payment url $url");
     return new WebviewScaffold(
         withJavascript: true,

@@ -202,7 +202,6 @@ class _LoginScreenState extends State<OtoVerification> {
 
         Navigator.pop(context);
         Navigator.pop(context);
-        Navigator.pop(context);
       } else {
         MemoryManagement.setAccessToken(accessToken: response?.data);
         Navigator.push(

@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/promotion/promotion_response.dart';
+import 'package:payvor/paypalpayment/webviewpayment.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
@@ -163,7 +165,7 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
             new Container(
               alignment: Alignment.center,
               child: new Text(
-                  "€ ${payment?.price ?? "0"}",
+                "€ ${payment?.price ?? "0"}",
                 style: new TextStyle(
                     fontFamily: AssetStrings.circulerMedium,
                     fontSize: 20,
@@ -189,32 +191,32 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
             ),
             payment?.isSelect ?? false
                 ? Wrap(
-                    children: [
-                      new Container(
+              children: [
+                new Container(
 
-                        alignment: Alignment.center,
-                        decoration: new BoxDecoration(
-                            color: Color.fromRGBO(255, 107, 102, 1),
-                            borderRadius: new BorderRadius.circular(15.0)),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left:10.0,right: 10,top: 5,bottom: 5),
-                          child: new Text(
-                            payment?.type?.toUpperCase() ?? "",
-                            style: new TextStyle(
-                                fontFamily: AssetStrings.circulerNormal,
-                                fontSize: 11,
-                                color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ],
-                )
-                : new Container(
-                    margin: new EdgeInsets.only(
-                      top: 9,
+                  alignment: Alignment.center,
+                  decoration: new BoxDecoration(
+                      color: Color.fromRGBO(255, 107, 102, 1),
+                      borderRadius: new BorderRadius.circular(15.0)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left:10.0,right: 10,top: 5,bottom: 5),
+                    child: new Text(
+                      payment?.type?.toUpperCase() ?? "",
+                      style: new TextStyle(
+                          fontFamily: AssetStrings.circulerNormal,
+                          fontSize: 11,
+                          color: Colors.white),
                     ),
-                    width: 83,
-                    height: 30)
+                  ),
+                ),
+              ],
+            )
+                : new Container(
+                margin: new EdgeInsets.only(
+                  top: 9,
+                ),
+                width: 83,
+                height: 30)
           ],
         ),
       ),
@@ -222,8 +224,39 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
   }
 
   Future<bool> callback() async {
-    Navigator.pop(context);
-    widget.voidcallback(1);
+    var isSelect = false;
+    var itemId = "";
+
+    for (var data in list) {
+      if (data?.isSelect != null && data?.isSelect) {
+        isSelect = true;
+        itemId = data?.id?.toString();
+        break;
+      }
+    }
+
+    if (!isSelect) {
+      showInSnackBar("Please select a option");
+
+      return false;
+    }
+
+    var getdata = await Navigator.push(
+      context,
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return new WebviewPayment(
+          type: "promotion",
+          itemId: itemId,
+        );
+      }),
+    );
+
+    if (getdata is bool) {
+      if (getData != null && getdata == true) {
+        Navigator.pop(context);
+        widget.voidcallback(1);
+      }
+    }
   }
 
   void showInSnackBar(String value) {

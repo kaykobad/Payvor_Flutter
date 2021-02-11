@@ -859,7 +859,7 @@ class _HomeState extends State<PostFavorDetails>
 
   Future<ValueSetter> voidCallBacks(int type) async {
     if (type == 1) {
-      showPaymentDialog();
+    //  showPaymentDialog();
     } else {
       showBottomSuccessPayment(
           "Successful!",

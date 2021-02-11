@@ -14,8 +14,11 @@ import 'package:payvor/model/update_firebase_token/update_token_request.dart';
 import 'package:payvor/pages/dummy.dart';
 import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/pages/my_profile/my_profile.dart';
+import 'package:payvor/pages/pay_feedback/pay_feedback_common.dart';
+import 'package:payvor/pages/pay_feedback/pay_give_feedback.dart';
 import 'package:payvor/pages/post/post_home.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
+import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/search_home.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
@@ -238,6 +241,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
         String payload = message['data']['type'];
 
+        //  moveToScreen(int.tryParse(payload),"1","2");
+
         // moveToScreenFromPush(int.tryParse(payload)); //w
 //        }
       },
@@ -248,13 +253,17 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
         String payload = message['data']['type'];
 
-        // moveToScreenFromPush(int.tryParse(payload)); //w
+        //   moveToScreen(int.tryParse(payload),"1","2");
+
 //        }
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("config Notification onLaunch");
         print("onLaunch $message");
         int type = int.tryParse(message["data"]["type"]);
+
+        //  moveToScreen(int.tryParse(type),"1","2");
+
         //   moveToScreenFromPush(type);
       },
     );
@@ -273,6 +282,35 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         // updateTokenToFirebase(token); //save to firebase
       }
     });
+  }
+
+  void moveToScreen(int type, String favid, String userid) {
+    if (type == 1) {
+      //"hire to u
+      _firebaseProvider?.changeScreen(new PayFeebackDetailsCommon(
+        postId: favid,
+        userId: userid,
+        type: 1,
+        status: 1,
+        voidcallback: null,
+        lauchCallBack: null,
+      ));
+    } else if (type == 2) {
+      // hire and paid favor
+
+      _firebaseProvider?.changeScreen(new PayFeebackDetails(
+        postId: favid,
+        userId: userid,
+        type: 1,
+        voidcallback: null,
+        lauchCallBack: null,
+      ));
+    } else {
+      // for apploed and refered favor( type 3,4 etc)
+      _firebaseProvider?.changeScreen(new PostFavorDetails(
+        id: favid.toString(),
+      ));
+    }
   }
 
   void setDeviceToken(String token) async {

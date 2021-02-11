@@ -10,6 +10,7 @@ import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/pages/add_payment_method/add_payment_method.dart';
 import 'package:payvor/pages/edit_profile/edit_user_profile.dart';
 import 'package:payvor/pages/forgot_password/forgot_password.dart';
+import 'package:payvor/pages/otp/enter_otp.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
@@ -55,6 +56,10 @@ class _HomeState extends State<VerifyProfile>
 
   String emailVerify = "0";
 
+  bool fromRegister = false;
+
+  var email = "";
+
   bool _switchValue = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -71,7 +76,14 @@ class _HomeState extends State<VerifyProfile>
 
     var infoData = jsonDecode(MemoryManagement.getUserInfo());
     var userinfo = LoginSignupResponse.fromJson(infoData);
+
     emailVerify = userinfo?.user?.is_email_verified?.toString() ?? "0";
+
+    if (userinfo?.user?.type == "Re" && userinfo?.user?.email?.isNotEmpty) {
+      email = userinfo?.user?.email ?? "";
+
+      fromRegister = true;
+    }
   }
 
   Widget getAppBarNew(BuildContext context) {
@@ -153,11 +165,15 @@ class _HomeState extends State<VerifyProfile>
                   ),
                   buildItemRecentSearch(
                       1, "Phone Number", AssetStrings.settingEdit),
-                  new Container(
-                    height: 6,
-                  ),
-                  buildItemRecentSearch(
-                      2, "Email Address", AssetStrings.settingNoti),
+                  fromRegister
+                      ? new Container(
+                          height: 6,
+                        )
+                      : Container(),
+                  fromRegister
+                      ? buildItemRecentSearch(
+                          2, "Email Address", AssetStrings.settingNoti)
+                      : Container(),
                   new Container(
                     height: 6,
                   ),
@@ -194,7 +210,11 @@ class _HomeState extends State<VerifyProfile>
           Navigator.push(
             context,
             new CupertinoPageRoute(builder: (BuildContext context) {
-              return new ForgotPassword(type: 2);
+              return new OtoVerification(
+                type: 2,
+                phoneNumber: email,
+                countryCode: "",
+              );
             }),
           );
           //  verify user email;
