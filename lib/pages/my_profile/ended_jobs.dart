@@ -187,14 +187,18 @@ class _HomeState extends State<MyEndedJobs>
                         AssetStrings.nopostnojob,
                       ),
                     ),*/
-                    Container(
-                      margin: new EdgeInsets.only(top: 42),
-                      child: new Text(
-                        "No Jobs Found",
-                        style: new TextStyle(
-                            color: Colors.black,
-                            fontFamily: AssetStrings.circulerMedium,
-                            fontSize: 17.0),
+                    InkWell(
+                      onTap: () {
+                        //  providerFirebase.changeScreen(Material(child: new MyProfileDetails(type: 2,postId: "68",)));
+                      },
+                      child: Container(
+                        child: new Text(
+                          "No Jobs Found",
+                          style: new TextStyle(
+                              color: Colors.black,
+                              fontFamily: AssetStrings.circulerMedium,
+                              fontSize: 17.0),
+                        ),
                       ),
                     ),
                     /* Container(
@@ -308,7 +312,11 @@ class _HomeState extends State<MyEndedJobs>
   Widget buildItemNew(Data data) {
     return InkWell(
       onTap: () {
-        providerFirebase.changeScreen(Material(child: new MyProfileDetails()));
+        providerFirebase.changeScreen(Material(
+            child: new MyProfileDetails(
+          type: 2,
+          postId: data?.id?.toString(),
+        )));
       },
       child: Container(
         color: Colors.white,

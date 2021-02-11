@@ -192,7 +192,6 @@ class _HomeState extends State<MyEndedFavor>
                       ),
                     ),*/
                     Container(
-                      margin: new EdgeInsets.only(top: 42),
                       child: new Text(
                         "No Favors Found",
                         style: new TextStyle(
@@ -312,7 +311,11 @@ class _HomeState extends State<MyEndedFavor>
   Widget buildItemNew(Data data) {
     return InkWell(
       onTap: () {
-        providerFirebase.changeScreen(Material(child: new MyProfileDetails()));
+        providerFirebase.changeScreen(Material(
+            child: new MyProfileDetails(
+          postId: data?.id?.toString(),
+          type: 1,
+        )));
       },
       child: Container(
         color: Colors.white,

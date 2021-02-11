@@ -14,6 +14,7 @@ import 'package:payvor/model/add_paypal/get_paypal_data.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/applied_user/favour_applied_user.dart';
 import 'package:payvor/model/common_response/common_success_response.dart';
+import 'package:payvor/model/common_response/favour_end_job_response.dart';
 import 'package:payvor/model/create_payvor/create_payvor_response.dart';
 import 'package:payvor/model/create_payvor/payvorcreate.dart';
 import 'package:payvor/model/favour_details_response/favour_details_response.dart';
@@ -623,6 +624,27 @@ class AuthProvider with ChangeNotifier {
       HiredUserDetailsResponse resendOtpResponse =
           new HiredUserDetailsResponse.fromJson(response);
       completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> getFavorPostDetailsProfile(
+      BuildContext context, String id) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response =
+        await APIHandler.get(context: context, url: APIs.favoeDetails + id);
+
+    print(APIs.favoeDetails + id);
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      EndedJobFavourResponse favourDetailsResponse =
+          new EndedJobFavourResponse.fromJson(response);
+      print("detail_response ${favourDetailsResponse.toJson()}");
+      completer.complete(favourDetailsResponse);
       notifyListeners();
       return completer.future;
     }

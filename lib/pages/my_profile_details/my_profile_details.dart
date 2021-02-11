@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/common_response/favour_end_job_response.dart';
 import 'package:payvor/model/hired_user_response_details/hired_user_response-details.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
@@ -19,16 +20,11 @@ import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class MyProfileDetails extends StatefulWidget {
-  final ValueChanged<Widget> lauchCallBack;
-  final String userId;
   final String postId;
   final int type;
   final ValueSetter<int> voidcallback;
 
-  MyProfileDetails(
-      {@required this.lauchCallBack,
-      this.userId,
-      this.postId,
+  MyProfileDetails({this.postId,
       this.type,
       this.voidcallback});
 
@@ -62,7 +58,7 @@ class _HomeState extends State<MyProfileDetails>
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
   FocusNode _DescriptionField = new FocusNode();
 
-  HiredUserDetailsResponse hiredUserDetailsResponse;
+  EndedJobFavourResponse hiredUserDetailsResponse;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
@@ -74,15 +70,9 @@ class _HomeState extends State<MyProfileDetails>
 
   @override
   void initState() {
-/*
-
-    var infoData = jsonDecode(MemoryManagement.getUserInfo());
-    var userinfo = LoginSignupResponse.fromJson(infoData);
-    ids = userinfo?.user?.id.toString() ?? "";
-*/
 
     Future.delayed(const Duration(milliseconds: 300), () {
-      //  hitApi();
+      hitApi();
     });
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
@@ -110,27 +100,15 @@ class _HomeState extends State<MyProfileDetails>
       return;
     }
 
-    var response = await provider.getHiredFavorDetails(
+    var response = await provider.getFavorPostDetailsProfile(
         context, widget?.postId?.toString());
 
-    if (response is HiredUserDetailsResponse) {
+    if (response is EndedJobFavourResponse) {
       provider.hideLoader();
 
       if (response != null && response.data != null) {
         hiredUserDetailsResponse = response;
-
-        var userid = hiredUserDetailsResponse?.data?.userId.toString();
-
-        if (userid == ids) {
-          isCurrentUser = true;
-        }
-
-        print("user $userid");
-        print("usermain $ids");
       }
-
-      print(response);
-      try {} catch (ex) {}
     } else {
       provider.hideLoader();
       APIError apiError = response;
@@ -179,7 +157,7 @@ class _HomeState extends State<MyProfileDetails>
       return DateFormat('dd MMM yyyy').format(dateTime);
     } catch (e) {
       print("date error ${e.toString()}");
-      return "02 jan 2020";
+      return "";
     }
   }
 
@@ -237,35 +215,7 @@ class _HomeState extends State<MyProfileDetails>
     );
   }
 
-  Widget getRowsPayment(String firstText, String amount, double tops) {
-    return new Container(
-      color: Colors.white,
-      padding: new EdgeInsets.only(left: 16, right: 16, top: tops),
-      child: new Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          new Text(
-            firstText,
-            style: new TextStyle(
-                fontFamily: AssetStrings.circulerNormal,
-                color: AppColors.moreText,
-                fontSize: 14),
-            textAlign: TextAlign.center,
-          ),
-          new Text(
-            amount,
-            style: new TextStyle(
-                fontFamily: AssetStrings.circulerNormal,
-                color: Colors.black,
-                fontSize: 14),
-            textAlign: TextAlign.center,
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget buildItem() {
+  Widget buildItem(int type, Rating data) {
     return Container(
       margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 12),
       child: Row(
@@ -280,7 +230,11 @@ class _HomeState extends State<MyProfileDetails>
             ),
             child: new ClipOval(
               child: getCachedNetworkImageWithurl(
-                  url: "", fit: BoxFit.cover, size: 32),
+                  url: type == 1
+                      ? hiredUserDetailsResponse?.data?.user?.profilePic ?? ""
+                      : "",
+                  fit: BoxFit.cover,
+                  size: 32),
             ),
           ),
           Expanded(
@@ -290,12 +244,14 @@ class _HomeState extends State<MyProfileDetails>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   new Text(
-                    "avinash",
+                    type == 1
+                        ? hiredUserDetailsResponse?.data?.user?.name ?? ""
+                        : "",
                     style: TextThemes.blackCirculerMedium,
                   ),
                   Container(
                       child: new Text(
-                    formatDateString("Post"),
+                        type == 1 ? "Post Owner" : "Favor Helper",
                     style: TextThemes.lightGrey,
                   )),
                 ],
@@ -319,7 +275,7 @@ class _HomeState extends State<MyProfileDetails>
                   Container(
                     margin: new EdgeInsets.only(top: 1.2),
                     child: new Text(
-                      "4",
+                      data?.rating?.toString() ?? "0",
                       style: TextThemes.blackPreview,
                     ),
                   ),
@@ -330,18 +286,18 @@ class _HomeState extends State<MyProfileDetails>
     );
   }
 
-  Widget buildItemMain(int pos) {
+  Widget buildItemMain(int type, Rating data) {
     return Container(
       color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          buildItem(),
+          buildItem(type, data),
           Container(
             margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 12.0),
             child: ReadMoreText(
-              "jidfogjopdjpogjsdjgpojogjodsjgopjdsopgjdsgldnlknskbnkldsnblkndlkbnldknblkndklnkldnglndklgnkldsnklnsdgklndlkgnldsngklndsklgndlsngodsnlsdnondlnlsdng",
+              data?.description ?? "",
               trimLines: 8,
               colorClickableText: AppColors.colorDarkCyan,
               trimMode: TrimMode.Line,
@@ -371,15 +327,18 @@ class _HomeState extends State<MyProfileDetails>
     );
   }
 
+/*
   _buildContestList() {
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: () async {
-        /*  isPullToRefresh = true;
+        */
+/*  isPullToRefresh = true;
         _loadMore = false;
         currentPage = 1;
 
-        await hitSearchApi(title);*/
+        await hitSearchApi(title);*/ /*
+
       },
       child: Container(
         color: Colors.white,
@@ -396,6 +355,7 @@ class _HomeState extends State<MyProfileDetails>
       ),
     );
   }
+*/
 
   @override
   Widget build(BuildContext context) {
@@ -411,7 +371,7 @@ class _HomeState extends State<MyProfileDetails>
           new Container(
             color: AppColors.whiteGray,
             height: screenSize.height,
-            child: hiredUserDetailsResponse == null
+            child: hiredUserDetailsResponse != null
                 ? SingleChildScrollView(
                     child: new Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -434,9 +394,9 @@ class _HomeState extends State<MyProfileDetails>
                                     width: 96.0,
                                     child: ClipOval(
                                       child: getCachedNetworkImageWithurl(
-                                        url: hiredUserDetailsResponse?.data
-                                                ?.postedbyuser?.profilePic ??
-                                            "aviiii",
+                                        url: hiredUserDetailsResponse
+                                                ?.data?.user?.profilePic ??
+                                            "",
                                         size: 96,
                                         fit: BoxFit.cover,
                                       ),
@@ -447,9 +407,7 @@ class _HomeState extends State<MyProfileDetails>
                                     width: 96.0,
                                     child: ClipOval(
                                       child: getCachedNetworkImageWithurl(
-                                        url: hiredUserDetailsResponse
-                                                ?.data?.hiredUser?.profilePic ??
-                                            "",
+                                        url: "",
                                         size: 96,
                                         fit: BoxFit.cover,
                                       ),
@@ -554,8 +512,19 @@ class _HomeState extends State<MyProfileDetails>
                             ),
                           ),
                         ),
-                        buildItemRating(2, formatDateString("02 jan 2021")),
-                        _buildContestList(),
+                        buildItemRating(
+                            2,
+                            formatDateString(hiredUserDetailsResponse
+                                ?.data?.hireDate
+                                ?.toString())),
+                        hiredUserDetailsResponse?.data?.postUserRat != null
+                            ? buildItemMain(
+                                1, hiredUserDetailsResponse?.data?.postUserRat)
+                            : Container(),
+                        hiredUserDetailsResponse?.data?.jobUserRat != null
+                            ? buildItemMain(
+                                2, hiredUserDetailsResponse?.data?.jobUserRat)
+                            : Container(),
                         new SizedBox(
                           height: 50.0,
                         ),
