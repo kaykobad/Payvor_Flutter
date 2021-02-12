@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:payvor/model/forgot_password/forgot_password_request.dart';
-import 'package:payvor/model/forgot_password/forgot_password_response.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/pages/edit_profile/edit_user_profile.dart';
 import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
@@ -18,6 +16,7 @@ import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
@@ -170,8 +169,7 @@ class _HomeState extends State<Settings>
         ));
   }
 
-  _launchURL() async {
-    const url = 'https://flutter.dev';
+  _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -264,9 +262,9 @@ class _HomeState extends State<Settings>
         if (type == 1) {
           firebaseProvider.changeScreen(Material(child: new EditProfile()));
         } else if (type == 3) {
-          _launchURL();
+          _launchURL(Constants.TermOfUses);
         } else if (type == 4) {
-          _launchURL();
+          _launchURL(Constants.privacyPolicy);
         } else if (type == 7) {
           AppReview.writeReview.then((onValue) {
             setState(() {
