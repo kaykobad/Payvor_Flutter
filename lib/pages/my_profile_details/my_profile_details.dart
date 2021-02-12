@@ -8,7 +8,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/common_response/favour_end_job_response.dart';
-import 'package:payvor/model/hired_user_response_details/hired_user_response-details.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/provider/auth_provider.dart';
@@ -232,7 +231,8 @@ class _HomeState extends State<MyProfileDetails>
               child: getCachedNetworkImageWithurl(
                   url: type == 1
                       ? hiredUserDetailsResponse?.data?.user?.profilePic ?? ""
-                      : "",
+                      : hiredUserDetailsResponse?.data?.hiredUser?.profilePic ??
+                          "",
                   fit: BoxFit.cover,
                   size: 32),
             ),
@@ -246,7 +246,7 @@ class _HomeState extends State<MyProfileDetails>
                   new Text(
                     type == 1
                         ? hiredUserDetailsResponse?.data?.user?.name ?? ""
-                        : "",
+                        : hiredUserDetailsResponse?.data?.hiredUser?.name ?? "",
                     style: TextThemes.blackCirculerMedium,
                   ),
                   Container(
@@ -407,7 +407,9 @@ class _HomeState extends State<MyProfileDetails>
                                     width: 96.0,
                                     child: ClipOval(
                                       child: getCachedNetworkImageWithurl(
-                                        url: "",
+                                        url: hiredUserDetailsResponse
+                                                ?.data?.hiredUser?.profilePic ??
+                                            "",
                                         size: 96,
                                         fit: BoxFit.cover,
                                       ),
