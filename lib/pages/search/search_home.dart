@@ -140,7 +140,7 @@ class HomeState extends State<SearchCompany>
                       child: Row(
                         children: [
                           new Text(
-                            data.user.name,
+                            data?.user?.name ?? "",
                             style: TextThemes.blackCirculerMedium,
                           ),
                           new SizedBox(

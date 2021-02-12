@@ -213,14 +213,19 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
             )
                 : new Container(
                 margin: new EdgeInsets.only(
-                  top: 9,
-                ),
-                width: 83,
-                height: 30)
+                      top: 9,
+                    ),
+                    width: 83,
+                    height: 30)
           ],
         ),
       ),
     );
+  }
+
+  Future<bool> callbackSuccessFailed() async {
+    Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   Future<bool> callback() async {
@@ -251,12 +256,92 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
       }),
     );
 
+    print(getdata);
+
     if (getdata is bool) {
       if (getData != null && getdata == true) {
-        Navigator.pop(context);
-        widget.voidcallback(1);
+        showBottomSheet("Successful!", "Payment Successful!.", 1);
+        /*Navigator.pop(context);
+        widget.voidcallback(1);*/
+      } else {
+        showBottomSheet("Failed!", "Payment Failed!.", 0);
       }
     }
+  }
+
+  void showBottomSheet(String text, String desc, int type) {
+    showModalBottomSheet<void>(
+        isScrollControlled: true,
+        context: context,
+        isDismissible: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
+        ),
+        builder: (BuildContext bc) {
+          return Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Container(
+                  child: new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 86.0,
+                    height: 86.0,
+                    margin: new EdgeInsets.only(top: 38),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: type == 1
+                          ? Color.fromRGBO(37, 26, 101, 1)
+                          : Color.fromRGBO(255, 107, 102, 1.0),
+                      shape: BoxShape.circle,
+                    ),
+                    child: type == 1
+                        ? new SvgPicture.asset(
+                            AssetStrings.check,
+                            width: 42.0,
+                            height: 42.0,
+                            color: Colors.white,
+                          )
+                        : new SvgPicture.asset(
+                            AssetStrings.cross,
+                            width: 42.0,
+                            height: 42.0,
+                            color: Colors.white,
+                          ),
+                  ),
+                  new Container(
+                    margin: new EdgeInsets.only(top: 40),
+                    child: new Text(
+                      text,
+                      style: new TextStyle(
+                          fontFamily: AssetStrings.circulerMedium,
+                          fontSize: 20,
+                          color: Colors.black),
+                    ),
+                  ),
+                  new Container(
+                    margin: new EdgeInsets.only(top: 10),
+                    child: new Text(
+                      desc,
+                      style: new TextStyle(
+                        fontFamily: AssetStrings.circulerNormal,
+                        fontSize: 16,
+                        color: Color.fromRGBO(114, 117, 112, 1),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: new EdgeInsets.only(top: 60, left: 16, right: 16),
+                    child: getSetupButtonNew(callbackSuccessFailed, "Ok", 0,
+                        newColor: AppColors.colorDarkCyan),
+                  ),
+                  Container(
+                    height: 56,
+                  )
+                ],
+              )));
+        });
   }
 
   void showInSnackBar(String value) {

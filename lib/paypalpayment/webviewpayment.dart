@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/utils/AppColors.dart';
-import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/memory_management.dart';
 
 class WebviewPayment extends StatefulWidget {
@@ -39,15 +38,24 @@ class _WebviewState extends State<WebviewPayment> {
     flutterWebviewPlugin.onUrlChanged.listen((state) async {
       print(state);
 
+      /* showdialogPayment("Payment Successful!.", "Back To Home", Colors.green,
+          AssetStrings.paypal, 1);*/
+      //  showBottomSheet("Failed!","Payment Failed!.",0);
+
       if (state.contains("http://167.172.40.120/sucess")) {
-        Navigator.pop(context);
-        showdialogPayment("Payment Successful!.", "Back To Home", Colors.green,
-            AssetStrings.paypal, 1);
+        print("success");
+
+        Navigator.of(context).pop(true);
+
+        //  showBottomSheet("Successful!","Payment Successful!.",1);
+        /*showdialogPayment("Payment Successful!.", "Back To Home", Colors.green,
+            AssetStrings.paypal, 1);*/
       } else {
         if (state.contains("http://167.172.40.120/cancel")) {
-          Navigator.pop(context);
-          showdialogPayment("Payment Failed!", "Try Again ", Colors.red,
-              AssetStrings.paypal, 0);
+          print("failed");
+
+          Navigator.of(context).pop(false);
+          //  showBottomSheet("Failed!","Payment Failed!.",0);
         }
       }
     });
@@ -62,7 +70,12 @@ class _WebviewState extends State<WebviewPayment> {
 
       }*/
 
-  void showdialogPayment(String text, String buttonText, Color colorMsg, String image, int type) {
+  void callback() async {
+    Navigator.pop(context);
+  }
+
+  void showdialogPayment(
+      String text, String buttonText, Color colorMsg, String image, int type) {
     showDialog(
         barrierDismissible: false,
         context: context,
