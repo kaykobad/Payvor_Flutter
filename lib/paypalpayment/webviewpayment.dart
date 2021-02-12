@@ -39,12 +39,12 @@ class _WebviewState extends State<WebviewPayment> {
     flutterWebviewPlugin.onUrlChanged.listen((state) async {
       print(state);
 
-      if (state == "http://167.172.40.120/sucess/53A83586P81192533") {
+      if (state.contains("http://167.172.40.120/sucess")) {
         Navigator.pop(context);
         showdialogPayment("Payment Successful!.", "Back To Home", Colors.green,
             AssetStrings.paypal, 1);
       } else {
-        if (state == "http://167.172.40.120/cancel/49232927JB9610232") {
+        if (state.contains("http://167.172.40.120/cancel")) {
           Navigator.pop(context);
           showdialogPayment("Payment Failed!", "Try Again ", Colors.red,
               AssetStrings.paypal, 0);
