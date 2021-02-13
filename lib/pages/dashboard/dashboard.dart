@@ -230,9 +230,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       onMessage: (Map<String, dynamic> message) async {
         print("config Notification onMessage");
         print("onMessage $message");
-        String body = message['notification']['body']?.toString();
-        String title = message['notification']['title']?.toString();
-        showNotification(title, body, message);
+        String type = message['data']['type'];
+        String favid = message['data']['fav_id'];
+        String userid = message['data']['user_id'];
+
+        moveToScreen(int.tryParse(type), favid, userid);
+
+        //  showNotification(title, body, message);
       },
       onReceive: (Map<String, dynamic> message) async {
         print("config Notification onReceive");
@@ -241,30 +245,26 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
         String payload = message['data']['type'];
 
-        //  moveToScreen(int.tryParse(payload),"1","2");
-
-        // moveToScreenFromPush(int.tryParse(payload)); //w
-//        }
       },
       onResume: (Map<String, dynamic> message) async {
         print("config Notification onResume");
         //  print("onResume: ${message}");
         print("onResume: ${message['data']['type']}");
 
-        String payload = message['data']['type'];
+        String type = message['data']['type'];
+        String favid = message['data']['fav_id'];
+        String userid = message['data']['user_id'];
 
-        //   moveToScreen(int.tryParse(payload),"1","2");
-
-//        }
+        moveToScreen(int.tryParse(type), favid, userid);
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("config Notification onLaunch");
         print("onLaunch $message");
-        int type = int.tryParse(message["data"]["type"]);
+        String type = message['data']['type'];
+        String favid = message['data']['fav_id'];
+        String userid = message['data']['user_id'];
 
-        //  moveToScreen(int.tryParse(type),"1","2");
-
-        //   moveToScreenFromPush(type);
+        moveToScreen(int.tryParse(type), favid, userid);
       },
     );
 
