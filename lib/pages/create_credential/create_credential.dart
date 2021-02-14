@@ -56,8 +56,11 @@ class _LoginScreenState extends State<CreateCredential> {
 
     var emails = MemoryManagement.getUserEmail();
     var names = MemoryManagement.getuserName();
-    name = names ?? "";
-    email = emails ?? "";
+
+    var infoData = jsonDecode(MemoryManagement.getUserInfo());
+    var userinfo = LoginSignupResponse.fromJson(infoData);
+    name = userinfo?.user?.name ?? "";
+    email = userinfo?.user?.email ?? "";
     super.initState();
   }
 
