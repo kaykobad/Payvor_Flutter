@@ -258,8 +258,7 @@ Widget getCachedNetworkImageWithurl(
   return new CachedNetworkImage(
     width: size,
     height: size,
-    imageUrl: "$url",
-    matchTextDirection: true,
+    imageUrl: url,
     fit: fit != null ? fit : BoxFit.cover,
     placeholder: (context, String val) {
       return new Center(

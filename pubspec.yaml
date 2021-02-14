@@ -44,6 +44,7 @@ dev_dependencies:
   country_pickers: ^1.1.0
   pin_view: ^1.0.1
   lottie: ^0.6.0
+  visibility_detector: ^0.1.5
   flutter_facebook_login: ^3.0.0
   twitter_login: ^2.1.0
   flutter_webview_plugin: ^0.3.11
