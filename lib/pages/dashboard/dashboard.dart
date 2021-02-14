@@ -230,7 +230,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       onMessage: (Map<String, dynamic> message) async {
         print("config Notification onMessage");
         print("onMessage $message");
-        String type = message['data']['type'];
+        var type = message['data']['type'];
         String favid = message['data']['fav_id'];
         String userid = message['data']['user_id'];
 
@@ -249,9 +249,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       onResume: (Map<String, dynamic> message) async {
         print("config Notification onResume");
         //  print("onResume: ${message}");
+        print("onResume $message");
         print("onResume: ${message['data']['type']}");
 
-        String type = message['data']['type'];
+        var type = message['data']['type'];
         String favid = message['data']['fav_id'];
         String userid = message['data']['user_id'];
 
@@ -260,7 +261,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       onLaunch: (Map<String, dynamic> message) async {
         print("config Notification onLaunch");
         print("onLaunch $message");
-        String type = message['data']['type'];
+        var type = message['data']['type'];
         String favid = message['data']['fav_id'];
         String userid = message['data']['user_id'];
 

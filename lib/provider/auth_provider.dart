@@ -1039,6 +1039,8 @@ class AuthProvider with ChangeNotifier {
 
   Future<dynamic> userProfileDetails(
       BuildContext context, int page, String userID) async {
+    print("user id$userID");
+    print(APIs.userProfileDetails);
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.get(
         context: context, url: APIs.userProfileDetails + userID);

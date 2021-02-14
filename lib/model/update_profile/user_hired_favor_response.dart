@@ -125,6 +125,7 @@ class DataUserFavour {
   int isDeleted;
   int hiredUserId;
   int status;
+  num perc;
   String title;
   String price;
   String description;
@@ -135,21 +136,23 @@ class DataUserFavour {
   String createdAt;
   String updatedAt;
 
-  DataUserFavour({this.id,
-    this.userId,
-    this.isActive,
-    this.isDeleted,
-    this.hiredUserId,
-    this.status,
-    this.title,
-    this.price,
-    this.description,
-    this.lat,
-    this.long,
-    this.location,
-    this.image,
-    this.createdAt,
-    this.updatedAt});
+  DataUserFavour(
+      {this.id,
+      this.userId,
+      this.isActive,
+      this.isDeleted,
+      this.hiredUserId,
+      this.status,
+      this.title,
+      this.price,
+      this.perc,
+      this.description,
+      this.lat,
+      this.long,
+      this.location,
+      this.image,
+      this.createdAt,
+      this.updatedAt});
 
   DataUserFavour.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -160,6 +163,7 @@ class DataUserFavour {
     status = json['status'];
     title = json['title'];
     price = json['price'];
+    perc = json['perc'];
     description = json['description'];
     lat = json['lat'];
     long = json['long'];
@@ -179,6 +183,7 @@ class DataUserFavour {
     data['status'] = this.status;
     data['title'] = this.title;
     data['price'] = this.price;
+    data['perc'] = this.perc;
     data['description'] = this.description;
     data['lat'] = this.lat;
     data['long'] = this.long;

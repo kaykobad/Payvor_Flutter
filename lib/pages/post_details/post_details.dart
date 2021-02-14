@@ -839,13 +839,15 @@ class _HomeState extends State<PostFavorDetails>
                 ],
               ),
             ),
-            Align(
-                alignment: Alignment.center,
-                child: Container(
-                  child: Image.asset(AssetStrings.verify),
-                  width: 21,
-                  height: 21,
-                )),
+            favoriteResponse?.data?.perc == 100
+                ? Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      child: Image.asset(AssetStrings.verify),
+                      width: 21,
+                      height: 21,
+                    ))
+                : Container(),
           ],
         ),
       ),

@@ -265,7 +265,7 @@ class _HomeState extends State<MyEndedFavor>
                         new SizedBox(
                           width: 8,
                         ),
-                        data?.isActive == 1
+                        data?.perc == 100
                             ? new Image.asset(
                                 AssetStrings.verify,
                                 width: 16,

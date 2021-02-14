@@ -363,7 +363,7 @@ class _HomeState extends State<MyProfile>
                               new SizedBox(
                                 width: 2,
                               ),
-                              userResponse?.user?.isActive == 1
+                              userResponse?.user?.perc == 100
                                   ? Container(
                                       child: Image.asset(AssetStrings.verify),
                                       width: 20,

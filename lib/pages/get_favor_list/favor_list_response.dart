@@ -185,9 +185,16 @@ class User {
   String email;
   String profilePic;
   int isActive;
+  num perc;
   String location;
 
-  User({this.name, this.email, this.profilePic, this.isActive, this.location});
+  User(
+      {this.name,
+      this.email,
+      this.profilePic,
+      this.isActive,
+      this.location,
+      this.perc});
 
   User.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -195,6 +202,7 @@ class User {
     profilePic = json['profile_pic'];
     isActive = json['is_active'];
     location = json['location'];
+    perc = json['perc'];
   }
 
   Map<String, dynamic> toJson() {
@@ -204,6 +212,7 @@ class User {
     data['profile_pic'] = this.profilePic;
     data['is_active'] = this.isActive;
     data['location'] = this.location;
+    data['perc'] = this.perc;
     return data;
   }
 }

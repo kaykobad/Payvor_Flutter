@@ -53,6 +53,7 @@ class Data {
   int id;
   int userId;
   int isActive;
+  num perc;
   int isDeleted;
   int hiredUserId;
   int status;
@@ -77,6 +78,7 @@ class Data {
       this.isActive,
       this.isDeleted,
       this.hiredUserId,
+      this.perc,
       this.status,
       this.title,
       this.price,
@@ -104,6 +106,7 @@ class Data {
     price = json['price'];
     description = json['description'];
     lat = json['lat'];
+    perc = json['perc'];
     long = json['long'];
     location = json['location'];
     image = json['image'];
@@ -123,6 +126,7 @@ class Data {
     data['is_active'] = this.isActive;
     data['is_deleted'] = this.isDeleted;
     data['hired_user_id'] = this.hiredUserId;
+    data['perc'] = this.perc;
     data['status'] = this.status;
     data['title'] = this.title;
     data['price'] = this.price;

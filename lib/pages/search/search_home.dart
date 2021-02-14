@@ -146,7 +146,7 @@ class HomeState extends State<SearchCompany>
                           new SizedBox(
                             width: 8,
                           ),
-                          data?.user?.isActive == 1
+                          data?.user?.perc == 100
                               ? new Image.asset(
                                   AssetStrings.verify,
                                   width: 16,

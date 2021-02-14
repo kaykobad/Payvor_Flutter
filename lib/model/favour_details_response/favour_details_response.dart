@@ -48,6 +48,7 @@ class Data {
   int id;
   int userId;
   int isActive;
+  num perc;
   String title;
   String price;
   String description;
@@ -71,17 +72,18 @@ class Data {
       this.userId,
       this.isActive,
       this.title,
+      this.perc,
       this.price,
       this.description,
       this.lat,
       this.long,
-    this.location,
-    this.image,
-    this.createdAt,
-    this.updatedAt,
-    this.user,
-    this.rating,
-    this.ratingCount,
+      this.location,
+      this.image,
+      this.createdAt,
+      this.updatedAt,
+      this.user,
+      this.rating,
+      this.ratingCount,
     this.ratingAvg,
     this.service_fee,
     this.receiving,
@@ -94,6 +96,7 @@ class Data {
     isActive = json['is_active'];
     title = json['title'];
     price = json['price'];
+    perc = json['perc'];
     description = json['description'];
     lat = json['lat'];
     long = json['long'];
@@ -125,6 +128,7 @@ class Data {
     data['is_active'] = this.isActive;
     data['title'] = this.title;
     data['price'] = this.price;
+    data['perc'] = this.perc;
     data['description'] = this.description;
     data['lat'] = this.lat;
     data['long'] = this.long;
