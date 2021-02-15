@@ -62,7 +62,7 @@ class _HomeState extends State<PreviewPost>
     var infoData = jsonDecode(MemoryManagement.getUserInfo());
     var userinfo = LoginSignupResponse.fromJson(infoData);
     userName = userinfo.user.name ?? "";
-    active = userinfo?.user?.perc ?? 0;
+    active = userinfo?.user?.isActive ?? 0;
     profile = userinfo.user.profilePic ?? "";
     location = userinfo.user.location ?? "";
 
@@ -330,7 +330,7 @@ class _HomeState extends State<PreviewPost>
                         new SizedBox(
                           width: 8,
                         ),
-                        active == 100
+                        active == 1
                             ? new Image.asset(
                                 AssetStrings.verify,
                                 width: 16,

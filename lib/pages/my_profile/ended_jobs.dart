@@ -266,7 +266,7 @@ class _HomeState extends State<MyEndedJobs>
                         new SizedBox(
                           width: 8,
                         ),
-                        data?.perc == 100
+                        data?.isActive == 1
                             ? new Image.asset(
                                 AssetStrings.verify,
                                 width: 16,

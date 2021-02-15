@@ -330,7 +330,7 @@ class _HomeState extends State<SearchHomeByName>
                         new SizedBox(
                           width: 8,
                         ),
-                        data?.user?.perc == 100
+                        data?.isActive == 1
                             ? new Image.asset(
                                 AssetStrings.verify,
                                 width: 16,
