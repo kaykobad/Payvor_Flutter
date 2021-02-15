@@ -425,7 +425,7 @@ class _HomeState extends State<ChatMessageDetails>
                         new SizedBox(
                           width: 8,
                         ),
-                        datas?.perc == 100
+                        userResponse?.user?.perc == 100
                             ? new Image.asset(
                                 AssetStrings.verify,
                                 width: 16,

@@ -169,6 +169,7 @@ class User {
   String location;
   String createdAt;
   String updatedAt;
+  num perc;
 
   User(
       {this.id,
@@ -183,6 +184,7 @@ class User {
       this.userType,
       this.isActive,
       this.snsId,
+      this.perc,
       this.profilePic,
       this.location,
       this.createdAt,
@@ -201,6 +203,7 @@ class User {
     userType = json['user_type'];
     isActive = json['is_active'];
     snsId = json['snsId'];
+    perc = json['perc'];
     profilePic = json['profile_pic'];
     location = json['location'];
     createdAt = json['created_at'];
@@ -222,6 +225,7 @@ class User {
     data['is_active'] = this.isActive;
     data['snsId'] = this.snsId;
     data['profile_pic'] = this.profilePic;
+    data['perc'] = this.perc;
     data['location'] = this.location;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;

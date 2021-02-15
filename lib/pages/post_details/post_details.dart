@@ -815,7 +815,7 @@ class _HomeState extends State<PostFavorDetails>
                           "Favor Post Owner",
                           style: TextThemes.greyTextFieldNormalNw,
                         )),
-                        favoriteResponse?.data.isActive == 1
+                        favoriteResponse?.data?.user?.perc == 100
                             ? Container(
                                 width: 3,
                                 height: 3,
@@ -826,7 +826,7 @@ class _HomeState extends State<PostFavorDetails>
                                 ),
                               )
                             : Container(),
-                        favoriteResponse?.data.isActive == 1
+                        favoriteResponse?.data?.user?.perc == 100
                             ? Container(
                                 child: new Text(
                                 "VERIFIED",
@@ -839,7 +839,7 @@ class _HomeState extends State<PostFavorDetails>
                 ],
               ),
             ),
-            favoriteResponse?.data?.perc == 100
+            favoriteResponse?.data?.user?.perc == 100
                 ? Align(
                     alignment: Alignment.center,
                     child: Container(
