@@ -93,7 +93,9 @@ class _HomeState extends State<AddPaymentMethodFirst>
     if (response is GetPaypalData) {
       provider.hideLoader();
 
-      dataList.add(response?.data);
+      if (response?.data != null) {
+        dataList.add(response?.data);
+      }
 
       print(response);
     } else {
