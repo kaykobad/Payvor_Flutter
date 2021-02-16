@@ -434,16 +434,16 @@ class _HomeState extends State<MyPosts>
                       voidcallback: callback,
             ))));
           } else {
-            /*  widget.lauchCallBack(Material(
+              widget.lauchCallBack(Material(
                 child: Material(
                     child: new PayFeebackDetailsCommon(
-                      lauchCallBack: widget?.lauchCallBack,
-                      userId: data?.hiredUserId?.toString(),
-                      postId: data?.id?.toString(),
-                      status: 0,
-                      type: 0,
-                      voidcallback: callback,
-            ))));*/
+              lauchCallBack: widget?.lauchCallBack,
+              userId: data?.hiredUserId?.toString(),
+              postId: data?.id?.toString(),
+              status: 1,
+              type: 1,
+              voidcallback: callback,
+            ))));
 
             widget.lauchCallBack(Material(
                 child: Material(
