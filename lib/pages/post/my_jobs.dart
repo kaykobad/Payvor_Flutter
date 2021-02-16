@@ -13,6 +13,7 @@ import 'package:payvor/pages/pay_feedback/pay_feedback_common.dart';
 import 'package:payvor/pages/pay_feedback/pay_give_feedback.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
@@ -35,6 +36,7 @@ class _HomeState extends State<MyJobs>
 
   String searchkey = null;
   AuthProvider provider;
+  FirebaseProvider providerFirebase;
   int currentPage = 1;
   bool isPullToRefresh = false;
   bool offstagenodata = true;
@@ -248,6 +250,7 @@ class _HomeState extends State<MyJobs>
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
+    providerFirebase = Provider.of<FirebaseProvider>(context);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -370,16 +373,10 @@ class _HomeState extends State<MyJobs>
   Widget buildItem(int index, Datas data) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
-            return Material(
-                child: new PostFavorDetails(
-              id: data?.favourId?.toString(),
-              isButtonDesabled: true,
-            ));
-          }),
-        );
+        providerFirebase?.changeScreen(new PostFavorDetails(
+          id: data?.favourId?.toString(),
+          isButtonDesabled: true,
+        ));
       },
       child: Container(
         padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),

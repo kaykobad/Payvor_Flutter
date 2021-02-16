@@ -254,7 +254,7 @@ class _HomeState extends State<EditProfile>
       _OldPasswordController.text = "";
       _NewPasswordController.text = "";
 
-      showBottomSheet();
+      showInSnackBar("Profile updated successfully.");
 
       setState(() {});
     } else {
@@ -299,6 +299,7 @@ class _HomeState extends State<EditProfile>
         maxHeight: Constants.maxHeight);
     var imageFile = await ImageCropper.cropImage(
         sourcePath: imageFileSelect.path,
+        cropStyle: CropStyle.circle,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
           CropAspectRatioPreset.ratio3x2,
@@ -328,6 +329,7 @@ class _HomeState extends State<EditProfile>
 
     var imageFile = await ImageCropper.cropImage(
         sourcePath: imageFileSelect.path,
+        cropStyle: CropStyle.circle,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
           CropAspectRatioPreset.ratio3x2,

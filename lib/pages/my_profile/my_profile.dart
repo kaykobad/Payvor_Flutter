@@ -147,6 +147,12 @@ class _HomeState extends State<MyProfile>
           MemoryManagement.setPushStatus(
               token: userinfo?.user?.disable_push?.toString() ?? "0");
 
+          if (userinfo.user?.payment_method > 0) {
+            MemoryManagement.setPaymentStatus(status: true);
+          } else {
+            MemoryManagement.setPaymentStatus(status: false);
+          }
+
           MemoryManagement.setUserInfo(userInfo: json.encode(userinfo));
         }
 
@@ -444,7 +450,7 @@ class _HomeState extends State<MyProfile>
                           ),
                           buildItem(1, "Verify Profile and Get badge"),
                           buildItem(2, "Payment Methods"),
-                          buildItem(3, "Verify Profile and Get badge"),
+                          //  buildItem(3, "Verify Profile and Get badge"),
                           new Container(
                             height: 20,
                             color: Colors.white,

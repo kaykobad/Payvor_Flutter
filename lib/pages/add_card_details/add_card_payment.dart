@@ -6,12 +6,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/add_paypal/add_paypal_request.dart';
 import 'package:payvor/model/apierror.dart';
-import 'package:payvor/model/forgot_password/forgot_password_request.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/pages/post_details/cardformatter.dart';
 import 'package:payvor/provider/auth_provider.dart';
-import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
@@ -20,8 +18,8 @@ import 'package:payvor/utils/ValidatorFunctions.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 import 'package:provider/provider.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 class AddCardDetails extends StatefulWidget {
   ValueSetter<int> voidcallback;
@@ -147,7 +145,7 @@ class _PaymentDialogState extends State<AddCardDetails> {
                           margin: new EdgeInsets.only(right: 25.0, top: 10),
                           width: getScreenSize(context: context).width,
                           child: new Text(
-                            "Card Details",
+                            "Payment Method",
                             style: new TextStyle(
                                 fontFamily: AssetStrings.circulerMedium,
                                 fontSize: 19,
@@ -248,7 +246,7 @@ class _PaymentDialogState extends State<AddCardDetails> {
                       new Container(
                         margin: new EdgeInsets.only(left: 16, top: 15),
                         child: new Text(
-                          "Add a Paypal Account",
+                          "Add Paypal Account",
                           style: TextThemes.darkBlackMedium,
                         ),
                       ),
@@ -285,7 +283,7 @@ class _PaymentDialogState extends State<AddCardDetails> {
                       ),
                       getTextField(
                           validatorCard,
-                          "Email",
+                          "Enter Paypal Email",
                           _AccountController,
                           _AccountField,
                           _NameField,
@@ -418,7 +416,7 @@ class _PaymentDialogState extends State<AddCardDetails> {
                         margin:
                             new EdgeInsets.only(top: 24, left: 16, right: 16),
                         child: getSetupButtonNew(
-                            callback, "Add Payment Method", 0,
+                            callback, "Add Paypal", 0,
                             newColor: AppColors.colorDarkCyan),
                       ),
                       Container(
@@ -474,6 +472,8 @@ class _PaymentDialogState extends State<AddCardDetails> {
 
       if (response != null && response.status.code == 200) {
         showInSnackBar("Payment method added successfully");
+        MemoryManagement.setPaymentStatus(status: true);
+
         Navigator.pop(context);
         Navigator.pop(context);
         Navigator.pop(context);

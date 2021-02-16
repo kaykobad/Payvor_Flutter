@@ -319,24 +319,28 @@ class _HomeState extends State<PayFeebackDetails>
     }
 
     if (widget.type == 0) {
-      var getdata = await Navigator.push(
-        context,
-        new CupertinoPageRoute(builder: (BuildContext context) {
-          return new WebviewPayment(
-            type: "favour",
-            itemId: widget?.postId?.toString(),
-          );
-        }),
-      );
+      if (type == 2) {
+        var getdata = await Navigator.push(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return new WebviewPayment(
+              type: "favour",
+              itemId: widget?.postId?.toString(),
+            );
+          }),
+        );
 
-      if (getdata is bool) {
-        if (getdata == true) {
-          showBottomSheet("Successful!", "Payment Successful!.", 1);
-          /*Navigator.pop(context);
+        if (getdata is bool) {
+          if (getdata == true) {
+            showBottomSheet("Successful!", "Payment Successful!.", 1);
+            /*Navigator.pop(context);
         widget.voidcallback(1);*/
-        } else {
-          showBottomSheet("Failed!", "Payment Failed!.", 0);
+          } else {
+            showBottomSheet("Failed!", "Payment Failed!.", 0);
+          }
         }
+      } else {
+        updateUserPaymentStatus();
       }
     } else {
       updateUserPaymentStatus();

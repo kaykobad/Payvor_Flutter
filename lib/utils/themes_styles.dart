@@ -121,6 +121,11 @@ class TextThemes {
     fontSize: 14,
     color: Color.fromRGBO(114, 117, 122, 1.0),
   );
+  static final TextStyle greyTextFieldNormalNew = TextStyle(
+    fontFamily: AssetStrings.circulerNormal,
+    fontSize: 15,
+    color: Color.fromRGBO(114, 117, 122, 1.0),
+  );
 
   static final TextStyle greyTextFieldNormalNw = TextStyle(
     fontFamily: AssetStrings.circulerNormal,

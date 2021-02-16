@@ -12,7 +12,6 @@ import 'package:payvor/model/forgot_password/forgot_password_response.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/pages/add_payment_method/add_payment_method.dart';
 import 'package:payvor/pages/edit_profile/edit_user_profile.dart';
-import 'package:payvor/pages/forgot_password/forgot_password.dart';
 import 'package:payvor/pages/otp/enter_otp.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
@@ -22,6 +21,7 @@ import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:provider/provider.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class VerifyProfile extends StatefulWidget {
 /*  final String id;
@@ -59,6 +59,9 @@ class _HomeState extends State<VerifyProfile>
 
   String emailVerify = "0";
 
+  bool mProfileUpdated = false;
+  bool mPaymentUpdated = false;
+
   bool fromRegister = false;
 
   var email = "";
@@ -84,14 +87,15 @@ class _HomeState extends State<VerifyProfile>
 
     if (userinfo?.user?.type == "Re" && userinfo?.user?.email?.isNotEmpty) {
       email = userinfo?.user?.email ?? "";
-
       fromRegister = true;
     }
+
+    mPaymentUpdated = MemoryManagement.getPaymentStatus() ?? false;
   }
 
   Widget getAppBarNew(BuildContext context) {
     return PreferredSize(
-        preferredSize: Size.fromHeight(53.0),
+        preferredSize: Size.fromHeight(50.0),
         child: Container(
           color: Colors.white,
           child: Column(
@@ -151,55 +155,88 @@ class _HomeState extends State<VerifyProfile>
     screenSize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
     firebaseProvider = Provider.of<FirebaseProvider>(context);
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: getAppBarNew(context),
-      backgroundColor: AppColors.whiteGray,
-      body: Stack(
-        children: <Widget>[
-          SingleChildScrollView(
-            child: new Container(
-              color: AppColors.whiteGray,
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Container(
-                    height: 7,
-                  ),
-                  buildItemRecentSearch(
-                      1, "Phone Number", AssetStrings.settingEdit),
-                  fromRegister
-                      ? new Container(
-                          height: 6,
-                        )
-                      : Container(),
-                  fromRegister
-                      ? buildItemRecentSearch(
-                          2, "Email Address", AssetStrings.settingNoti)
-                      : Container(),
-                  new Container(
-                    height: 6,
-                  ),
-                  buildItemRecentSearch(
-                      3, "Upload Profile Photo", AssetStrings.settingTerms),
-                  new Container(
-                    height: 6,
-                  ),
-                  buildItemRecentSearch(
-                      4, "Add Payment Method", AssetStrings.settingPrivacy),
-                ],
+    return VisibilityDetector(
+      key: Key('my-widget-key'),
+      onVisibilityChanged: (visibilityInfo) {
+        var visiblePercentage = visibilityInfo.visibleFraction * 100;
+
+        if (visiblePercentage == 100) {
+          var infoData = jsonDecode(MemoryManagement.getUserInfo());
+          var userinfo = LoginSignupResponse.fromJson(infoData);
+
+          var profile = userinfo?.user?.profilePic ?? "";
+
+          if (profile.isNotEmpty && profile.length > 0) {
+            mProfileUpdated = true;
+          } else {
+            mProfileUpdated = false;
+            ;
+          }
+
+          mPaymentUpdated = MemoryManagement.getPaymentStatus() ?? false;
+
+          setState(() {});
+        }
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: getAppBarNew(context),
+        backgroundColor: AppColors.whiteGray,
+        body: Stack(
+          children: <Widget>[
+            SingleChildScrollView(
+              child: new Container(
+                color: AppColors.whiteGray,
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new Container(
+                      height: 5,
+                    ),
+                    buildItemRecentSearch(
+                        1, "Phone Number", AssetStrings.settingEdit, true),
+                    fromRegister
+                        ? new Container(
+                            height: 4,
+                          )
+                        : Container(),
+                    fromRegister
+                        ? buildItemRecentSearch(
+                            2,
+                            "Email Address",
+                            AssetStrings.settingNoti,
+                            emailVerify == "1" ? true : false)
+                        : Container(),
+                    new Container(
+                      height: 4,
+                    ),
+                    buildItemRecentSearch(
+                        3,
+                        "Upload Profile Photo",
+                        AssetStrings.settingTerms,
+                        mProfileUpdated ? true : false),
+                    new Container(
+                      height: 4,
+                    ),
+                    buildItemRecentSearch(
+                        4,
+                        "Add Payment Method",
+                        AssetStrings.settingPrivacy,
+                        mPaymentUpdated ? true : false),
+                  ],
+                ),
               ),
             ),
-          ),
-          Container(
-            child: new Center(
-              child: getHalfScreenLoader(
-                status: provider.getLoading(),
-                context: context,
+            Container(
+              child: new Center(
+                child: getHalfScreenLoader(
+                  status: provider.getLoading(),
+                  context: context,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -256,10 +293,11 @@ class _HomeState extends State<VerifyProfile>
   @override
   bool get wantKeepAlive => true;
 
-  Widget buildItemRecentSearch(int type, String data, String icon) {
+  Widget buildItemRecentSearch(
+      int type, String data, String icon, bool visibile) {
     return InkWell(
       onTap: () {
-        if (type == 4) {
+        if (type == 4 && mPaymentUpdated == false) {
           firebaseProvider
               .changeScreen(Material(child: new AddPaymentMethod()));
         } else if (type == 3) {
@@ -272,7 +310,7 @@ class _HomeState extends State<VerifyProfile>
       child: Container(
         color: Colors.white,
         padding:
-            new EdgeInsets.only(left: 16.0, right: 16.0, top: 26, bottom: 26),
+            new EdgeInsets.only(left: 16.0, right: 16.0, top: 22, bottom: 22),
         child: Container(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -295,57 +333,40 @@ class _HomeState extends State<VerifyProfile>
               new SizedBox(
                 width: 8,
               ),
-              type == 1 || type == 2
-                  ? Container(
-                      padding: new EdgeInsets.only(
-                          left: 8, right: 8, top: 6, bottom: 6),
-                      decoration: new BoxDecoration(
-                          color: type == 2 && emailVerify == "0"
-                              ? Color.fromRGBO(255, 237, 237, 1)
-                              : Color.fromRGBO(221, 242, 255, 1),
-                          borderRadius: new BorderRadius.circular(2)),
-                      child: new Row(
-                        children: [
-                          type == 2
-                              ? emailVerify == "1"
-                                  ? new Image.asset(
-                                      AssetStrings.iconTicks,
-                                      width: 20,
-                                      height: 20,
-                                    )
-                                  : Container()
-                              : new Image.asset(
-                                  AssetStrings.iconTicks,
-                                  width: 20,
-                                  height: 20,
-                                ),
-                          new Container(
-                            margin: new EdgeInsets.only(
-                                left: type == 2 && emailVerify == "0" ? 0 : 6),
-                            child: new Text(
-                              type == 2
-                                  ? emailVerify == "1"
-                                      ? "Verified"
-                                      : "Verify"
-                                  : "Verified",
-                              style: new TextStyle(
-                                  fontSize: 16,
-                                  color: type == 2 && emailVerify == "0"
-                                      ? Color.fromRGBO(255, 107, 102, 1)
-                                      : AppColors.colorDarkCyan,
-                                  fontFamily: AssetStrings.circulerMedium),
-                            ),
+              Container(
+                padding:
+                    new EdgeInsets.only(left: 8, right: 8, top: 6, bottom: 6),
+                decoration: new BoxDecoration(
+                    color: !visibile
+                        ? AppColors.colorDarkCyan
+                        : Color.fromRGBO(221, 242, 255, 1),
+                    borderRadius: new BorderRadius.circular(2)),
+                child: new Row(
+                  children: [
+                    visibile
+                        ? new Image.asset(
+                            AssetStrings.iconTicks,
+                            width: 20,
+                            height: 20,
                           )
-                        ],
+                        : Container(),
+                    new Container(
+                      margin: new EdgeInsets.only(
+                          left: visibile ? 6 : 19.5,
+                          right: visibile ? 0 : 19.5,
+                          top: visibile ? 0 : 1,
+                          bottom: visibile ? 0 : 1),
+                      child: new Text(
+                        visibile ? "Verified" : "Verify",
+                        style: new TextStyle(
+                            fontSize: 16,
+                            color: visibile
+                                ? AppColors.colorDarkCyan
+                                : Colors.white,
+                            fontFamily: AssetStrings.circulerMedium),
                       ),
                     )
-                  : Container(
-                      height: 32,
-                      margin: new EdgeInsets.only(left: 7.0),
-                      child: new Icon(
-                        Icons.arrow_forward_ios,
-                        size: 12,
-                        color: Color.fromRGBO(183, 183, 183, 1),
+                        ],
                       ),
                     )
             ],

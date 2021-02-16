@@ -12,6 +12,7 @@ import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
 import 'package:payvor/model/promotion/promotion_response.dart';
+import 'package:payvor/pages/add_payment_method_first/add_payment.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/payment/payment_dialog.dart';
 import 'package:payvor/pages/payment/post_payment.dart';
@@ -343,7 +344,15 @@ class _HomeState extends State<PostFavorDetails>
     if ((favoriteResponse?.data?.is_user_applied != 1) &&
         (widget.isButtonDesabled != null && !widget.isButtonDesabled)
     ) {
-      hitApplyFavApi();
+      //  var status= MemoryManagement.getPaymentStatus()??"";
+      var firstTimePayment = MemoryManagement.getFirstPaymentStatus() ?? false;
+
+      if (!firstTimePayment) {
+        showBottomPaymentMethod();
+        MemoryManagement.setFirstPaymentStatus(status: true);
+      } else {
+        hitApplyFavApi();
+      }
     }
 
     /* await Future.delayed(Duration(milliseconds: 200));
@@ -355,22 +364,24 @@ class _HomeState extends State<PostFavorDetails>
   void callbackPromote() async {
     if (propmoteDataResponse != null && propmoteDataResponse.data != null) {
       showBottomSheet();
-    }
-    else {
+    } else {
       hitApiPromotion(1);
     }
   }
 
   void callbackPaymentSuccess() async {
     Navigator.pop(context); //back to previous screen
-
   }
 
+  void callbackPaymentAddMethod() async {
+    Navigator.pop(context); //back to previous screen
+    providerFirebase
+        ?.changeScreen(Material(child: new AddPaymentMethodFirst()));
+  }
 
   void callbackPaymentSuccessBack() async {
     Navigator.pop(context);
     Navigator.pop(context); //back to previous screen
-
   }
 
   Widget buildItem() {
@@ -901,8 +912,67 @@ class _HomeState extends State<PostFavorDetails>
         });
   }
 
-  void showBottomSuccessPayment(String title, String description,
-      String buttonText, int type) {
+  void showBottomPaymentMethod() {
+    showModalBottomSheet<void>(
+        isScrollControlled: true,
+        isDismissible: false,
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
+        ),
+        builder: (BuildContext bc) {
+          return Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Container(
+                  child: new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    margin: new EdgeInsets.only(top: 22),
+                    child: new Image.asset(AssetStrings.artworkPayment,
+                        width: 120.0, height: 105.0),
+                  ),
+                  new Container(
+                    margin: new EdgeInsets.only(top: 40),
+                    child: new Text(
+                      "Add Payment Method",
+                      style: new TextStyle(
+                          fontFamily: AssetStrings.circulerMedium,
+                          fontSize: 20,
+                          color: Colors.black),
+                    ),
+                  ),
+                  new Container(
+                    margin: new EdgeInsets.only(top: 10, left: 35, right: 35),
+                    alignment: Alignment.center,
+                    child: new Text(
+                      "You’ve to add a paypal account to apply for the favors. You’ll be paid to the account you are going to add ",
+                      textAlign: TextAlign.center,
+                      style: new TextStyle(
+                        fontFamily: AssetStrings.circulerNormal,
+                        fontSize: 16,
+                        height: 1.5,
+                        color: Color.fromRGBO(114, 117, 112, 1),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: new EdgeInsets.only(top: 40, left: 16, right: 16),
+                    child: getSetupButtonNew(
+                        callbackPaymentAddMethod, "Add Now", 0,
+                        newColor: AppColors.colorDarkCyan),
+                  ),
+                  Container(
+                    height: 41,
+                  )
+                ],
+              )));
+        });
+  }
+
+  void showBottomSuccessPayment(
+      String title, String description, String buttonText, int type) {
     showModalBottomSheet<void>(
         isScrollControlled: true,
         context: context,

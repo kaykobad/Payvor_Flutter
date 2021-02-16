@@ -27,6 +27,7 @@ class AssetStrings {
   static const String appIntroPage4 = 'assets/png/app_intro_page4.webp';
   static const String appSettings = 'assets/png/settings.png';
   static const String settingEdit = 'assets/png/setting_edit.png';
+  static const String artworkPayment = 'assets/png/artwork_payment.png';
   static const String settingNoti = 'assets/png/setting_noti.png';
   static const String settingHelp = 'assets/png/setting_help.png';
   static const String settingPrivacy = 'assets/png/setting_privacy.png';
@@ -39,6 +40,7 @@ class AssetStrings {
   //app icon
 
   static const String logo = 'assets/svg/logo.svg';
+  static const String info_users = 'assets/png/info_users.png';
   static const String email = 'assets/svg/email.svg';
   static const String tick = 'assets/svg/tick.svg';
   static const String star = 'assets/svg/star.svg';

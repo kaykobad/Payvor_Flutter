@@ -79,7 +79,6 @@ class MemoryManagement {
     return prefs.getBool(SharedPrefsKeys.NOTIFICATION_ONOFF);
   }
 
-
   static void setToolTipState({@required int state}) {
     prefs.setInt(SharedPrefsKeys.TUTORIAL_STATE, state);
   }
@@ -88,7 +87,21 @@ class MemoryManagement {
     return prefs.getInt(SharedPrefsKeys.TUTORIAL_STATE);
   }
 
+  static void setPaymentStatus({@required bool status}) {
+    prefs.setBool(SharedPrefsKeys.PAYMENT_STATUS, status);
+  }
 
+  static bool getPaymentStatus() {
+    return prefs.getBool(SharedPrefsKeys.PAYMENT_STATUS);
+  }
+
+  static void setFirstPaymentStatus({@required bool status}) {
+    prefs.setBool(SharedPrefsKeys.PAYMENT_FIRSTIME_STATUS, status);
+  }
+
+  static bool getFirstPaymentStatus() {
+    return prefs.getBool(SharedPrefsKeys.PAYMENT_FIRSTIME_STATUS);
+  }
 
   static void setSocialStatus({@required bool status}) {
     prefs.setBool(SharedPrefsKeys.LOGIN_STATUS, status);

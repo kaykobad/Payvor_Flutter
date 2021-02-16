@@ -43,6 +43,8 @@ class SharedPrefsKeys {
   static const String TUTORIAL_STATE = "tutorial_state";
   static const String FILTER_DATA = "FILTER";
   static const String LOGIN_STATUS = "login_social_status";
+  static const String PAYMENT_FIRSTIME_STATUS = "payment_firsttime_status";
+  static const String PAYMENT_STATUS = "payment_status";
   static const String FILTER_DATA_STATUS = "FILTER_STATUS";
   static const String TAB_DATA_STATUS = "TAB_STATUS";
 

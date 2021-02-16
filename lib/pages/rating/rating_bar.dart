@@ -170,23 +170,25 @@ class _HomeState extends State<RatingBarNew>
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.baseline,
                     children: [
-                      Container(
-                        alignment: Alignment.topLeft,
-                        margin: new EdgeInsets.only(left: 17.0, top: 10),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: new Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: new SvgPicture.asset(
-                              AssetStrings.back,
-                              width: 16.0,
-                              height: 16.0,
-                            ),
-                          ),
-                        ),
-                      ),
+                      widget?.paymentType ?? "" != "Card/Paypal"
+                          ? Container(
+                              alignment: Alignment.topLeft,
+                              margin: new EdgeInsets.only(left: 17.0, top: 10),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: new Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: new SvgPicture.asset(
+                                    AssetStrings.back,
+                                    width: 16.0,
+                                    height: 16.0,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(),
                       Expanded(
                         child: Container(
                           alignment: Alignment.center,
@@ -315,18 +317,22 @@ class _HomeState extends State<RatingBarNew>
                   ),
                   widget?.type == 0 ? new Column(
                     children: [
-                      getRowTop(),
-                      getRowBottom(),
-                      Opacity(
-                        opacity: 0.2,
-                        child: new Container(
-                          height: 1.0,
-                          margin: new EdgeInsets.only(
-                              left: 18.0, right: 18.0, top: 20),
-                          color: AppColors.dividerColor,
-                        ),
-                      ),
-                    ],
+                            widget?.paymentType ?? "" != "Card/Paypal"
+                                ? getRowTop()
+                                : Container(),
+                            widget?.paymentType ?? "" != "Card/Paypal"
+                                ? getRowBottom()
+                                : Container(),
+                            Opacity(
+                              opacity: 0.2,
+                              child: new Container(
+                                height: 1.0,
+                                margin: new EdgeInsets.only(
+                                    left: 18.0, right: 18.0, top: 20),
+                                color: AppColors.dividerColor,
+                              ),
+                            ),
+                          ],
                   ) : Container(),
                   Container(
                     margin: new EdgeInsets.only(left: 18, right: 18.0, top: 20),

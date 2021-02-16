@@ -15,6 +15,8 @@ import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/memory_management.dart';
+import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class AddPaymentMethodFirst extends StatefulWidget {
@@ -94,7 +96,10 @@ class _HomeState extends State<AddPaymentMethodFirst>
       provider.hideLoader();
 
       if (response?.data != null) {
+        MemoryManagement.setPaymentStatus(status: true);
         dataList.add(response?.data);
+      } else {
+        MemoryManagement.setPaymentStatus(status: false);
       }
 
       print(response);
@@ -127,6 +132,7 @@ class _HomeState extends State<AddPaymentMethodFirst>
     var response = await provider.deletePaypalMethod(context, id);
 
     if (response is CommonSuccessResponse) {
+      MemoryManagement.setPaymentStatus(status: false);
       provider.hideLoader();
       showInSnackBar("Paypal method deleted successfully");
 
@@ -216,18 +222,37 @@ class _HomeState extends State<AddPaymentMethodFirst>
               child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  new Container(
-                    height: 7,
-                  ),
+                  dataList?.length == 0
+                      ? Container(
+                          margin: new EdgeInsets.only(
+                              top: 11, bottom: 11, left: 16, right: 16),
+                          child: new Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Image.asset(
+                                AssetStrings.info_users,
+                                height: 20,
+                                width: 20,
+                              ),
+                              Expanded(
+                                child: new Container(
+                                  margin: new EdgeInsets.only(left: 7),
+                                  child: new Text(
+                                      "You are adding this payment method to recieve the payment automatically paid by Favor owner ending a favor.",
+                                      style: TextThemes.greyTextFieldNormalNew),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      : Container(),
                   dataList?.length == 0 ? buildItemItemAddCard() : Container(),
-                  new Container(
-                    height: 24,
-                  ),
                   dataList?.length > 0
                       ? Container(
-                          margin: new EdgeInsets.only(left: 16),
+                          margin: new EdgeInsets.only(
+                              left: 16, top: 12, bottom: 12),
                           child: new Text(
-                            "Added Methods",
+                            "Default Method",
                             style: new TextStyle(
                               color: Colors.black,
                               fontFamily: AssetStrings.circulerMedium,
@@ -239,9 +264,6 @@ class _HomeState extends State<AddPaymentMethodFirst>
                           ),
                         )
                       : Container(),
-                  new Container(
-                    height: 24,
-                  ),
                   buildContestListSearch(),
                   new Container(
                     height: 6,
