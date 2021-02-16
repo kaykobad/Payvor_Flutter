@@ -414,9 +414,8 @@ class _PaymentDialogState extends State<AddCardDetails> {
                       ),*/
                       Container(
                         margin:
-                            new EdgeInsets.only(top: 24, left: 16, right: 16),
-                        child: getSetupButtonNew(
-                            callback, "Add Paypal", 0,
+                            new EdgeInsets.only(top: 120, left: 16, right: 16),
+                        child: getSetupButtonNew(callback, "Add Paypal", 0,
                             newColor: AppColors.colorDarkCyan),
                       ),
                       Container(
