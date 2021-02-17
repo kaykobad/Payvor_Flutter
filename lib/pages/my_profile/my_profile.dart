@@ -326,6 +326,9 @@ class _HomeState extends State<MyProfile>
           print(userResponse?.user?.profilePic?.toString());
 
           setState(() {});
+
+          isPullToRefresh = true;
+          hitUserApi();
         }
       },
       child: Scaffold(

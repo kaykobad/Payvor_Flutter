@@ -308,19 +308,24 @@ class _HomeState extends State<PayFeebackDetailsCommon>
   bool get wantKeepAlive => true;
 
   void callback() async {
-    /* if (widget.type == 0 && type == 0) {
-      showInSnackBar("Please select payment type");
-
-      return;
-    }*/
-
-    updateUserPaymentStatus();
-
-    /*  await Future.delayed(Duration(milliseconds: 200));
-    showInSnackBar("Favour applied successfully");
-    await Future.delayed(Duration(milliseconds: 1500));
-    Navigator.pop(context); //back to previous screen
-   // showBottomSheet();*/
+    widget.lauchCallBack(Material(
+        child: Material(
+            child: new RatingBarNew(
+      id: widget?.postId?.toString(),
+      type: 1,
+      image: widget.type == 0
+          ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? ""
+          : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
+      name: widget.type == 0
+          ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
+          : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
+      userId: widget.type == 0
+          ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
+          : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ?? "",
+      paymentAmount: hiredUserDetailsResponse?.data?.receiving?.toString(),
+      paymentType: type == 1 ? "Hand Cash" : "Card/Paypal",
+      voidcallback: callbackApi,
+    ))));
   }
 
   redirect() async {
