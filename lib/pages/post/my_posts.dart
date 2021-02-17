@@ -440,7 +440,7 @@ class _HomeState extends State<MyPosts>
               lauchCallBack: widget?.lauchCallBack,
               userId: data?.hiredUserId?.toString(),
               postId: data?.id?.toString(),
-              status: 1,
+              status: 0,
               type: 1,
               voidcallback: callback,
             ))));
