@@ -441,7 +441,7 @@ class _HomeState extends State<MyPosts>
               userId: data?.hiredUserId?.toString(),
               postId: data?.id?.toString(),
               status: 0,
-              type: 1,
+              type: 0,
               voidcallback: callback,
             ))));
 /*

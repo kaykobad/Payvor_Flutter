@@ -308,12 +308,11 @@ class _HomeState extends State<PayFeebackDetailsCommon>
   bool get wantKeepAlive => true;
 
   void callback() async {
-    if (widget.type == 0 && type == 0) {
+    /* if (widget.type == 0 && type == 0) {
       showInSnackBar("Please select payment type");
 
       return;
-    }
-
+    }*/
 
     updateUserPaymentStatus();
 
