@@ -444,7 +444,7 @@ class _HomeState extends State<MyPosts>
               type: 1,
               voidcallback: callback,
             ))));
-
+/*
             widget.lauchCallBack(Material(
                 child: Material(
                     child: new PayFeebackDetails(
@@ -453,7 +453,7 @@ class _HomeState extends State<MyPosts>
               postId: data?.id?.toString(),
               type: 0,
               voidcallback: callback,
-            ))));
+            ))));*/
           }
         } else {
           widget.lauchCallBack(Material(

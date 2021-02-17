@@ -227,17 +227,20 @@ class _HomeState extends State<PayFeebackDetails>
 
     if (response is ReportResponse) {
       if (response != null && response.status.code == 200) {
+        if (widget.voidcallback != null) {
+          widget.voidcallback(1);
+        }
 
         firebaseProvider.changeScreen(Material(
             child: Material(
                 child: new RatingBarNew(
-                  id: widget?.postId?.toString(),
-                  type: widget?.type,
-                  image: widget.type == 0 ? hiredUserDetailsResponse?.data
-                      ?.hiredUser?.profilePic ?? "" : hiredUserDetailsResponse
-                      ?.data?.postedbyuser?.profilePic ?? "",
-                  name: widget.type == 0 ? hiredUserDetailsResponse?.data
-                      ?.hiredUser?.name ?? "" : hiredUserDetailsResponse?.data
+          id: widget?.postId?.toString(),
+          type: widget?.type,
+          image: widget.type == 0
+              ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? ""
+              : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
+          name: widget.type == 0
+              ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? "" : hiredUserDetailsResponse?.data
                       ?.postedbyuser?.name ?? "",
                   userId: widget.type == 0
                       ? hiredUserDetailsResponse?.data?.hiredUser?.id
