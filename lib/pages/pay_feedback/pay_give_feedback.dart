@@ -346,7 +346,27 @@ class _HomeState extends State<PayFeebackDetails>
         updateUserPaymentStatus();
       }
     } else {
-      updateUserPaymentStatus();
+      // updateUserPaymentStatus();
+
+      firebaseProvider.changeScreen(Material(
+          child: Material(
+              child: new RatingBarNew(
+        id: widget?.postId?.toString(),
+        type: widget?.type,
+        image: widget.type == 0
+            ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? ""
+            : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
+        name: widget.type == 0
+            ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
+            : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
+        userId: widget.type == 0
+            ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
+            : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ??
+                "",
+        paymentAmount: hiredUserDetailsResponse?.data?.receiving?.toString(),
+        paymentType: type == 1 ? "Hand Cash" : "Card/Paypal",
+        voidcallback: callbackApi,
+      ))));
     }
   }
 
