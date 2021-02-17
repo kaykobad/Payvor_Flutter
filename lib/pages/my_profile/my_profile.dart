@@ -359,8 +359,6 @@ class _HomeState extends State<MyProfile>
                                 bottom: 0.0,
                                 width: getScreenSize(context: context).width,
                                 child: Container(
-                                  width: 89,
-                                  height: 89,
                                   alignment: Alignment.center,
                                   decoration: new BoxDecoration(
                                       shape: BoxShape.circle,
