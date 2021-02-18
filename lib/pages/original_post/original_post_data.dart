@@ -13,6 +13,7 @@ import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
 import 'package:payvor/pages/chat/private_chat.dart';
+import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
@@ -713,72 +714,101 @@ class _HomeState extends State<OriginalPostData>
         });
   }
 
+  void goToUser(String name, String userid, String image) {
+    Navigator.push(
+      context,
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return Material(
+            child: Material(
+                child: new ChatMessageDetails(
+          id: "",
+          name: name,
+          image: image,
+          hireduserId: userid,
+        )));
+      }),
+    );
+  }
+
   Widget buildItemNew(DatasUser user, int pos) {
     var type = false;
     return Container(
       margin: new EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: <Widget>[
-          new Container(
-            width: 40.0,
-            height: 40.0,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(shape: BoxShape.circle),
-            child: ClipOval(
-              // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+          InkWell(
+            onTap: () {
+              goToUser(user?.user?.profilePic, user?.user?.id?.toString(),
+                  user?.user?.name);
+            },
+            child: new Container(
+              width: 40.0,
+              height: 40.0,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(shape: BoxShape.circle),
+              child: ClipOval(
+                // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
-              child: getCachedNetworkImageWithurl(
-                  url: user?.user?.profilePic ?? "",
-                  fit: BoxFit.fill,
-                  size: 40),
+                child: getCachedNetworkImageWithurl(
+                    url: user?.user?.profilePic ?? "",
+                    fit: BoxFit.fill,
+                    size: 40),
+              ),
             ),
           ),
           Expanded(
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: new EdgeInsets.only(left: 10.0, right: 10.0),
-                  child: new Text(
-                    user?.user?.name ?? "",
-                    style: TextThemes.greyTextFielMedium,
+            child: InkWell(
+              onTap: () {
+                goToUser(user?.user?.profilePic, user?.user?.id?.toString(),
+                    user?.user?.name);
+              },
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: new Text(
+                      user?.user?.name ?? "",
+                      style: TextThemes.greyTextFielMedium,
+                    ),
                   ),
-                ),
-                Container(
-                  margin: new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
-                  child: Row(
-                    children: [
-                      new Image.asset(
-                        AssetStrings.rating,
-                        width: 13,
-                        height: 13,
-                      ),
-                      new SizedBox(
-                        width: 3,
-                      ),
-                      Container(
-                          child: new Text(
-                        user?.user?.ratingAvg.toString() ?? "",
-                        style: TextThemes.greyTextFieldNormal,
-                      )),
-                      Container(
-                        width: 5,
-                        height: 5,
-                        margin: new EdgeInsets.only(left: 4, right: 4),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.darkgrey,
+                  Container(
+                    margin:
+                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                    child: Row(
+                      children: [
+                        new Image.asset(
+                          AssetStrings.rating,
+                          width: 13,
+                          height: 13,
                         ),
-                      ),
-                      Container(
-                          child: new Text(
-                        "${user?.user?.ratingCount.toString() ?? "0"} Reviews",
-                        style: TextThemes.greyTextFieldNormal,
-                      )),
-                    ],
-                  ),
-                )
-              ],
+                        new SizedBox(
+                          width: 3,
+                        ),
+                        Container(
+                            child: new Text(
+                          user?.user?.ratingAvg.toString() ?? "",
+                          style: TextThemes.greyTextFieldNormal,
+                        )),
+                        Container(
+                          width: 5,
+                          height: 5,
+                          margin: new EdgeInsets.only(left: 4, right: 4),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.darkgrey,
+                          ),
+                        ),
+                        Container(
+                            child: new Text(
+                          "${user?.user?.ratingCount.toString() ?? "0"} Reviews",
+                          style: TextThemes.greyTextFieldNormal,
+                        )),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
           Align(
