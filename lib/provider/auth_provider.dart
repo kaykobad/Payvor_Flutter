@@ -581,6 +581,8 @@ class AuthProvider with ChangeNotifier {
         url: APIs.appliedFavor,
         requestBody: request.toJson());
 
+    print("applied fav");
+
     if (response is APIError) {
       completer.complete(response);
       return completer.future;

@@ -77,8 +77,8 @@ class _HomeState extends State<PostFavorDetails>
       new GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
-    _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value??"Favour Already Applied By This User")));
+    _scaffoldKey.currentState.showSnackBar(
+        new SnackBar(content: new Text(value ?? "Something went wrong")));
   }
 
 
@@ -326,6 +326,7 @@ class _HomeState extends State<PostFavorDetails>
       print(response);
       try {} catch (ex) {}
     } else {
+      print("avinashhh");
       provider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
@@ -346,8 +347,9 @@ class _HomeState extends State<PostFavorDetails>
     ) {
       //  var status= MemoryManagement.getPaymentStatus()??"";
       var firstTimePayment = MemoryManagement.getFirstPaymentStatus() ?? false;
+      var paymentStatus = MemoryManagement.getPaymentStatus() ?? false;
 
-      if (!firstTimePayment) {
+      if (!paymentStatus && !firstTimePayment) {
         showBottomPaymentMethod();
         MemoryManagement.setFirstPaymentStatus(status: true);
       } else {

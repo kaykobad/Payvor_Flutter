@@ -227,7 +227,7 @@ class APIHandler {
 
   static String parseError(dynamic response) {
     try {
-      return response["error"];
+      return response["message"];
     }
     catch (e) {
       return Messages.genericError;
