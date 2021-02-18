@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/notifications/notification_response.dart';
@@ -16,7 +17,6 @@ import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:provider/provider.dart';
-
 class Notifications extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -272,25 +272,31 @@ class _HomeState extends State<Notifications>
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  margin: new EdgeInsets.only(left: 14.0),
-                  child: new RichText(
-                    text: new TextSpan(
-                      text: data?.user?.name ?? "",
-                      style: new TextStyle(
-                          fontSize: 16.0,
-                          fontFamily: AssetStrings.circulerBoldStyle,
-                          color: Color.fromRGBO(23, 23, 23, 1)),
-                      children: <TextSpan>[
-                        new TextSpan(
-                            text: " ${data?.description ?? ""}",
+                data?.type != 3
+                    ? Container(
+                        margin: new EdgeInsets.only(left: 14.0),
+                        child: new RichText(
+                          text: new TextSpan(
+                            text: data?.user?.name ?? "",
                             style: new TextStyle(
-                                fontFamily: AssetStrings.circulerNormal,
-                                color: Color.fromRGBO(103, 99, 99, 1))),
-                      ],
-                    ),
-                  ),
-                ),
+                                fontSize: 16.0,
+                                fontFamily: AssetStrings.circulerBoldStyle,
+                                color: Color.fromRGBO(23, 23, 23, 1)),
+                            children: <TextSpan>[
+                              new TextSpan(
+                                  text: " ${data?.description ?? ""}",
+                                  style: new TextStyle(
+                                      fontFamily: AssetStrings.circulerNormal,
+                                      color: Color.fromRGBO(103, 99, 99, 1))),
+                            ],
+                          ),
+                        ),
+                      )
+                    : Container(
+                        margin: const EdgeInsets.only(left: 14),
+                        alignment: Alignment.centerLeft,
+                        child: Html(
+                            shrinkToFit: true, data: "${data?.description}")),
                 Container(
                   margin: new EdgeInsets.only(left: 14.0),
                   child: new Text("\"${data?.favour?.title ?? ""}\" ",
