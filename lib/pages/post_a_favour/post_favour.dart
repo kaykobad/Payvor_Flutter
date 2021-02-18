@@ -444,25 +444,25 @@ class _HomeState extends State<PostFavour>
     var price = _PriceController.text;
     var desc = _DescriptionController.text;
     var location = _LocationController.text;
+    var latlong = _LatLongController.text;
     isValid = true;
-    if (title.isEmpty || title
-        .trim()
-        .length == 0) {
+    if (title.isEmpty || title.trim().length == 0) {
       showInSnackBar("Please enter the title");
       return false;
     } else if (price.isEmpty || price.length == 0) {
       showInSnackBar("Please enyter the price");
       return false;
-    }
-    else if (desc.isEmpty || desc.length == 0) {
+    } else if (desc.isEmpty || desc.length == 0) {
       showInSnackBar("Please enter the description");
       return false;
     }
     else if (location.isEmpty || location.length == 0) {
       showInSnackBar("Please enter the location");
       return false;
-    }
-    else {
+    } else if (latlong.isEmpty || latlong.length == 0) {
+      showInSnackBar("No location info found please try again.");
+      return false;
+    } else {
       isValid = false;
       return true;
     }
