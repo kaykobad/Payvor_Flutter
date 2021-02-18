@@ -500,12 +500,16 @@ class _HomeState extends State<EditProfile>
     var password = _OldPasswordController.text;
     var newpassword = _NewPasswordController.text;
     var location = _LocationController.text;
+    var locationLatlong = _LatLongController.text;
 
     if (name.isEmpty || name.length == 0) {
       showInSnackBar("Please enter the name");
       return false;
     } else if (location.isEmpty || location.length == 0) {
       showInSnackBar("Please enter the location");
+      return false;
+    } else if (locationLatlong.isEmpty || locationLatlong.length == 0) {
+      showInSnackBar("No location info found please try again.");
       return false;
     } else {
       if (password.isNotEmpty || password.length > 0) {

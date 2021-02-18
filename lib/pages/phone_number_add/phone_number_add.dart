@@ -489,15 +489,16 @@ class _LoginScreenState extends State<PhoneNumberAdd> {
   void callback() {
     var location = _LocationController.text;
     var phonenumber = _PhoneController.text;
+    var locationLatlong = _LatLongController.text;
 
-    if (location.isEmpty || location
-        .trim()
-        .length == 0) {
+    if (location.isEmpty || location.trim().length == 0) {
       showInSnackBar(ResString().get('enter_location'));
       return;
-    }
-    else if (phonenumber.isEmpty || phonenumber.length == 0) {
+    } else if (phonenumber.isEmpty || phonenumber.length == 0) {
       showInSnackBar(ResString().get('enter_phone_number'));
+      return;
+    } else if (locationLatlong.isEmpty || locationLatlong.length == 0) {
+      showInSnackBar("No location info found please try again.");
       return;
     }
 
