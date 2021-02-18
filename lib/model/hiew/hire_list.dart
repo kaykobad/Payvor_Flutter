@@ -163,6 +163,8 @@ class User {
   String lat;
   String long;
   String profilePic;
+  num ratingCount;
+  num ratingAvg;
 
   User(
       {this.id,
@@ -171,6 +173,8 @@ class User {
       this.phone,
       this.lat,
       this.long,
+      this.ratingCount,
+      this.ratingAvg,
       this.profilePic});
 
   User.fromJson(Map<String, dynamic> json) {
@@ -180,6 +184,8 @@ class User {
     phone = json['phone'];
     lat = json['lat'];
     long = json['long'];
+    ratingCount = json['rating_count'];
+    ratingAvg = json['rating_avg'];
     profilePic = json['profile_pic'];
   }
 
@@ -191,6 +197,8 @@ class User {
     data['phone'] = this.phone;
     data['lat'] = this.lat;
     data['long'] = this.long;
+    data['rating_count'] = this.ratingCount;
+    data['rating_avg'] = this.ratingAvg;
     data['profile_pic'] = this.profilePic;
     return data;
   }

@@ -12,6 +12,7 @@ import 'package:payvor/model/hiew/hire_list.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
+import 'package:payvor/pages/chat/private_chat.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
@@ -757,7 +758,7 @@ class _HomeState extends State<OriginalPostData>
                       ),
                       Container(
                           child: new Text(
-                        "4",
+                        user?.user?.ratingAvg.toString() ?? "",
                         style: TextThemes.greyTextFieldNormal,
                       )),
                       Container(
@@ -771,7 +772,7 @@ class _HomeState extends State<OriginalPostData>
                       ),
                       Container(
                           child: new Text(
-                        "4 Reviews",
+                        "${user?.user?.ratingCount.toString() ?? "0"} Reviews",
                         style: TextThemes.greyTextFieldNormal,
                       )),
                     ],
@@ -782,15 +783,73 @@ class _HomeState extends State<OriginalPostData>
           ),
           Align(
               alignment: Alignment.center,
-              child: type == false
-                  ? InkWell(
+              child: InkWell(
                 onTap: () {
-                  showBottomSheetHire(user?.userId?.toString(), pos);
+                  var currentUserId;
+                  var _userName;
+                  var _userProfilePic;
+                  var userData = MemoryManagement.getUserInfo();
+                  if (userData != null) {
+                    Map<String, dynamic> data = jsonDecode(userData);
+                    LoginSignupResponse userResponse =
+                        LoginSignupResponse.fromJson(data);
+                    _userName = userResponse.user.name ?? "";
+                    _userProfilePic = userResponse.user.profilePic ?? "";
+                    currentUserId = userResponse.user.id.toString();
+                  }
+                  var screen = PrivateChat(
+                    peerId: user?.userId?.toString() ?? "",
+                    peerAvatar: user?.user?.profilePic?.toString() ?? "",
+                    userName: user?.user?.name?.toString() ?? "",
+                    isGroup: false,
+                    currentUserId: currentUserId,
+                    currentUserName: _userName,
+                    currentUserProfilePic: _userProfilePic,
+                  );
+                  //move to private chat screen
+                  //widget.fullScreenWidget(screen);
+
+                  Navigator.push(
+                    context,
+                    new CupertinoPageRoute(builder: (BuildContext context) {
+                      return Material(child: screen);
+                    }),
+                  );
                 },
                 child: Container(
                   width: 65,
                   height: 25,
                   alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: new BorderRadius.circular(12.0),
+                      border: new Border.all(
+                          color: Color.fromRGBO(103, 99, 99, 0.19)),
+                      color: Color.fromRGBO(248, 248, 250, 1.0)),
+                  child: new Text(
+                    "Chat",
+                    style: new TextStyle(
+                      color: Colors.black,
+                      fontFamily: AssetStrings.circulerNormal,
+                      fontSize: 13,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              )),
+          new SizedBox(
+            width: 4,
+          ),
+          Align(
+              alignment: Alignment.center,
+              child: type == false
+                  ? InkWell(
+                      onTap: () {
+                        showBottomSheetHire(user?.userId?.toString(), pos);
+                      },
+                      child: Container(
+                        width: 65,
+                        height: 25,
+                        alignment: Alignment.center,
                   decoration: BoxDecoration(
                       borderRadius: new BorderRadius.circular(12.0),
                             color: AppColors.colorDarkCyan),

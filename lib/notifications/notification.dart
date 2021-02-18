@@ -262,7 +262,9 @@ class _HomeState extends State<Notifications>
               // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
               child: getCachedNetworkImageWithurl(
-                  url: "", fit: BoxFit.fill, size: 49),
+                  url: data?.user?.profilePic ?? "",
+                  fit: BoxFit.fill,
+                  size: 49),
             ),
           ),
           Expanded(
