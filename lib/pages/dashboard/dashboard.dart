@@ -14,6 +14,7 @@ import 'package:payvor/model/update_firebase_token/update_token_request.dart';
 import 'package:payvor/pages/dummy.dart';
 import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/pages/my_profile/my_profile.dart';
+import 'package:payvor/pages/original_post/original_post_data.dart';
 import 'package:payvor/pages/pay_feedback/pay_feedback_common.dart';
 import 'package:payvor/pages/pay_feedback/pay_give_feedback.dart';
 import 'package:payvor/pages/post/post_home.dart';
@@ -22,6 +23,7 @@ import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/search_home.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
+import 'package:payvor/review/review_post.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
@@ -306,6 +308,18 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         voidcallback: null,
         lauchCallBack: null,
       ));
+    } else if (type == 3) {
+      // for rated user
+      _firebaseProvider?.changeScreen(Material(
+          child: new ReviewPost(
+        id: favid ?? "",
+      )));
+    } else if (type == 4) {
+      // for applied user
+      _firebaseProvider?.changeScreen(Material(
+          child: new OriginalPostData(
+        id: favid,
+      )));
     } else {
       // for apploed and refered favor( type 3,4 etc)
       _firebaseProvider?.changeScreen(new PostFavorDetails(

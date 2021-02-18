@@ -7,11 +7,13 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/notifications/notification_response.dart';
+import 'package:payvor/pages/original_post/original_post_data.dart';
 import 'package:payvor/pages/pay_feedback/pay_feedback_common.dart';
 import 'package:payvor/pages/pay_feedback/pay_give_feedback.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
+import 'package:payvor/review/review_post.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
@@ -272,7 +274,7 @@ class _HomeState extends State<Notifications>
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                data?.type != 3
+                data?.type != 4
                     ? Container(
                         margin: new EdgeInsets.only(left: 14.0),
                         child: new RichText(
@@ -344,8 +346,20 @@ class _HomeState extends State<Notifications>
                     voidcallback: null,
                     lauchCallBack: null,
                   ));
+                } else if (data?.type == 3) {
+                  // for rated user
+                  providerFirebase?.changeScreen(Material(
+                      child: new ReviewPost(
+                    id: data.favourId.toString() ?? "",
+                  )));
+                } else if (data?.type == 4) {
+                  // for applied user
+
+                  providerFirebase?.changeScreen(Material(
+                      child: new OriginalPostData(
+                    id: data.favourId.toString(),
+                  )));
                 } else {
-                  // for apploed and refered favor( type 3,4 etc)
                   _redirectToFavourDetailScreen(data.favourId);
                 }
               },
