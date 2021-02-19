@@ -522,9 +522,11 @@ class _HomeState extends State<MyProfile>
                               children: <Widget>[
                                 new MyEndedFavor(
                                   hireduserId: widget.hireduserId,
+                                  name: widget.name,
                                 ),
                                 new MyEndedJobs(
                                   hireduserId: widget.hireduserId,
+                                  name: widget.name,
                                 )
                               ],
                             ),

@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/my_profile_job_hire/my_profile_job_hire_response.dart';
 import 'package:payvor/pages/my_profile_details/my_profile_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
@@ -13,13 +15,16 @@ import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class MyEndedJobs extends StatefulWidget {
   final String hireduserId;
+  final String name;
 
-  MyEndedJobs({this.hireduserId});
+  MyEndedJobs({this.hireduserId, this.name});
 
   @override
   _HomeState createState() => _HomeState();
@@ -36,6 +41,11 @@ class _HomeState extends State<MyEndedJobs>
   bool offstagenodata = true;
   bool loader = false;
   String title = "";
+
+  String username = "";
+  String profilepic = "";
+  int percent = 0;
+  String location = "";
 
   List<Data> listResult = List();
 
@@ -157,79 +167,98 @@ class _HomeState extends State<MyEndedJobs>
     provider = Provider.of<AuthProvider>(context);
     providerFirebase = Provider.of<FirebaseProvider>(context);
 
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: AppColors.whiteGray,
-      body: Stack(
-        children: <Widget>[
-          new Container(
-            color: AppColors.whiteGray,
-            padding: new EdgeInsets.only(bottom: 70),
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildContestList(),
-              ],
+    return VisibilityDetector(
+      key: Key('my-widget-key_o'),
+      onVisibilityChanged: (visibilityInfo) {
+        var visiblePercentage = visibilityInfo.visibleFraction * 100;
+
+        var infoData = jsonDecode(MemoryManagement.getUserInfo());
+        var userinfo = LoginSignupResponse.fromJson(infoData);
+
+        username = userinfo?.user?.name ?? "";
+        profilepic = userinfo?.user?.profilePic ?? "";
+        location = userinfo?.user?.location ?? "";
+        percent = userinfo?.user?.perc ?? 0;
+
+        print("callllll end jobs");
+        print(percent);
+
+        setState(() {});
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: AppColors.whiteGray,
+        body: Stack(
+          children: <Widget>[
+            new Container(
+              color: AppColors.whiteGray,
+              padding: new EdgeInsets.only(bottom: 70),
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _buildContestList(),
+                ],
+              ),
             ),
-          ),
-          Offstage(
-            offstage: offstagenodata,
-            child: Container(
-              height: screenSize.height,
-              padding: new EdgeInsets.only(bottom: 40),
-              child: new Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    /* InkWell(
-                      onTap: () {},
-                      child: new SvgPicture.asset(
-                        AssetStrings.nopostnojob,
-                      ),
-                    ),*/
-                    InkWell(
-                      onTap: () {
-                        //  providerFirebase.changeScreen(Material(child: new MyProfileDetails(type: 2,postId: "68",)));
-                      },
-                      child: Container(
-                        child: new Text(
-                          "No Jobs Found",
-                          style: new TextStyle(
-                              color: Colors.black,
-                              fontFamily: AssetStrings.circulerMedium,
-                              fontSize: 17.0),
+            Offstage(
+              offstage: offstagenodata,
+              child: Container(
+                height: screenSize.height,
+                padding: new EdgeInsets.only(bottom: 40),
+                child: new Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      /* InkWell(
+                        onTap: () {},
+                        child: new SvgPicture.asset(
+                          AssetStrings.nopostnojob,
+                        ),
+                      ),*/
+                      InkWell(
+                        onTap: () {
+                          //  providerFirebase.changeScreen(Material(child: new MyProfileDetails(type: 2,postId: "68",)));
+                        },
+                        child: Container(
+                          child: new Text(
+                            "No Jobs Found",
+                            style: new TextStyle(
+                                color: Colors.black,
+                                fontFamily: AssetStrings.circulerMedium,
+                                fontSize: 17.0),
+                          ),
                         ),
                       ),
-                    ),
-                    /* Container(
-                      margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
-                      child: new Text(
-                        "You don’t have any job yet.\nOnce you’re hired it will show up here.",
-                        textAlign: TextAlign.center,
-                        style: new TextStyle(
-                            height: 1.5,
-                            color: Color.fromRGBO(103, 99, 99, 1.0),
-                            fontFamily: AssetStrings.circulerNormal,
-                            fontSize: 15.0),
-                      ),
-                    ),*/
-                  ],
+                      /* Container(
+                        margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
+                        child: new Text(
+                          "You don’t have any job yet.\nOnce you’re hired it will show up here.",
+                          textAlign: TextAlign.center,
+                          style: new TextStyle(
+                              height: 1.5,
+                              color: Color.fromRGBO(103, 99, 99, 1.0),
+                              fontFamily: AssetStrings.circulerNormal,
+                              fontSize: 15.0),
+                        ),
+                      ),*/
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          Container(
-            child: new Center(
-              child: getHalfScreenLoader(
-                status: provider.getLoading(),
-                context: context,
+            Container(
+              child: new Center(
+                child: getHalfScreenLoader(
+                  status: provider.getLoading(),
+                  context: context,
+                ),
               ),
             ),
-          ),
-          /* new Center(
-            child: _getLoader,
-          ),*/
-        ],
+            /* new Center(
+              child: _getLoader,
+            ),*/
+          ],
+        ),
       ),
     );
   }
@@ -240,15 +269,13 @@ class _HomeState extends State<MyEndedJobs>
       child: Row(
         children: <Widget>[
           new Container(
-            width: 40.0,
-            height: 40.0,
             decoration: BoxDecoration(shape: BoxShape.circle),
             alignment: Alignment.center,
             child: ClipOval(
               // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
               child: getCachedNetworkImageWithurl(
-                  url: data?.image ?? "", fit: BoxFit.fill, size: 40),
+                  url: profilepic ?? "", fit: BoxFit.cover, size: 40),
             ),
           ),
           Expanded(
@@ -260,13 +287,13 @@ class _HomeState extends State<MyEndedJobs>
                     child: Row(
                       children: [
                         new Text(
-                          data?.hired?.name ?? "",
+                          username ?? "",
                           style: TextThemes.blackCirculerMedium,
                         ),
                         new SizedBox(
                           width: 8,
                         ),
-                        data?.perc == 100
+                        percent == 100
                             ? new Image.asset(
                                 AssetStrings.verify,
                                 width: 16,
@@ -289,7 +316,7 @@ class _HomeState extends State<MyEndedJobs>
                       ),
                       Expanded(
                           child: new Text(
-                        data?.location ?? "",
+                            location ?? "",
                         style: TextThemes.greyDarkTextHomeLocation,
                       )),
                     ],
