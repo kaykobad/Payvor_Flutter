@@ -67,6 +67,7 @@ class Data {
   String paymentType;
   String hireDate;
   String paymentDate;
+  String profile_pic;
   String contractEndDate;
   String createdAt;
   String updatedAt;
@@ -80,6 +81,7 @@ class Data {
       this.hiredUserId,
       this.perc,
       this.status,
+      this.profile_pic,
       this.title,
       this.price,
       this.description,
@@ -107,6 +109,7 @@ class Data {
     description = json['description'];
     lat = json['lat'];
     perc = json['perc'];
+    profile_pic = json['profile_pic'];
     long = json['long'];
     location = json['location'];
     image = json['image'];
@@ -133,6 +136,7 @@ class Data {
     data['description'] = this.description;
     data['lat'] = this.lat;
     data['long'] = this.long;
+    data['profile_pic'] = this.profile_pic;
     data['location'] = this.location;
     data['image'] = this.image;
     data['payment_type'] = this.paymentType;
