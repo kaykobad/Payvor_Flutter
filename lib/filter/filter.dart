@@ -170,6 +170,12 @@ class _HomeState extends State<Filter>
   }
 
   void callback() {
+    if (_LocationController.text.length > 0 &&
+        _LatLongController.text.isEmpty) {
+      showInSnackBar("Please select a specific location");
+      return;
+    }
+
     var filter = FilterRequest(
       location: _LocationController.text,
       latlongData: _LatLongController.text,

@@ -320,8 +320,8 @@ class _HomeState extends State<ChatMessageDetails>
   bool get wantKeepAlive => true;
 
   void callback() async {
-
-      var currentUserId ;
+    if (widget?.userButtonMsg != null && widget?.userButtonMsg) {
+      var currentUserId;
       var _userName;
       var _userProfilePic;
       var userData = MemoryManagement.getUserInfo();
@@ -330,7 +330,7 @@ class _HomeState extends State<ChatMessageDetails>
         LoginSignupResponse userResponse = LoginSignupResponse.fromJson(data);
         _userName = userResponse.user.name ?? "";
         _userProfilePic = userResponse.user.profilePic ?? "";
-        currentUserId=userResponse.user.id.toString();
+        currentUserId = userResponse.user.id.toString();
       }
       var screen = PrivateChat(
         peerId: widget.hireduserId,
@@ -347,10 +347,12 @@ class _HomeState extends State<ChatMessageDetails>
       Navigator.push(
         context,
         new CupertinoPageRoute(builder: (BuildContext context) {
-          return Material(child:screen);
+          return Material(child: screen);
         }),
       );
-
+    } else {
+      showInSnackBar("You can't chat now");
+    }
   }
 
   redirect() async {
@@ -678,29 +680,27 @@ class _HomeState extends State<ChatMessageDetails>
                             ],
                           ),
                         ),
-                        widget?.userButtonMsg != null && widget?.userButtonMsg
-                            ? Material(
-                                elevation: 0.0,
-                                child: Container(
-                                    color: Colors.white,
-                                    padding: new EdgeInsets.only(
-                                        top: 20, bottom: 10),
-                                    child: getSetupButtonNewRow(
-                                        callback, "Message", 16,
-                                        newColor: AppColors.colorDarkCyan)),
-                        )
-                            : Container(),
-                  list.length > 0 ? Container(
-                      margin: new EdgeInsets.only(
-                          left: 16, right: 16, top: 22, bottom: 10),
-                      alignment: Alignment.centerLeft,
-                      child: new Text(
-                        "All Posts",
-                        style: TextThemes.blackCirculerMediumHeight,
-                      )) : Container(
-
-                    margin: new EdgeInsets.only(top: 100),
-                    child: new Center(
+                        Material(
+                          elevation: 0.0,
+                          child: Container(
+                              color: Colors.white,
+                              padding: new EdgeInsets.only(top: 20, bottom: 10),
+                              child: getSetupButtonNewRow(
+                                  callback, "Message", 16,
+                                  newColor: AppColors.colorDarkCyan)),
+                        ),
+                        list.length > 0
+                            ? Container(
+                                margin: new EdgeInsets.only(
+                                    left: 16, right: 16, top: 22, bottom: 10),
+                                alignment: Alignment.centerLeft,
+                                child: new Text(
+                                  "All Posts",
+                                  style: TextThemes.blackCirculerMediumHeight,
+                                ))
+                            : Container(
+                                margin: new EdgeInsets.only(top: 100),
+                                child: new Center(
 
                       child: new Text(
                         "No Favors Found",
