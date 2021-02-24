@@ -25,9 +25,9 @@ class Constants{
 
   //privacy policy and term of users links
   static const String privacyPolicy =
-      "https://www.freeprivacypolicy.com/blog/privacy-policy-url/";
+      "http://167.172.40.120/privacy-policy";
   static const String TermOfUses =
-      "https://www.freeprivacypolicy.com/blog/privacy-policy-url/";
+      "http://167.172.40.120/terms";
 
   static const int HOME_LAUCH_DETAILS_SCREEN = 1;
   static const int HOME_LAUCH_SEARCH_SCREEN = 2;

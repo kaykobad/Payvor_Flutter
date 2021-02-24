@@ -213,7 +213,7 @@ class User {
   String name;
   String email;
   String phone;
-  String otp;
+  dynamic otp;
   String type;
   String countryCode;
   String lat;

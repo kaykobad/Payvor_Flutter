@@ -184,9 +184,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
-
-    print("dashboard");
 
     MemoryManagement.setScreenType(type: "3");
     _firebaseMessaging = FirebaseMessaging();
@@ -211,18 +208,29 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   void showNotification(
-      String title, String body, Map<String, dynamic> data) async {
+    String title,
+    String body,
+    Map<String, dynamic> data,
+    String type,
+    String favid,
+    String userId,
+  ) async {
     AndroidNotificationDetails androidPlatformChannelSpecifics =
         new AndroidNotificationDetails(
             'your channel id', 'your channel name', 'your channel description');
     IOSNotificationDetails iOSPlatformChannelSpecifics =
         new IOSNotificationDetails();
+
+    MacOSNotificationDetails macOSNotificationDetails =
+        new MacOSNotificationDetails();
     NotificationDetails platformChannelSpecifics = new NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    int type = int.tryParse(data["data"]["type"]);
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics,
+        macOS: macOSNotificationDetails);
+    // int type = int.tryParse(data["data"]["type"]);
     await flutterLocalNotificationsPlugin.show(
         100, title, body, platformChannelSpecifics,
-        payload: type.toString());
+        payload: "$type,$favid,$userId");
   }
 
   void configurePushNotification() async {
@@ -232,20 +240,30 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       onMessage: (Map<String, dynamic> message) async {
         print("config Notification onMessage");
         print("onMessage $message");
-        var type = message['data']['type'];
-        String favid = message['data']['fav_id'];
-        String userid = message['data']['user_id'];
-
-        moveToScreen(int.tryParse(type), favid, userid);
-
-        //  showNotification(title, body, message);
+        if (Platform.isIOS) {
+          var type = message['notification']['type'];
+          String favid = message['notification']['fav_id'];
+          String userid = message['notification']['user_id'];
+          String title = message['notification']['title'];
+          String description = message['notification']['body'];
+          print("data proceed");
+          showNotification(title, description, message, type, favid, userid);
+        }
       },
       onReceive: (Map<String, dynamic> message) async {
         print("config Notification onReceive");
         //  print("onResume: ${message}");
         print("onResume: ${message['data']['type']}");
-
-        String payload = message['data']['type'];
+        print("onMessage $message");
+        if (Platform.isIOS) {
+          var type = message['notification']['type'];
+          String favid = message['notification']['fav_id'];
+          String userid = message['notification']['user_id'];
+          String title = message['notification']['title'];
+          String description = message['notification']['body'];
+          print("data proceed");
+          showNotification(title, description, message, type, favid, userid);
+        }
 
       },
       onResume: (Map<String, dynamic> message) async {
@@ -257,7 +275,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         var type = message['data']['type'];
         String favid = message['data']['fav_id'];
         String userid = message['data']['user_id'];
-
+        print("onMessage data parsed");
         moveToScreen(int.tryParse(type), favid, userid);
       },
       onLaunch: (Map<String, dynamic> message) async {
@@ -360,16 +378,50 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   void _initPushNotification() async {
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-// initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
-    var initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
-    var initializationSettingsIOS = IOSInitializationSettings(
-        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-    var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('app_icon');
+    final IOSInitializationSettings initializationSettingsIOS =
+    IOSInitializationSettings(
+      requestSoundPermission: false,
+      requestBadgePermission: false,
+      requestAlertPermission: false,
+      onDidReceiveLocalNotification: onDidReceiveLocalNotification,
+    );
+
+    final MacOSInitializationSettings initializationSettingsMacOS =
+    MacOSInitializationSettings(
+        requestAlertPermission: false,
+        requestBadgePermission: false,
+        requestSoundPermission: false);
+
+    final InitializationSettings initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsIOS,
+        macOS: initializationSettingsMacOS);
+
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
+
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        MacOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
   }
 
   Future onDidReceiveLocalNotification(
@@ -399,22 +451,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       debugPrint('notification payload: ' + payload);
 //      Map valueMap = json.decode(payload);
       print("type $payload");
-      moveToScreenFromPush(int.tryParse(payload)); //when click in push
-
+      var data = payload.split(",");
+      moveToScreen(int.tryParse(data[0]), data[1], data[2]);
     }
   }
 
-//screen redirection for chat
-  moveToScreenFromPush(int type) {
-    switch ((type)) {
-      case 1:
-        //moveToLenderScreen();
-        break;
-      case 2:
-        //  movetoBorrowScreen(1);
-        break;
-    }
-  }
 
   @override
   void dispose() {

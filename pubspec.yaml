@@ -69,7 +69,7 @@ dev_dependencies:
   url_launcher: ^5.7.10
   stripe_payment: ^1.0.10
   flutter_switch: ^0.0.2
-  flutter_local_notifications: ^1.1.6
+  flutter_local_notifications: ^4.0.1
   app_review:
 
 

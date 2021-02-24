@@ -106,7 +106,7 @@ class _HomeState extends State<EditProfile>
     profile = userinfo?.user?.profilePic ?? "";
     print("profile");
     _LocationController.text = userinfo?.user?.location ?? "";
-    _LatLongController.text = userinfo?.user?.lat + "," + userinfo?.user?.long;
+    _LatLongController.text = "${userinfo?.user?.lat??0.0},${userinfo?.user?.long??0.0}";
 
     _setScrollListener();
 
@@ -116,7 +116,6 @@ class _HomeState extends State<EditProfile>
   @override
   void dispose() {
     _streamControllerShowLoader.close(); //close the stream on dispose
-
     super.dispose();
   }
 
