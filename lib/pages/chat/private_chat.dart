@@ -368,7 +368,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
 
     //check if user online or offline
     if (!userWindowStatus) {
-      //  setPushNotification(content);
+        setPushNotification(content);
     }
   }
 
@@ -831,6 +831,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
   }
 
   void setPushNotification(String content) async {
+
 //    bool gotInternetConnection = await hasInternetConnection(
 //      context: context,
 //      mounted: mounted,
@@ -844,7 +845,6 @@ class PrivateChatScreenState extends State<PrivateChat> {
 //          toId: peerId, fromId: currentUseerId, message: content);
 //      var response = await _dashBoardBloc.sendNotification(
 //          context: context, sendNotificationRequest: request);
-//
 //
 //      //push sent
 //      if (response != null && (response is SendNotificationResponse)) {
