@@ -8,8 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_for_chat.dart';
 import 'package:payvor/pages/chat/chat_user.dart';
+import 'package:payvor/pages/chat/send_noti_request.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/payment/chat_bubble_image_left.dart';
 import 'package:payvor/pages/payment/chat_bubble_image_right.dart';
@@ -831,28 +833,26 @@ class PrivateChatScreenState extends State<PrivateChat> {
   }
 
   void setPushNotification(String content) async {
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {},
+      onSuccess: () {},
+    );
 
-//    bool gotInternetConnection = await hasInternetConnection(
-//      context: context,
-//      mounted: mounted,
-//      canShowAlert: true,
-//      onFail: () {},
-//      onSuccess: () {},
-//    );
-//
-//    if (gotInternetConnection) {
-//      var request = new SendNotificationRequest(
-//          toId: peerId, fromId: currentUseerId, message: content);
-//      var response = await _dashBoardBloc.sendNotification(
-//          context: context, sendNotificationRequest: request);
-//
-//      //push sent
-//      if (response != null && (response is SendNotificationResponse)) {
-//        print(response.message);
-//      } else {
-//        print(response);
-//      }
-//    }
+    if (gotInternetConnection) {
+      var request = new SendNotificationRequest(
+          reciver_id: peerId, message: content);
+      var response = await firebaseProvider.sendNotification(
+          context: context, notificationRequest: request);
+      //push sent
+      if (response != null && (response is ReportResponse)) {
+        print(response.message);
+      } else {
+        print(response);
+      }
+    }
   }
 
   @override

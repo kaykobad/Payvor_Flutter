@@ -5,11 +5,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
+import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_for_chat.dart';
+import 'package:payvor/networkmodel/APIHandler.dart';
+import 'package:payvor/networkmodel/APIs.dart';
 import 'package:payvor/pages/chat/chat_user.dart';
 import 'package:payvor/pages/chat/payvor_firebase_user.dart';
 import 'package:payvor/pages/chat/payvor_group_chat.dart';
+import 'package:payvor/pages/chat/send_noti_request.dart';
 import 'package:payvor/pages/payment/firebase_constants.dart';
 import 'package:payvor/pages/search/search_home.dart';
 import 'package:payvor/utils/constants.dart';
@@ -323,6 +328,28 @@ class FirebaseProvider with ChangeNotifier {
     chatUser.updatedAt = new DateTime.now().millisecondsSinceEpoch;
 
     _addUser(user.userId, chatUser, userId.toString());
+  }
+
+  Future<dynamic> sendNotification(
+      {@required SendNotificationRequest notificationRequest,
+      @required BuildContext context}) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+
+    var response = await APIHandler.post(
+      context: context,
+      requestBody: notificationRequest,
+      url: APIs.sendNotification,
+    );
+
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      ReportResponse sendNotificationResponse =
+          new ReportResponse.fromJson(response);
+      completer.complete(sendNotificationResponse);
+      return completer.future;
+    }
   }
 
   void _addUser(String userId, ChatUser user, String currentUserId) async {

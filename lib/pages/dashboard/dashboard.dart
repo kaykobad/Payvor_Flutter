@@ -11,6 +11,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:payvor/chat/chat_screen.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/update_firebase_token/update_token_request.dart';
+import 'package:payvor/pages/chat/private_chat.dart';
 import 'package:payvor/pages/dummy.dart';
 import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/pages/my_profile/my_profile.dart';
@@ -276,7 +277,20 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         String favid = message['data']['fav_id'];
         String userid = message['data']['user_id'];
         print("onMessage data parsed");
-        moveToScreen(int.tryParse(type), favid, userid);
+
+        try {
+          int types = int.tryParse(type);
+
+          if (types == 7) {
+            String userid = message['data']['user_id'];
+            String username = message['data']['user_name'];
+            String profilepic = message['data']['profile_pic'];
+
+            movetochatScreen(userid, profilepic, username);
+          } else {
+            moveToScreen(int.tryParse(type), favid, userid);
+          }
+        } catch (e) {}
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("config Notification onLaunch");
@@ -285,7 +299,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         String favid = message['data']['fav_id'];
         String userid = message['data']['user_id'];
 
-        moveToScreen(int.tryParse(type), favid, userid);
+        try {
+          int types = int.tryParse(type);
+
+          if (types == 7) {
+            String userid = message['data']['user_id'];
+            String username = message['data']['user_name'];
+            String profilepic = message['data']['profile_pic'];
+
+            movetochatScreen(userid, profilepic, username);
+          } else {
+            moveToScreen(int.tryParse(type), favid, userid);
+          }
+        } catch (e) {}
       },
     );
 
@@ -344,6 +370,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         id: favid.toString(),
       ));
     }
+  }
+
+  void movetochatScreen(String senderid, String image, String name) {
+    var screen = PrivateChat(
+      peerId: senderid ?? "",
+      peerAvatar: image ?? "",
+      userName: name ?? "",
+      isGroup: false,
+      currentUserId: userId,
+      currentUserName: userName,
+      currentUserProfilePic: profile,
+    );
+    _firebaseProvider?.changeScreen(screen);
   }
 
   void setDeviceToken(String token) async {

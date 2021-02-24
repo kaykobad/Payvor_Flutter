@@ -58,4 +58,5 @@ class APIs {
   static const String endFavors = "$baseUrl/ended-favours/";
   static const String userHire = "$baseUrl/hire-user/";
   static const String deletePost = "$baseUrl/delete-repost-favour/";
+  static const String sendNotification = "$baseUrl/chat-noti";
 }
