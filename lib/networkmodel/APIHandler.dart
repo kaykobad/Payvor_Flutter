@@ -171,6 +171,7 @@ class APIHandler {
       completer.complete(response.data);
 
     } on DioError catch (e) {
+      print("url: ${url}");
       print("error ${e.response?.statusCode}");
       print("messag ${e.response?.data}");
       print("messag ${e.response}");
