@@ -234,6 +234,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         payload: "$type,$favid,$userId");
   }
 
+  //redirect to chat screen when receive the notification
+  void _moveToChatScreen() {
+    setState(() {
+      currentTab = 3;
+    });
+  }
+
   void configurePushNotification() async {
     print("config Notification");
 
@@ -242,13 +249,17 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         print("config Notification onMessage");
         print("onMessage $message");
         if (Platform.isIOS) {
+           //move to chat screen
           var type = message['notification']['type'];
-          String favid = message['notification']['fav_id'];
-          String userid = message['notification']['user_id'];
           String title = message['notification']['title'];
           String description = message['notification']['body'];
-          print("data proceed");
-          showNotification(title, description, message, type, favid, userid);
+          if (type.toString() == "7") {
+            showNotification(title, description, message, type, "0", "0");
+          } else {
+            String favid = message['notification']['fav_id'];
+            String userid = message['notification']['user_id'];
+            showNotification(title, description, message, type, favid, userid);
+          }
         }
       },
       onReceive: (Map<String, dynamic> message) async {
@@ -258,12 +269,15 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         print("onMessage $message");
         if (Platform.isIOS) {
           var type = message['notification']['type'];
-          String favid = message['notification']['fav_id'];
-          String userid = message['notification']['user_id'];
           String title = message['notification']['title'];
           String description = message['notification']['body'];
-          print("data proceed");
-          showNotification(title, description, message, type, favid, userid);
+          if (type.toString() == "7") {
+            showNotification(title, description, message, type, "0", "0");
+          } else {
+            String favid = message['notification']['fav_id'];
+            String userid = message['notification']['user_id'];
+            showNotification(title, description, message, type, favid, userid);
+          }
         }
 
       },
@@ -271,47 +285,53 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         print("config Notification onResume");
         //  print("onResume: ${message}");
         print("onResume $message");
-        print("onResume: ${message['data']['type']}");
 
-        var type = message['data']['type'];
-        String favid = message['data']['fav_id'];
-        String userid = message['data']['user_id'];
-        print("onMessage data parsed");
-
-        try {
-          int types = int.tryParse(type);
-
-          if (types == 7) {
-            String userid = message['data']['user_id'];
-            String username = message['data']['user_name'];
-            String profilepic = message['data']['profile_pic'];
-
-            movetochatScreen(userid, profilepic, username);
+        if (Platform.isIOS) {
+          var type = message['notification']['type'];
+          String title = message['notification']['title'];
+          String description = message['notification']['body'];
+          if (type.toString() == "7") {
+            showNotification(title, description, message, type, "0", "0");
           } else {
+            String favid = message['notification']['fav_id'];
+            String userid = message['notification']['user_id'];
+            showNotification(title, description, message, type, favid, userid);
+          }
+        } else {
+          var type = message['data']['type'];
+          if (type.toString() == "7") {
+            _moveToChatScreen();
+          } else {
+            String favid = message['data']['fav_id'];
+            String userid = message['data']['user_id'];
             moveToScreen(int.tryParse(type), favid, userid);
           }
-        } catch (e) {}
+        }
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("config Notification onLaunch");
         print("onLaunch $message");
-        var type = message['data']['type'];
-        String favid = message['data']['fav_id'];
-        String userid = message['data']['user_id'];
-
-        try {
-          int types = int.tryParse(type);
-
-          if (types == 7) {
-            String userid = message['data']['user_id'];
-            String username = message['data']['user_name'];
-            String profilepic = message['data']['profile_pic'];
-
-            movetochatScreen(userid, profilepic, username);
+        if (Platform.isIOS) {
+          var type = message['notification']['type'];
+          String title = message['notification']['title'];
+          String description = message['notification']['body'];
+          if (type.toString() == "7") {
+            showNotification(title, description, message, type, "0", "0");
           } else {
+            String favid = message['notification']['fav_id'];
+            String userid = message['notification']['user_id'];
+            showNotification(title, description, message, type, favid, userid);
+          }
+        } else {
+          var type = message['data']['type'];
+          if (type.toString() == "7") {
+            _moveToChatScreen();
+          } else {
+            String favid = message['data']['fav_id'];
+            String userid = message['data']['user_id'];
             moveToScreen(int.tryParse(type), favid, userid);
           }
-        } catch (e) {}
+        }
       },
     );
 
@@ -491,7 +511,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 //      Map valueMap = json.decode(payload);
       print("type $payload");
       var data = payload.split(",");
-      moveToScreen(int.tryParse(data[0]), data[1], data[2]);
+      if (data[0] == "7") {
+        _moveToChatScreen();
+      } else
+        moveToScreen(int.tryParse(data[0]), data[1], data[2]);
     }
   }
 
