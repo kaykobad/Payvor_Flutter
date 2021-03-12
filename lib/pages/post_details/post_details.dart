@@ -1197,8 +1197,11 @@ class _HomeState extends State<PostFavorDetails>
                         getRowsPayment(ResString().get('job_payment'),
                             "€${favoriteResponse?.data?.price}", 23.0),
                         getRowsPayment(
-                            ResString().get('payvor_service_fee') +
-                                "(${favoriteResponse?.data?.service_perc?.toString()}%)",
+                            !isCurrentUser
+                                ? ResString().get('payvor_service_fee') +
+                                    "(${favoriteResponse?.data?.service_perc?.toString()}%)"
+                                : ResString().get('payvor_service_fee') +
+                                    "(0%)",
                             isCurrentUser
                                 ? "-€0"
                                 : "-€${favoriteResponse?.data?.service_fee}",

@@ -935,23 +935,34 @@ class _HomeState extends State<PayFeebackDetails>
                       child: new Text(
                         ResString().get('payment_brkdown'),
                         style: TextThemes.blackCirculerMediumHeight,
-                      )),
-                  getRowsPayment(
-                      ResString().get('job_payment'),
-                      "€${hiredUserDetailsResponse?.data?.price?.toString() ??
-                          ""}", 23.0),
-                  getRowsPayment(
+                            )),
+                        getRowsPayment(
+                            ResString().get('job_payment'),
+                            "€${hiredUserDetailsResponse?.data?.price?.toString() ?? ""}",
+                            23.0),
+                        /* getRowsPayment(
                       ResString().get('payvor_service_fee') +
                           "(${hiredUserDetailsResponse?.data?.servicePerc
                               ?.toString()}%)",
                       "-€${hiredUserDetailsResponse?.data?.serviceFee?.toString() ?? ""}",
-                      9.0),
-                  new Container(
-                    height: 13,
-                    color: Colors.white,
-                  ),
-                  Opacity(
-                    opacity: 0.12,
+                      9.0),*/
+
+                        getRowsPayment(
+                            !isCurrentUser
+                                ? ResString().get('payvor_service_fee') +
+                                    "(${hiredUserDetailsResponse?.data?.servicePerc?.toString()}%)"
+                                : ResString().get('payvor_service_fee') +
+                                    "(0%)",
+                            isCurrentUser
+                                ? "-€0"
+                                : "-€${hiredUserDetailsResponse?.data?.serviceFee}",
+                            9.0),
+                        new Container(
+                          height: 13,
+                          color: Colors.white,
+                        ),
+                        Opacity(
+                          opacity: 0.12,
                           child: new Container(
                             height: 1.0,
                             margin:
@@ -975,9 +986,20 @@ class _HomeState extends State<PayFeebackDetails>
                                     fontSize: 15),
                                 textAlign: TextAlign.center,
                               ),
-                              new Text(
+                              /* new Text(
                                 "€${hiredUserDetailsResponse?.data?.receiving
                                     ?.toString() ?? ""}",
+                                style: new TextStyle(
+                                    fontFamily: AssetStrings.circulerBoldStyle,
+                                    color: AppColors.bluePrimary,
+                                    fontSize: 15),
+                                textAlign: TextAlign.center,
+                              ),*/
+
+                              new Text(
+                                isCurrentUser
+                                    ? "€${hiredUserDetailsResponse?.data?.price}"
+                                    : "€${hiredUserDetailsResponse?.data?.receiving}",
                                 style: new TextStyle(
                                     fontFamily: AssetStrings.circulerBoldStyle,
                                     color: AppColors.bluePrimary,
