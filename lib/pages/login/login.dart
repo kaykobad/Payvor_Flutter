@@ -274,7 +274,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
 
       if (type == "0") {
 
-        if (response?.user != null && response?.user.is_location == 0) {
+        if (response?.user != null && response?.user?.is_location == 0) {
           Navigator.push(
             context,
             new CupertinoPageRoute(builder: (BuildContext context) {

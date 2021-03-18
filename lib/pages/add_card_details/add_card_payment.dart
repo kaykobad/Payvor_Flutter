@@ -19,7 +19,6 @@ import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 
 class AddCardDetails extends StatefulWidget {
   ValueSetter<int> voidcallback;
@@ -35,7 +34,7 @@ class _PaymentDialogState extends State<AddCardDetails> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   GlobalKey<FormState> _fieldKey = new GlobalKey<FormState>();
-  PaymentMethod _paymentMethod;
+ // PaymentMethod _paymentMethod;
 
   TextEditingController _AccountController = new TextEditingController();
   TextEditingController _NameController = new TextEditingController();
@@ -56,7 +55,7 @@ class _PaymentDialogState extends State<AddCardDetails> {
   String textName = "";
   String textMonth = "";
   String textCvv = "";
-  Token _paymentToken;
+ // Token _paymentToken;
   AuthProvider provider;
 
   List<TextInputFormatter> listCardNumber = new List<TextInputFormatter>();
@@ -167,7 +166,7 @@ class _PaymentDialogState extends State<AddCardDetails> {
     provider = Provider.of<AuthProvider>(context);
     return Scaffold(
       key: _scaffoldKey,
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       appBar: getAppBarNew(context),
       backgroundColor: Colors.white,
       body: Container(

@@ -3,7 +3,7 @@ import 'package:payvor/model/login/loginsignupreponse.dart';
 class UserProfileFavorResponse {
   Status status;
   Data data;
-  User user;
+  AppUser user;
 
   UserProfileFavorResponse({this.status, this.data, this.user});
 
@@ -11,7 +11,7 @@ class UserProfileFavorResponse {
     status =
         json['status'] != null ? new Status.fromJson(json['status']) : null;
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    user = json['user'] != null ? new AppUser.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {

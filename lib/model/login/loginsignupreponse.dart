@@ -1,7 +1,7 @@
 class LoginSignupResponse {
   Status status;
   String data;
-  User user;
+  AppUser user;
   bool isnew;
 
   LoginSignupResponse({this.status, this.data, this.user, this.isnew});
@@ -10,7 +10,7 @@ class LoginSignupResponse {
     status =
     json['status'] != null ? new Status.fromJson(json['status']) : null;
     data = json['data'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    user = json['user'] != null ? new AppUser.fromJson(json['user']) : null;
     isnew = json['isnew'];
   }
 
@@ -50,7 +50,7 @@ class Status {
   }
 }
 
-class User {
+class AppUser {
   int id;
   String name;
   String email;
@@ -79,7 +79,7 @@ class User {
   num disable_push;
   String device_id;
 
-  User({
+  AppUser({
     this.id,
     this.name,
     this.email,
@@ -109,7 +109,7 @@ class User {
     this.device_id,
   });
 
-  User.fromJson(Map<String, dynamic> json) {
+  AppUser.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     email = json['email'];

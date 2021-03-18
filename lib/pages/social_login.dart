@@ -8,7 +8,10 @@ import 'package:twitter_login/twitter_login.dart';
 //import 'package:flutter_twitter/flutter_twitter.dart' as androidTwitter;
 class SocialLogin extends StatelessWidget {
   bool isLoggedIn = false;
-  static final FacebookLogin facebookSignIn = new FacebookLogin();
+  final FacebookLogin facebookSignIn = new FacebookLogin();
+  final String _twitterApiKey = 'NjhbcYuBWb8RZAOnbd2nlbYD0';
+  final String _twitterApiSecretKey =
+      'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl';
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +58,8 @@ class SocialLogin extends StatelessWidget {
 
     try {
       var twitterLogin = new TwitterLogin(
-          apiKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
-          apiSecretKey: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
+          apiKey: _twitterApiKey,
+          apiSecretKey: _twitterApiSecretKey,
           redirectURI: "twitterkit-NjhbcYuBWb8RZAOnbd2nlbYD0://");
 
       final authResult = await twitterLogin.login();
@@ -85,7 +88,7 @@ class SocialLogin extends StatelessWidget {
           // _showErrorMessage(result.error);
           break;
       }
-
+      print("twitter id ${authResult.user.id}");
       return twitterAuthResult;
     }catch(ex)
     {
@@ -94,12 +97,13 @@ class SocialLogin extends StatelessWidget {
       print("twitter_error ${ex.toString()}");
       return twitterAuthResult;
     }
+
   }
 
   Future<dynamic> twitterLoginAndroid() async {
 //    var twitterLogin = new androidTwitter.TwitterLogin(
-//      consumerKey: 'NjhbcYuBWb8RZAOnbd2nlbYD0',
-//      consumerSecret: 'rqXzFc5wPl7UnyvDjTSH4aaPHRB39i3BE6FjaDgJ3nFalp04dl',
+//      consumerKey: _twitterApiKey,
+//      consumerSecret: _twitterApiSecretKey,
 //    );
 //
 //    TwitterAuthResult twitterAuthResult = new TwitterAuthResult();

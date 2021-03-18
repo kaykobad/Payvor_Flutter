@@ -88,7 +88,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
   String peerId;
   String peerAvatar;
   String currentUseerId;
-  var listMessage;
+  List<QueryDocumentSnapshot> listMessage;
   String groupChatId;
   File imageFile;
   bool isLoading;
@@ -211,18 +211,18 @@ class PrivateChatScreenState extends State<PrivateChat> {
   }
 
   void getUserUserStatusOnChatWindow() {
-    var docRef = Firestore.instance
+    var docRef = FirebaseFirestore.instance
         .collection(MESSAGES)
-        .document(groupChatId)
+        .doc(groupChatId)
         .collection("chatwindowstatus")
-        .document(peerId)
+        .doc(peerId)
         .snapshots();
 
     docRef.listen((DocumentSnapshot snapshot) {
       if (snapshot.data == null) {
         userWindowStatus = false;
       } else {
-        userWindowStatus = snapshot.data["isOnline"];
+        userWindowStatus = (snapshot.data()==null)?false:snapshot.data()["isOnline"];
       }
       print("isonline $userWindowStatus");
       _streamControllerUserStatus.add(userWindowStatus);
@@ -231,46 +231,46 @@ class PrivateChatScreenState extends State<PrivateChat> {
 
   void _checkIsUserBockedOrBlockedBy() {
     //check if user whom chatting is blocked
-    var docRef = Firestore.instance
+    var docRef = FirebaseFirestore.instance
         .collection(MESSAGES)
-        .document(groupChatId)
+        .doc(groupChatId)
         .collection("blockstatus")
-        .document(peerId)
+        .doc(peerId)
         .snapshots();
 
     docRef.listen((DocumentSnapshot result) {
       if (result.data == null) {
         isUserBlocked = false;
       } else {
-        isUserBlocked = result.data["isBlocked"];
+        isUserBlocked = (result.data()==null)?false:result.data()["isBlocked"];
       }
     });
 
     //check if user blocked by chatting user
-    var docRef2 = Firestore.instance
+    var docRef2 = FirebaseFirestore.instance
         .collection('messages')
-        .document(groupChatId)
+        .doc(groupChatId)
         .collection("blockstatus")
-        .document(currentUseerId)
+        .doc(currentUseerId)
         .snapshots();
 
     docRef2.listen((DocumentSnapshot result) {
       if (result.data == null) {
         isUserBlockedBy = false;
       } else {
-        isUserBlockedBy = result.data["isBlocked"];
+        isUserBlockedBy = (result.data()==null)?false:result.data()["isBlocked"];
       }
     });
   }
 
   void _blockUnblockUser(bool status) {
-    var docRef = Firestore.instance
+    var docRef = FirebaseFirestore.instance
         .collection('messages')
-        .document(groupChatId)
+        .doc(groupChatId)
         .collection("blockstatus")
-        .document(peerId);
+        .doc(peerId);
 
-    docRef.setData({'isBlocked': status}).then((results) {
+    docRef.set({'isBlocked': status}).then((results) {
       isUserBlocked = status;
       if (status) //if user is blocked
         showAlertDialog(Constants.USER_BLOCKED_MESSAGE);
@@ -307,10 +307,10 @@ class PrivateChatScreenState extends State<PrivateChat> {
   Future uploadFile() async {
     var user = "user+${widget.currentUserId}";
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    StorageReference reference =
+    Reference reference =
         FirebaseStorage.instance.ref().child(user).child(fileName);
-    StorageUploadTask uploadTask = reference.putFile(imageFile);
-    StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+    UploadTask uploadTask = reference.putFile(imageFile);
+    TaskSnapshot storageTaskSnapshot = await uploadTask.snapshot;
     storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
       imageUrl = downloadUrl;
       setState(() {
@@ -339,13 +339,13 @@ class PrivateChatScreenState extends State<PrivateChat> {
       textEditingController.clear();
       var timeStamp = DateTime.now().millisecondsSinceEpoch;
       print("chatid" + groupChatId);
-      var documentReference = Firestore.instance
+      var documentReference = FirebaseFirestore.instance
           .collection('messages')
-          .document(groupChatId)
+          .doc(groupChatId)
           .collection('items')
-          .document(timeStamp.toString());
+          .doc(timeStamp.toString());
 
-      documentReference.setData(
+      documentReference.set(
         {
           'idFrom': currentUseerId,
           'idTo': peerId,
@@ -377,13 +377,13 @@ class PrivateChatScreenState extends State<PrivateChat> {
   void setOnlineOfflineStatusOnWindow(bool status) async {
     var statusData = new Map<String, dynamic>();
     statusData["isOnline"] = status;
-    var docRef = Firestore.instance
+    var docRef = FirebaseFirestore.instance
         .collection('messages')
-        .document(groupChatId)
+        .doc(groupChatId)
         .collection("chatwindowstatus")
-        .document(currentUseerId);
+        .doc(currentUseerId);
 
-    docRef.setData(statusData).catchError((e) {
+    docRef.set(statusData).catchError((e) {
       print("error ${e.toString()}");
     });
   }
@@ -417,7 +417,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
 
   Widget _otherChatMessageBubble(String content, num timeStamp, int index) {
     var isLiked = false;
-    var likedBy = listMessage[index]['likedby'];
+    var likedBy = listMessage[index].data()['likedby'];
     print("liked by $likedBy");
     if (likedBy != null) {
       isLiked =
@@ -446,23 +446,23 @@ class PrivateChatScreenState extends State<PrivateChat> {
     );
   }
 
-  Widget buildItem(int index, DocumentSnapshot document) {
-    if (document['idFrom'] == currentUseerId) {
+  Widget buildItem(int index, QueryDocumentSnapshot doc) {
+    if (doc.data()['idFrom'] == currentUseerId) {
       // Right (my message)
       return Column(
         children: <Widget>[
-          document['type'] == 0
+          doc.data()['type'] == 0
               // Text
               ? _myChatBubbleMessage(
-                  document['content'], document['timestamp'], index)
-              : document['type'] == 1
+                  doc.data()['content'], doc.data()['timestamp'], index)
+              : doc.data()['type'] == 1
                   // Image
                   ? _myChatBubbleImage(
-                      document['content'], document['timestamp'], index)
+                      doc.data()['content'], doc.data()['timestamp'], index)
                   // Sticker
                   : Container(
                       child: new Image.asset(
-                        'images/${document['content']}.gif',
+                        'images/${doc.data()['content']}.gif',
                         width: 100.0,
                         height: 100.0,
                         fit: BoxFit.cover,
@@ -505,18 +505,18 @@ class PrivateChatScreenState extends State<PrivateChat> {
 //                      )
 //                    :
                 : Container(),
-            document['type'] == 0
+            doc.data()['type'] == 0
                 ? _otherChatMessageBubble(
-                    document['content'], document['timestamp'], index)
-                : document['type'] == 1
+                    doc.data()['content'], doc.data()['timestamp'], index)
+                : doc.data()['type'] == 1
                 ? Container(
               child: _otherChatImageBubble(
-                  document['content'], document['timestamp'], index),
+                  doc.data()['content'], doc.data()['timestamp'], index),
               margin: EdgeInsets.only(left: 10.0),
             )
                 : Container(
 //                  child: new Image.asset(
-//                    'images/${document['content']}.gif',
+//                    'images/${doc.data()['content']}.gif',
 //                    width: 100.0,
 //                    height: 100.0,
 //                    fit: BoxFit.cover,
@@ -532,7 +532,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
 //                    child: Text(
 //                      DateFormat('dd MMM kk:mm').format(
 //                          DateTime.fromMillisecondsSinceEpoch(
-//                              document['timestamp'])),
+//                              doc.data()['timestamp'])),
 //                      style: TextStyle(
 //                          color: AppColors.kGrey,
 //                          fontSize: 12.0,
@@ -553,7 +553,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
   bool isLastMessageLeft(int index) {
     if ((index > 0 &&
             listMessage != null &&
-            listMessage[index - 1]['idFrom'] == currentUseerId) ||
+            listMessage[index - 1].data()['idFrom'] == currentUseerId) ||
         index == 0) {
       return true;
     } else {
@@ -564,7 +564,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
   bool isLastMessageRight(int index) {
     if ((index > 0 &&
             listMessage != null &&
-            listMessage[index - 1]['idFrom'] != currentUseerId) ||
+            listMessage[index - 1].data()['idFrom'] != currentUseerId) ||
         index == 0) {
       return true;
     } else {
@@ -1021,30 +1021,30 @@ class PrivateChatScreenState extends State<PrivateChat> {
   Widget buildListMessage() {
     return Flexible(
       child: StreamBuilder(
-        stream: Firestore.instance
+        stream: FirebaseFirestore.instance
             .collection('messages')
-            .document(groupChatId)
+            .doc(groupChatId)
             .collection('items')
             .orderBy('timestamp', descending: true)
             .limit(100)
             .snapshots(),
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(
                 child: CupertinoActivityIndicator(
               radius: Constants.LOADER_RADIUS,
             ));
           } else {
-            listMessage = snapshot.data.documents;
+            listMessage = snapshot.data.docs;
             var messageList = List<Widget>();
             var index = 0;
-            for (var document in snapshot.data.documents) {
-              var timeSection = TimeAgo.timeString(document['timestamp']);
+            for (var doc in snapshot.data.docs) {
+              var timeSection = TimeAgo.timeString(doc.data()['timestamp']);
               if (_timeSection != timeSection) {
                 messageList.add(_timeSectionWidget(_timeSection));
                  _timeSection = timeSection;
               }
-              messageList.add(buildItem(index, snapshot.data.documents[index]));
+              messageList.add(buildItem(index, snapshot.data.docs[index]));
               index++;
 
             }

@@ -7,13 +7,15 @@ import 'package:payvor/provider/theme_provider.dart';
 import 'package:payvor/viewmodel/auth_view_model.dart';
 import 'package:payvor/viewmodel/home_view_model.dart';
 import 'package:provider/provider.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'enums/flavor.dart';
 
 void main() {
   //for check life cycle
   WidgetsFlutterBinding.ensureInitialized();
-
+  Firebase.initializeApp();
 //  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.landscapeLeft])
   //    .then((_) async {
   runApp(

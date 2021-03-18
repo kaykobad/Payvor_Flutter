@@ -8,7 +8,7 @@ import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
-import 'package:stripe_payment/stripe_payment.dart';
+//import 'package:stripe_payment/stripe_payment.dart';
 
 class PaymentDialog extends StatefulWidget {
   ValueSetter<int> voidcallback;
@@ -23,7 +23,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   GlobalKey<FormState> _fieldKey = new GlobalKey<FormState>();
-  PaymentMethod _paymentMethod;
+  //PaymentMethod _paymentMethod;
 
   TextEditingController _AccountController = new TextEditingController();
   TextEditingController _NameController = new TextEditingController();
@@ -44,7 +44,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
   String textName = "";
   String textMonth = "";
   String textCvv = "";
-  Token _paymentToken;
+  //Token _paymentToken;
   List<TextInputFormatter> listCardNumber = new List<TextInputFormatter>();
   List<TextInputFormatter> listExpDate = new List<TextInputFormatter>();
   List<TextInputFormatter> listcvv = new List<TextInputFormatter>();
@@ -94,7 +94,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: Container(
           decoration: new BoxDecoration(
             borderRadius: BorderRadius.only(
@@ -449,20 +449,20 @@ class _PaymentDialogState extends State<PaymentDialog> {
           return false;
         }
 
-        final CreditCard testCard = CreditCard(
-            number: account,
-            expMonth: monthCard,
-            expYear: yearCard,
-            cvc: cvv,
-            name: name);
-
-        StripePayment.createTokenWithCard(
-          testCard,
-        ).then((token) {
-          showInSnackBar(token?.tokenId);
-
-          _paymentToken = token;
-        }).catchError(setError);
+//        final CreditCard testCard = CreditCard(
+//            number: account,
+//            expMonth: monthCard,
+//            expYear: yearCard,
+//            cvc: cvv,
+//            name: name);
+//
+//        StripePayment.createTokenWithCard(
+//          testCard,
+//        ).then((token) {
+//          showInSnackBar(token?.tokenId);
+//
+//          _paymentToken = token;
+//        }).catchError(setError);
 
         /*  StripePayment.createPaymentMethod(
           PaymentMethodRequest(

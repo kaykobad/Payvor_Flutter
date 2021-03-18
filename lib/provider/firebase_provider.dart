@@ -71,9 +71,9 @@ class FirebaseProvider with ChangeNotifier {
 
   Stream<List<ChatUser>> getChatFriends(
       {@required String userId, String name}) {
-    var firestore = Firestore.instance
+    var firestore = FirebaseFirestore.instance
         .collection("chatfriends")
-        .document(userId)
+        .doc(userId)
         .collection("friends")
         .orderBy('lastMessageTime', descending: true)
         .snapshots();
@@ -84,8 +84,8 @@ class FirebaseProvider with ChangeNotifier {
     //get the data and convert to list
     firestore.listen((QuerySnapshot snapshot) {
       final List<ChatUser> productList =
-      snapshot.documents.map((documentSnapshot) {
-        return ChatUser.fromMap(documentSnapshot.data);
+      snapshot.docs.map((documentSnapshot) {
+        return ChatUser.fromMap(documentSnapshot.data());
       }).toList();
 
       //remove if any item is null
@@ -97,9 +97,9 @@ class FirebaseProvider with ChangeNotifier {
   }
 
   Future<List<ChatUser>> getChatFriendsList({@required String userId}) async {
-    var firestore = Firestore.instance
+    var firestore = FirebaseFirestore.instance
         .collection("chatfriends")
-        .document(userId)
+        .doc(userId)
         .collection("friends")
         .orderBy('lastMessageTime', descending: true);
 
@@ -118,10 +118,10 @@ class FirebaseProvider with ChangeNotifier {
 //      controller.add(productList);
 //    });
 
-    var chatUserList=List<ChatUser>();
-    var querySnapshots = await firestore.getDocuments();
-    for (var document in querySnapshots.documents) {
-      chatUserList.add(ChatUser.fromMap(document.data));
+    List<ChatUser> chatUserList=[];
+    var querySnapshots = await firestore.get();
+    for (var document in querySnapshots.docs) {
+      chatUserList.add(ChatUser.fromMap(document.data()));
     }
 
     return chatUserList;
@@ -225,11 +225,11 @@ class FirebaseProvider with ChangeNotifier {
 
   Future<bool> checkGroupMemberIsAdmin(
       {@required String groupId, @required String userId}) async {
-    var firestore = Firestore.instance
+    var firestore = FirebaseFirestore.instance
         .collection(GROUPS)
-        .document(groupId)
+        .doc(groupId)
         .collection(GROUP_MEMBERS)
-        .document(userId);
+        .doc(userId);
 
     print("path ${firestore.path}");
     var document = await firestore.get();
@@ -239,7 +239,7 @@ class FirebaseProvider with ChangeNotifier {
       return false;
     } else {
       print("member found");
-      var member = FilmShapeFirebaseGroupMember.fromJson(document.data);
+      var member = FilmShapeFirebaseGroupMember.fromJson(document.data());
       return member.isAdmin;
     }
   }
@@ -266,29 +266,30 @@ class FirebaseProvider with ChangeNotifier {
   Future<void> updateGroupMessage({@required String message,
     @required num timestamp,
     @required String groupId}) {
-    var document = Firestore.instance.collection(GROUPS).document(groupId);
+    var document = FirebaseFirestore.instance.collection(GROUPS).doc(groupId);
 
     var dataMap = new Map<String, dynamic>();
     dataMap["lastMessage"] = message;
     dataMap["lastMessageTime"] = timestamp;
-    document.updateData(dataMap);
+    document.update(dataMap);
   }
 
   Future<bool> addNewMembersToGroup(
       {@required FilmShapeFirebaseGroup filmShapeFirebaseGroup,
         @required List<FilmShapeFirebaseGroupMember> members,
         @required String groupId}) async {
-    var document = Firestore.instance.collection(GROUPS).document(groupId);
+    var document = FirebaseFirestore.instance.collection(GROUPS).doc(groupId);
 
-    await document.setData(filmShapeFirebaseGroup.toJson(), merge: true);
+    await document.set(
+        filmShapeFirebaseGroup.toJson(), SetOptions(merge: true));
     //save members
     for (var member in members) {
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection(GROUPS)
-          .document(groupId)
+          .doc(groupId)
           .collection(GROUP_MEMBERS)
-          .document(member.userName)
-          .setData(member.toJson());
+          .doc(member.userName)
+          .set(member.toJson());
     }
     hideLoader();
     return true;
@@ -353,11 +354,11 @@ class FirebaseProvider with ChangeNotifier {
   }
 
   void _addUser(String userId, ChatUser user, String currentUserId) async {
-    var document = Firestore.instance
+    var document = FirebaseFirestore.instance
         .collection("chatfriends")
-        .document(userId)
+        .doc(userId)
         .collection("friends")
-        .document(user.userId);
+        .doc(user.userId);
 
     //add  details
     await document.get().then((value) {
@@ -367,7 +368,7 @@ class FirebaseProvider with ChangeNotifier {
         if (currentUserId == userId) {
           user.unreadMessageCount = 0; //reset count
         }
-        document.setData(user.toJson());
+        document.set(user.toJson());
       } else {
         //other wise update the these 3 fields values
         var dataMap = new Map<String, dynamic>();
@@ -381,7 +382,7 @@ class FirebaseProvider with ChangeNotifier {
         if (currentUserId != userId) {
           //if count is 1 increment it
           if (user.unreadMessageCount == 1)
-            document.updateData({
+            document.update({
               "unreadMessageCount": FieldValue.increment(1),
               "updatedAt": DateTime
                   .now()
@@ -390,7 +391,7 @@ class FirebaseProvider with ChangeNotifier {
 
         }
 
-        document.updateData(dataMap);
+        document.update(dataMap);
       }
     }).catchError((error) {
       print("error" + error.toString());
@@ -400,14 +401,14 @@ class FirebaseProvider with ChangeNotifier {
   @override
   Future<bool> resetUnreadMessageCount(
       {@required String userId, @required String chatUserId}) async {
-    var document = Firestore.instance
+    var document = FirebaseFirestore.instance
         .collection("chatfriends")
-        .document(userId)
+        .doc(userId)
         .collection("friends")
-        .document(chatUserId);
+        .doc(chatUserId);
 
     try {
-      await document.updateData({
+      await document.update({
         "unreadMessageCount": 0,
         "updatedAt": DateTime
             .now()
@@ -429,19 +430,19 @@ class FirebaseProvider with ChangeNotifier {
     String deviceid ="";// MemoryManagement.getuserId();
 
     var document =
-    Firestore.instance.collection(Constants.FCM_DEVICE_TOKEN).document(userId);
+    FirebaseFirestore.instance.collection(Constants.FCM_DEVICE_TOKEN).doc(userId);
 
-    var documentDevices = Firestore.instance
+    var documentDevices = FirebaseFirestore.instance
         .collection(Constants.FCM_DEVICE_TOKEN)
-        .document(userId)
+        .doc(userId)
         .collection(Constants.DEVICES)
-        .document(deviceid);
+        .doc(deviceid);
 
     //save document to collection
-    await document.setData(
+    await document.set(
         {"deviceType": deviceType, "userId": userId, "userName": userName});
     //save token to devices
-    await documentDevices.setData({
+    await documentDevices.set({
       "fcmTokenId": deviceToken,
     });
 
@@ -449,21 +450,21 @@ class FirebaseProvider with ChangeNotifier {
   }
 
   Future<String> signIn(String email, String password) async {
-    AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
+    UserCredential result = await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
-    FirebaseUser user = result.user;
+    User user = result.user;
     return user.uid;
   }
 
   Future<String> signUp(String email, String password) async {
-    AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
+    UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
-    FirebaseUser user = result.user;
+    User user = result.user;
     return user.uid;
   }
 
-  Future<FirebaseUser> getCurrentUser() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
+  Future<User> getCurrentUser() async {
+    User user = await _firebaseAuth.currentUser;
     return user;
   }
 
@@ -474,25 +475,25 @@ class FirebaseProvider with ChangeNotifier {
   Future<void> createFirebaseUser(PayvorFirebaseUser PayvorFirebaseUser) async {
     var firebaseUser = await getCurrentUser();
     var document =
-    Firestore.instance.collection(USERS).document(firebaseUser.uid);
+    FirebaseFirestore.instance.collection(USERS).doc(firebaseUser.uid);
 
-    await document.setData(PayvorFirebaseUser.toJson());
+    await document.set(PayvorFirebaseUser.toJson());
   }
 
   Future<bool> createGroup(FilmShapeFirebaseGroup filmShapeFirebaseGroup,
       List<FilmShapeFirebaseGroupMember> members,) async {
-    var document = Firestore.instance.collection(GROUPS).document();
-    var documentId = document.documentID;
+    var document = FirebaseFirestore.instance.collection(GROUPS).doc();
+    var documentId = document.id;
     filmShapeFirebaseGroup.groupId = documentId;
-    await document.setData(filmShapeFirebaseGroup.toJson());
+    await document.set(filmShapeFirebaseGroup.toJson());
     //save members
     for (var member in members) {
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection(GROUPS)
-          .document(documentId)
+          .doc(documentId)
           .collection(GROUP_MEMBERS)
-          .document(member.userId)
-          .setData(member.toJson());
+          .doc(member.userId)
+          .set(member.toJson());
     }
     hideLoader();
     return true;
@@ -500,18 +501,18 @@ class FirebaseProvider with ChangeNotifier {
 
   Future<bool> createGroupProject(FilmShapeFirebaseGroup filmShapeFirebaseGroup,
       List<FilmShapeFirebaseGroupMember> members, String groupId) async {
-    var document = Firestore.instance.collection(GROUPS).document(groupId);
+    var document = FirebaseFirestore.instance.collection(GROUPS).doc(groupId);
 
     filmShapeFirebaseGroup.groupId = groupId;
-    await document.setData(filmShapeFirebaseGroup.toJson());
+    await document.set(filmShapeFirebaseGroup.toJson());
     //save members
     for (var member in members) {
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection(GROUPS)
-          .document(groupId)
+          .doc(groupId)
           .collection(GROUP_MEMBERS)
-          .document()
-          .setData(member.toJson());
+          .doc()
+          .set(member.toJson());
     }
     hideLoader();
     return true;
@@ -520,22 +521,22 @@ class FirebaseProvider with ChangeNotifier {
   Future<void> updateFirebaseUser(PayvorFirebaseUser PayvorFirebaseUser) async {
     var firebaseUser = await getCurrentUser();
     var document =
-    Firestore.instance.collection(USERS).document(firebaseUser.uid);
+    FirebaseFirestore.instance.collection(USERS).doc(firebaseUser.uid);
 
-    await document.updateData(PayvorFirebaseUser.toJson());
+    await document.update(PayvorFirebaseUser.toJson());
   }
 
   Future<void> updateUserOnlineOfflineStatus({@required bool status}) async {
     var firebaseUser = await getCurrentUser();
     var document =
-    Firestore.instance.collection(CHATFRIENDS).document(firebaseUser.uid);
+    FirebaseFirestore.instance.collection(CHATFRIENDS).doc(firebaseUser.uid);
     var payvorFirebaseUser = PayvorFirebaseUser(isOnline: status);
-    return await document.updateData(payvorFirebaseUser.toJson());
+    return await document.update(payvorFirebaseUser.toJson());
   }
 
   Future<void> deleteFriend({@required String userId,@required String friendId}) async {
     var document =
-    Firestore.instance.collection(CHATFRIENDS).document(userId).collection(FRIENDS).document(friendId);
+    FirebaseFirestore.instance.collection(CHATFRIENDS).doc(userId).collection(FRIENDS).doc(friendId);
     print("path ${document.path}");
     return await document.delete();
   }
@@ -543,11 +544,11 @@ class FirebaseProvider with ChangeNotifier {
 
   Future<bool> privateChatLikedUnliked(bool status, String chatId,
       String commentId, int userId) async {
-    var firestore = Firestore.instance
+    var firestore = FirebaseFirestore.instance
         .collection(MESSAGES)
-        .document(chatId)
+        .doc(chatId)
         .collection(ITEMS)
-        .document(commentId);
+        .doc(commentId);
 
     print("path of like ${firestore.path}");
     var ids = List<int>();
@@ -557,12 +558,12 @@ class FirebaseProvider with ChangeNotifier {
         {
       print("like aadd");
 
-      await firestore.updateData({"likedby": FieldValue.arrayUnion(ids)});
+      await firestore.update({"likedby": FieldValue.arrayUnion(ids)});
 
       return true;
     } else {
       print("like remove");
-      await firestore.updateData({"likedby": FieldValue.arrayRemove(ids)});
+      await firestore.update({"likedby": FieldValue.arrayRemove(ids)});
       return false;
     }
   }
@@ -570,17 +571,17 @@ class FirebaseProvider with ChangeNotifier {
   @override
   Future<bool> insertPostInfoForChat(
       {@required PostForChat request, @required String documentId}) async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection(FAVOURS)
-        .document(documentId)
-        .setData(request.toJson());
+        .doc(documentId)
+        .set(request.toJson());
     return true;
   }
 
   Future<PostForChat> getPostInfoForChat({@required String documentId}) async {
-    var document = Firestore.instance.collection(FAVOURS).document(documentId);
+    var document = FirebaseFirestore.instance.collection(FAVOURS).doc(documentId);
     var documentData = await document.get();
-    return PostForChat.fromJson(documentData.data);
+    return PostForChat.fromJson(documentData.data());
   }
 
   void hideLoader() {

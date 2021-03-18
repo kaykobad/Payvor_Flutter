@@ -95,9 +95,9 @@ class _HomeState extends State<SearchMessage>
 
 //
   void checkNewUser({@required String userId}) {
-    var firestore = Firestore.instance
+    var firestore = FirebaseFirestore.instance
         .collection("chatfriends")
-        .document(userId)
+        .doc(userId)
         .collection("friends")
         .orderBy('lastMessageTime', descending: true)
         .limit(1)
@@ -107,7 +107,7 @@ class _HomeState extends State<SearchMessage>
     firestore.listen((QuerySnapshot snapshot) {
       print("new chat");
       if (!_firstTimeChatUser) {
-        checkForNewUserOrLatestMessage(snapshot.documents[0]);
+        checkForNewUserOrLatestMessage(snapshot.docs[0]);
       } else {
         _firstTimeChatUser = false;
       }
@@ -115,7 +115,7 @@ class _HomeState extends State<SearchMessage>
   }
 
   void checkForNewUserOrLatestMessage(DocumentSnapshot documentSnapshot) {
-    var newChatUser = ChatUser.fromMap(documentSnapshot.data);
+    var newChatUser = ChatUser.fromMap(documentSnapshot.data());
     print("new chat user ${newChatUser.toJson()}");
     if (_chatUserList.isNotEmpty) {
       var isOldUser = false;

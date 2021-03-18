@@ -102,30 +102,30 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     }
     if (!canPop) //check if screen popped or not and showing home tab data
       return showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Exit the app?'),
-            content: Text('Do you want to exit an App'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('NO'),
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-              ),
-              FlatButton(
-                child: Text('YES'),
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                  exit(0); //close app
-                },
-              ),
-            ],
-          );
-        },
-      ) ??
+            context: context,
+            barrierDismissible: false, // user must tap button!
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Exit the app?'),
+                content: Text('Do you want to exit an App'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('NO'),
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('YES'),
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                      exit(0); //close app
+                    },
+                  ),
+                ],
+              );
+            },
+          ) ??
           false;
   }
 
@@ -185,9 +185,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   @override
   void initState() {
-
     MemoryManagement.setScreenType(type: "3");
-    _firebaseMessaging = FirebaseMessaging();
+    _firebaseMessaging = FirebaseMessaging.instance;
     configurePushNotification();
 
     _initPushNotification();
@@ -241,107 +240,143 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     });
   }
 
+  Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    // If you're going to use other Firebase services in the background, such as Firestore,
+    // make sure you call `initializeApp` before using other Firebase services.
+    print('Handling a background message ${message.messageId}');
+  }
+
   void configurePushNotification() async {
     print("config Notification");
 
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("config Notification onMessage");
-        print("onMessage $message");
-        if (Platform.isIOS) {
-           //move to chat screen
-          var type = message['notification']['type'];
-          String title = message['notification']['title'];
-          String description = message['notification']['body'];
-          if (type.toString() == "7") {
-            showNotification(title, description, message, type, "0", "0");
-          } else {
-            String favid = message['notification']['fav_id'];
-            String userid = message['notification']['user_id'];
-            showNotification(title, description, message, type, favid, userid);
-          }
-        }
-      },
-      onReceive: (Map<String, dynamic> message) async {
-        print("config Notification onReceive");
-        //  print("onResume: ${message}");
-        print("onResume: ${message['data']['type']}");
-        print("onMessage $message");
-        if (Platform.isIOS) {
-          var type = message['notification']['type'];
-          String title = message['notification']['title'];
-          String description = message['notification']['body'];
-          if (type.toString() == "7") {
-            showNotification(title, description, message, type, "0", "0");
-          } else {
-            String favid = message['notification']['fav_id'];
-            String userid = message['notification']['user_id'];
-            showNotification(title, description, message, type, favid, userid);
-          }
-        }
+    // Set the background messaging handler early on, as a named top-level function
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("config Notification onResume");
-        //  print("onResume: ${message}");
-        print("onResume $message");
-
-        if (Platform.isIOS) {
-          var type = message['notification']['type'];
-          String title = message['notification']['title'];
-          String description = message['notification']['body'];
-          if (type.toString() == "7") {
-            showNotification(title, description, message, type, "0", "0");
-          } else {
-            String favid = message['notification']['fav_id'];
-            String userid = message['notification']['user_id'];
-            showNotification(title, description, message, type, favid, userid);
-          }
-        } else {
-          var type = message['data']['type'];
-          if (type.toString() == "7") {
-            _moveToChatScreen();
-          } else {
-            String favid = message['data']['fav_id'];
-            String userid = message['data']['user_id'];
-            moveToScreen(int.tryParse(type), favid, userid);
-          }
-        }
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("config Notification onLaunch");
-        print("onLaunch $message");
-        if (Platform.isIOS) {
-          var type = message['notification']['type'];
-          String title = message['notification']['title'];
-          String description = message['notification']['body'];
-          if (type.toString() == "7") {
-            showNotification(title, description, message, type, "0", "0");
-          } else {
-            String favid = message['notification']['fav_id'];
-            String userid = message['notification']['user_id'];
-            showNotification(title, description, message, type, favid, userid);
-          }
-        } else {
-          var type = message['data']['type'];
-          if (type.toString() == "7") {
-            _moveToChatScreen();
-          } else {
-            String favid = message['data']['fav_id'];
-            String userid = message['data']['user_id'];
-            moveToScreen(int.tryParse(type), favid, userid);
-          }
-        }
-      },
+    /// Update the iOS foreground notification presentation options to allow
+    /// heads up notifications.
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
     );
 
-    _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(sound: true, badge: true, alert: true));
-
-    _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {
-      print("Settings registered: $settings");
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage message) {
+      if (message != null) {
+        _showLocalPush(message.data);
+      }
     });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      _showLocalPush(message.data);
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message != null) _showLocalPush(message.data);
+    });
+
+    // _firebaseMessaging.configure(
+    //   onMessage: (Map<String, dynamic> message) async {
+    //     print("config Notification onMessage");
+    //     print("onMessage $message");
+    //     if (Platform.isIOS) {
+    //       //move to chat screen
+    //       var type = message['notification']['type'];
+    //       String title = message['notification']['title'];
+    //       String description = message['notification']['body'];
+    //       if (type.toString() == "7") {
+    //         showNotification(title, description, message, type, "0", "0");
+    //       } else {
+    //         String favid = message['notification']['fav_id'];
+    //         String userid = message['notification']['user_id'];
+    //         showNotification(title, description, message, type, favid, userid);
+    //       }
+    //     }
+    //   },
+    //   onReceive: (Map<String, dynamic> message) async {
+    //     print("config Notification onReceive");
+    //     //  print("onResume: ${message}");
+    //     print("onResume: ${message['data']['type']}");
+    //     print("onMessage $message");
+    //     if (Platform.isIOS) {
+    //       var type = message['notification']['type'];
+    //       String title = message['notification']['title'];
+    //       String description = message['notification']['body'];
+    //       if (type.toString() == "7") {
+    //         showNotification(title, description, message, type, "0", "0");
+    //       } else {
+    //         String favid = message['notification']['fav_id'];
+    //         String userid = message['notification']['user_id'];
+    //         showNotification(title, description, message, type, favid, userid);
+    //       }
+    //     }
+    //   },
+    //   onResume: (Map<String, dynamic> message) async {
+    //     print("config Notification onResume");
+    //     //  print("onResume: ${message}");
+    //     print("onResume $message");
+    //
+    //     if (Platform.isIOS) {
+    //       var type = message['notification']['type'];
+    //       String title = message['notification']['title'];
+    //       String description = message['notification']['body'];
+    //       if (type.toString() == "7") {
+    //         showNotification(title, description, message, type, "0", "0");
+    //       } else {
+    //         String favid = message['notification']['fav_id'];
+    //         String userid = message['notification']['user_id'];
+    //         showNotification(title, description, message, type, favid, userid);
+    //       }
+    //     } else {
+    //       var type = message['data']['type'];
+    //       if (type.toString() == "7") {
+    //         _moveToChatScreen();
+    //       } else {
+    //         String favid = message['data']['fav_id'];
+    //         String userid = message['data']['user_id'];
+    //         moveToScreen(int.tryParse(type), favid, userid);
+    //       }
+    //     }
+    //   },
+    //   onLaunch: (Map<String, dynamic> message) async {
+    //     print("config Notification onLaunch");
+    //     print("onLaunch $message");
+    //     if (Platform.isIOS) {
+    //       var type = message['notification']['type'];
+    //       String title = message['notification']['title'];
+    //       String description = message['notification']['body'];
+    //       if (type.toString() == "7") {
+    //         showNotification(title, description, message, type, "0", "0");
+    //       } else {
+    //         String favid = message['notification']['fav_id'];
+    //         String userid = message['notification']['user_id'];
+    //         showNotification(title, description, message, type, favid, userid);
+    //       }
+    //     } else {
+    //       var type = message['data']['type'];
+    //       if (type.toString() == "7") {
+    //         _moveToChatScreen();
+    //       } else {
+    //         String favid = message['data']['fav_id'];
+    //         String userid = message['data']['user_id'];
+    //         moveToScreen(int.tryParse(type), favid, userid);
+    //       }
+    //     }
+    //   },
+    // );
+
+    // _firebaseMessaging.requestNotificationPermissions(
+    //     const IosNotificationSettings(sound: true, badge: true, alert: true));
+    //
+    // _firebaseMessaging.onIosSettingsRegistered
+    //     .listen((IosNotificationSettings settings) {
+    //   print("Settings registered: $settings");
+    // });
+
     _firebaseMessaging.getToken().then((String token) {
       print("DevToken   $token");
       if (token != null) {
@@ -349,6 +384,33 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         // updateTokenToFirebase(token); //save to firebase
       }
     });
+  }
+
+  void _showLocalPush(Map<String, dynamic> message) {
+    print("config Notification onMessage");
+    print("onMessage $message");
+
+    if (Platform.isIOS) {
+      var type = message['notification']['type'];
+      String title = message['notification']['title'];
+      String description = message['notification']['body'];
+      if (type.toString() == "7") {
+        showNotification(title, description, message, type, "0", "0");
+      } else {
+        String favid = message['notification']['fav_id'];
+        String userid = message['notification']['user_id'];
+        showNotification(title, description, message, type, favid, userid);
+      }
+    } else {
+      var type = message['data']['type'];
+      if (type.toString() == "7") {
+        _moveToChatScreen();
+      } else {
+        String favid = message['data']['fav_id'];
+        String userid = message['data']['user_id'];
+        moveToScreen(int.tryParse(type), favid, userid);
+      }
+    }
   }
 
   void moveToScreen(int type, String favid, String userid) {
@@ -437,13 +499,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   void _initPushNotification() async {
-    flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('app_icon');
+        AndroidInitializationSettings('app_icon');
     final IOSInitializationSettings initializationSettingsIOS =
-    IOSInitializationSettings(
+        IOSInitializationSettings(
       requestSoundPermission: false,
       requestBadgePermission: false,
       requestAlertPermission: false,
@@ -451,36 +512,37 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     );
 
     final MacOSInitializationSettings initializationSettingsMacOS =
-    MacOSInitializationSettings(
-        requestAlertPermission: false,
-        requestBadgePermission: false,
-        requestSoundPermission: false);
+        MacOSInitializationSettings(
+            requestAlertPermission: false,
+            requestBadgePermission: false,
+            requestSoundPermission: false);
 
-    final InitializationSettings initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid,
-        iOS: initializationSettingsIOS,
-        macOS: initializationSettingsMacOS);
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+            android: initializationSettingsAndroid,
+            iOS: initializationSettingsIOS,
+            macOS: initializationSettingsMacOS);
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>()
+            IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+          alert: true,
+          badge: true,
+          sound: true,
+        );
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        MacOSFlutterLocalNotificationsPlugin>()
+            MacOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+          alert: true,
+          badge: true,
+          sound: true,
+        );
   }
 
   Future onDidReceiveLocalNotification(
@@ -518,7 +580,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     }
   }
 
-
   @override
   void dispose() {
     // TODO: implement dispose
@@ -544,47 +605,41 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           sizing: StackFit.loose,
           children: <Widget>[
             Navigator(
-              key: _homeScreen,
-              onGenerateRoute: (route) =>
-                  MaterialPageRoute(
-                    settings: route,
-                    builder: (context) =>
-                        SearchCompany(
+                key: _homeScreen,
+                onGenerateRoute: (route) => MaterialPageRoute(
+                      settings: route,
+                      builder: (context) => SearchCompany(
                         lauchCallBack: homeCallBack,
                         callbackmyid: callbackChangePage,
                         userid: userId?.toString(),
                       ),
-                  )),
+                    )),
             Navigator(
               key: _chatScreen,
-              onGenerateRoute: (route) =>
-                  MaterialPageRoute(
-                    settings: route,
-                    builder: (context) =>
-                        PostScreen(
-                          lauchCallBack: homeCallBack,
-                        ),
-                  ),
+              onGenerateRoute: (route) => MaterialPageRoute(
+                settings: route,
+                builder: (context) => PostScreen(
+                  lauchCallBack: homeCallBack,
+                ),
+              ),
             ),
             Navigator(
               key: _dummyScreen,
-              onGenerateRoute: (route) =>
-                  MaterialPageRoute(
-                    settings: route,
-                    builder: (context) =>
-                        Dummy(
-                          logoutCallBack: logoutCallBack,
-                        ),
-                  ),
+              onGenerateRoute: (route) => MaterialPageRoute(
+                settings: route,
+                builder: (context) => Dummy(
+                  logoutCallBack: logoutCallBack,
+                ),
+              ),
             ),
             Navigator(
               key: _notificationScreen,
-              onGenerateRoute: (route) =>
-                  MaterialPageRoute(
-                    settings: route,
-                    builder: (context) =>
-                        ChatScreen(logoutCallBack: logoutCallBack,),
-                  ),
+              onGenerateRoute: (route) => MaterialPageRoute(
+                settings: route,
+                builder: (context) => ChatScreen(
+                  logoutCallBack: logoutCallBack,
+                ),
+              ),
             ),
             Navigator(
               key: _profileScreen,
@@ -627,12 +682,15 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             backgroundColor: Colors.white,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                  icon: bottomMenuIconWidget(AssetStrings.home_inactive,22,23),
-                  activeIcon: bottomMenuIconWidget( AssetStrings.home_active,22,23),
+                  icon:
+                      bottomMenuIconWidget(AssetStrings.home_inactive, 22, 23),
+                  activeIcon:
+                      bottomMenuIconWidget(AssetStrings.home_active, 22, 23),
                   label: ""),
               BottomNavigationBarItem(
-                  icon: bottomMenuIconWidget( AssetStrings.job_inactive,25,23),
-                  activeIcon: bottomMenuIconWidget( AssetStrings.job_active,25,23),
+                  icon: bottomMenuIconWidget(AssetStrings.job_inactive, 25, 23),
+                  activeIcon:
+                      bottomMenuIconWidget(AssetStrings.job_active, 25, 23),
                   label: ""),
               BottomNavigationBarItem(
                   icon: firstWidget(AppColors.kWhite, AssetStrings.group),
@@ -640,18 +698,23 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   label: ""),
               BottomNavigationBarItem(
                   icon: bottomMenuIconWidget(
-                      (_isNewActivityFound) ? AssetStrings
-                          .activity_unselected_with_noti : AssetStrings
-                          .activity_not_selected,26,26),
+                      (_isNewActivityFound)
+                          ? AssetStrings.activity_unselected_with_noti
+                          : AssetStrings.activity_not_selected,
+                      26,
+                      26),
                   activeIcon: bottomMenuIconWidget(
-                      (_isNewActivityFound) ? AssetStrings
-                          .activity_selected_with_noti : AssetStrings
-                          .activity_selected,26,26),
+                      (_isNewActivityFound)
+                          ? AssetStrings.activity_selected_with_noti
+                          : AssetStrings.activity_selected,
+                      26,
+                      26),
                   label: ""),
-
               BottomNavigationBarItem(
-                  icon: bottomMenuIconWidget( AssetStrings.profile_inactive,19,24),
-                  activeIcon: bottomMenuIconWidget( AssetStrings.profile_active,19,24),
+                  icon: bottomMenuIconWidget(
+                      AssetStrings.profile_inactive, 19, 24),
+                  activeIcon:
+                      bottomMenuIconWidget(AssetStrings.profile_active, 19, 24),
                   label: ""),
             ],
             currentIndex: currentTab,
@@ -659,7 +722,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               setState(() {
                 currentTab = index;
                 if (index == 0) //for home tab
-                    {
+                {
                   SystemChrome.setSystemUIOverlayStyle(
                       SystemUiOverlayStyle.light);
 
@@ -674,21 +737,18 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             },
           ),
         ),
-
       ),
     );
   }
 
-
-
-
   Widget firstWidget(Color color, String image) {
-    return SvgPicture.asset(image, width: Constants.bottomIconSize,
+    return SvgPicture.asset(image,
+        width: Constants.bottomIconSize,
         height: Constants.bottomIconSize,
         color: color);
   }
 
-  Widget bottomMenuIconWidget(String image,double width,double height) {
+  Widget bottomMenuIconWidget(String image, double width, double height) {
     return Center(
       child: SvgPicture.asset(
         image,
@@ -699,27 +759,20 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   void _setupCounterChangeListener() {
-    _firebaseProvider.setStreamNotifier(StreamController<bool>()) ;
+    _firebaseProvider.setStreamNotifier(StreamController<bool>());
     _firebaseProvider.notificationStreamController.stream.listen((event) {
       print("notificatoion count status $event");
 
-      if(event!=_isNewActivityFound)
-        {
-          print("update called");
-          _isNewActivityFound=event;
-          setState(() {
-
-          });
-        }
-
+      if (event != _isNewActivityFound) {
+        print("update called");
+        _isNewActivityFound = event;
+        setState(() {});
+      }
     });
   }
-
 }
 
-
 class CustomFloatingButton extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -735,5 +788,4 @@ class CustomFloatingButton extends StatelessWidget {
           ),
         ));
   }
-
 }

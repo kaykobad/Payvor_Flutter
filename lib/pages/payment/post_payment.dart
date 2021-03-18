@@ -37,7 +37,7 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: Container(
           decoration: new BoxDecoration(
             borderRadius: BorderRadius.only(

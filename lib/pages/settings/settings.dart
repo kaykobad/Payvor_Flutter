@@ -21,6 +21,7 @@ import 'package:payvor/utils/memory_management.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class Settings extends StatefulWidget {
   final String id;
@@ -128,6 +129,7 @@ class _HomeState extends State<Settings>
                   margin: new EdgeInsets.only(top: 15),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
                     children: [
                       Container(
                         alignment: Alignment.topLeft,
@@ -273,7 +275,11 @@ class _HomeState extends State<Settings>
             print(onValue);
           });
         } else if (type == 6) {
-          Share.share('check out my website https://example.com');
+          Share.share('check out the app https://payvor.page.link/app');
+        }
+        //go to help section
+        else if (type == 5) {
+          _sendEmail();
         }
       },
       child: Container(
@@ -340,5 +346,16 @@ class _HomeState extends State<Settings>
         ),
       ),
     );
+  }
+
+  void _sendEmail() async {
+    final Email email = Email(
+      body: 'Your query goes here...',
+      subject: 'Payvor help',
+      recipients: ['info@payvor.io'],
+         isHTML: false,
+    );
+
+    await FlutterEmailSender.send(email);
   }
 }
