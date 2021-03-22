@@ -72,6 +72,7 @@ dev_dependencies:
   flutter_local_notifications:
   app_review:
   flutter_email_sender: ^5.0.0
+  sign_in_with_apple: ^3.0.0
 
 
 

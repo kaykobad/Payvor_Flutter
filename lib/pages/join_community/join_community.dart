@@ -29,6 +29,8 @@ import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 
 class JoinCommunityNew extends StatefulWidget {
   @override
@@ -248,6 +250,19 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                           child: new Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
+                              (Platform.isIOS)?InkWell(
+                                onTap: () {
+                                  _doAppleLogin();
+                                },
+                                child: new SvgPicture.asset(
+                                  AssetStrings.appleLogin,
+                                  height: 48,
+                                  width: 48,
+                                ),
+                              ):Container(),
+                              (Platform.isIOS)?new SizedBox(
+                                width: 16.0,
+                              ):Container(),
                               InkWell(
                                 onTap: () {
                                   getFacebookUserInfo();
@@ -456,6 +471,11 @@ class _LoginScreenState extends State<JoinCommunityNew> {
         {
           types = "In";
         }
+        break;
+      case "4":
+        {
+          types="ap";
+        }
     }
 
     if (type == "0") {
@@ -498,6 +518,11 @@ class _LoginScreenState extends State<JoinCommunityNew> {
         case "3":
           {
             email = "in_$snsId@instagram.com";
+          }
+          break;
+        case "4":
+          {
+            email = "ap_$snsId@apple.com";
           }
       }
 
@@ -632,5 +657,30 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     hitApi();
 
     //  goToAddPhone();
+  }
+
+  void _doAppleLogin() async {
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      print(credential);
+
+      email = credential.userIdentifier+"_"+credential.email;
+      name = credential.givenName;
+      type = "4";
+      snsId = credential.userIdentifier;
+      profilePic = "";
+      hitApi();
+    }
+    catch(ex)
+    {
+      showInSnackBar(Messages.genericError);
+
+    }
   }
 }

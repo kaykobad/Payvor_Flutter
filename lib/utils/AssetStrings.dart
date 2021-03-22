@@ -77,6 +77,7 @@ class AssetStrings {
   static const String imagePlaceholder = 'assets/png/shape.png';
   static const String facebook = 'assets/svg/facebook.svg';
   static const String twitter = 'assets/svg/twitter.svg';
+  static const String appleLogin = 'assets/svg/apple.svg';
   static const String insta = 'assets/png/insta.png';
   static const String back = 'assets/svg/back.svg';
   static const String group = 'assets/svg/group.svg';
