@@ -37,6 +37,8 @@ class Constants{
   static const double CHAT_PROFILE_PIC_SIZE = 40;
   static const double FLOATING_BUTTON_SIZE = 75;
 
+  static const String GOOGLE_PLACES_API="AIzaSyBoUjHUkix8N1_pKbw09IcYDDZzgmkvXKg";
+
 
 
 }

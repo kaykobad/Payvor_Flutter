@@ -239,7 +239,7 @@ class _LoginScreenState extends State<OtoVerification> {
     var response = await provider.getotp(widget.phoneNumber ?? "", context);
     provider.hideLoader();
     if (response is ResendOtpResponse) {
-      showInSnackBar("Your otp code is ${response.data.otp}");
+     // showInSnackBar("Your otp code is ${response.data.otp}");
     } else {
       APIError apiError = response;
       print(apiError.error);

@@ -12,6 +12,7 @@ import 'package:payvor/utils/autocomplete_text_field.dart';
 
 import 'AppColors.dart';
 import 'AssetStrings.dart';
+import 'constants.dart';
 
 List<Predictions> list = new List();
 
@@ -417,7 +418,7 @@ Widget getLocation(
 
             if (id.length > 0) {
               var response = await dio.get(
-                  "https://maps.googleapis.com/maps/api/geocode/json?place_id=$id&key=AIzaSyDZ-dGhsAHzvrFfdpFkk5cpJpZfJ6mbR9I")
+                  "https://maps.googleapis.com/maps/api/geocode/json?place_id=$id&key=${Constants.GOOGLE_PLACES_API}")
                   .timeout(timeoutDuration);
 
               LatLongResponse locationList = LatLongResponse.fromJson(
@@ -480,7 +481,7 @@ Future<List<String>> getLocationSuggestionsList(String locationText) async {
     _requestToken = CancelToken(); //generate new token for new request
     //call the apoi
     var response = await dio.get(
-        "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$locationText&key=AIzaSyDZ-dGhsAHzvrFfdpFkk5cpJpZfJ6mbR9I",
+        "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$locationText&key=${Constants.GOOGLE_PLACES_API}builder: (_) =>",
         cancelToken: _requestToken)
         .timeout(timeoutDuration);
     //get the suggestion list
