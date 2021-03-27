@@ -95,7 +95,7 @@ class _LoginScreenState extends State<OtoVerification> {
       setState(() {
         _current = _start - duration.elapsed.inSeconds;
         // colorResend = Colors.black.withOpacity(0.4);
-        print(_current);
+        //print(_current);
 
         if (_current == 1) {
           timer();
@@ -104,7 +104,7 @@ class _LoginScreenState extends State<OtoVerification> {
     });
 
     sub.onDone(() {
-      print(countDownTimer.toString());
+      //print(countDownTimer.toString());
       sub.cancel();
       // colorResend = AppColors.kBlack;
     });
@@ -135,9 +135,7 @@ class _LoginScreenState extends State<OtoVerification> {
     var infoData = jsonDecode(MemoryManagement.getUserInfo());
     var userinfo = LoginSignupResponse.fromJson(infoData);
 
-
-    OtpRequest loginRequest =
-    new OtpRequest(
+    OtpRequest loginRequest = new OtpRequest(
         otp: pinText, id: userinfo?.user?.id?.toString() ?? "", type: "id");
     var response = await provider.verifyOtp(loginRequest, context);
     provider.hideLoader();
@@ -148,7 +146,10 @@ class _LoginScreenState extends State<OtoVerification> {
         Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
-            return Material(child: new CreateCredential(type: false,));
+            return Material(
+                child: new CreateCredential(
+              type: false,
+            ));
           }),
         );
       } else {
@@ -158,12 +159,12 @@ class _LoginScreenState extends State<OtoVerification> {
           new CupertinoPageRoute(builder: (BuildContext context) {
             return DashBoardScreen();
           }),
-              (route) => false,
+          (route) => false,
         );
       }
     } else {
       APIError apiError = response;
-      print(apiError.error);
+      //print(apiError.error);
 
       showInSnackBar("Invalid Otp");
     }
@@ -191,7 +192,7 @@ class _LoginScreenState extends State<OtoVerification> {
     var response = await provider.verifyEmailVerify(loginRequest, context);
     provider.hideLoader();
     if (response is LoginSignupResponse) {
-      print("typpppee ${widget?.type?.toString()}");
+      //print("typpppee ${widget?.type?.toString()}");
 
       if (widget?.type?.toString() == "2") {
         var infoData = jsonDecode(MemoryManagement.getUserInfo());
@@ -213,7 +214,7 @@ class _LoginScreenState extends State<OtoVerification> {
       }
     } else {
       APIError apiError = response;
-      print(apiError.error);
+      //print(apiError.error);
 
       showInSnackBar(apiError.messag);
     }
@@ -235,14 +236,15 @@ class _LoginScreenState extends State<OtoVerification> {
     if (!gotInternetConnection) {
       return;
     }
-
-    var response = await provider.getotp(widget.phoneNumber ?? "", context);
+    var phoneNumber = "${widget.countryCode}${widget.phoneNumber}";
+    var response =
+        await provider.getotp(widget.phoneNumber, widget.countryCode, context);
     provider.hideLoader();
     if (response is ResendOtpResponse) {
-     // showInSnackBar("Your otp code is ${response.data.otp}");
+      // showInSnackBar("Your otp code is ${response.data.otp}");
     } else {
       APIError apiError = response;
-      print(apiError.error);
+      //print(apiError.error);
       showInSnackBar(Messages.genericError);
     }
   }
@@ -296,17 +298,16 @@ class _LoginScreenState extends State<OtoVerification> {
                             left: 20.0, right: 20.0, top: 6),
                         child: new RichText(
                             text: new TextSpan(
-                              text:
-                              widget.type == 0 ? ResString().get(
-                                  'enter_code_that') : ResString().get(
-                                  'enter_code_that_email'),
-                              style: TextThemes.grayNormal,
-                              children: <TextSpan>[
-                                new TextSpan(
-                                  text: noPhone,
-                                  style: TextThemes.blackTextFieldNormal,
-                                ),
-                              ],
+                          text: widget.type == 0
+                              ? ResString().get('enter_code_that')
+                              : ResString().get('enter_code_that_email'),
+                          style: TextThemes.grayNormal,
+                          children: <TextSpan>[
+                            new TextSpan(
+                              text: noPhone,
+                              style: TextThemes.blackTextFieldNormal,
+                            ),
+                          ],
                         )),
                       ),
                       space(),
@@ -344,12 +345,11 @@ class _LoginScreenState extends State<OtoVerification> {
                               FocusScope.of(context)
                                   .requestFocus(new FocusNode());
                               pinText = pin;
-                              print(pin);
+                              //print(pin);
 
                               if (widget.type == 0) {
                                 hitApi();
-                              }
-                              else {
+                              } else {
                                 hitForgotApi();
                               }
                             }),
@@ -357,34 +357,39 @@ class _LoginScreenState extends State<OtoVerification> {
                       new SizedBox(
                         height: 85.0,
                       ),
-                      widget.type == 0 ? offstage == 1.0
-                          ? Container()
-                          : Container(
-                          alignment: Alignment.center,
-                          margin: new EdgeInsets.only(left: 20.0),
-                          child: new Text(
-                            ResString().get('verify_code') +
-                                "$_current",
-                            style: TextThemes.greyDarkTextFieldItalic,
-                          )) : Container(),
-                      widget.type == 0 ? Opacity(
-                        opacity: offstage,
-                        child: InkWell(
-                          onTap: () {
-                            if (offstage == 1.0) {
-                              startTimer();
-                              hitResendApi();
-                            }
-                          },
-                          child: Container(
-                              alignment: Alignment.center,
-                              margin: new EdgeInsets.only(left: 20.0, top: 18),
-                              child: new Text(
-                                ResString().get('resend_code'),
-                                style: TextThemes.redTextSmallMedium,
-                              )),
-                        ),
-                      ) : Container(),
+                      widget.type == 0
+                          ? offstage == 1.0
+                              ? Container()
+                              : Container(
+                                  alignment: Alignment.center,
+                                  margin: new EdgeInsets.only(left: 20.0),
+                                  child: new Text(
+                                    ResString().get('verify_code') +
+                                        "$_current",
+                                    style: TextThemes.greyDarkTextFieldItalic,
+                                  ))
+                          : Container(),
+                      widget.type == 0
+                          ? Opacity(
+                              opacity: offstage,
+                              child: InkWell(
+                                onTap: () {
+                                  if (offstage == 1.0) {
+                                    startTimer();
+                                    hitResendApi();
+                                  }
+                                },
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    margin: new EdgeInsets.only(
+                                        left: 20.0, top: 18),
+                                    child: new Text(
+                                      ResString().get('resend_code'),
+                                      style: TextThemes.redTextSmallMedium,
+                                    )),
+                              ),
+                            )
+                          : Container(),
                       new SizedBox(
                         height: 25.0,
                       ),

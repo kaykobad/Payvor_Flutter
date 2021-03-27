@@ -408,8 +408,8 @@ Widget getLocation(
             for (var data in list) {
               if (text == data.description) {
                 id = data.place_id;
-                print("select ${data.description}");
-                print("selectid ${data.place_id}");
+                //print("select ${data.description}");
+                //print("selectid ${data.place_id}");
                 break;
               }
             }
@@ -417,6 +417,7 @@ Widget getLocation(
 
 
             if (id.length > 0) {
+              //print("latlong https://maps.googleapis.com/maps/api/geocode/json?place_id=$id&key=${Constants.GOOGLE_PLACES_API}");
               var response = await dio.get(
                   "https://maps.googleapis.com/maps/api/geocode/json?place_id=$id&key=${Constants.GOOGLE_PLACES_API}")
                   .timeout(timeoutDuration);
@@ -428,7 +429,7 @@ Widget getLocation(
                   locationList.results.length > 0) {
                 var data = locationList.results[0];
 
-                print("data ${data.geometry?.location?.lat}");
+                //print("data ${data.geometry?.location?.lat}");
 
                 controllers.text = data?.geometry?.location?.lat?.toString() +
                     "," +
@@ -438,13 +439,13 @@ Widget getLocation(
 
 
             // addData(text);
-            print(text);
+            //print(text);
           },
           focusLost: () {
-            print("focust lost");
+            //print("focust lost");
           },
           onValueChanged: (String text) {
-            print("called $text");
+            //print("called $text");
           },
           controller: controller,
           suggestionStyle: Theme.of(context).textTheme.body1,
@@ -476,17 +477,18 @@ Future<List<String>> getLocationSuggestionsList(String locationText) async {
   list.clear();
 
   try {
+    //print("url  https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$locationText&key=${Constants.GOOGLE_PLACES_API}");
     if (_requestToken != null)
       _requestToken.cancel(); //cancel the previous on going request
     _requestToken = CancelToken(); //generate new token for new request
     //call the apoi
     var response = await dio.get(
-        "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$locationText&key=${Constants.GOOGLE_PLACES_API}builder: (_) =>",
+        "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$locationText&key=${Constants.GOOGLE_PLACES_API}",
         cancelToken: _requestToken)
         .timeout(timeoutDuration);
     //get the suggestion list
     var locationList = SuggestedLocation.fromJson(response.data);
-    print("ress $response");
+    //print("ress $response");
 
     //get description list and add to string list
     for (var data in locationList.predictions) {

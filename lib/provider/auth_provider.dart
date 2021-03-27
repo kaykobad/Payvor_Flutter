@@ -51,6 +51,7 @@ import 'package:payvor/networkmodel/APIHandler.dart';
 import 'package:payvor/networkmodel/APIs.dart';
 import 'package:payvor/notifications/notification_response.dart';
 import 'package:payvor/pages/get_favor_list/favor_list_response.dart';
+import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/memory_management.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -69,7 +70,8 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      LoginSignupResponse loginSignupResponse = new LoginSignupResponse.fromJson(response);
+      LoginSignupResponse loginSignupResponse =
+          new LoginSignupResponse.fromJson(response);
       completer.complete(loginSignupResponse);
       notifyListeners();
       return completer.future;
@@ -110,12 +112,12 @@ class AuthProvider with ChangeNotifier {
 //      }
 //    }
     if (response is APIError) {
-      response.error="The email has already been taken";
+      response.error = "The email has already been taken";
       completer.complete(response);
       return completer.future;
     } else {
       LoginSignupResponse loginResponseData =
-      new LoginSignupResponse.fromJson(response);
+          new LoginSignupResponse.fromJson(response);
       completer.complete(loginResponseData);
       notifyListeners();
       return completer.future;
@@ -124,7 +126,6 @@ class AuthProvider with ChangeNotifier {
 
   Future<dynamic> socialSignup(
       SignUpSocialRequest requests, BuildContext context) async {
-
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.post(
         context: context,
@@ -175,7 +176,8 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      LoginSignupResponse loginResponseData = new LoginSignupResponse.fromJson(response);
+      LoginSignupResponse loginResponseData =
+          new LoginSignupResponse.fromJson(response);
       completer.complete(loginResponseData);
       notifyListeners();
       return completer.future;
@@ -427,8 +429,7 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      OtpVerification otpVerification =
-          new OtpVerification.fromJson(response);
+      OtpVerification otpVerification = new OtpVerification.fromJson(response);
       //if wrong otp
       if (!otpVerification.status.status) {
         var apiError = APIError(messag: "Wrong OTP", status: 400);
@@ -597,18 +598,23 @@ class AuthProvider with ChangeNotifier {
     return completer.future;
   }
 
-  Future<dynamic> getotp(String phoneNumber, BuildContext context) async {
+  Future<dynamic> getotp(String phoneNumber,String countryCode, BuildContext context) async {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.get(
-        context: context, url: APIs.getOtpUrl + phoneNumber);
+        context: context, url: "${APIs.getOtpUrl}$countryCode/$phoneNumber");
 
     if (response is APIError) {
       completer.complete(response);
       return completer.future;
     } else {
-      ResendOtpResponse resendOtpResponse =
-          new ResendOtpResponse.fromJson(response);
-      completer.complete(resendOtpResponse);
+      try {
+        ResendOtpResponse resendOtpResponse =
+            new ResendOtpResponse.fromJson(response);
+        completer.complete(resendOtpResponse);
+      } catch (ex) {
+        completer.complete(APIError(error: Messages.genericError));
+      }
+
       notifyListeners();
       return completer.future;
     }
@@ -664,7 +670,7 @@ class AuthProvider with ChangeNotifier {
       return completer.future;
     } else {
       FavourDetailsResponse favourDetailsResponse =
-      new FavourDetailsResponse.fromJson(response);
+          new FavourDetailsResponse.fromJson(response);
       print("detail_response ${favourDetailsResponse.toJson()}");
       completer.complete(favourDetailsResponse);
       notifyListeners();
@@ -674,16 +680,15 @@ class AuthProvider with ChangeNotifier {
 
   Future<dynamic> getPromotionData(BuildContext context) async {
     Completer<dynamic> completer = new Completer<dynamic>();
-    var response = await APIHandler.get(
-        context: context, url: APIs.getPromotionData);
-
+    var response =
+        await APIHandler.get(context: context, url: APIs.getPromotionData);
 
     if (response is APIError) {
       completer.complete(response);
       return completer.future;
     } else {
       PropmoteDataResponse favourDetailsResponse =
-      new PropmoteDataResponse.fromJson(response);
+          new PropmoteDataResponse.fromJson(response);
       completer.complete(favourDetailsResponse);
       notifyListeners();
       return completer.future;
@@ -727,8 +732,7 @@ class AuthProvider with ChangeNotifier {
       if (filterRequest.minprice > 0 || filterRequest.maxprice < 100) {
         isFilter = true;
         data.write(
-            "&minprice=${filterRequest?.minprice
-                ?.toString()}&maxprice=${filterRequest?.maxprice?.toString()}");
+            "&minprice=${filterRequest?.minprice?.toString()}&maxprice=${filterRequest?.maxprice?.toString()}");
       }
       if (filterRequest?.list != null) {
         var datanew = "";
@@ -751,15 +755,12 @@ class AuthProvider with ChangeNotifier {
 
       if (isFilter) {
         voidcallback(true);
-      }
-      else {
+      } else {
         voidcallback(false);
       }
       print("data $data");
 
-      if (data
-          .toString()
-          .length > 0) {
+      if (data.toString().length > 0) {
         uri = uri + data.toString();
       }
     } else {
@@ -833,9 +834,9 @@ class AuthProvider with ChangeNotifier {
       int page, ReferRequestNew requestsNew, int type) async {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.post(
-        context: context, url: APIs.refUsers + "?page=$page",
-        requestBody: type == 1 ? requests.toJson() : requestsNew.toJson()
-    );
+        context: context,
+        url: APIs.refUsers + "?page=$page",
+        requestBody: type == 1 ? requests.toJson() : requestsNew.toJson());
 
     print(APIs.refUsers);
     print("request ${requests}");
@@ -980,15 +981,17 @@ class AuthProvider with ChangeNotifier {
     } else {
       print("res $jsonDecode($response)");
       GettingReportReason resendOtpResponse =
-      new GettingReportReason.fromJson(response);
+          new GettingReportReason.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;
     }
   }
 
-  Future<dynamic> hiredFavourPost(BuildContext context,
-      int page,) async {
+  Future<dynamic> hiredFavourPost(
+    BuildContext context,
+    int page,
+  ) async {
     print("fave");
     var infoData = jsonDecode(MemoryManagement.getUserInfo());
     var userinfo = LoginSignupResponse.fromJson(infoData);
@@ -1012,10 +1015,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<dynamic> reviewList(
-    BuildContext context,
-    int page,
-      String id) async {
+  Future<dynamic> reviewList(BuildContext context, int page, String id) async {
     print("fave");
 
     Completer<dynamic> completer = new Completer<dynamic>();
@@ -1070,12 +1070,10 @@ class AuthProvider with ChangeNotifier {
     var userinfo = LoginSignupResponse.fromJson(infoData);
     Completer<dynamic> completer = new Completer<dynamic>();
     var response =
-        await APIHandler.get(context: context, url: APIs.favorPostedByUser
-    );
+        await APIHandler.get(context: context, url: APIs.favorPostedByUser);
 
     print(APIs.favorPostedByUser);
     print(APIs.favorPostedByUser + userinfo.user?.id?.toString());
-
 
     if (response is APIError) {
       completer.complete(response);
@@ -1083,25 +1081,24 @@ class AuthProvider with ChangeNotifier {
     } else {
       print("res $jsonDecode($response)");
       FavourPostedByUserResponse resendOtpResponse =
-      new FavourPostedByUserResponse.fromJson(response);
+          new FavourPostedByUserResponse.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;
     }
   }
 
-
-  Future<dynamic> favourjobapplieduser(BuildContext context,
-      int page,) async {
+  Future<dynamic> favourjobapplieduser(
+    BuildContext context,
+    int page,
+  ) async {
     print("fave");
 
     Completer<dynamic> completer = new Completer<dynamic>();
-    var response = await APIHandler.get(
-        context: context, url: APIs.favorAppliedByUser
-    );
+    var response =
+        await APIHandler.get(context: context, url: APIs.favorAppliedByUser);
 
     print(APIs.favorAppliedByUser);
-
 
     if (response is APIError) {
       completer.complete(response);
@@ -1109,25 +1106,24 @@ class AuthProvider with ChangeNotifier {
     } else {
       print("res $jsonDecode($response)");
       FavourAppliedByUserResponse resendOtpResponse =
-      new FavourAppliedByUserResponse.fromJson(response);
+          new FavourAppliedByUserResponse.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;
     }
   }
 
-
-  Future<dynamic> currentuserhirefavor(BuildContext context,
-      int page,) async {
+  Future<dynamic> currentuserhirefavor(
+    BuildContext context,
+    int page,
+  ) async {
     print("fave");
 
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.get(
-        context: context, url: APIs.currentuserhirebyfavor
-    );
+        context: context, url: APIs.currentuserhirebyfavor);
 
     print(APIs.currentuserhirebyfavor);
-
 
     if (response is APIError) {
       completer.complete(response);
@@ -1203,16 +1199,15 @@ class AuthProvider with ChangeNotifier {
     } else {
       print("res $jsonDecode($response)");
       NotificationResponse resendOtpResponse =
-      new NotificationResponse.fromJson(response);
+          new NotificationResponse.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;
     }
   }
 
-
-  Future<dynamic> getSearchSuggestList(String data, BuildContext context,
-      int page) async {
+  Future<dynamic> getSearchSuggestList(
+      String data, BuildContext context, int page) async {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.get(
         context: context, url: APIs.seacrhSuggestList + data + "?page=$page");
