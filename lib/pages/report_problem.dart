@@ -121,7 +121,7 @@ class _HomeState extends State<ReportProblems>
                 child: Container(
                   margin: new EdgeInsets.only(top: 10),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         alignment: Alignment.topLeft,

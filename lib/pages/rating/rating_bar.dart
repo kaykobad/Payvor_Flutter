@@ -168,7 +168,7 @@ class _HomeState extends State<RatingBarNew>
                 child: Container(
                   margin: new EdgeInsets.only(top: 15),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       widget?.paymentType != null &&
                               widget?.paymentType != "Card/Paypal"

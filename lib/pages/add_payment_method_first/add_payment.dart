@@ -163,7 +163,8 @@ class _HomeState extends State<AddPaymentMethodFirst>
                 child: Container(
                   margin: new EdgeInsets.only(top: 15),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+
                     children: [
                       Container(
                         alignment: Alignment.topLeft,
@@ -221,6 +222,7 @@ class _HomeState extends State<AddPaymentMethodFirst>
               color: AppColors.whiteGray,
               child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                textBaseline: TextBaseline.ideographic,
                 children: <Widget>[
                   dataList?.length == 0
                       ? Container(

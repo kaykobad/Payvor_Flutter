@@ -186,7 +186,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   @override
   void initState() {
     MemoryManagement.setScreenType(type: "3");
-    _firebaseMessaging = FirebaseMessaging.instance;
+    _firebaseMessaging = FirebaseMessaging();
     configurePushNotification();
 
     _initPushNotification();
@@ -240,142 +240,142 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     });
   }
 
-  Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-    // If you're going to use other Firebase services in the background, such as Firestore,
-    // make sure you call `initializeApp` before using other Firebase services.
-    print('Handling a background message ${message.messageId}');
-  }
+  // Future<void> _firebaseMessagingBackgroundHandler(
+  //      RemoteMessage message) async {
+  //   // If you're going to use other Firebase services in the background, such as Firestore,
+  //   // make sure you call `initializeApp` before using other Firebase services.
+  //   print('Handling a background message ${message.messageId}');
+  // }
 
   void configurePushNotification() async {
     print("config Notification");
 
-    // Set the background messaging handler early on, as a named top-level function
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    // // Set the background messaging handler early on, as a named top-level function
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    //
+    // /// Update the iOS foreground notification presentation options to allow
+    // /// heads up notifications.
+    // await FirebaseMessaging.instance
+    //     .setForegroundNotificationPresentationOptions(
+    //   alert: true,
+    //   badge: true,
+    //   sound: true,
+    // );
+    //
+    // FirebaseMessaging.instance
+    //     .getInitialMessage()
+    //     .then((RemoteMessage message) {
+    //   if (message != null) {
+    //     _showLocalPush(message.data);
+    //   }
+    // });
+    //
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   print('A new onMessageOpenedApp event was published!');
+    //   _showLocalPush(message.data);
+    // });
+    //
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   if (message != null) _showLocalPush(message.data);
+    // });
 
-    /// Update the iOS foreground notification presentation options to allow
-    /// heads up notifications.
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("config Notification onMessage");
+        print("onMessage $message");
+        if (Platform.isIOS) {
+          //move to chat screen
+          var type = message['notification']['type'];
+          String title = message['notification']['title'];
+          String description = message['notification']['body'];
+          if (type.toString() == "7") {
+            showNotification(title, description, message, type, "0", "0");
+          } else {
+            String favid = message['notification']['fav_id'];
+            String userid = message['notification']['user_id'];
+            showNotification(title, description, message, type, favid, userid);
+          }
+        }
+      },
+      onReceive: (Map<String, dynamic> message) async {
+        print("config Notification onReceive");
+        //  print("onResume: ${message}");
+        print("onResume: ${message['data']['type']}");
+        print("onMessage $message");
+        if (Platform.isIOS) {
+          var type = message['notification']['type'];
+          String title = message['notification']['title'];
+          String description = message['notification']['body'];
+          if (type.toString() == "7") {
+            showNotification(title, description, message, type, "0", "0");
+          } else {
+            String favid = message['notification']['fav_id'];
+            String userid = message['notification']['user_id'];
+            showNotification(title, description, message, type, favid, userid);
+          }
+        }
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("config Notification onResume");
+        //  print("onResume: ${message}");
+        print("onResume $message");
+
+        if (Platform.isIOS) {
+          var type = message['notification']['type'];
+          String title = message['notification']['title'];
+          String description = message['notification']['body'];
+          if (type.toString() == "7") {
+            showNotification(title, description, message, type, "0", "0");
+          } else {
+            String favid = message['notification']['fav_id'];
+            String userid = message['notification']['user_id'];
+            showNotification(title, description, message, type, favid, userid);
+          }
+        } else {
+          var type = message['data']['type'];
+          if (type.toString() == "7") {
+            _moveToChatScreen();
+          } else {
+            String favid = message['data']['fav_id'];
+            String userid = message['data']['user_id'];
+            moveToScreen(int.tryParse(type), favid, userid);
+          }
+        }
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("config Notification onLaunch");
+        print("onLaunch $message");
+        if (Platform.isIOS) {
+          var type = message['notification']['type'];
+          String title = message['notification']['title'];
+          String description = message['notification']['body'];
+          if (type.toString() == "7") {
+            showNotification(title, description, message, type, "0", "0");
+          } else {
+            String favid = message['notification']['fav_id'];
+            String userid = message['notification']['user_id'];
+            showNotification(title, description, message, type, favid, userid);
+          }
+        } else {
+          var type = message['data']['type'];
+          if (type.toString() == "7") {
+            _moveToChatScreen();
+          } else {
+            String favid = message['data']['fav_id'];
+            String userid = message['data']['user_id'];
+            moveToScreen(int.tryParse(type), favid, userid);
+          }
+        }
+      },
     );
 
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((RemoteMessage message) {
-      if (message != null) {
-        _showLocalPush(message.data);
-      }
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
     });
-
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-      _showLocalPush(message.data);
-    });
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (message != null) _showLocalPush(message.data);
-    });
-
-    // _firebaseMessaging.configure(
-    //   onMessage: (Map<String, dynamic> message) async {
-    //     print("config Notification onMessage");
-    //     print("onMessage $message");
-    //     if (Platform.isIOS) {
-    //       //move to chat screen
-    //       var type = message['notification']['type'];
-    //       String title = message['notification']['title'];
-    //       String description = message['notification']['body'];
-    //       if (type.toString() == "7") {
-    //         showNotification(title, description, message, type, "0", "0");
-    //       } else {
-    //         String favid = message['notification']['fav_id'];
-    //         String userid = message['notification']['user_id'];
-    //         showNotification(title, description, message, type, favid, userid);
-    //       }
-    //     }
-    //   },
-    //   onReceive: (Map<String, dynamic> message) async {
-    //     print("config Notification onReceive");
-    //     //  print("onResume: ${message}");
-    //     print("onResume: ${message['data']['type']}");
-    //     print("onMessage $message");
-    //     if (Platform.isIOS) {
-    //       var type = message['notification']['type'];
-    //       String title = message['notification']['title'];
-    //       String description = message['notification']['body'];
-    //       if (type.toString() == "7") {
-    //         showNotification(title, description, message, type, "0", "0");
-    //       } else {
-    //         String favid = message['notification']['fav_id'];
-    //         String userid = message['notification']['user_id'];
-    //         showNotification(title, description, message, type, favid, userid);
-    //       }
-    //     }
-    //   },
-    //   onResume: (Map<String, dynamic> message) async {
-    //     print("config Notification onResume");
-    //     //  print("onResume: ${message}");
-    //     print("onResume $message");
-    //
-    //     if (Platform.isIOS) {
-    //       var type = message['notification']['type'];
-    //       String title = message['notification']['title'];
-    //       String description = message['notification']['body'];
-    //       if (type.toString() == "7") {
-    //         showNotification(title, description, message, type, "0", "0");
-    //       } else {
-    //         String favid = message['notification']['fav_id'];
-    //         String userid = message['notification']['user_id'];
-    //         showNotification(title, description, message, type, favid, userid);
-    //       }
-    //     } else {
-    //       var type = message['data']['type'];
-    //       if (type.toString() == "7") {
-    //         _moveToChatScreen();
-    //       } else {
-    //         String favid = message['data']['fav_id'];
-    //         String userid = message['data']['user_id'];
-    //         moveToScreen(int.tryParse(type), favid, userid);
-    //       }
-    //     }
-    //   },
-    //   onLaunch: (Map<String, dynamic> message) async {
-    //     print("config Notification onLaunch");
-    //     print("onLaunch $message");
-    //     if (Platform.isIOS) {
-    //       var type = message['notification']['type'];
-    //       String title = message['notification']['title'];
-    //       String description = message['notification']['body'];
-    //       if (type.toString() == "7") {
-    //         showNotification(title, description, message, type, "0", "0");
-    //       } else {
-    //         String favid = message['notification']['fav_id'];
-    //         String userid = message['notification']['user_id'];
-    //         showNotification(title, description, message, type, favid, userid);
-    //       }
-    //     } else {
-    //       var type = message['data']['type'];
-    //       if (type.toString() == "7") {
-    //         _moveToChatScreen();
-    //       } else {
-    //         String favid = message['data']['fav_id'];
-    //         String userid = message['data']['user_id'];
-    //         moveToScreen(int.tryParse(type), favid, userid);
-    //       }
-    //     }
-    //   },
-    // );
-
-    // _firebaseMessaging.requestNotificationPermissions(
-    //     const IosNotificationSettings(sound: true, badge: true, alert: true));
-    //
-    // _firebaseMessaging.onIosSettingsRegistered
-    //     .listen((IosNotificationSettings settings) {
-    //   print("Settings registered: $settings");
-    // });
 
     _firebaseMessaging.getToken().then((String token) {
       print("DevToken   $token");

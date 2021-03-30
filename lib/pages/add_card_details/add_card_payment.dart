@@ -119,7 +119,8 @@ class _PaymentDialogState extends State<AddCardDetails> {
                 child: Container(
                   margin: new EdgeInsets.only(top: 15),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+
                     children: [
                       Container(
                         alignment: Alignment.topLeft,

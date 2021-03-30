@@ -759,21 +759,18 @@ class _LoginScreenState extends State<LoginScreenNew> {
         ],
       );
 
-      print(credential);
+    //  print(credential);
 
-       email = credential.userIdentifier+"_"+credential.email;
-       name = credential.givenName;
+       email = credential?.userIdentifier??""+"_"+credential?.email??"";
+       name = credential?.givenName??"";
        type = "4";
-       snsId = credential.userIdentifier;
+       snsId = credential?.userIdentifier??"";
        profilePic = "";
        hitApi(1);
     }
     catch(ex)
     {
       showInSnackBar(Messages.genericError);
-
-
-
 
     }
   }

@@ -108,7 +108,8 @@ class _HomeState extends State<VerifyProfile>
                 child: Container(
                   margin: new EdgeInsets.only(top: 15),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+
                     children: [
                       Container(
                         alignment: Alignment.topLeft,
@@ -189,6 +190,7 @@ class _HomeState extends State<VerifyProfile>
                 color: AppColors.whiteGray,
                 child: new Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  textBaseline: TextBaseline.ideographic,
                   children: <Widget>[
                     new Container(
                       height: 5,
@@ -314,6 +316,7 @@ class _HomeState extends State<VerifyProfile>
         child: Container(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
+            textBaseline: TextBaseline.ideographic,
             children: <Widget>[
               Expanded(
                 child: Container(

@@ -128,8 +128,7 @@ class _HomeState extends State<Settings>
                 child: Container(
                   margin: new EdgeInsets.only(top: 15),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         alignment: Alignment.topLeft,
