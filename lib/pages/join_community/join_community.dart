@@ -31,7 +31,6 @@ import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-
 class JoinCommunityNew extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -110,7 +109,8 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     );
   }*/
 
-  Widget getTextField(String labelText,
+  Widget getTextField(
+      String labelText,
       TextEditingController controller,
       FocusNode focusNodeCurrent,
       FocusNode focusNodeNext,
@@ -169,191 +169,252 @@ class _LoginScreenState extends State<JoinCommunityNew> {
 
   @override
   Widget build(BuildContext context) {
-    var screensize = MediaQuery
-        .of(context)
-        .size;
+    var screensize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
     firebaseProvider = Provider.of<FirebaseProvider>(context);
-    return Material(
-      child: Container(
-        color: Colors.white,
-        child: Stack(
-          children: [
-            Scaffold(
-              appBar: getAppBarNew(context),
-              backgroundColor: Colors.white,
-              key: _scaffoldKeys,
-              body: new SingleChildScrollView(
-                child: Form(
-                  key: _fieldKey,
-                  child: Container(
-                    color: Colors.white,
-                    width: screensize.width,
-                    child: new Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        new SizedBox(
-                          height: Constants.backIconsSpace,
-                        ),
-                        Container(
-                            margin: new EdgeInsets.only(left: 20.0),
-                            child: new Text(
-                              "Join the community here!",
-                              style: TextThemes.extraBold,
-                            )),
-                        Container(
-                          margin: new EdgeInsets.only(
-                              left: 20.0, right: 20.0, top: 6),
+    return Container(
+      color: Colors.white,
+      child: Stack(
+        children: [
+          Scaffold(
+            appBar: getAppBarNew(context),
+            backgroundColor: Colors.white,
+            key: _scaffoldKeys,
+            body: new SingleChildScrollView(
+              child: Form(
+                key: _fieldKey,
+                child: Container(
+                  color: Colors.white,
+                  width: screensize.width,
+                  child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      new SizedBox(
+                        height: Constants.backIconsSpace,
+                      ),
+                      Container(
+                          margin: new EdgeInsets.only(left: 20.0),
                           child: new Text(
-                            ResString().get('enter_your_details'),
-                            style: TextThemes.grayNormal,
-                          ),
+                            "Join the community here!",
+                            style: TextThemes.extraBold,
+                          )),
+                      Container(
+                        margin: new EdgeInsets.only(
+                            left: 20.0, right: 20.0, top: 6),
+                        child: new Text(
+                          ResString().get('enter_your_details'),
+                          style: TextThemes.grayNormal,
                         ),
-                        space(),
-                        new SizedBox(
-                          height: 15.0,
-                        ),
-                        getTextField(
-                            ResString().get('email_address'),
-                            _EmailController,
-                            _EmailField,
-                            __FullNameField,
-                            TextInputType.emailAddress,
-                            AssetStrings.emailPng),
-                        new SizedBox(
-                          height: 18.0,
-                        ),
-                        getTextField(
-                            ResString().get('full_name'),
-                            _FullNameController,
-                            __FullNameField,
-                            __FullNameField,
-                            TextInputType.text,
-                            AssetStrings.fullname),
-                        new SizedBox(
-                          height: 54.0,
-                        ),
-                        Container(
-                            child: getSetupButtonNew(callback,
-                                ResString().get('sign_up_button'), 20)),
-                        Container(
-                          alignment: Alignment.center,
-                          margin: new EdgeInsets.only(
-                              left: 20.0, right: 20.0, top: 98),
-                          child: new Text(ResString().get('or_signup_with'),
-                              style: TextThemes.greyTextFieldMedium),
-                        ),
-                        space(),
-                        Container(
-                          alignment: Alignment.center,
-                          margin: new EdgeInsets.only(left: 20.0, right: 20.0),
-                          child: new Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              (Platform.isIOS)?InkWell(
+                      ),
+                      space(),
+                      new SizedBox(
+                        height: 15.0,
+                      ),
+                      getTextField(
+                          ResString().get('email_address'),
+                          _EmailController,
+                          _EmailField,
+                          __FullNameField,
+                          TextInputType.emailAddress,
+                          AssetStrings.emailPng),
+                      new SizedBox(
+                        height: 18.0,
+                      ),
+                      getTextField(
+                          ResString().get('full_name'),
+                          _FullNameController,
+                          __FullNameField,
+                          __FullNameField,
+                          TextInputType.text,
+                          AssetStrings.fullname),
+                      new SizedBox(
+                        height: 54.0,
+                      ),
+                      Container(
+                          child: getSetupButtonNew(callback,
+                              ResString().get('sign_up_button'), 20)),
+                      Container(
+                        alignment: Alignment.center,
+                        margin: new EdgeInsets.only(
+                            left: 20.0, right: 20.0, top: 98),
+                        child: new Text(ResString().get('or_signup_with'),
+                            style: TextThemes.greyTextFieldMedium),
+                      ),
+                      space(),
+                      Container(
+                        alignment: Alignment.center,
+                        margin: new EdgeInsets.only(left: 20.0, right: 20.0),
+                        child: new Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            (Platform.isIOS)
+                                ? InkWell(
+                                    onTap: () {
+                                      _doAppleLogin();
+                                    },
+                                    child: new SvgPicture.asset(
+                                      AssetStrings.appleLogin,
+                                      height: 48,
+                                      width: 48,
+                                    ),
+                                  )
+                                : Container(),
+                            (Platform.isIOS)
+                                ? new SizedBox(
+                                    width: 16.0,
+                                  )
+                                : Container(),
+                            InkWell(
+                              onTap: () {
+                                getFacebookUserInfo();
+                              },
+                              child: new SvgPicture.asset(
+                                AssetStrings.facebook,
+                                height: 48,
+                                width: 48,
+                              ),
+                            ),
+                            new SizedBox(
+                              width: 16.0,
+                            ),
+                            InkWell(
                                 onTap: () {
-                                  _doAppleLogin();
+                                  getTwitterInfo();
                                 },
                                 child: new SvgPicture.asset(
-                                  AssetStrings.appleLogin,
+                                  AssetStrings.twitter,
                                   height: 48,
                                   width: 48,
-                                ),
-                              ):Container(),
-                              (Platform.isIOS)?new SizedBox(
-                                width: 16.0,
-                              ):Container(),
-                              InkWell(
+                                )),
+                            new SizedBox(
+                              width: 16.0,
+                            ),
+                            InkWell(
                                 onTap: () {
-                                  getFacebookUserInfo();
+                                  getInstaUserInfo();
                                 },
-                                child: new SvgPicture.asset(
-                                  AssetStrings.facebook,
+                                child: new Image.asset(
+                                  AssetStrings.insta,
                                   height: 48,
                                   width: 48,
+                                )),
+                          ],
+                        ),
+                      ),
+                      space(),
+                      new SizedBox(
+                        height: 27.0,
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        child: new RichText(
+                            textAlign: TextAlign.center,
+                            text: new TextSpan(
+                              text: ResString().get('already_have_Account'),
+                              style: TextThemes.greyDarkTextFieldMedium,
+                              children: <TextSpan>[
+                                new TextSpan(
+                                  text: ResString().get('login_button'),
+                                  style: TextThemes.redTextSmallMedium,
+                                  recognizer: new TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.push(
+                                        context,
+                                        new CupertinoPageRoute(
+                                            builder: (BuildContext context) {
+                                          return new LoginScreenNew();
+                                        }),
+                                      );
+                                    },
                                 ),
-                              ),
-                              new SizedBox(
-                                width: 16.0,
-                              ),
-                              InkWell(
-                                  onTap: () {
-                                    getTwitterInfo();
-                                  },
-                                  child: new SvgPicture.asset(
-                                    AssetStrings.twitter,
-                                    height: 48,
-                                    width: 48,
-                                  )),
-                              new SizedBox(
-                                width: 16.0,
-                              ),
-                              InkWell(
-                                  onTap: () {
-                                    getInstaUserInfo();
-                                  },
-                                  child: new Image.asset(
-                                    AssetStrings.insta,
-                                    height: 48,
-                                    width: 48,
-                                  )),
-                            ],
-                          ),
-                        ),
-                        space(),
-                        new SizedBox(
-                          height: 27.0,
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          child: new RichText(
-                              textAlign: TextAlign.center,
-                              text: new TextSpan(
-                                text: ResString().get('already_have_Account'),
-                                style: TextThemes.greyDarkTextFieldMedium,
-                                children: <TextSpan>[
-                                  new TextSpan(
-                                    text: ResString().get('login_button'),
-                                    style: TextThemes.redTextSmallMedium,
-                                    recognizer: new TapGestureRecognizer()
-                                      ..onTap = () {
-                                        Navigator.push(
-                                          context,
-                                          new CupertinoPageRoute(
-                                              builder: (BuildContext context) {
-                                                return new LoginScreenNew();
-                                              }),
-                                        );
-                                      },
-                                  ),
-                                ],
-                              )),
-                        ),
-                        new SizedBox(
-                          height: 15.0,
-                        ),
-                      ],
-                    ),
+                              ],
+                            )),
+                      ),
+                      new SizedBox(
+                        height: 15.0,
+                      ),
+                   //   termAndConditionView
+                    ],
                   ),
                 ),
               ),
             ),
-            new Center(
-              child: getFullScreenProviderLoader(
-                status: provider.getLoading(),
-                context: context,
-              ),
+          ),
+          new Center(
+            child: getFullScreenProviderLoader(
+              status: provider.getLoading(),
+              context: context,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  var _valueC = false;
+
+  void onChecked(bool value) {
+    setState(() {
+      _valueC = value;
+      print('value: $value');
+    });
+  }
+
+  get termAndConditionView => Padding(
+        padding: const EdgeInsets.only(left: 16.0, right: 16),
+        child: new Row(
+          children: <Widget>[
+            new Checkbox(
+              value: _valueC,
+              onChanged: onChecked,
+            ),
+            privacyPolicyLinkAndTermsOfService()
           ],
         ),
+      );
+
+  Widget privacyPolicyLinkAndTermsOfService() {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Text.rich(TextSpan(
+            text: 'By continuing, you agree to our ',
+            style: TextStyle(fontSize: 12, color: Colors.black),
+            children: <TextSpan>[
+              TextSpan(
+                  text: 'Terms of Service',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      // code to open / launch terms of service link here
+                    }),
+              TextSpan(
+                  text: ' and ',
+                  style: TextStyle(fontSize: 12, color: Colors.black),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text: 'Privacy Policy',
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            // code to open / launch privacy policy link here
+                          })
+                  ])
+            ])),
       ),
     );
   }
 
   Future<ValueSetter> voidCallBackLike(Token tokem) async {
     {
-
-      email = tokem.id.toString()+"_";
+      email = tokem.id.toString() + "_";
       name = tokem.username ?? "";
       type = "3";
       snsId = tokem.id.toString();
@@ -382,13 +443,14 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     } catch (ex) {}
   }
 
-
   void getTwitterInfo() async {
-    var socialLogin=new SocialLogin();
-    var result = (Platform.isIOS)?await socialLogin.twitterLogin():await socialLogin.twitterLoginAndroid();
+    var socialLogin = new SocialLogin();
+    var result = (Platform.isIOS)
+        ? await socialLogin.twitterLogin()
+        : await socialLogin.twitterLoginAndroid();
 
-    if (result!=null&&result.login) {
-      email = result.id+"_"+result.email;
+    if (result != null && result.login) {
+      email = result.id + "_" + result.email;
       name = result.username;
       type = "2";
       snsId = result.id;
@@ -405,7 +467,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     if (googleSignInAccount != null && googleSignInAccount is Map) {
       var nameUser = googleSignInAccount["name"];
       var id = googleSignInAccount["id"];
-      var emails = id+"_"+googleSignInAccount["email"];
+      var emails = id + "_" + googleSignInAccount["email"];
       var photodata = googleSignInAccount["picture"];
       var photourl = photodata["data"];
       // MemoryManagement.setuserName(username: nameUser);
@@ -474,7 +536,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
         break;
       case "4":
         {
-          types="ap";
+          types = "ap";
         }
     }
 
@@ -546,21 +608,20 @@ class _LoginScreenState extends State<JoinCommunityNew> {
         await firebaseProvider.createFirebaseUser(user);
       }
 
-    provider.hideLoader();
-    MemoryManagement.setScreenType(type: "1");
+      provider.hideLoader();
+      MemoryManagement.setScreenType(type: "1");
 
-    if (type == "0") {
-      if (response?.user != null && response?.user.is_location == 0) {
-        Navigator.push(
-          context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
-            return new PhoneNumberAdd();
+      if (type == "0") {
+        if (response?.user != null && response?.user.is_location == 0) {
+          Navigator.push(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return new PhoneNumberAdd();
             }),
           );
 
           return;
         } else if (response?.user != null && response?.user.is_password == 0) {
-
           Navigator.push(
             context,
             new CupertinoPageRoute(builder: (BuildContext context) {
@@ -582,7 +643,6 @@ class _LoginScreenState extends State<JoinCommunityNew> {
         }
       }
 
-
       if (response.isnew == null || response.isnew) {
         Navigator.push(
           context,
@@ -597,7 +657,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
           new CupertinoPageRoute(builder: (BuildContext context) {
             return DashBoardScreen();
           }),
-              (route) => false,
+          (route) => false,
         );
       }
     } else {
@@ -608,9 +668,8 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     }
   }
 
-
-  PayvorFirebaseUser getUser(LoginSignupResponse signupResponse,
-      String firebaseId, String email) {
+  PayvorFirebaseUser getUser(
+      LoginSignupResponse signupResponse, String firebaseId, String email) {
     return new PayvorFirebaseUser(
         fullName: signupResponse?.user?.name,
         email: email,
@@ -619,8 +678,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
         created: DateTime.now().toIso8601String(),
         filmShapeId: signupResponse?.user?.id,
         firebaseId: firebaseId,
-        isOnline: true
-    );
+        isOnline: true);
   }
 
   static String validatorEmail(String value) {
@@ -668,19 +726,16 @@ class _LoginScreenState extends State<JoinCommunityNew> {
         ],
       );
 
-    //  print(credential);
+      //  print(credential);
 
-      email = credential?.userIdentifier??""+"_"+credential?.email??"";
-      name = credential?.givenName??"";
+      email = credential?.userIdentifier ?? "" + "_" + credential?.email ?? "";
+      name = credential?.givenName ?? "";
       type = "4";
-      snsId = credential?.userIdentifier??"";
+      snsId = credential?.userIdentifier ?? "";
       profilePic = "";
       hitApi();
-    }
-    catch(ex)
-    {
+    } catch (ex) {
       showInSnackBar(Messages.genericError);
-
     }
   }
 }

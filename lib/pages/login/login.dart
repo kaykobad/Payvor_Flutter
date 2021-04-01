@@ -340,8 +340,8 @@ class _LoginScreenState extends State<LoginScreenNew> {
     } else {
       firebaseProvider.hideLoader();
       APIError apiError = response;
-      print(apiError.error);
-      showInSnackBar("Authentication Failed");
+     // print(apiError.error);
+      showInSnackBar(apiError.error??Messages.unAuthorizedError);
     }
   }
 

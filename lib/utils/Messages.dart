@@ -8,7 +8,7 @@ class Messages {
   static const String timeoutError = "Request timeout";
   static const String genericError = "Something went wrong, please try again";
   static const String badFormatError = "Internal server error";
-  static const String unAuthorizedError = "Unauthorized";
+  static const String unAuthorizedError = "Unauthorized access";
 
   // Success messages
   static const String profileUpdateSuccess = "Profile updated successfully";

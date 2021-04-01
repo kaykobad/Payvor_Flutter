@@ -31,10 +31,9 @@ class CreateCredential extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<CreateCredential> {
-
   TextEditingController _PasswordController = new TextEditingController();
   TextEditingController _ConfirmPasswordController =
-  new TextEditingController();
+      new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
   FocusNode _PasswordField = new FocusNode();
   FocusNode _ConfirmPasswordField = new FocusNode();
@@ -42,11 +41,12 @@ class _LoginScreenState extends State<CreateCredential> {
   bool obsecureText = true;
   bool obsecureTextConfirm = true;
 
-
   String name = "";
   String email = "";
 
   AuthProvider provider;
+
+  var _termAndConditionCheck = false;
 
   List<TextInputFormatter> listPassword = new List<TextInputFormatter>();
 
@@ -77,7 +77,6 @@ class _LoginScreenState extends State<CreateCredential> {
     );
   }
 
-
   hitApi() async {
     provider.setLoading();
     UpdateProfileRequest updateProfileRequest = new UpdateProfileRequest();
@@ -98,8 +97,7 @@ class _LoginScreenState extends State<CreateCredential> {
     }
 
     var response =
-    await provider.createCredential(updateProfileRequest, context);
-
+        await provider.createCredential(updateProfileRequest, context);
 
     provider.hideLoader();
     if (response is CommonSuccessResponse) {
@@ -196,7 +194,8 @@ class _LoginScreenState extends State<CreateCredential> {
     );
   }*/
 
-  Widget getTextField(String labelText,
+  Widget getTextField(
+      String labelText,
       TextEditingController controller,
       FocusNode focusNodeCurrent,
       FocusNode focusNodeNext,
@@ -256,11 +255,11 @@ class _LoginScreenState extends State<CreateCredential> {
               child: new Text(
                 type == 1
                     ? obsecureText
-                    ? "show"
-                    : "hide"
+                        ? "show"
+                        : "hide"
                     : obsecureTextConfirm
-                    ? "show"
-                    : "hide",
+                        ? "show"
+                        : "hide",
                 style: TextThemes.blackTextSmallNormal,
               ),
             ),
@@ -298,9 +297,9 @@ class _LoginScreenState extends State<CreateCredential> {
               children: [
                 Container(
                     child: new Text(
-                      name,
-                      style: TextThemes.smallBold,
-                    )),
+                  name,
+                  style: TextThemes.smallBold,
+                )),
                 Container(
                   margin: new EdgeInsets.only(top: 1),
                   child: new Text(
@@ -344,8 +343,9 @@ class _LoginScreenState extends State<CreateCredential> {
         children: [
           Scaffold(
             key: _scaffoldKeys,
-            appBar: widget.type ? getAppBarNewBlank(context) : getAppBarNew(
-                context),
+            appBar: widget.type
+                ? getAppBarNewBlank(context)
+                : getAppBarNew(context),
             backgroundColor: Colors.white,
             body: new SingleChildScrollView(
               child: Container(
@@ -365,7 +365,7 @@ class _LoginScreenState extends State<CreateCredential> {
                         )),
                     Container(
                       margin:
-                      new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                          new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
                       child: new Text(
                         ResString().get('set_password'),
                         style: TextThemes.grayNormal,
@@ -375,8 +375,6 @@ class _LoginScreenState extends State<CreateCredential> {
                     new SizedBox(
                       height: 38.0,
                     ),
-
-
                     getTextField(
                         ResString().get('password'),
                         _PasswordController,
@@ -399,46 +397,9 @@ class _LoginScreenState extends State<CreateCredential> {
                         2,
                         obsecureTextConfirm),
                     new SizedBox(
-                      height: 46.0,
+                      height: 10.0,
                     ),
-                    Container(
-                      margin: new EdgeInsets.only(left: 21.0),
-                      child: new RichText(
-
-                          text: new TextSpan(
-                            text: ResString().get('by_continue'),
-                            style: TextThemes.grayNormalSmall,
-                            children: <TextSpan>[
-                              new TextSpan(
-                                text: ResString().get('term_of_uses'),
-                                style: TextThemes.blueMediumSmall,
-                                recognizer: new TapGestureRecognizer()
-                                  ..onTap = () {
-                                    print("called");
-                                    _redirect(
-                                        heading:
-                                        ResString().get('term_of_uses'),
-                                        url: Constants.TermOfUses);
-                                  },
-                              ),
-                              new TextSpan(
-                                text: ResString().get('confirm_that'),
-                                style: TextThemes.grayNormalSmall,
-                              ),
-                              new TextSpan(
-                                text: ResString().get('privacy_policy'),
-                                style: TextThemes.blueMediumSmall,
-                                recognizer: new TapGestureRecognizer()
-                                  ..onTap = () {
-                                    _redirect(
-                                        heading:
-                                        ResString().get('privacy_policy'),
-                                        url: Constants.privacyPolicy);
-                                  },
-                              ),
-                            ],
-                          )),
-                    ),
+                    termAndConditionWidget,
                     Container(
                         margin: new EdgeInsets.only(top: 170),
                         child: getSetupButtonNew(
@@ -462,15 +423,70 @@ class _LoginScreenState extends State<CreateCredential> {
     );
   }
 
-  _redirect({@required String heading, @required String url}) async
-  {
+  void onChecked(bool value) {
+    setState(() {
+      _termAndConditionCheck = value;
+      // print('value: $value');
+    });
+  }
+
+  get termAndConditionWidget => Padding(
+        padding: const EdgeInsets.only(left: 8, right: 4),
+        child: new Row(
+          children: <Widget>[
+            new Checkbox(
+              value: _termAndConditionCheck,
+              onChanged: onChecked,
+            ),
+            termAndConditionText
+          ],
+        ),
+      );
+
+  get termAndConditionText => Padding(
+        padding: const EdgeInsets.only(top: 12.0),
+        child: new RichText(
+            text: new TextSpan(
+          text: ResString().get('by_continue'),
+          style: TextThemes.grayNormalSmall,
+          children: <TextSpan>[
+            new TextSpan(
+              text: ResString().get('term_of_uses'),
+              style: TextThemes.blueMediumSmall,
+              recognizer: new TapGestureRecognizer()
+                ..onTap = () {
+                  print("called");
+                  _redirect(
+                      heading: ResString().get('term_of_uses'),
+                      url: Constants.TermOfUses);
+                },
+            ),
+            new TextSpan(
+              text: ResString().get('confirm_that'),
+              style: TextThemes.grayNormalSmall,
+            ),
+            new TextSpan(
+              text: ResString().get('privacy_policy'),
+              style: TextThemes.blueMediumSmall,
+              recognizer: new TapGestureRecognizer()
+                ..onTap = () {
+                  _redirect(
+                      heading: ResString().get('privacy_policy'),
+                      url: Constants.privacyPolicy);
+                },
+            ),
+          ],
+        )),
+      );
+
+  _redirect({@required String heading, @required String url}) async {
     Navigator.push(
         context,
         new MaterialPageRoute(
             builder: (context) => new WebViewPages(
-              heading: heading,
-              url: url,
-            )));
+                  heading: heading,
+                  url: url,
+                )));
   }
 
   void callback() {
@@ -485,9 +501,11 @@ class _LoginScreenState extends State<CreateCredential> {
     } else if (password.compareTo(confirmPassword) != 0) {
       showInSnackBar(ResString().get('password_not_match'));
       return;
-    }
-    else if (password.length<6 || password.length>20) {
+    } else if (password.length < 6 || password.length > 20) {
       showInSnackBar(ResString().get('password_should_6_20_char'));
+      return;
+    } else if (!_termAndConditionCheck) {
+      showInSnackBar(ResString().get('accept_term_and_condition'));
       return;
     }
     hitApi();

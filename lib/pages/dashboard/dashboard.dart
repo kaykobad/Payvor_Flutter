@@ -592,6 +592,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     _firebaseProvider = Provider.of<FirebaseProvider>(context);
     authProvider = Provider.of<AuthProvider>(context);
     _firebaseProvider.setHomeContext(context);
+    authProvider.setHomeContext(context);
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(

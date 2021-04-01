@@ -57,6 +57,14 @@ import 'package:payvor/utils/memory_management.dart';
 class AuthProvider with ChangeNotifier {
   var _isLoading = false;
 
+
+
+  BuildContext _context;
+  getHomeContext()=>_context;
+  void setHomeContext(BuildContext context) {
+   _context=context;
+  }
+
   getLoading() => _isLoading;
 
   Future<dynamic> login(LoginRequest request, BuildContext context) async {

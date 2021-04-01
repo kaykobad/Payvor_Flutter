@@ -7,10 +7,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
+import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/Messages.dart';
 
 import 'AppColors.dart';
+import 'memory_management.dart';
 
 // Todo: actual
 
@@ -41,19 +44,15 @@ bool isAndroidPlatform({@required BuildContext context}) {
 
 String readTimestamp(String timestamp) {
   var time = '';
- try {
-   var now = new DateTime.now();
-   var format = new DateFormat('HH:MM');
-   var date =
-
-   new DateTime.fromMicrosecondsSinceEpoch(num.parse(timestamp) * 1000);
-   time = format.format(date);
-
- }
- catch(ex)
-  {
+  try {
+    var now = new DateTime.now();
+    var format = new DateFormat('HH:MM');
+    var date =
+        new DateTime.fromMicrosecondsSinceEpoch(num.parse(timestamp) * 1000);
+    time = format.format(date);
+  } catch (ex) {
     print("chat time ${ex.toString()}");
-    time=timestamp;
+    time = timestamp;
   }
   return time;
 }
@@ -79,19 +78,17 @@ Widget getSpacer({double height, double width}) {
 // Clears memory on logout success
 void onLogoutSuccess({
   @required BuildContext context,
-}) {
- // MemoryManagement.clearMemory();
+}) async {
+  await MemoryManagement.clearMemory();
 
-/*
-  if (isAndroid()) {
-    Fluttertoast.clearAllNotifications();
-  }
-  isUserSignedIn = false;*/
-//  customPushAndRemoveUntilSplash(
-//    context: context,
-//  );
+  Navigator.pushAndRemoveUntil(
+    context,
+    new CupertinoPageRoute(builder: (BuildContext context) {
+      return new LoginScreenNew();
+    }),
+    (route) => false,
+  );
 }
-
 
 // Checks target platform
 bool isAndroid() {
@@ -158,35 +155,33 @@ IconData getPlatformSpecificBackIcon() {
       : Icons.arrow_back;
 }
 
-Widget backButton(VoidCallback callback)
-{
-
+Widget backButton(VoidCallback callback) {
   return InkWell(
-    onTap: (){
+    onTap: () {
       callback();
     },
     child: Icon(
       getPlatformSpecificBackIcon(),
       color: AppColors.kBlack,
-      ),
+    ),
   );
 }
 
-
-
-AppBar commonAppBar({VoidCallback callback,Widget action,@required String title})
-{
+AppBar commonAppBar(
+    {VoidCallback callback, Widget action, @required String title}) {
   return AppBar(
     backgroundColor: AppColors.kWhite,
     // Here we take the value from the MyHomePage object that was created by
     // the App.build method, and use it to set our appbar title.
-    title: Text(title,style: TextStyle(color: AppColors.kBlack),),
+    title: Text(
+      title,
+      style: TextStyle(color: AppColors.kBlack),
+    ),
     centerTitle: true,
     leading: backButton(callback),
-    actions: [action??Container()],
+    actions: [action ?? Container()],
   );
 }
-
 
 Widget getFullScreenProviderLoader({
   @required bool status,
@@ -227,14 +222,12 @@ Widget getHalfScreenLoader({
   Color color,
   double strokeWidth,
 }) {
-  return
-    status
-        ? getHalfAppThemedLoader(
-      context: context,
-    )
-        : new Container();
+  return status
+      ? getHalfAppThemedLoader(
+          context: context,
+        )
+      : new Container();
 }
-
 
 Widget getHalfAppThemedLoader({
   @required BuildContext context,
@@ -393,36 +386,38 @@ Widget getChildLoader({
   );
 }
 
-
 // Show alert dialog
-void showAlert({@required BuildContext context,
-  String titleText,
-  Widget title,
-  String message,
-  Widget content,
-  Map<String, VoidCallback> actionCallbacks}) {
+void showAlert(
+    {@required BuildContext context,
+    String titleText,
+    Widget title,
+    String message,
+    Widget content,
+    Map<String, VoidCallback> actionCallbacks}) {
   Widget titleWidget = titleText == null
       ? title
       : new Text(
-    titleText.toUpperCase(),
-    textAlign: TextAlign.center,
-    style: new TextStyle(
-      color: dialogContentColor,
-      fontSize: 14.0,
-      fontWeight: FontWeight.bold,
-    ),
-  );
+          titleText.toUpperCase(),
+          textAlign: TextAlign.center,
+          style: new TextStyle(
+            color: dialogContentColor,
+            fontSize: 14.0,
+            fontWeight: FontWeight.bold,
+          ),
+        );
   Widget contentWidget = message == null
-      ? content != null ? content : new Container()
+      ? content != null
+          ? content
+          : new Container()
       : new Text(
-    message,
-    textAlign: TextAlign.center,
-    style: new TextStyle(
-      color: dialogContentColor,
-      fontWeight: FontWeight.w400,
+          message,
+          textAlign: TextAlign.center,
+          style: new TextStyle(
+            color: dialogContentColor,
+            fontWeight: FontWeight.w400,
 //            fontFamily: Constants.contentFontFamily,
-    ),
-  );
+          ),
+        );
 
   OverlayEntry alertDialog;
   // Returns alert actions
@@ -478,7 +473,7 @@ void showAlert({@required BuildContext context,
   }
 
   List<Widget> actions =
-  actionCallbacks != null ? _getAlertActions(actionCallbacks) : [];
+      actionCallbacks != null ? _getAlertActions(actionCallbacks) : [];
 
   OverlayState overlayState;
   overlayState = Overlay.of(context);
@@ -532,21 +527,20 @@ void showAlert({@required BuildContext context,
                       color: dialogContentColor,
                     ),
                     new Row(
-                      children: <Widget>[]
-                        ..addAll(
+                      children: <Widget>[]..addAll(
                           new List.generate(
                             actions.length +
                                 (actions.length > 1 ? (actions.length - 1) : 0),
-                                (int index) {
+                            (int index) {
                               return index.isOdd
                                   ? new Container(
-                                width: 0.6,
-                                height: 30.0,
-                                color: dialogContentColor,
-                              )
+                                      width: 0.6,
+                                      height: 30.0,
+                                      color: dialogContentColor,
+                                    )
                                   : new Expanded(
-                                child: actions[index ~/ 2],
-                              );
+                                      child: actions[index ~/ 2],
+                                    );
                             },
                           ),
                         ),
@@ -593,13 +587,11 @@ Widget getCachedNetworkImage(
     },
     errorWidget: (BuildContext context, String error, Object obj) {
       return new Center(
-        child:Icon(
-          Icons.image,
-          color: Colors.grey,
-          size: 36.0,
-        )
-      );
+          child: Icon(
+        Icons.image,
+        color: Colors.grey,
+        size: 36.0,
+      ));
     },
   );
 }
-

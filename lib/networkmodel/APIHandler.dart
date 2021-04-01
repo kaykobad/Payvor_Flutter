@@ -1,16 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/memory_management.dart';
+import 'package:provider/provider.dart';
 
 enum MethodType { POST, GET, PUT, DELETE }
+
 const Duration timeoutDuration = const Duration(seconds: 60);
+
 class APIHandler {
   static Map<String, String> defaultHeaders = {
     "Content-Type": "application/json",
@@ -97,7 +102,6 @@ class APIHandler {
       headers.addAll(defaultHeaders);
       headers.addAll(additionalHeaders);
 
-
       if (MemoryManagement.getAccessToken() != null) {
         headers["Authorization"] =
             "Bearer " + MemoryManagement.getAccessToken();
@@ -123,21 +127,18 @@ class APIHandler {
                 options: Options(
                   headers: headers,
                 ),
-            data: requestBody,
+                data: requestBody,
               )
               .timeout(timeoutDuration);
 
           break;
         case MethodType.GET:
           response = await dio
-              .get(
-                url,
-                options: Options(
-                  headers: headers,
-                ),
-               queryParameters: requestBody
-
-              )
+              .get(url,
+                  options: Options(
+                    headers: headers,
+                  ),
+                  queryParameters: requestBody)
               .timeout(timeoutDuration);
           break;
         case MethodType.PUT:
@@ -169,7 +170,6 @@ class APIHandler {
       //print("respnse code: ${response.code}");
 
       completer.complete(response.data);
-
     } on DioError catch (e) {
       print("error ${e}");
       print("url: ${url}");
@@ -177,51 +177,55 @@ class APIHandler {
       print("messag ${e.response?.data}");
       print("messag ${e.response}");
 
-       if (e.response?.statusCode == 403) {
+      if (e.response?.statusCode == 403) {
         APIError apiError = new APIError(
           error: parseError(e.response.data),
           status: 403,
           onAlertPop: () {},
         );
         completer.complete(apiError);
+      } else if (e.response?.statusCode == 400) {
+        APIError apiError = new APIError(
+          error: parseError(e.response.data),
+          messag: e.response.data,
+          status: 400,
+          onAlertPop: () {
+            // onLogoutSuccess(
+            //   context: context,
+            // );
+          },
+        );
+        completer.complete(apiError);
+      } else if (e.response?.statusCode == 401) {
+        APIError apiError = new APIError(
+          error: parseError(e.response.data),
+          status: 401,
+          onAlertPop: () {
+            onLogoutSuccess(
+              context: context,
+            );
+          },
+        );
+        completer.complete(apiError);
+        //logout the user in case of blocked user
+        try {
+          onLogoutSuccess(
+            context: Provider.of<AuthProvider>(context,listen: false).getHomeContext(),
+          );
+        } catch (ex) {
+         // print("error ${ex.toString()}");
+        }
+      } else {
+        APIError apiError = new APIError(
+            error: parseError(e.response?.data ?? ""),
+            messag: e.response?.data ?? "",
+            status: e.response?.statusCode ?? 0);
+        completer.complete(apiError);
       }
-      else if (e.response?.statusCode == 400) {
-         APIError apiError = new APIError(
-           error: parseError(e.response.data),
-           messag: e.response.data,
-           status: 400,
-           onAlertPop: () {
-             onLogoutSuccess(
-               context: context,
-             );
-           },
-         );
-         completer.complete(apiError);
-      }
-       else if (e.response?.statusCode == 401) {
-         APIError apiError = new APIError(
-           error: Messages.unAuthorizedError,
-           status: 401,
-           onAlertPop: () {
-             onLogoutSuccess(
-               context: context,
-             );
-           },
-         );
-         completer.complete(apiError);
-       }
-       else {
-         APIError apiError = new APIError(
-             error: parseError(e.response?.data??""),
-             messag: e.response?.data??"",
-             status: e.response?.statusCode??0);
-         completer.complete(apiError);
-       }
-    }
-    catch (e) {
+    } catch (e) {
       print("errror ${e.toString()}");
-      APIError apiError = new APIError(
-          error: Messages.genericError, status: 500);
+      APIError apiError =
+          new APIError(error: Messages.genericError, status: 500);
       completer.complete(apiError);
     }
     return completer.future;
@@ -229,9 +233,13 @@ class APIHandler {
 
   static String parseError(dynamic response) {
     try {
-      return response["message"];
-    }
-    catch (e) {
+      var errorMessage = response["message"];
+      if (errorMessage == null) {
+        return response['error'];
+      } else {
+        return errorMessage;
+      }
+    } catch (e) {
       return Messages.genericError;
     }
   }
@@ -239,8 +247,7 @@ class APIHandler {
   static String parseErrorMessage(dynamic response) {
     try {
       return response["message"];
-    }
-    catch (e) {
+    } catch (e) {
       return Messages.genericError;
     }
   }

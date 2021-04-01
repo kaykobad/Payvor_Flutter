@@ -112,6 +112,7 @@ class ResString {
     'mm/yy': 'MM/YY',
     'cvv': 'CVV',
     'you_get': 'You’ll Get',
+    'accept_term_and_condition': 'Please accept the term and conditions.',
   };
   String get(String key){
     return data[key];
