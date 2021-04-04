@@ -66,7 +66,6 @@ class _LoginScreenState extends State<LoginScreenNew> {
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-
   }
 
   Widget getView() {
@@ -101,23 +100,16 @@ class _LoginScreenState extends State<LoginScreenNew> {
           }
         },
         decoration: new InputDecoration(
-
           enabledBorder: new OutlineInputBorder(
               borderSide: new BorderSide(
                 color: Colors.grey.withOpacity(0.5),
               ),
-              borderRadius: new BorderRadius.circular(8)
-
-          ),
+              borderRadius: new BorderRadius.circular(8)),
           focusedBorder: new OutlineInputBorder(
               borderSide: new BorderSide(
                 color: AppColors.colorCyanPrimary,
-
               ),
-              borderRadius: new BorderRadius.circular(8)
-
-
-          ),
+              borderRadius: new BorderRadius.circular(8)),
           contentPadding: new EdgeInsets.only(top: 10.0),
           prefixIcon: Padding(
             padding: const EdgeInsets.only(
@@ -130,26 +122,26 @@ class _LoginScreenState extends State<LoginScreenNew> {
           ),
           suffixIcon: obsectextType
               ? Offstage(
-            offstage: !obsectextType,
-            child: InkWell(
-              onTap: () {
-                obsecureText = !obsecureText;
-                setState(() {});
-              },
-              child: Container(
-                width: 30.0,
-                margin: new EdgeInsets.only(right: 10.0, bottom: 4),
-                alignment: Alignment.centerRight,
-                child: new Text(
-                  obsecureText ? "show" : "hide",
-                  style: TextThemes.blackTextSmallNormal,
-                ),
-              ),
-            ),
-          )
+                  offstage: !obsectextType,
+                  child: InkWell(
+                    onTap: () {
+                      obsecureText = !obsecureText;
+                      setState(() {});
+                    },
+                    child: Container(
+                      width: 30.0,
+                      margin: new EdgeInsets.only(right: 10.0, bottom: 4),
+                      alignment: Alignment.centerRight,
+                      child: new Text(
+                        obsecureText ? "show" : "hide",
+                        style: TextThemes.blackTextSmallNormal,
+                      ),
+                    ),
+                  ),
+                )
               : Container(
-            width: 1.0,
-          ),
+                  width: 1.0,
+                ),
           hintText: labelText,
           hintStyle: TextThemes.greyTextFieldHintNormal,
         ),
@@ -177,7 +169,6 @@ class _LoginScreenState extends State<LoginScreenNew> {
     }
 
     if (typse == 0) {
-
       LoginRequest loginRequest = new LoginRequest(
           password: _PasswordController.text, email: _EmailController.text);
       response = await provider.login(loginRequest, context);
@@ -210,7 +201,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
           break;
         case "4":
           {
-            types="ap";
+            types = "ap";
           }
       }
       SignUpSocialRequest loginRequest = new SignUpSocialRequest(
@@ -223,7 +214,6 @@ class _LoginScreenState extends State<LoginScreenNew> {
       response = await provider.socialSignup(loginRequest, context);
       MemoryManagement.socialMediaStatus("1");
     }
-
 
     if (response is LoginSignupResponse) {
       provider.setLoading();
@@ -265,7 +255,6 @@ class _LoginScreenState extends State<LoginScreenNew> {
         //update user info to fire store user collection
         await firebaseProvider
             .updateFirebaseUser(getUser(response, firebaseId, email));
-
       } catch (ex) {
         print("error ${ex.toString()}");
         //for old filmshape users
@@ -277,14 +266,11 @@ class _LoginScreenState extends State<LoginScreenNew> {
         user.created = DateTime.now()
             .toIso8601String(); //if user is not registered with firebase
         await firebaseProvider.createFirebaseUser(user);
-
       }
 
       provider.hideLoader();
 
-
       if (type == "0") {
-
         if (response?.user != null && response?.user?.is_location == 0) {
           Navigator.push(
             context,
@@ -295,7 +281,6 @@ class _LoginScreenState extends State<LoginScreenNew> {
 
           return;
         } else if (response?.user != null && response?.user.is_password == 0) {
-
           Navigator.push(
             context,
             new CupertinoPageRoute(builder: (BuildContext context) {
@@ -306,7 +291,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
           return;
         }
       } else {
-         if (response?.user != null && response?.user.is_location == 0) {
+        if (response?.user != null && response?.user.is_location == 0) {
           Navigator.push(
             context,
             new CupertinoPageRoute(builder: (BuildContext context) {
@@ -327,27 +312,24 @@ class _LoginScreenState extends State<LoginScreenNew> {
           }),
         );
       } else {
-
         Navigator.pushAndRemoveUntil(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
             return DashBoardScreen();
           }),
-              (route) => false,
+          (route) => false,
         );
       }
-
     } else {
       firebaseProvider.hideLoader();
       APIError apiError = response;
-     // print(apiError.error);
-      showInSnackBar(apiError.error??Messages.unAuthorizedError);
+      // print(apiError.error);
+      showInSnackBar(apiError.error ?? Messages.unAuthorizedError);
     }
   }
 
-
-  PayvorFirebaseUser getUser(LoginSignupResponse signupResponse,
-      String firebaseId, String email) {
+  PayvorFirebaseUser getUser(
+      LoginSignupResponse signupResponse, String firebaseId, String email) {
     return new PayvorFirebaseUser(
         fullName: signupResponse.user.name,
         email: email,
@@ -370,9 +352,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
     provider = Provider.of<AuthProvider>(context);
     firebaseProvider = Provider.of<FirebaseProvider>(context);
 
-    var screensize = MediaQuery
-        .of(context)
-        .size;
+    var screensize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: getAppBarNew(context),
       backgroundColor: Colors.white,
@@ -381,7 +361,6 @@ class _LoginScreenState extends State<LoginScreenNew> {
         children: [
           Container(
             color: Colors.white,
-
             child: new SingleChildScrollView(
               child: Container(
                 color: Colors.white,
@@ -400,7 +379,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
                         )),
                     Container(
                       margin:
-                      new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                          new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
                       child: new Text(
                         ResString().get('to_continuew_plz'),
                         style: TextThemes.grayNormal,
@@ -470,23 +449,23 @@ class _LoginScreenState extends State<LoginScreenNew> {
                                   padding: const EdgeInsets.all(4.0),
                                   child: boolCheckBox
                                       ? new SvgPicture.asset(
-                                    AssetStrings.tick,
-                                  )
+                                          AssetStrings.tick,
+                                        )
                                       : new Container(),
                                 ),
                               ),
                             ),
                             decoration: boolCheckBox
                                 ? new BoxDecoration(
-                                borderRadius:
-                                new BorderRadius.circular(4.0),
-                                color: AppColors.colorCyanPrimary)
+                                    borderRadius:
+                                        new BorderRadius.circular(4.0),
+                                    color: AppColors.colorCyanPrimary)
                                 : new BoxDecoration(
-                                borderRadius:
-                                new BorderRadius.circular(4.0),
-                                border: new Border.all(
-                                    color: Colors.grey.withOpacity(0.6),
-                                    width: 1.6)),
+                                    borderRadius:
+                                        new BorderRadius.circular(4.0),
+                                    border: new Border.all(
+                                        color: Colors.grey.withOpacity(0.6),
+                                        width: 1.6)),
                             width: 20,
                             height: 20,
                           ),
@@ -501,15 +480,14 @@ class _LoginScreenState extends State<LoginScreenNew> {
                                   },
                                   child: new Text(
                                       ResString().get('remember_me'),
-                                      style: TextThemes
-                                          .blackTextSmallMedium))),
+                                      style: TextThemes.blackTextSmallMedium))),
                           InkWell(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 new CupertinoPageRoute(
                                     builder: (BuildContext context) {
-                                      return new ForgotPassword(
+                                  return new ForgotPassword(
                                     type: 1,
                                   );
                                 }),
@@ -532,7 +510,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
                     Container(
                       alignment: Alignment.center,
                       margin:
-                      new EdgeInsets.only(left: 20.0, right: 20.0, top: 51),
+                          new EdgeInsets.only(left: 20.0, right: 20.0, top: 51),
                       child: new Text(ResString().get('or_login_with'),
                           style: TextThemes.greyTextFieldMedium),
                     ),
@@ -543,20 +521,23 @@ class _LoginScreenState extends State<LoginScreenNew> {
                       child: new Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-
-                          (Platform.isIOS)?InkWell(
-                            onTap: () {
-                              _doAppleLogin();
-                            },
-                            child: new SvgPicture.asset(
-                              AssetStrings.appleLogin,
-                              height: 48,
-                              width: 48,
-                            ),
-                          ):Container(),
-                          (Platform.isIOS)?new SizedBox(
-                            width: 16.0,
-                          ):Container(),
+                          (Platform.isIOS)
+                              ? InkWell(
+                                  onTap: () {
+                                    _doAppleLogin();
+                                  },
+                                  child: new SvgPicture.asset(
+                                    AssetStrings.appleLogin,
+                                    height: 48,
+                                    width: 48,
+                                  ),
+                                )
+                              : Container(),
+                          (Platform.isIOS)
+                              ? new SizedBox(
+                                  width: 16.0,
+                                )
+                              : Container(),
                           InkWell(
                             onTap: () {
                               getFacebookUserInfo();
@@ -617,8 +598,8 @@ class _LoginScreenState extends State<LoginScreenNew> {
                                       context,
                                       new CupertinoPageRoute(
                                           builder: (BuildContext context) {
-                                            return new JoinCommunityNew();
-                                          }),
+                                        return new JoinCommunityNew();
+                                      }),
                                     );
                                   },
                               ),
@@ -667,7 +648,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       print("tokenss get ${tokem.access}");
       print("id get ${tokem.id}");
 
-      email = tokem.id.toString()+"_";
+      email = tokem.id.toString() + "_";
       name = "";
       type = "3";
       snsId = tokem.id.toString();
@@ -686,7 +667,6 @@ class _LoginScreenState extends State<LoginScreenNew> {
         );
       }),
     );
-
   }
 
   void getTwitterInfo() async {
@@ -696,7 +676,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
         : await socialLogin.twitterLoginAndroid();
 
     if (result != null && result.login) {
-      email = result.id+"_"+result.email;
+      email = result.id + "_" + result.email;
       name = result.username;
       type = "2";
       snsId = result.id;
@@ -713,7 +693,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
     if (facebookSignInAccount != null && facebookSignInAccount is Map) {
       var nameUser = facebookSignInAccount["name"];
       var id = facebookSignInAccount["id"];
-      var emails = id+"_"+facebookSignInAccount["email"];
+      var emails = id + "_" + facebookSignInAccount["email"];
       var photodata = facebookSignInAccount["picture"];
       var photourl = photodata["data"];
       // MemoryManagement.setuserName(username: nameUser);
@@ -750,6 +730,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       );*/
     }
   }
+
   void _doAppleLogin() async {
     try {
       final credential = await SignInWithApple.getAppleIDCredential(
@@ -759,19 +740,17 @@ class _LoginScreenState extends State<LoginScreenNew> {
         ],
       );
 
-    //  print(credential);
+      //  print(credential);
 
-       email = credential?.userIdentifier??""+"_"+credential?.email??"";
-       name = credential?.givenName??"";
-       type = "4";
-       snsId = credential?.userIdentifier??"";
-       profilePic = "";
-       hitApi(1);
-    }
-    catch(ex)
-    {
-      showInSnackBar(Messages.genericError);
-
+      snsId = credential?.userIdentifier ?? "";
+      var userEmail = credential?.email ?? "";
+      email = snsId + "_" + userEmail;
+      name = credential?.givenName ?? "";
+      type = "4";
+      profilePic = "";
+      hitApi(1);
+    } catch (ex) {
+      showInSnackBar(Messages.genericError + ex.toString());
     }
   }
 }

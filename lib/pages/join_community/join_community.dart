@@ -231,8 +231,8 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                         height: 54.0,
                       ),
                       Container(
-                          child: getSetupButtonNew(callback,
-                              ResString().get('sign_up_button'), 20)),
+                          child: getSetupButtonNew(
+                              callback, ResString().get('sign_up_button'), 20)),
                       Container(
                         alignment: Alignment.center,
                         margin: new EdgeInsets.only(
@@ -333,7 +333,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                       new SizedBox(
                         height: 15.0,
                       ),
-                   //   termAndConditionView
+                      //   termAndConditionView
                     ],
                   ),
                 ),
@@ -728,14 +728,15 @@ class _LoginScreenState extends State<JoinCommunityNew> {
 
       //  print(credential);
 
-      email = credential?.userIdentifier ?? "" + "_" + credential?.email ?? "";
+      snsId = credential?.userIdentifier ?? "";
+      var userEmail = credential?.email ?? "";
+      email = snsId + "_" + userEmail;
       name = credential?.givenName ?? "";
       type = "4";
-      snsId = credential?.userIdentifier ?? "";
       profilePic = "";
       hitApi();
     } catch (ex) {
-      showInSnackBar(Messages.genericError);
+      showInSnackBar(Messages.genericError + ex.toString());
     }
   }
 }
