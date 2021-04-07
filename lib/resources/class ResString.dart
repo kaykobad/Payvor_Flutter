@@ -113,6 +113,9 @@ class ResString {
     'cvv': 'CVV',
     'you_get': 'You’ll Get',
     'accept_term_and_condition': 'Please accept the term and conditions.',
+    'no_favours':'No Favors!\n\nNo one have posted favor in your area yet. Be the first.'
+
+
   };
   String get(String key){
     return data[key];

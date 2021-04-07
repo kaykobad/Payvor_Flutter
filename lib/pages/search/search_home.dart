@@ -13,6 +13,7 @@ import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/pages/suggestion_search/suggestion_search.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
+import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/shimmers/home_shimmer_loader.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -208,7 +209,6 @@ class HomeState extends State<SearchCompany>
       return;
     }
 
-
     if (_loadMore) {
       currentPage++;
     } else {
@@ -242,12 +242,8 @@ class HomeState extends State<SearchCompany>
         } else {
           offstagenodata = false;
         }
-
       }
-
-
     } else {
-
       APIError apiError = response;
       print(apiError.error);
 
@@ -255,7 +251,6 @@ class HomeState extends State<SearchCompany>
     }
     provider.hideLoader();
   }
-
 
   void _setScrollListener() {
     //crollController.position.isScrollingNotifier.addListener(() { print("called");});
@@ -270,8 +265,7 @@ class HomeState extends State<SearchCompany>
           isPullToRefresh = true;
           hitApi(filterRequest);
           showInSnackBar("Loading data...");
-        }
-        else {
+        } else {
           print("not called");
         }
       }
@@ -303,7 +297,6 @@ class HomeState extends State<SearchCompany>
                       "Find your favors",
                       style: TextThemes.whiteMedium,
                     )),
-
                 Stack(
                   children: [
                     getTextField(),
@@ -329,23 +322,25 @@ class HomeState extends State<SearchCompany>
                 new SizedBox(
                   height: 16.0,
                 ),
-
-                (provider.getLoading()) ? Expanded(
-                  child: Container(
-                    height: double.infinity,
-                    child: HomeShimmer(),
-                  ),
-                ) : _buildContestList(),
+                (provider.getLoading())
+                    ? Expanded(
+                        child: Container(
+                          height: double.infinity,
+                          child: HomeShimmer(),
+                        ),
+                      )
+                    : _buildContestList(),
               ],
             ),
           ),
           Visibility(
-            visible:!offstagenodata,
+            visible: !offstagenodata,
             child: Container(
               margin: new EdgeInsets.only(top: 170),
               child: new Center(
                 child: new Text(
-                  "No Favors Found",
+                  ResString().get("no_favours"),
+                  textAlign: TextAlign.center,
                   style: new TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.bold,
@@ -354,8 +349,6 @@ class HomeState extends State<SearchCompany>
               ),
             ),
           ),
-
-
         ],
       ),
     );
@@ -380,7 +373,6 @@ class HomeState extends State<SearchCompany>
                 onTap: () {
                   widget.lauchCallBack(Material(child: new SearchHomeByName()));
                 },
-
                 decoration: new InputDecoration(
                   enabledBorder: new OutlineInputBorder(
                       borderRadius: new BorderRadius.circular(3)),
@@ -439,9 +431,7 @@ class HomeState extends State<SearchCompany>
   Future<ValueSetter> voidCallBackStaus(bool boolean) async {
     showData = boolean;
 
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   Future<ValueSetter> voidCallBacks(FilterRequest filter) async {
@@ -511,7 +501,7 @@ class HomeState extends State<SearchCompany>
             child: Material(
                 child: new PostFavorDetails(
           id: data.id.toString(),
-                  voidcallback: callback,
+          voidcallback: callback,
         ))));
       },
       child: Container(
@@ -534,22 +524,23 @@ class HomeState extends State<SearchCompany>
                 color: AppColors.dividerColor,
               ),
             ),
+            data?.image != null && data.image.isNotEmpty
+                ? new Container(
+                    height: 147,
+                    width: double.infinity,
+                    margin:
+                        new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
+                    child: ClipRRect(
+                      // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                      borderRadius: new BorderRadius.circular(10.0),
 
-            data?.image != null && data.image.isNotEmpty ? new Container(
-              height: 147,
-              width: double.infinity,
-              margin:
-              new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
-              child: ClipRRect(
-                // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                borderRadius: new BorderRadius.circular(10.0),
-
-                child: getCachedNetworkImageRect(
-                  url: data?.image,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ) : Container(),
+                      child: getCachedNetworkImageRect(
+                        url: data?.image,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )
+                : Container(),
             Container(
                 width: double.infinity,
                 color: Colors.white,
@@ -578,8 +569,6 @@ class HomeState extends State<SearchCompany>
                 trimExpandedText: ' less',
               ),
             ),
-
-
             new SizedBox(
               height: 15.0,
             )
@@ -589,4 +578,3 @@ class HomeState extends State<SearchCompany>
     );
   }
 }
-
