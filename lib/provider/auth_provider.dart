@@ -21,6 +21,7 @@ import 'package:payvor/model/favour_details_response/favour_details_response.dar
 import 'package:payvor/model/favour_posted_by_user.dart';
 import 'package:payvor/model/forgot_password/forgot_password_request.dart';
 import 'package:payvor/model/forgot_password/forgot_password_response.dart';
+import 'package:payvor/model/hide_post_request.dart';
 import 'package:payvor/model/hiew/hire_list.dart';
 import 'package:payvor/model/hired_user_response_details/hired_user_response-details.dart';
 import 'package:payvor/model/logged_in_user/logged_in_user_response.dart';
@@ -57,12 +58,12 @@ import 'package:payvor/utils/memory_management.dart';
 class AuthProvider with ChangeNotifier {
   var _isLoading = false;
 
-
-
   BuildContext _context;
-  getHomeContext()=>_context;
+
+  getHomeContext() => _context;
+
   void setHomeContext(BuildContext context) {
-   _context=context;
+    _context = context;
   }
 
   getLoading() => _isLoading;
@@ -525,14 +526,30 @@ class AuthProvider with ChangeNotifier {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.get(
         context: context, url: APIs.deletePost + id + "/1");
-
+    hideLoader();
     if (response is APIError) {
       completer.complete(response);
       return completer.future;
     } else {
       ReportResponse otpVerification = new ReportResponse.fromJson(response);
-      //if wrong otp
+      completer.complete(otpVerification);
+    }
 
+    notifyListeners();
+    return completer.future;
+  }
+
+  Future<dynamic> hidePost(String postId, BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var hidePost = new HidePostRequest(postId: postId);
+    var response = await APIHandler.post(
+        context: context, url: APIs.hidePost+"?post_id=$postId");
+    hideLoader();
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      ReportResponse otpVerification = new ReportResponse.fromJson(response);
       completer.complete(otpVerification);
     }
 
@@ -606,7 +623,8 @@ class AuthProvider with ChangeNotifier {
     return completer.future;
   }
 
-  Future<dynamic> getotp(String phoneNumber,String countryCode, BuildContext context) async {
+  Future<dynamic> getotp(
+      String phoneNumber, String countryCode, BuildContext context) async {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.get(
         context: context, url: "${APIs.getOtpUrl}$countryCode/$phoneNumber");

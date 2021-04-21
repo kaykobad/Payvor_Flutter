@@ -171,7 +171,7 @@ class _HomeState extends State<OriginalPostData>
 
     if (response is ReportResponse) {
       if (response != null && response.status.code == 200) {
-        showInSnackBar(response.message);
+        showInSnackBar(response.success);
       }
 
       print(response);
@@ -304,7 +304,6 @@ class _HomeState extends State<OriginalPostData>
     if (!gotInternetConnection) {
       return;
     }
-    //  var reportrequest=new ReportPostRequest(favour_id: favoriteResponse?.data?.id?.toString());
 
     var response = await provider.deletePost(
         favoriteResponse?.data?.id?.toString(), context);
@@ -313,7 +312,7 @@ class _HomeState extends State<OriginalPostData>
 
     if (response is ReportResponse) {
       if (response != null && response.status.code == 200) {
-        showInSnackBar(response.message);
+        showInSnackBar(response.success);
       }
 
       print(response);

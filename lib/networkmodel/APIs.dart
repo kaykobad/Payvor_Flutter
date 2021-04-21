@@ -59,4 +59,5 @@ class APIs {
   static const String userHire = "$baseUrl/hire-user/";
   static const String deletePost = "$baseUrl/delete-repost-favour/";
   static const String sendNotification = "$baseUrl/chat-noti";
+  static const String hidePost = "$baseUrl/remove-favour";
 }

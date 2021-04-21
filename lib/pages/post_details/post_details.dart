@@ -52,7 +52,7 @@ class _HomeState extends State<PostFavorDetails>
       new StreamController<bool>();
   ScrollController scrollController = new ScrollController();
 
-  List<String> listOption = ["Report", "Share"];
+  List<String> listOption = ["Report", "Share", "Hide Post"];
 
   PropmoteDataResponse propmoteDataResponse = new PropmoteDataResponse();
 
@@ -80,7 +80,6 @@ class _HomeState extends State<PostFavorDetails>
     _scaffoldKey.currentState.showSnackBar(
         new SnackBar(content: new Text(value ?? "Something went wrong")));
   }
-
 
   @override
   void initState() {
@@ -141,10 +140,7 @@ class _HomeState extends State<PostFavorDetails>
 
       showInSnackBar(apiError.error);
     }
-
-
   }
-
 
   hitApiPromotion(int type) async {
     bool gotInternetConnection = await hasInternetConnection(
@@ -170,8 +166,7 @@ class _HomeState extends State<PostFavorDetails>
           showBottomSheet();
         }
       }
-    }
-    else {
+    } else {
       provider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
@@ -183,12 +178,9 @@ class _HomeState extends State<PostFavorDetails>
     setState(() {});
   }
 
-
   hitReportApi() async {
     offstageLoader = true;
-    setState(() {
-
-    });
+    setState(() {});
 
     bool gotInternetConnection = await hasInternetConnection(
       context: context,
@@ -196,9 +188,7 @@ class _HomeState extends State<PostFavorDetails>
       canShowAlert: true,
       onFail: () {
         offstageLoader = false;
-        setState(() {
-
-        });
+        setState(() {});
       },
       onSuccess: () {},
     );
@@ -215,7 +205,7 @@ class _HomeState extends State<PostFavorDetails>
 
     if (response is ReportResponse) {
       if (response != null && response.status.code == 200) {
-        showInSnackBar(response.message);
+        showInSnackBar(response.success);
       }
 
       print(response);
@@ -231,12 +221,9 @@ class _HomeState extends State<PostFavorDetails>
     setState(() {});
   }
 
-
   hitDeletePostApi() async {
     offstageLoader = true;
-    setState(() {
-
-    });
+    setState(() {});
 
     bool gotInternetConnection = await hasInternetConnection(
       context: context,
@@ -244,9 +231,7 @@ class _HomeState extends State<PostFavorDetails>
       canShowAlert: true,
       onFail: () {
         offstageLoader = false;
-        setState(() {
-
-        });
+        setState(() {});
       },
       onSuccess: () {},
     );
@@ -267,7 +252,7 @@ class _HomeState extends State<PostFavorDetails>
           widget.voidcallback(1);
           Navigator.pop(context);
         }
-        showInSnackBar(response.message);
+        showInSnackBar(response.success);
       }
 
       print(response);
@@ -283,11 +268,9 @@ class _HomeState extends State<PostFavorDetails>
     setState(() {});
   }
 
-
-  hitApplyFavApi() async {
-    offstageLoader = true;
+  void _hidePostApi() async {
     setState(() {
-
+      offstageLoader = true;
     });
 
     bool gotInternetConnection = await hasInternetConnection(
@@ -296,9 +279,46 @@ class _HomeState extends State<PostFavorDetails>
       canShowAlert: true,
       onFail: () {
         offstageLoader = false;
-        setState(() {
+        setState(() {});
+      },
+      onSuccess: () {},
+    );
 
-        });
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    var response = await provider.hidePost(
+        favoriteResponse?.data?.id?.toString(), context);
+
+    setState(() {
+      offstageLoader = false;
+    });
+
+    if (response is ReportResponse) {
+      if (widget.voidcallback != null) {
+        widget.voidcallback(1);
+        Navigator.pop(context);
+      }
+
+      print(response);
+    } else {
+      APIError apiError = response;
+      showInSnackBar(apiError.error);
+    }
+  }
+
+  hitApplyFavApi() async {
+    offstageLoader = true;
+    setState(() {});
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        offstageLoader = false;
+        setState(() {});
       },
       onSuccess: () {},
     );
@@ -309,16 +329,14 @@ class _HomeState extends State<PostFavorDetails>
     var reportrequest = new ReportPostRequest(
         favour_id: favoriteResponse?.data?.id?.toString());
 
-
     var response = await provider.applyFav(reportrequest, context);
 
     offstageLoader = false;
 
     if (response is ReportResponse) {
       if (response != null && response.status.code == 200) {
-        showBottomSuccessPayment(
-            "Apply Successful!", "You have applied to the favor Successfully",
-            "Done", 0);
+        showBottomSuccessPayment("Apply Successful!",
+            "You have applied to the favor Successfully", "Done", 0);
 
         //  showInSnackBar(response.status.message);
       }
@@ -337,14 +355,12 @@ class _HomeState extends State<PostFavorDetails>
     setState(() {});
   }
 
-
   @override
   bool get wantKeepAlive => true;
 
   void callback() async {
     if ((favoriteResponse?.data?.is_user_applied != 1) &&
-        (widget.isButtonDesabled != null && !widget.isButtonDesabled)
-    ) {
+        (widget.isButtonDesabled != null && !widget.isButtonDesabled)) {
       //  var status= MemoryManagement.getPaymentStatus()??"";
       var firstTimePayment = MemoryManagement.getFirstPaymentStatus() ?? false;
       var paymentStatus = MemoryManagement.getPaymentStatus() ?? false;
@@ -390,7 +406,7 @@ class _HomeState extends State<PostFavorDetails>
     return Container(
       color: Colors.white,
       padding:
-      new EdgeInsets.only(left: 16.0, right: 16.0, top: 16, bottom: 16),
+          new EdgeInsets.only(left: 16.0, right: 16.0, top: 16, bottom: 16),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -417,9 +433,9 @@ class _HomeState extends State<PostFavorDetails>
                       ),
                       Container(
                           child: new Text(
-                            favoriteResponse?.data.location ?? "",
-                            style: TextThemes.greyDarkTextHomeLocation,
-                          )),
+                        favoriteResponse?.data.location ?? "",
+                        style: TextThemes.greyDarkTextHomeLocation,
+                      )),
                     ],
                   ),
                 )
@@ -457,17 +473,15 @@ class _HomeState extends State<PostFavorDetails>
         Navigator.pop(context);
         if (text == "Report Post") {
           _showConfirmDialog(1, 'Are you sure want to report this post?');
-        }
-        else if (text == "Share Post") {
+        } else if (text == "Share Post") {
           _share();
-        }
-        else if (text == "Edit Post") {
+        } else if (text == "Edit Post") {
           redirect();
-        }
-        else if (text == "Delete Post") {
+        } else if (text == "Hide Post") {
+          _showConfirmDialog(3, 'Are you sure want to hide this post from your home?');
+        } else if (text == "Delete Post") {
           _showConfirmDialog(2, 'Are you sure want to delete this post?');
         }
-
       },
       child: Container(
         child: Row(
@@ -529,6 +543,12 @@ class _HomeState extends State<PostFavorDetails>
                           child: getBottomText(
                               AssetStrings.slash, "Report Post", 22))
                       : Container(),
+                  !isCurrentUser
+                      ? Container(
+                          margin: new EdgeInsets.only(top: 35, left: 27),
+                          child: getBottomText(
+                              AssetStrings.slash, "Hide Post", 22))
+                      : Container(),
                   isCurrentUser
                       ? Container(
                           margin: new EdgeInsets.only(top: 35, left: 27),
@@ -538,8 +558,8 @@ class _HomeState extends State<PostFavorDetails>
                   isCurrentUser
                       ? Container(
                           margin: new EdgeInsets.only(top: 35, left: 27),
-                      child:
-                      getBottomText(AssetStrings.delete, "Delete Post", 22))
+                          child: getBottomText(
+                              AssetStrings.delete, "Delete Post", 22))
                       : Container(),
                   Opacity(
                     opacity: 0.12,
@@ -556,10 +576,9 @@ class _HomeState extends State<PostFavorDetails>
                     height: 56,
                   )
                 ],
-                  )));
+              )));
         });
   }
-
 
   void showBottomSheet() {
     showModalBottomSheet<void>(
@@ -575,26 +594,20 @@ class _HomeState extends State<PostFavorDetails>
                 topLeft: const Radius.circular(25.0),
                 topRight: const Radius.circular(25.0)),
             child: Container(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height / 1.4,
+              height: MediaQuery.of(context).size.height / 1.4,
               decoration: new BoxDecoration(
                   color: Colors.black,
                   borderRadius: new BorderRadius.only(
                       topLeft: const Radius.circular(10.0),
                       topRight: const Radius.circular(10.0))),
               child: Padding(
-                  padding: MediaQuery
-                      .of(context)
-                      .viewInsets,
+                  padding: MediaQuery.of(context).viewInsets,
                   child: PaymentDialogPost(
                       data: propmoteDataResponse, voidcallback: voidCallBacks)),
             ),
           );
         });
   }
-
 
   void _showPopupMenu(Offset offset) async {
     double left = offset.dx;
@@ -710,9 +723,8 @@ class _HomeState extends State<PostFavorDetails>
                               ),
                               Container(
                                   child: new Text(
-                                    "${favoriteResponse?.data?.ratingCount
-                                        .toString() ?? "0"} Reviews",
-                                    style: TextThemes.greyTextFieldNormalNw,
+                                "${favoriteResponse?.data?.ratingCount.toString() ?? "0"} Reviews",
+                                style: TextThemes.greyTextFieldNormalNw,
                               )),
                             ],
                           )
@@ -756,7 +768,6 @@ class _HomeState extends State<PostFavorDetails>
                 fontSize: 14),
             textAlign: TextAlign.center,
           ),
-
           new Text(
             amount,
             style: new TextStyle(
@@ -874,7 +885,7 @@ class _HomeState extends State<PostFavorDetails>
 
   Future<ValueSetter> voidCallBacks(int type) async {
     if (type == 1) {
-    //  showPaymentDialog();
+      //  showPaymentDialog();
     } else {
       showBottomSuccessPayment(
           "Successful!",
@@ -884,15 +895,13 @@ class _HomeState extends State<PostFavorDetails>
     }
   }
 
-
   void showPaymentDialog() {
     showModalBottomSheet<void>(
         isScrollControlled: true,
         context: context,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(26.0),
-              topRight: Radius.circular(26.0)),
+              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
         ),
         builder: (BuildContext bc) {
           return ClipRRect(
@@ -984,78 +993,71 @@ class _HomeState extends State<PostFavorDetails>
         ),
         builder: (BuildContext bc) {
           return Padding(
-              padding: MediaQuery
-                  .of(context)
-                  .viewInsets,
+              padding: MediaQuery.of(context).viewInsets,
               child: Container(
-
                   child: new Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-
-
-                      Container(
-                        width: 86.0,
-                        height: 86.0,
-                        margin: new EdgeInsets.only(top: 38),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(37, 26, 101, 1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: GestureDetector(
-                            onTapDown: (TapDownDetails details) {
-                              /* //_showPopupMenu(details.globalPosition);
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 86.0,
+                    height: 86.0,
+                    margin: new EdgeInsets.only(top: 38),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(37, 26, 101, 1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: GestureDetector(
+                        onTapDown: (TapDownDetails details) {
+                          /* //_showPopupMenu(details.globalPosition);
                                showBottomSheet();*/
-                            },
-                            child: new SvgPicture.asset(
-                              AssetStrings.check,
-                              width: 42.0,
-                              height: 42.0,
-                              color: Colors.white,
-                            )),
+                        },
+                        child: new SvgPicture.asset(
+                          AssetStrings.check,
+                          width: 42.0,
+                          height: 42.0,
+                          color: Colors.white,
+                        )),
+                  ),
+                  new Container(
+                    margin: new EdgeInsets.only(top: 40),
+                    child: new Text(
+                      title,
+                      style: new TextStyle(
+                          fontFamily: AssetStrings.circulerMedium,
+                          fontSize: 20,
+                          color: Colors.black),
+                    ),
+                  ),
+                  new Container(
+                    margin: new EdgeInsets.only(top: 10, left: 35, right: 35),
+                    alignment: Alignment.center,
+                    child: new Text(
+                      description,
+                      textAlign: TextAlign.center,
+                      style: new TextStyle(
+                        fontFamily: AssetStrings.circulerNormal,
+                        fontSize: 16,
+                        height: 1.5,
+                        color: Color.fromRGBO(114, 117, 112, 1),
                       ),
-
-                      new Container(
-                        margin: new EdgeInsets.only(top: 40),
-                        child: new Text(title, style: new TextStyle(
-                            fontFamily: AssetStrings.circulerMedium,
-                            fontSize: 20,
-                            color: Colors.black),),
-                      ),
-
-                      new Container(
-                        margin: new EdgeInsets.only(
-                            top: 10, left: 35, right: 35),
-                        alignment: Alignment.center,
-                        child: new Text(
-                          description,
-                          textAlign: TextAlign.center,
-                          style: new TextStyle(
-                            fontFamily: AssetStrings.circulerNormal,
-                            fontSize: 16,
-                            height: 1.5,
-                            color: Color.fromRGBO(114, 117, 112, 1),),),
-
-
-                      ),
-
-                      Container(
-                        margin: new EdgeInsets.only(
-                            top: 60, left: 16, right: 16),
-                        child: getSetupButtonNew(
-                            type == 1
-                                ? callbackPaymentSuccess
-                                : callbackPaymentSuccessBack, buttonText, 0,
-                            newColor: AppColors.colorDarkCyan),
-                      ),
-
-
-                      Container(
-                        height: 56,
-                      )
-                    ],
-                  )));
+                    ),
+                  ),
+                  Container(
+                    margin: new EdgeInsets.only(top: 60, left: 16, right: 16),
+                    child: getSetupButtonNew(
+                        type == 1
+                            ? callbackPaymentSuccess
+                            : callbackPaymentSuccessBack,
+                        buttonText,
+                        0,
+                        newColor: AppColors.colorDarkCyan),
+                  ),
+                  Container(
+                    height: 56,
+                  )
+                ],
+              )));
         });
   }
 
@@ -1080,9 +1082,10 @@ class _HomeState extends State<PostFavorDetails>
               onPressed: () {
                 if (type == 1) {
                   hitReportApi();
-                }
-                else {
+                } else if (type == 2) {
                   hitDeletePostApi();
+                } else {
+                  _hidePostApi();
                 }
 
                 //showInSnackBar("Post reported successfully");
@@ -1101,12 +1104,9 @@ class _HomeState extends State<PostFavorDetails>
     );
   }
 
-  void _share()async
-  {
+  void _share() async {
     Share.share('check out this post https://google.com');
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -1274,14 +1274,17 @@ class _HomeState extends State<PostFavorDetails>
               left: 0.0,
               right: 0.0,
               child: Container(
-                margin: new EdgeInsets.only(top: 30, left: 16, right: 5,),
+                margin: new EdgeInsets.only(
+                  top: 30,
+                  left: 16,
+                  right: 5,
+                ),
                 child: new Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-
                         child: Container(
                           width: 30.0,
                           height: 30.0,
@@ -1339,12 +1342,13 @@ class _HomeState extends State<PostFavorDetails>
                 ),
               )),
           favoriteResponse != null && favoriteResponse.data != null
-              ? !isCurrentUser ? Positioned(
-            bottom: 0.0,
-            left: 0.0,
-            right: 0.0,
-            child: Material(
-              elevation: 18.0,
+              ? !isCurrentUser
+                  ? Positioned(
+                      bottom: 0.0,
+                      left: 0.0,
+                      right: 0.0,
+                      child: Material(
+                        elevation: 18.0,
                         child: Container(
                             color: Colors.white,
                             padding: new EdgeInsets.only(top: 9, bottom: 28),
@@ -1358,23 +1362,25 @@ class _HomeState extends State<PostFavorDetails>
                                     ? AppColors.desabledGray
                                     : AppColors.colorDarkCyan)),
                       ),
-          ) : Positioned(
-            bottom: 0.0,
-            left: 0.0,
-            right: 0.0,
-            child: widget.isButtonDesabled != null && !widget.isButtonDesabled
-                ? Material(
-              elevation: 18.0,
-              child: Container(
-                  color: Colors.white,
-                  padding: new EdgeInsets.only(top: 9, bottom: 28),
-                  child: getSetupButtonNew(
-                      callbackPromote, "Promote your Favor", 16)),
-            )
-                : Container(),
-          )
+                    )
+                  : Positioned(
+                      bottom: 0.0,
+                      left: 0.0,
+                      right: 0.0,
+                      child: widget.isButtonDesabled != null &&
+                              !widget.isButtonDesabled
+                          ? Material(
+                              elevation: 18.0,
+                              child: Container(
+                                  color: Colors.white,
+                                  padding:
+                                      new EdgeInsets.only(top: 9, bottom: 28),
+                                  child: getSetupButtonNew(callbackPromote,
+                                      "Promote your Favor", 16)),
+                            )
+                          : Container(),
+                    )
               : Container(),
-
           new Center(
             child: getHalfScreenLoader(
               status: offstageLoader,

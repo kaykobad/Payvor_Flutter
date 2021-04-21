@@ -1,13 +1,13 @@
 class ReportResponse {
   Status status;
-  String message;
+  String success;
 
-  ReportResponse({this.status, this.message});
+  ReportResponse({this.status, this.success});
 
   ReportResponse.fromJson(Map<String, dynamic> json) {
     status =
-        json['status'] != null ? new Status.fromJson(json['status']) : null;
-    message = json['message'];
+    json['status'] != null ? new Status.fromJson(json['status']) : null;
+    success = json['Success'];
   }
 
   Map<String, dynamic> toJson() {
@@ -15,7 +15,7 @@ class ReportResponse {
     if (this.status != null) {
       data['status'] = this.status.toJson();
     }
-    data['message'] = this.message;
+    data['Success'] = this.success;
     return data;
   }
 }

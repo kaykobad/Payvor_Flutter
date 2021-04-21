@@ -848,7 +848,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
           context: context, notificationRequest: request);
       //push sent
       if (response != null && (response is ReportResponse)) {
-        print(response.message);
+        print(response.success);
       } else {
         print(response);
       }
