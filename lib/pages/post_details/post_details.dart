@@ -268,7 +268,7 @@ class _HomeState extends State<PostFavorDetails>
     setState(() {});
   }
 
-  void _hidePostApi() async {
+  void _hidePostBlockUserApi(int type) async {
     setState(() {
       offstageLoader = true;
     });
@@ -289,7 +289,7 @@ class _HomeState extends State<PostFavorDetails>
     }
 
     var response = await provider.hidePost(
-        favoriteResponse?.data?.id?.toString(), context);
+        favoriteResponse?.data?.id?.toString(), type, context);
 
     setState(() {
       offstageLoader = false;
@@ -478,7 +478,11 @@ class _HomeState extends State<PostFavorDetails>
         } else if (text == "Edit Post") {
           redirect();
         } else if (text == "Hide Post") {
-          _showConfirmDialog(3, 'Are you sure want to hide this post from your home?');
+          _showConfirmDialog(
+              3, 'Are you sure want to hide this post from your home?');
+        } else if (text == "Block User") {
+          _showConfirmDialog(4,
+              'You will not be able to see any posts from this user in future.Are you sure want to block this user?');
         } else if (text == "Delete Post") {
           _showConfirmDialog(2, 'Are you sure want to delete this post?');
         }
@@ -542,6 +546,12 @@ class _HomeState extends State<PostFavorDetails>
                           margin: new EdgeInsets.only(top: 35, left: 27),
                           child: getBottomText(
                               AssetStrings.slash, "Report Post", 22))
+                      : Container(),
+                  !isCurrentUser
+                      ? Container(
+                          margin: new EdgeInsets.only(top: 35, left: 27),
+                          child: getBottomText(
+                              AssetStrings.slash, "Block User", 22))
                       : Container(),
                   !isCurrentUser
                       ? Container(
@@ -1084,8 +1094,10 @@ class _HomeState extends State<PostFavorDetails>
                   hitReportApi();
                 } else if (type == 2) {
                   hitDeletePostApi();
+                } else if (type == 3) {
+                  _hidePostBlockUserApi(0); //Hide post
                 } else {
-                  _hidePostApi();
+                  _hidePostBlockUserApi(1); //Block user
                 }
 
                 //showInSnackBar("Post reported successfully");

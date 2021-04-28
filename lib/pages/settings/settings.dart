@@ -271,7 +271,7 @@ class _HomeState extends State<Settings>
             setState(() {
               output = onValue;
             });
-            print(onValue);
+            // print(onValue);
           });
         } else if (type == 6) {
           Share.share('check out the app https://payvor.page.link/app');
@@ -352,7 +352,7 @@ class _HomeState extends State<Settings>
       body: 'Your query goes here...',
       subject: 'Payvor help',
       recipients: ['info@payvor.io'],
-         isHTML: false,
+      isHTML: false,
     );
 
     await FlutterEmailSender.send(email);

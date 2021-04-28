@@ -539,11 +539,11 @@ class AuthProvider with ChangeNotifier {
     return completer.future;
   }
 
-  Future<dynamic> hidePost(String postId, BuildContext context) async {
+  Future<dynamic> hidePost(String postId, int type, BuildContext context) async {
     Completer<dynamic> completer = new Completer<dynamic>();
     var hidePost = new HidePostRequest(postId: postId);
     var response = await APIHandler.post(
-        context: context, url: APIs.hidePost+"?post_id=$postId");
+        context: context, url: APIs.hidePost+"?post_id=$postId&block_user=$type");
     hideLoader();
     if (response is APIError) {
       completer.complete(response);
