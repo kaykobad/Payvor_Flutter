@@ -70,9 +70,10 @@ dev_dependencies:
 #  stripe_payment: ^1.0.10
   flutter_switch: ^0.2.2
   flutter_local_notifications:
-  app_review:
   flutter_email_sender: ^5.0.0
   sign_in_with_apple: ^3.0.0
+  launch_review:
+
 
 
 

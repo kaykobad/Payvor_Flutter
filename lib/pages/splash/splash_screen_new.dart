@@ -134,7 +134,6 @@ class FadeIn extends State<SplashScreen> {
     );
   }
 
-
 //  Future<void> initPlatformStateForUriUniLinks() async {
 //    // Attach a listener to the Uri links stream
 //    _sub = getUriLinksStream().listen((Uri uri) {
@@ -197,9 +196,6 @@ class FadeIn extends State<SplashScreen> {
     //
 
     var screenType = MemoryManagement.getScreenType();
-
-    print("status $status");
-    print("screenType $screenType");
     Timer _timer = new Timer(const Duration(seconds: 2), () {
       if (screenType == "1") {
         Navigator.pushAndRemoveUntil(
@@ -215,7 +211,9 @@ class FadeIn extends State<SplashScreen> {
         Navigator.pushAndRemoveUntil(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
-            return CreateCredential(type: true,);
+            return CreateCredential(
+              type: true,
+            );
           }),
           (route) => false,
         );

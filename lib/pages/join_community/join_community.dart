@@ -412,23 +412,18 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     );
   }
 
-  Future<ValueSetter> voidCallBackLike(Token tokem) async {
+  Future<ValueSetter> voidCallBackLike(Token token) async {
     {
-      email = tokem.id.toString() + "_";
-      name = tokem.username ?? "";
+      email = token.id.toString() + "_"+"@instagram.com";
+      name = token.username ?? "";
       type = "3";
-      snsId = tokem.id.toString();
-      profilePic = tokem.image ?? "";
+      snsId = token.id.toString();
+      profilePic = token.image ?? "";
       hitApi();
     }
   }
 
   void getInstaUserInfo() async {
-    /*var googleSignInAccount = await new SocialLogin().getToken(
-        "671655060202677",
-        "015b739c9f1a115c79f0b7c7288c9cd2",
-        voidCallBackLike);*/
-
     try {
       Navigator.push(
         context,
@@ -440,7 +435,9 @@ class _LoginScreenState extends State<JoinCommunityNew> {
           );
         }),
       );
-    } catch (ex) {}
+    } catch (ex) {
+      showInSnackBar(Messages.genericError);
+    }
   }
 
   void getTwitterInfo() async {
@@ -450,7 +447,10 @@ class _LoginScreenState extends State<JoinCommunityNew> {
         : await socialLogin.twitterLoginAndroid();
 
     if (result != null && result.login) {
-      email = result.id + "_" + result.email;
+      email = (result.email != null)
+          ? (result.id + "_" + result.email)
+          : "${result.id}@twitter.com";
+
       name = result.username;
       type = "2";
       snsId = result.id;
@@ -467,20 +467,14 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     if (googleSignInAccount != null && googleSignInAccount is Map) {
       var nameUser = googleSignInAccount["name"];
       var id = googleSignInAccount["id"];
-      var emails = id + "_" + googleSignInAccount["email"];
+      var fbEmail = googleSignInAccount["email"];
       var photodata = googleSignInAccount["picture"];
       var photourl = photodata["data"];
-      // MemoryManagement.setuserName(username: nameUser);
 
       var photo = photourl["url"];
 
-//      print("$nameUser");
-//      print("$email");
-//      print("$photodata");
-//      print("$photourl");
-//      print("$photo");
+      email = (fbEmail != null) ? (id + "_" + fbEmail) : ("$id@facebook.com");
 
-      email = emails;
       name = nameUser;
       type = "1";
       snsId = id;
@@ -725,12 +719,10 @@ class _LoginScreenState extends State<JoinCommunityNew> {
           AppleIDAuthorizationScopes.fullName,
         ],
       );
-
-      //  print(credential);
-
       snsId = credential?.userIdentifier ?? "";
-      var userEmail = credential?.email ?? "";
-      email = snsId + "_" + userEmail;
+      var userEmail = credential?.email;
+      email =
+          (userEmail != null) ? (snsId + "_" + userEmail) : "$snsId@apple.com";
       name = credential?.givenName ?? "";
       type = "4";
       profilePic = "";

@@ -1,7 +1,4 @@
-import 'dart:async';
 import 'dart:core';
-
-import 'package:app_review/app_review.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -22,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:launch_review/launch_review.dart';
 
 class Settings extends StatefulWidget {
   final String id;
@@ -36,8 +34,6 @@ class _HomeState extends State<Settings>
     with AutomaticKeepAliveClientMixin<Settings> {
   var screenSize;
 
-  final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
 
   AuthProvider provider;
   FirebaseProvider firebaseProvider;
@@ -58,16 +54,13 @@ class _HomeState extends State<Settings>
     super.initState();
 
     var status = MemoryManagement.getPushStatus() ?? "0";
-    print("status $status");
+    //print("status $status");
 
     if (status == "0") {
       _switchValue = false;
     }
 
-    AppReview.getAppID.then((onValue) {
-      setState(() {});
-      print("App ID" + onValue);
-    });
+
   }
 
   void _logout() async {
@@ -98,7 +91,7 @@ class _HomeState extends State<Settings>
       if (response != null && response is ReportResponse) {
         var status = MemoryManagement.getPushStatus() ?? "0";
 
-        print("status $status");
+        //print("status $status");
 
         if (status == "0") {
           MemoryManagement.setPushStatus(token: "1");
@@ -266,13 +259,10 @@ class _HomeState extends State<Settings>
           _launchURL(Constants.TermOfUses);
         } else if (type == 4) {
           _launchURL(Constants.privacyPolicy);
-        } else if (type == 7) {
-          AppReview.writeReview.then((onValue) {
-            setState(() {
-              output = onValue;
-            });
-            // print(onValue);
-          });
+        } //review app
+        else if (type == 7) {
+          LaunchReview.launch(androidAppId: "com.app.payvor",
+              iOSAppId: "1558962094");
         } else if (type == 6) {
           Share.share('check out the app https://payvor.page.link/app');
         }

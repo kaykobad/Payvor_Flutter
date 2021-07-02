@@ -643,15 +643,12 @@ class _LoginScreenState extends State<LoginScreenNew> {
     hitApi(0);
   }
 
-  Future<ValueSetter> voidCallBackLike(Token tokem) async {
+  Future<ValueSetter> voidCallBackLike(Token token) async {
     {
-      print("tokenss get ${tokem.access}");
-      print("id get ${tokem.id}");
-
-      email = tokem.id.toString() + "_";
-      name = "";
+      email = token.id.toString() + "_" + "@instagram.com";
+      name = token.username ?? "";
       type = "3";
-      snsId = tokem.id.toString();
+      snsId = token.id.toString();
       hitApi(1);
     }
   }
@@ -676,7 +673,10 @@ class _LoginScreenState extends State<LoginScreenNew> {
         : await socialLogin.twitterLoginAndroid();
 
     if (result != null && result.login) {
-      email = result.id + "_" + result.email;
+      email = (result.email != null)
+          ? (result.id + "_" + result.email)
+          : "${result.id}@twitter.com";
+
       name = result.username;
       type = "2";
       snsId = result.id;
@@ -693,41 +693,20 @@ class _LoginScreenState extends State<LoginScreenNew> {
     if (facebookSignInAccount != null && facebookSignInAccount is Map) {
       var nameUser = facebookSignInAccount["name"];
       var id = facebookSignInAccount["id"];
-      var emails = id + "_" + facebookSignInAccount["email"];
+      var fbEmail = facebookSignInAccount["email"];
       var photodata = facebookSignInAccount["picture"];
       var photourl = photodata["data"];
-      // MemoryManagement.setuserName(username: nameUser);
 
       var photo = photourl["url"];
 
-//      print("$nameUser");
-//      print("$email");
-//      print("$photodata");
-//      print("$photourl");
-//      print("$photo");
-      email = emails;
+      email = (fbEmail != null) ? (id + "_" + fbEmail) : ("$id@facebook.com");
       name = nameUser;
       type = "1";
       snsId = id;
       profilePic = photo;
       hitApi(1);
-
-      /*  MemoryManagement.setImage(image:photo);
-      _EmailController.text=email;
-      loginSocial(email,id);*/
-
     } else {
       showInSnackBar(Messages.genericError);
-      /*showAlert(
-        context: context,
-        titleText: "ERROR",
-        message: "There are some authenticate issues.Please try again later.",
-        actionCallbacks: {
-          "OK": () {
-
-          }
-        },
-      );*/
     }
   }
 
@@ -740,11 +719,10 @@ class _LoginScreenState extends State<LoginScreenNew> {
         ],
       );
 
-      //  print(credential);
-
       snsId = credential?.userIdentifier ?? "";
-      var userEmail = credential?.email ?? "";
-      email = snsId + "_" + userEmail;
+      var userEmail = credential?.email;
+      email =
+          (userEmail != null) ? (snsId + "_" + userEmail) : "$snsId@apple.com";
       name = credential?.givenName ?? "";
       type = "4";
       profilePic = "";

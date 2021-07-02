@@ -79,8 +79,7 @@ Widget getSpacer({double height, double width}) {
 void onLogoutSuccess({
   @required BuildContext context,
 }) async {
-  await MemoryManagement.clearMemory();
-
+  await MemoryManagement?.clearMemory();
   Navigator.pushAndRemoveUntil(
     context,
     new CupertinoPageRoute(builder: (BuildContext context) {

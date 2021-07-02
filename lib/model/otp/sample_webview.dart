@@ -44,7 +44,6 @@ class _WebviewInstaState extends State<WebviewInsta> {
         var codes = await url
             .replaceAll("https://github.com/login?code=", '')
             .replaceAll('#_', "");
-        print("urll + $codes"); // IF SUCCESS LOGIN
 
         final http.Response response = await http
             .post("https://api.instagram.com/oauth/access_token", body: {
@@ -93,8 +92,8 @@ class _WebviewInstaState extends State<WebviewInsta> {
           final http.Response response = await http.get("https://graph.instagram.com/${token.id}?fields=id,username&access_token=${token.access}");
 */
 
-          print("token not null");
-          print(json.decode(response.body));
+          //  print("token not null");
+          //print(json.decode(response.body));
           flutterWebViewPlugin.close();
           widget.callback(token);
           Navigator.pop(context);
@@ -103,7 +102,6 @@ class _WebviewInstaState extends State<WebviewInsta> {
     });
 
     super.initState();
-
   }
 
   @override
