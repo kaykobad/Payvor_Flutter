@@ -6,6 +6,7 @@ class Constants{
   static const double bottomIconSize = 26;
   static const double backIconsSpace = 10;
   static const double textFieldHeight = 58;
+  static const double textFieldHeightNew = 45;
 
   static String GALLARY = "Choose Photo";
   static String CAMERA = "Take Photo";

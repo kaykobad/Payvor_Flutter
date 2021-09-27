@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:payvor/pages/guest_view/guest_view.dart';
+import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/pages/splash/splash_screen_new.dart';
+import 'package:payvor/pages/stripe_card_added/add_stripe_card.dart';
+import 'package:payvor/pages/stripe_card_added/stripe_card_added.dart';
+import 'package:payvor/pages/verify_profile_new/verify_profiles_new.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/provider/language_provider.dart';

@@ -213,8 +213,7 @@ class _AutoCompleteTextViewState extends State<AutoCompleteTextView> {
                   color: AppColors.colorCyanPrimary,
                 ),
                 borderRadius: new BorderRadius.circular(8)),
-            contentPadding: new EdgeInsets.only(top: 10.0),
-            prefixIcon: Padding(
+                  prefixIcon: Padding(
               padding: const EdgeInsets.all(14.0),
               child: new Image.asset(
                 widget.svgicon,
@@ -228,7 +227,6 @@ class _AutoCompleteTextViewState extends State<AutoCompleteTextView> {
           ) : new InputDecoration(
             enabledBorder: InputBorder.none,
             focusedBorder: InputBorder.none,
-            contentPadding: new EdgeInsets.only(top: 10.0),
             hintText: widget.hintText,
             hintStyle: widget.hintTheme != null && widget.hintTheme ? TextThemes
                 .readAlert : TextThemes.greyTextFieldHintNormal,

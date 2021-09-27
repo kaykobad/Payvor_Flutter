@@ -10,6 +10,7 @@ class AppColors {
   static const Color kGrey = const Color(0xFF232323);
   static const Color kBackgroundColor = const Color(0xFFF9FAFC);
   static const Color borderWhiteButton = const Color(0xFFE7E7E7);
+  static const Color backgroundGray = const Color(0xFFE5E5E5);
 
   //player screen
   static const Color kPlayerButtonBackground = const Color(0xFF9D9C98);
@@ -38,9 +39,15 @@ class AppColors {
   static const Color darkgrey = const Color(0xFF676363);
   static const Color lightGrey = const Color(0xFFB7B7B7);
   static const Color desabledGray = const Color(0xFFD9D9D9);
+  static const Color grayy = const Color(0xFFD5D5D5);
+  static const Color lightGray = const Color(0xFF72757A);
   static const Color greyProfile = const Color(0xFFEDEDED);
   static const Color leftChat = const Color(0xFFf0f0f1);
   static const Color redLight = const Color(0xFFFF6B66); //255,107,102
+  static const Color blue = const Color(0xFF23137D);
+  static const Color grayLight = const Color(0xFF72757A);
+
+  //255,107,102
 
 //intro screen gradient button color
   static const Color kFirstGradientColor = const Color(0xFF259BB5);

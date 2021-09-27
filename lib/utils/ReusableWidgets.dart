@@ -134,8 +134,95 @@ Widget getSetupButtonNewBorder(
   );
 }
 
+Widget getLocationNew(
+    TextEditingController controller,
+    BuildContext context,
+    StreamController<bool> _streamControllerShowLoader,
+    bool isBackground,
+    TextEditingController controllers,
+    {String iconData,
+    bool colorAlert,
+    double iconPadding = 0}) {
+  return Container(
+    alignment: Alignment.center,
+    margin: !isBackground
+        ? new EdgeInsets.only(left: 20, right: 20)
+        : new EdgeInsets.only(left: 0, right: 0),
+    child: Stack(
+      children: <Widget>[
+        AutoCompleteTextView(
+          isLocation: true,
+          defaultPadding: 10,
+          svgicon: iconData,
+          hintText: "Location",
+          hintTheme: colorAlert,
+          backgroundShow: isBackground,
+          suggestionsApiFetchDelay: 100,
+          focusGained: () {},
+          onTapCallback: (String text) async {
+            var id = "";
+
+            for (var data in list) {
+              if (text == data.description) {
+                id = data.place_id;
+                print("select ${data.description}");
+                print("selectid ${data.place_id}");
+                break;
+              }
+            }
+            Dio dio = Dio();
+
+            if (id.length > 0) {
+              var response = await dio
+                  .get(
+                      "https://maps.googleapis.com/maps/api/geocode/json?place_id=$id&key=AIzaSyCRoMT83W3AeP4JZbKStOTiazbH8OH_Cbo")
+                  .timeout(timeoutDuration);
+
+              LatLongResponse locationList =
+                  LatLongResponse.fromJson(response.data);
+
+              if (locationList.results != null &&
+                  locationList.results.length > 0) {
+                var data = locationList.results[0];
+
+                print("data ${data.geometry?.location?.lat}");
+
+                controllers.text = data?.geometry?.location?.lat?.toString() +
+                    "," +
+                    data?.geometry?.location?.lng?.toString();
+              }
+            }
+
+            // addData(text);
+            print(text);
+          },
+          focusLost: () {
+            print("focust lost");
+          },
+          onValueChanged: (String text) {
+            print("called $text");
+          },
+          controller: controller,
+          suggestionStyle: Theme.of(context).textTheme.body1,
+          getSuggestionsMethod: getLocationSuggestionsList,
+          tfTextAlign: TextAlign.left,
+          tfTextDecoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: "Location",
+          ),
+        ),
+        Positioned(
+            right: 8,
+            top: 0,
+            bottom: 0,
+            child: _loader(_streamControllerShowLoader))
+      ],
+    ),
+  );
+}
+
 Widget getSetupButtonNew(VoidCallback callback, String text, double margin,
-    {Color newColor,String imagePath}) {
+    {Color newColor, String imagePath}) {
   return Container(
     height: 58.0,
     margin: new EdgeInsets.only(left: margin, right: margin),
@@ -171,7 +258,59 @@ Widget getSetupButtonNew(VoidCallback callback, String text, double margin,
                   fontSize: 16,
                   color: Colors.white,
                 ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
 
+Widget getSetupButtonNewCustom(
+    VoidCallback callback, String text, double margin,
+    {Color newColor, String imagePath, Color textColor}) {
+  return Container(
+    height: 54.0,
+    margin: new EdgeInsets.only(left: margin, right: margin),
+    decoration: new BoxDecoration(
+      borderRadius: new BorderRadius.circular(8.0),
+    ),
+    child: Material(
+      borderRadius: new BorderRadius.circular(8.0),
+      child: Ink(
+        decoration: new BoxDecoration(
+            borderRadius: new BorderRadius.circular(8.0),
+            color: (newColor != null) ? newColor : AppColors.colorDarkCyan),
+        child: InkWell(
+          borderRadius: new BorderRadius.circular(8.0),
+          splashColor: (newColor != null) ? newColor : AppColors.colorDarkCyan,
+          onTap: () {
+            callback();
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              (imagePath != null)
+                  ? Image.asset(
+                      imagePath,
+                      width: 18,
+                      height: 18,
+                    )
+                  : Container(),
+              (imagePath != null)
+                  ? SizedBox(
+                      width: 5,
+                    )
+                  : Container(),
+              new Text(
+                text,
+                style: new TextStyle(
+                  fontFamily: AssetStrings.circulerMedium,
+                  fontSize: 16,
+                  color: textColor,
+                ),
               ),
             ],
           ),
@@ -341,7 +480,7 @@ Widget getAppBarNew(BuildContext context) {
 
 Widget getSetupDecoratorButtonNew(
     VoidCallback callback, String text, double margin,
-    {Color newColor}) {
+    {Color newColor, Color textColor}) {
   return Container(
     height: 58.0,
     margin: new EdgeInsets.only(left: margin, right: margin),
@@ -367,7 +506,7 @@ Widget getSetupDecoratorButtonNew(
               style: new TextStyle(
                 fontFamily: AssetStrings.circulerMedium,
                 fontSize: 16,
-                color: AppColors.kPrimaryBlue,
+                color: textColor != null ? textColor : AppColors.kPrimaryBlue,
               ),
             ),
           ),

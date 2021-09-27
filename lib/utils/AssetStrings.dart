@@ -54,6 +54,7 @@ class AssetStrings {
   static const String shape = 'assets/svg/shape.svg';
   static const String passPng = 'assets/png/pass_new.png';
   static const String logopng = 'assets/png/logo.png';
+  static const String guestView = 'assets/png/guest_view.png';
   static const String rating = 'assets/png/rating.png';
   static const String imageMessage = 'assets/png/image_message.png';
   static const String plushome = 'assets/png/plus_home.svg';
