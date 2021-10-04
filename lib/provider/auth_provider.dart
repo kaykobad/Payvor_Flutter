@@ -13,6 +13,7 @@ import 'package:payvor/model/add_paypal/add_paypal_request.dart';
 import 'package:payvor/model/add_paypal/get_paypal_data.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/applied_user/favour_applied_user.dart';
+import 'package:payvor/model/category/category_response.dart';
 import 'package:payvor/model/common_response/common_success_response.dart';
 import 'package:payvor/model/common_response/favour_end_job_response.dart';
 import 'package:payvor/model/create_payvor/create_payvor_response.dart';
@@ -41,6 +42,8 @@ import 'package:payvor/model/report_reason/report_reason_response.dart';
 import 'package:payvor/model/reset_password/reset_pass_request.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/model/signup/signuprequest.dart';
+import 'package:payvor/model/stripe/stripe_add_users.dart';
+import 'package:payvor/model/stripe/stripe_get_users.dart';
 import 'package:payvor/model/suggest/suggest_response.dart';
 import 'package:payvor/model/update_firebase_token/update_firebase_token_response.dart';
 import 'package:payvor/model/update_firebase_token/update_token_request.dart';
@@ -729,8 +732,7 @@ class AuthProvider with ChangeNotifier {
 
     if (filterRequest != null) {
       var isFilter = false;
-      if (filterRequest.latlongData.isNotEmpty &&
-          filterRequest.location.isNotEmpty) {
+      if (filterRequest.latlongData.isNotEmpty) {
         if (filterRequest.latlongData.length > 0) {
           var datas = filterRequest.latlongData.trim().toString().split(",");
 
@@ -755,7 +757,8 @@ class AuthProvider with ChangeNotifier {
         isFilter = true;
         data.write("&distance=${filterRequest?.distance?.toString()}");
       }
-      if (filterRequest.minprice > 0 || filterRequest.maxprice < 100) {
+      if ((filterRequest.minprice != null && filterRequest.minprice > 0) ||
+          (filterRequest.maxprice != null && filterRequest.maxprice < 100)) {
         isFilter = true;
         data.write(
             "&minprice=${filterRequest?.minprice?.toString()}&maxprice=${filterRequest?.maxprice?.toString()}");
@@ -901,6 +904,22 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<dynamic> setCategory(BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(context: context, url: APIs.category);
+    print("category ${APIs.category}");
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      CategoryResponse resendOtpResponse =
+          new CategoryResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
   Future<dynamic> giveUserRating(
       GiveRatingRequest requests, BuildContext context) async {
     Completer<dynamic> completer = new Completer<dynamic>();
@@ -912,6 +931,41 @@ class AuthProvider with ChangeNotifier {
       return completer.future;
     } else {
       ReportResponse resendOtpResponse = new ReportResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> getAddedCards(BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response =
+        await APIHandler.get(context: context, url: APIs.getStripeUsers);
+    print("addStripeUsers ${APIs.getStripeUsers}");
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      GetStripeUsers resendOtpResponse = new GetStripeUsers.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> addStripeCards(
+      BuildContext context, AddStripeRequest request) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.post(
+        context: context,
+        url: APIs.addStripeUsers,
+        requestBody: request?.toJson());
+    print("addStripeUsers ${APIs.addStripeUsers}");
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      AddStripeUsers resendOtpResponse = new AddStripeUsers.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;

@@ -431,11 +431,21 @@ class _HomeState extends State<PostFavorDetails>
                       new SizedBox(
                         width: 6,
                       ),
-                      Container(
-                          child: new Text(
-                        favoriteResponse?.data.location ?? "",
-                        style: TextThemes.greyDarkTextHomeLocation,
-                      )),
+                      Expanded(
+                        child: Container(
+                          child: Container(
+                            child: new Text(
+                              favoriteResponse?.data.location +
+                                      " - " +
+                                      "235 m way" ??
+                                  "",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextThemes.greyDarkTextHomeLocation,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 )

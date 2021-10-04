@@ -1,9 +1,12 @@
 import 'dart:core';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:launch_review/launch_review.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/pages/edit_profile/edit_user_profile.dart';
 import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
@@ -18,8 +21,6 @@ import 'package:payvor/utils/memory_management.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:launch_review/launch_review.dart';
 
 class Settings extends StatefulWidget {
   final String id;
@@ -226,7 +227,7 @@ class _HomeState extends State<Settings>
                         style: new TextStyle(
                             fontFamily: AssetStrings.circulerMedium,
                             fontSize: 16,
-                            color: AppColors.colorDarkCyan),
+                            color: AppColors.redLight),
                       ),
                     ),
                   )

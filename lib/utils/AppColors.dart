@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  static const Color kPrimaryBlue = const Color(0xFF251A65);
+  static const Color kPrimaryBlue = const Color(0xFF23137D);
 
   static const Color kWhite = const Color(0xFFFFFFFF);
   static const Color kBlack = const Color(0xFF000000);
@@ -17,20 +17,22 @@ class AppColors {
   static const Color kPlayerFilterTextColor = const Color(0xFF8492A6);
   static const Color kPlayerFilterBackground = const Color(0xFF000D1E);
   static const Color kPlayerFilterInactiveBackground = const Color(0xFFF9FAFC);
-  static const Color kTinderSwipeLikeDislikeTextColor = const Color(0xFF23C8D2);
+  static const Color kTinderSwipeLikeDislikeTextColor = const Color(0xFF09A5FF);
 
   //for app intro
-  static const Color kAppBlue = const Color(0xFF00BDF7);
+  static const Color kAppBlue = const Color(0xFF09A5FF);
   static const Color kAppIntroBackgroundColor = const Color(0xFFF4F3F6);
-  static const Color kAppIntroPreferenceColor = const Color(0xFF23C8D2);
+  static const Color kAppIntroPreferenceColor = const Color(0xFF09A5FF);
   static const Color kAppIntroLeftRightStand = const Color(0xFFC2E9EF);
   static const Color lightReferred = const Color(0xFFEFF9FF);
+  static const Color notiBackground = const Color(0xFFEAF7FF);
   static const Color kAppIntroImageGradientColor = const Color(0xFFF4F5F7);
-  static const Color colorCyanPrimary = const Color(0xFF32C5FF);
+  static const Color colorCyanPrimary = const Color(0xFF09A5FF);
   static const Color colorDarkCyan = const Color(0xFF09A5FF); //9.165,255
   static const Color colorGray = const Color(0xFFE7E7E7);
-  static const Color bluePrimary = const Color(0xFF251A65);
-  static const Color whiteGray = const Color(0xFFF8F8FA);
+  static const Color lightGrayNew = const Color(0xFF72757A);
+  static const Color bluePrimary = const Color(0xFF23137D);
+  static const Color whiteGray = const Color(0xFFFAF9F9);
   static const Color dividerColor = const Color(0xFF979797);
   static const Color dividerNew = const Color(0xFFE4E4E6);
   static const Color lightCyan = const Color(0xFFEFF9FF);
@@ -46,6 +48,7 @@ class AppColors {
   static const Color redLight = const Color(0xFFFF6B66); //255,107,102
   static const Color blue = const Color(0xFF23137D);
   static const Color grayLight = const Color(0xFF72757A);
+  static const Color grayView = const Color(0xFFF6F6F6);
 
   //255,107,102
 

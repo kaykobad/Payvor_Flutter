@@ -15,6 +15,7 @@ import 'package:payvor/pages/my_profile/ended_jobs.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/settings/settings.dart';
 import 'package:payvor/pages/verify_profile.dart';
+import 'package:payvor/pages/verify_profile_new/verify_profiles_new.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/review/review_post.dart';
@@ -449,12 +450,59 @@ class _HomeState extends State<MyProfile>
                               ],
                             ),
                           ),
-                          buildItem(1, "Verify Profile and Get badge"),
-                          buildItem(2, "Payment Methods"),
+
+                          new Container(
+                            height: 16,
+                            color: Colors.white,
+                          ),
+                          Opacity(
+                            opacity: 0.12,
+                            child: new Container(
+                              height: 1.0,
+                              margin: new EdgeInsets.only(left: 16, right: 16),
+                              color: AppColors.dividerColor,
+                            ),
+                          ),
+                          new Container(
+                            height: 16,
+                            color: Colors.white,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              providerFirebase?.changeScreen(
+                                  Material(child: new VerificationProfiles()));
+                            },
+                            child: Container(
+                              color: Colors.white,
+                              alignment: Alignment.center,
+                              child: new Text(
+                                "VERIFY YOUR PROFILE",
+                                style: new TextStyle(
+                                    color: AppColors.redLight,
+                                    fontSize: 14,
+                                    fontFamily: AssetStrings.circulerNormal),
+                              ),
+                            ),
+                          ),
+
+                          //  buildItem(1, "Verify Profile and Get badge"),
+                          //  buildItem(2, "Payment Methods"),
                           //  buildItem(3, "Verify Profile and Get badge"),
                           new Container(
-                            height: 20,
+                            height: 16,
                             color: Colors.white,
+                          ),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            margin: new EdgeInsets.only(
+                                left: 16, right: 16, top: 16, bottom: 16),
+                            child: new Text(
+                              "History",
+                              style: new TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontFamily: AssetStrings.circulerNormal),
+                            ),
                           ),
                           Material(
                             child: Container(
@@ -554,19 +602,15 @@ class _HomeState extends State<MyProfile>
                       children: [
                         Container(
                           child: Container(
-                            padding: new EdgeInsets.only(
-                                top: 9, bottom: 9, left: 14, right: 14),
-                            decoration: BoxDecoration(
-                                color: Color.fromRGBO(49, 34, 139, 1.0),
-                                borderRadius: new BorderRadius.circular(17)),
                             child: InkWell(
                                 onTap: () {
                                   //  Navigator.pop(context);
                                 },
                                 child: new Text(
-                                  "${userResponse?.user?.perc?.toString() ?? "0"}% Verified",
+                                  /*    "${userResponse?.user?.perc?.toString() ?? "0"}% Verified"*/
+                                  "Profile",
                                   style: new TextStyle(
-                                      fontSize: 13,
+                                      fontSize: 20,
                                       color: Colors.white,
                                       fontFamily: AssetStrings.circulerMedium),
                                 )),

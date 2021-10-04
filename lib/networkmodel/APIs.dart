@@ -34,6 +34,9 @@ class APIs {
   static const String refUsers = "$baseUrl/ref-user";
   static const String giveRating = "$baseUrl/give-rating";
   static const String updatetoken = "$baseUrl/update-token";
+  static const String getStripeUsers = "$baseUrl/get-stripe-user";
+  static const String addStripeUsers = "$baseUrl/add-card";
+  static const String category = "$baseUrl/get-category";
   static const String updateFavStatus = "$baseUrl/update-fav-status";
   static const String updatePushStatus = "$baseUrl/disable-push/";
   static const String deleteAccount = "$baseUrl/delete_ac/";

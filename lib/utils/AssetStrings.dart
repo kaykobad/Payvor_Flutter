@@ -96,6 +96,9 @@ class AssetStrings {
   static const String check = 'assets/svg/check.svg';
   static const String notification = 'assets/svg/notification_empty.svg';
   static const String chat_empty = 'assets/svg/empty_chat.svg';
+  static const String chat_empty_new = 'assets/svg/empty_chat_new.png';
+  static const String empty_notification_new =
+      'assets/svg/empty_notification_new.png';
   static const String nopostnojob = 'assets/svg/nopost_nojobs.svg';
   static const String paypal = 'assets/png/paypal_icon.png';
   static const String iconTick = 'assets/png/card_tick.png';
@@ -103,6 +106,11 @@ class AssetStrings {
   static const String addCard = 'assets/png/card_normal.png';
   static const String lockProfile = 'assets/png/lock_profile.png';
   static const String addPayment = 'assets/png/add_payment.png';
+  static const String card = 'assets/png/card_card.png';
+  static const String cardCal = 'assets/png/calender_card.png';
+  static const String cardPerson = 'assets/png/user_card.png';
+  static const String cardLock = 'assets/png/lock_card.png';
+  static const String splashLogo = 'assets/png/splash_logo.gif';
   static const String floatingplushome =
       'assets/png/floating_button_plus_icon.png';
 
@@ -113,13 +121,25 @@ class AssetStrings {
   static const String job_active = 'assets/svg/bottom_tab_job_active.svg';
   static const String job_inactive = 'assets/svg/bottom_tab_job_inactive.svg';
 
-  static const String profile_active = 'assets/svg/bottom_tab_profile_active.svg';
-  static const String profile_inactive = 'assets/svg/bottom_tab_profile_inactive.svg';
+  static const String bag = 'assets/svg/bag.png';
+  static const String person = 'assets/svg/person.png';
+  static const String thumbLeft = 'assets/svg/thumb_left.png';
+  static const String thumbRight = 'assets/svg/thumb_right.png';
+  static const String noJobsNew = 'assets/svg/no_jobs_new.png';
+  static const String appleNew = 'assets/svg/apple_new.png';
+  static const String moneyNew = 'assets/svg/money.png';
 
+  static const String profile_active =
+      'assets/svg/bottom_tab_profile_active.svg';
+  static const String profile_inactive =
+      'assets/svg/bottom_tab_profile_inactive.svg';
 
-  static const String activity_selected = 'assets/svg/bottom_tab_activity_active.svg';
-  static const String activity_not_selected = 'assets/svg/bottom_tab_activity_inactive.svg';
-  static const String activity_selected_with_noti = 'assets/svg/bottom_tab_activity_active_with_count.svg';
-  static const String activity_unselected_with_noti = 'assets/svg/bottom_tab_activity_inactive_with_count.svg';
-
+  static const String activity_selected =
+      'assets/svg/bottom_tab_activity_active.svg';
+  static const String activity_not_selected =
+      'assets/svg/bottom_tab_activity_inactive.svg';
+  static const String activity_selected_with_noti =
+      'assets/svg/bottom_tab_activity_active_with_count.svg';
+  static const String activity_unselected_with_noti =
+      'assets/svg/bottom_tab_activity_inactive_with_count.svg';
 }

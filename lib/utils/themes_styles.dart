@@ -99,6 +99,7 @@ class TextThemes {
       fontFamily: AssetStrings.circulerMedium,
       fontSize: 14,
       color: Color.fromRGBO(50, 197, 255, 1.0));
+
   static final TextStyle redTextSmallMedium = TextStyle(
       fontFamily: AssetStrings.circulerBoldStyle,
       fontSize: 12,

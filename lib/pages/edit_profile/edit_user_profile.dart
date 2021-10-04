@@ -778,24 +778,21 @@ class _HomeState extends State<EditProfile>
                       color: AppColors.dividerColor,
                     ),
                   ),*/
-                  getTextField("Phone Number", _PhoneController, _PriceField,
+                  /*    getTextField("Phone Number", _PhoneController, _PriceField,
                       _LocationField, TextInputType.number, 1),
 
-                  /*   Opacity(
-                    opacity: 0.12,
-                    child: new Container(
-                      height: 1.0,
-                      color: AppColors.dividerColor,
-                    ),
+                  new SizedBox(
+                    height: 4.0,
                   ),*/
-                  new Container(
+
+                  /* new Container(
                     color: Colors.white,
                     height: 64.0,
                     margin: new EdgeInsets.only(top: 6.0),
                     padding: new EdgeInsets.only(right: 16),
                     child: new Row(
                       children: [
-                        /*   new Text(
+                        */ /*   new Text(
                           ResString().get('location'),
                           style: new TextStyle(
                               fontFamily: AssetStrings.circulerNormal,
@@ -803,7 +800,7 @@ class _HomeState extends State<EditProfile>
                               fontSize: 16),
                           textAlign: TextAlign.center,
                         ),
-*/
+*/ /*
                         Expanded(
                           child: Container(
                             padding: new EdgeInsets.only(left: 16, right: 5.0),
@@ -821,20 +818,20 @@ class _HomeState extends State<EditProfile>
                         new SizedBox(
                           width: 15,
                         ),
-                        /* new Text(
+                        */ /* new Text(
                           ">",
                           style: new TextStyle(
                               fontFamily: AssetStrings.circulerNormal,
                               color: AppColors.lightGrey,
                               fontSize: 16),
                           textAlign: TextAlign.center,
-                        ),*/
+                        ),*/ /*
                       ],
                     ),
                   ),
                   new SizedBox(
                     height: 24,
-                  ),
+                  ),*/
                   new Container(
                     padding: new EdgeInsets.only(left: 16, right: 5.0, top: 17),
                     color: Colors.white,
@@ -851,8 +848,12 @@ class _HomeState extends State<EditProfile>
                       _NewPasswordField,
                       TextInputType.text,
                       1),
-                  new SizedBox(
-                    height: 6,
+                  Opacity(
+                    opacity: 0.12,
+                    child: new Container(
+                      height: 1.0,
+                      color: AppColors.dividerColor,
+                    ),
                   ),
                   getTextField(
                       "New Password",

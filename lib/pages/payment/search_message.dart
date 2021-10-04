@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/pages/chat/chat_user.dart';
 import 'package:payvor/pages/chat/private_chat.dart';
@@ -208,11 +207,12 @@ class _HomeState extends State<SearchMessage>
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            new SvgPicture.asset(
-              AssetStrings.chat_empty,
+            new Image.asset(
+              AssetStrings.chat_empty_new,
+              width: 150,
+              height: 150,
             ),
             Container(
-              margin: new EdgeInsets.only(top: 42),
               child: new Text(
                 "No Messages",
                 style: new TextStyle(

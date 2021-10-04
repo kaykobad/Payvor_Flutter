@@ -39,12 +39,19 @@ class JoinCommunityNew extends StatefulWidget {
 class _LoginScreenState extends State<JoinCommunityNew> {
   TextEditingController _EmailController = new TextEditingController();
   TextEditingController _FullNameController = new TextEditingController();
+  TextEditingController _PasswordController = new TextEditingController();
+
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
   GlobalKey<FormState> _fieldKey = new GlobalKey<FormState>();
+
   FocusNode _EmailField = new FocusNode();
   FocusNode __FullNameField = new FocusNode();
+  FocusNode _PasswordField = new FocusNode();
+  bool obsecureText = true;
+
   String name = "";
   String email = "";
+  String password = "";
   String snsId = "";
   String type = "";
   String profilePic = "";
@@ -120,14 +127,15 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     return Container(
       margin: new EdgeInsets.only(left: 20.0, right: 20.0),
       height: Constants.textFieldHeight,
-      child: new TextFormField(
+      child: new TextField(
         controller: controller,
         keyboardType: textInputType,
         style: TextThemes.blackTextFieldNormal,
+        obscureText: obsectextType ? obsecureText : false,
         focusNode: focusNodeCurrent,
-        onFieldSubmitted: (String value) {
-          if (focusNodeCurrent == __FullNameField) {
-            __FullNameField.unfocus();
+        onSubmitted: (String value) {
+          if (focusNodeCurrent == _PasswordField) {
+            _PasswordField.unfocus();
           } else {
             FocusScope.of(context).autofocus(focusNodeNext);
           }
@@ -145,16 +153,36 @@ class _LoginScreenState extends State<JoinCommunityNew> {
               borderRadius: new BorderRadius.circular(8)),
           contentPadding: new EdgeInsets.only(top: 10.0),
           prefixIcon: Padding(
-            padding: const EdgeInsets.all(14.0),
+            padding: const EdgeInsets.only(
+                left: 14.0, right: 14.0, bottom: 14, top: 14.0),
             child: new Image.asset(
               svgPicture,
               width: 20.0,
               height: 20.0,
             ),
           ),
-          suffixIcon: new Container(
-            width: 1,
-          ),
+          suffixIcon: obsectextType
+              ? Offstage(
+                  offstage: !obsectextType,
+                  child: InkWell(
+                    onTap: () {
+                      obsecureText = !obsecureText;
+                      setState(() {});
+                    },
+                    child: Container(
+                      width: 30.0,
+                      margin: new EdgeInsets.only(right: 10.0, bottom: 4),
+                      alignment: Alignment.centerRight,
+                      child: new Text(
+                        obsecureText ? "show" : "hide",
+                        style: TextThemes.blackTextSmallNormal,
+                      ),
+                    ),
+                  ),
+                )
+              : Container(
+                  width: 1.0,
+                ),
           hintText: labelText,
           hintStyle: TextThemes.greyTextFieldHintNormal,
         ),
@@ -195,7 +223,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                       Container(
                           margin: new EdgeInsets.only(left: 20.0),
                           child: new Text(
-                            "Join the community here!",
+                            "Create Account",
                             style: TextThemes.extraBold,
                           )),
                       Container(
@@ -211,34 +239,66 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                         height: 15.0,
                       ),
                       getTextField(
-                          ResString().get('email_address'),
-                          _EmailController,
-                          _EmailField,
-                          __FullNameField,
-                          TextInputType.emailAddress,
-                          AssetStrings.emailPng),
-                      new SizedBox(
-                        height: 18.0,
-                      ),
-                      getTextField(
                           ResString().get('full_name'),
                           _FullNameController,
                           __FullNameField,
                           __FullNameField,
                           TextInputType.text,
-                          AssetStrings.fullname),
+                          AssetStrings.fullname,
+                          obsectextType: false),
                       new SizedBox(
-                        height: 54.0,
+                        height: 18.0,
                       ),
+                      getTextField(
+                          ResString().get('email_address'),
+                          _EmailController,
+                          _EmailField,
+                          __FullNameField,
+                          TextInputType.emailAddress,
+                          AssetStrings.emailPng,
+                          obsectextType: false),
+                      new SizedBox(
+                        height: 18.0,
+                      ),
+                      getTextField(
+                          ResString().get('password'),
+                          _PasswordController,
+                          _PasswordField,
+                          _PasswordField,
+                          TextInputType.text,
+                          AssetStrings.passPng,
+                          obsectextType: true),
+                      termAndConditionView,
                       Container(
                           child: getSetupButtonNew(
-                              callback, ResString().get('sign_up_button'), 20)),
-                      Container(
-                        alignment: Alignment.center,
+                              callback, "Create an Account", 20)),
+                      new Container(
                         margin: new EdgeInsets.only(
-                            left: 20.0, right: 20.0, top: 98),
-                        child: new Text(ResString().get('or_signup_with'),
-                            style: TextThemes.greyTextFieldMedium),
+                            left: 20.0, right: 20.0, top: 32),
+                        child: new Row(
+                          children: [
+                            Expanded(
+                              child: new Container(
+                                height: 1.0,
+                                color: AppColors.colorGray,
+                              ),
+                            ),
+                            new Container(
+                              margin: new EdgeInsets.only(left: 8, right: 8),
+                              child: new Text(
+                                "OR SIGNUP WITH",
+                                style: new TextStyle(
+                                    color: AppColors.moreText, fontSize: 12),
+                              ),
+                            ),
+                            Expanded(
+                              child: new Container(
+                                height: 1.0,
+                                color: AppColors.colorGray,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                       space(),
                       Container(
@@ -333,7 +393,6 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                       new SizedBox(
                         height: 15.0,
                       ),
-                      //   termAndConditionView
                     ],
                   ),
                 ),
@@ -360,55 +419,41 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     });
   }
 
-  get termAndConditionView => Padding(
-        padding: const EdgeInsets.only(left: 16.0, right: 16),
-        child: new Row(
-          children: <Widget>[
-            new Checkbox(
-              value: _valueC,
-              onChanged: onChecked,
-            ),
-            privacyPolicyLinkAndTermsOfService()
-          ],
-        ),
-      );
+  get termAndConditionView => Container(
+      margin: EdgeInsets.only(left: 20.0, right: 20, top: 16, bottom: 16),
+      child: privacyPolicyLinkAndTermsOfService());
 
   Widget privacyPolicyLinkAndTermsOfService() {
     return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Text.rich(TextSpan(
-            text: 'By continuing, you agree to our ',
-            style: TextStyle(fontSize: 12, color: Colors.black),
-            children: <TextSpan>[
-              TextSpan(
-                  text: 'Terms of Service',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
-                  ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      // code to open / launch terms of service link here
-                    }),
-              TextSpan(
-                  text: ' and ',
-                  style: TextStyle(fontSize: 12, color: Colors.black),
-                  children: <TextSpan>[
-                    TextSpan(
-                        text: 'Privacy Policy',
-                        style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.blue,
-                            decoration: TextDecoration.underline),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            // code to open / launch privacy policy link here
-                          })
-                  ])
-            ])),
-      ),
+      child: Text.rich(TextSpan(
+          text: 'By continuing, you agree to Payvor’s ',
+          style: TextStyle(
+              fontSize: 13, color: AppColors.lightGrayNew, height: 1.4),
+          children: <TextSpan>[
+            TextSpan(
+                text: 'Terms of Use',
+                style: TextStyle(
+                  fontSize: 13.2,
+                  color: AppColors.colorDarkCyan,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    // code to open / launch terms of service link here
+                  }),
+            TextSpan(
+                text: ' and confirm that you have read the ',
+                style: TextStyle(fontSize: 13, color: AppColors.lightGrayNew),
+                children: <TextSpan>[
+                  TextSpan(
+                      text: 'Privacy Policy',
+                      style: TextStyle(
+                          fontSize: 13.2, color: AppColors.colorDarkCyan),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          // code to open / launch privacy policy link here
+                        })
+                ])
+          ])),
     );
   }
 
@@ -536,7 +581,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
 
     if (type == "0") {
       SignUpRequest loginRequest = new SignUpRequest(
-          name: name, password: "123", email: email, type: types);
+          name: name, password: password, email: email, type: types);
       response = await provider.signup(loginRequest, context);
       MemoryManagement.socialMediaStatus("0");
     } else {
@@ -605,12 +650,12 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       provider.hideLoader();
       MemoryManagement.setScreenType(type: "1");
 
-      if (type == "0") {
+/*      if (type == "0") {
         if (response?.user != null && response?.user.is_location == 0) {
           Navigator.push(
             context,
             new CupertinoPageRoute(builder: (BuildContext context) {
-              return new PhoneNumberAdd();
+              return new ResetPassword();
             }),
           );
 
@@ -630,18 +675,18 @@ class _LoginScreenState extends State<JoinCommunityNew> {
           Navigator.push(
             context,
             new CupertinoPageRoute(builder: (BuildContext context) {
-              return new PhoneNumberAdd();
+              return new ResetPassword();
             }),
           );
           return;
         }
-      }
+      }*/
 
       if (response.isnew == null || response.isnew) {
         Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
-            return new PhoneNumberAdd();
+            return new ResetPassword();
           }),
         );
       } else {
@@ -691,6 +736,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
   void callback() {
     email = _EmailController.text;
     name = _FullNameController.text;
+    password = _PasswordController.text;
     type = "0";
     snsId = "";
 
@@ -703,6 +749,9 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       return;
     } else if (name.isEmpty || name.length == 0) {
       showInSnackBar(ResString().get('enter_full_name'));
+      return;
+    } else if (password.isEmpty || password.length == 0) {
+      showInSnackBar("Enter the password.");
       return;
     }
 

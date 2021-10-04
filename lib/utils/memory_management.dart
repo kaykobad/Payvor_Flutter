@@ -28,8 +28,21 @@ class MemoryManagement {
     return prefs.getString(SharedPrefsKeys.NAME);
   }
 
+  static void setGeo({@required String geo}) {
+    prefs.setString(SharedPrefsKeys.USER_GEO, geo);
+  }
 
+  static String getGeo() {
+    return prefs.getString(SharedPrefsKeys.USER_GEO);
+  }
 
+  static void setLocationName({@required String geo}) {
+    prefs.setString(SharedPrefsKeys.USER_GEO_LOCATION, geo);
+  }
+
+  static String getLocationName() {
+    return prefs.getString(SharedPrefsKeys.USER_GEO_LOCATION);
+  }
 
   static void setVerifyMailTemp({@required bool verify}) {
     prefs.setBool(SharedPrefsKeys.MAIL_VERIFY_TEMP, verify);
@@ -173,6 +186,14 @@ class MemoryManagement {
 
   static String getUserInfo() {
     return prefs.getString(SharedPrefsKeys.USER_INFO);
+  }
+
+  static void setCategory({@required String userInfo}) {
+    prefs.setString(SharedPrefsKeys.USER_CATEGORY, userInfo);
+  }
+
+  static String getCategory() {
+    return prefs.getString(SharedPrefsKeys.USER_CATEGORY);
   }
 
   static void setYoutubeToken({@required String token}) {

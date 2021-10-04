@@ -178,7 +178,7 @@ class _LoginScreenState extends State<ForgotPassword> {
                         margin:
                         new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
                         child: new Text(
-                          ResString().get('enter_your_email'),
+                           "Please enter your email to get a new password",
                           style: TextThemes.grayNormal,
                         ),
                       ),
@@ -193,12 +193,11 @@ class _LoginScreenState extends State<ForgotPassword> {
                           TextInputType.emailAddress,
                           AssetStrings.emailPng),
                       new SizedBox(
-                        height: 101.0,
+                        height: 30.0,
                       ),
                       Container(
-                          child:
-                          getSetupButtonNew(
-                              callback, ResString().get('reset_link'), 20)),
+                          child: getSetupButtonNew(
+                              callback, "Send reset link", 20)),
                       new SizedBox(
                         height: 20.0,
                       ),

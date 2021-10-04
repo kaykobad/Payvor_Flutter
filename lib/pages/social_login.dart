@@ -74,7 +74,7 @@ class SocialLogin extends StatelessWidget {
           twitterAuthResult.authToken = authResult.authToken;
           twitterAuthResult.authSecToken = authResult.authTokenSecret;
           twitterAuthResult.login = true;
-          twitterAuthResult.id = authResult.user.id;
+        //  twitterAuthResult.id = authResult.user.id;
           twitterAuthResult.msg = "Login Successfully";
           break;
         case TwitterLoginStatus.cancelledByUser:
@@ -88,7 +88,7 @@ class SocialLogin extends StatelessWidget {
           // _showErrorMessage(result.error);
           break;
       }
-      print("twitter id ${authResult.user.id}");
+      //  print("twitter id ${authResult.user.id}");
       return twitterAuthResult;
     }catch(ex)
     {

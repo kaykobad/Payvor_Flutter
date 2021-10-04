@@ -8,18 +8,18 @@ import 'package:payvor/model/add_paypal/add_paypal_request.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
+import 'package:payvor/model/stripe/stripe_add_users.dart';
+import 'package:payvor/model/update_firebase_token/update_token_request.dart';
 import 'package:payvor/pages/post_details/cardformatter.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
-import 'package:payvor/utils/ValidatorFunctions.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 
 class AddStripeCardDetails extends StatefulWidget {
   ValueSetter<int> voidcallback;
@@ -82,10 +82,10 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
   void initState() {
     // TODO: implement initState
 
-    StripePayment.setOptions(StripeOptions(
+    /* StripePayment.setOptions(StripeOptions(
         publishableKey: "pk_test_aSaULNS8cJU6Tvo20VAXy6rp",
         merchantId: "Test",
-        androidPayMode: 'test'));
+        androidPayMode: 'test'));*/
 
     listCardNumber.addAll([
       WhitelistingTextInputFormatter.digitsOnly,
@@ -102,6 +102,10 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
       WhitelistingTextInputFormatter.digitsOnly,
       new LengthLimitingTextInputFormatter(4)
     ]);
+
+    Future.delayed(const Duration(milliseconds: 300), () {
+      hitStripeApi();
+    });
 
     super.initState();
   }
@@ -163,6 +167,43 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
         ));
   }
 
+  hitStripeApi() async {
+    provider.setLoading();
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+    AddStripeRequest updateTokenRequest = AddStripeRequest(strtoken: "");
+
+    var response = await provider.addStripeCards(context, updateTokenRequest);
+
+    if (response is AddStripeUsers) {
+      provider.hideLoader();
+
+      if (response != null && response.data == 200) {}
+
+      setState(() {});
+
+      print(response);
+    } else {
+      provider.hideLoader();
+
+      APIError apiError = response;
+
+      showInSnackBar(apiError.error);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<AuthProvider>(context);
@@ -200,6 +241,7 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
                               0,
                               mNameEmpty,
                               listNormalText,
+                              AssetStrings.cardPerson,
                               TextInputType.text),
                         ),
                         mNameEmpty
@@ -230,6 +272,7 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
                               0,
                               mCardEmpty,
                               listCardNumber,
+                              AssetStrings.card,
                               TextInputType.number),
                         ),
                         mCardEmpty
@@ -262,6 +305,7 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
                                     1,
                                     mMonthEmpty,
                                     listExpDate,
+                                    AssetStrings.cardCal,
                                     TextInputType.number),
                               ),
                               new SizedBox(
@@ -277,6 +321,7 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
                                     1,
                                     mCvvEmpty,
                                     listcvv,
+                                    AssetStrings.cardLock,
                                     TextInputType.number),
                               ),
                             ],
@@ -419,6 +464,7 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
       int type,
       bool card,
       List<TextInputFormatter> inputFormateer,
+      String image,
       TextInputType textInputType) {
     return Container(
       height: Constants.textFieldHeightNew,
@@ -454,10 +500,13 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
                     : AppColors.colorCyanPrimary,
               ),
               borderRadius: new BorderRadius.circular(8)),
-          contentPadding: new EdgeInsets.only(top: 10.0, left: 17),
-          suffixIcon: Container(
-            width: 1.0,
-          ),
+          contentPadding: new EdgeInsets.only(top: 10.0, left: 0),
+          prefixIcon: image != null
+              ? Container(
+                  padding: new EdgeInsets.only(top: 12, bottom: 12, right: 1),
+                  child: new Image.asset(image),
+                )
+              : Container(),
           hintText: labelText,
           hintStyle: TextThemes.greyTextFieldHintNormal,
         ),
@@ -532,7 +581,7 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
           return false;
         }
 
-        final CreditCard testCard = CreditCard(
+        /*  final CreditCard testCard = CreditCard(
             number: account,
             expMonth: monthCard,
             expYear: yearCard,
@@ -545,7 +594,7 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
           showInSnackBar(token?.tokenId);
 
           //  _paymentToken = token;
-        }).catchError(setError);
+        }).catchError(setError);*/
 
 /*
           StripePayment.createPaymentMethod(

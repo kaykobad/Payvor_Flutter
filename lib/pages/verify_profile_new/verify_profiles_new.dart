@@ -1,30 +1,25 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:payvor/model/add_paypal/add_paypal_request.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/forgot_password/forgot_password_request.dart';
+import 'package:payvor/model/forgot_password/forgot_password_response.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
-import 'package:payvor/model/post_details/report_post_response.dart';
-import 'package:payvor/pages/post_details/cardformatter.dart';
+import 'package:payvor/pages/otp/enter_otp.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
-import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
-import 'package:payvor/utils/ValidatorFunctions.dart';
-import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
-import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class VerificationProfiles extends StatefulWidget {
-  ValueSetter<int> voidcallback;
   int type;
 
-  VerificationProfiles({this.voidcallback, this.type});
+  VerificationProfiles({this.type});
 
   @override
   _PaymentDialogState createState() => _PaymentDialogState();
@@ -36,10 +31,20 @@ class _PaymentDialogState extends State<VerificationProfiles> {
   GlobalKey<FormState> _fieldKey = new GlobalKey<FormState>();
 
   AuthProvider provider;
+  var email = "";
+  String emailVerify = "0";
 
   @override
   void initState() {
     super.initState();
+    var infoData = jsonDecode(MemoryManagement.getUserInfo());
+    var userinfo = LoginSignupResponse.fromJson(infoData);
+
+    emailVerify = userinfo?.user?.is_email_verified?.toString() ?? "0";
+
+    if (userinfo?.user?.type == "Re" && userinfo?.user?.email?.isNotEmpty) {
+      email = userinfo?.user?.email ?? "";
+    }
   }
 
   Widget getAppBarNew(BuildContext context) {
@@ -99,6 +104,53 @@ class _PaymentDialogState extends State<VerificationProfiles> {
         ));
   }
 
+  hitApi() async {
+    provider.setLoading();
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    ForgotPasswordRequest forgotrequest =
+        new ForgotPasswordRequest(email: email);
+    var response = await provider.forgotPassword(forgotrequest, context);
+
+    if (response is ForgotPasswordResponse) {
+      try {
+        showInSnackBar(response.status.message);
+
+        Navigator.push(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return new OtoVerification(
+              type: 2,
+              phoneNumber: email,
+              countryCode: "",
+            );
+          }),
+        );
+      } catch (ex) {}
+
+      provider.hideLoader();
+    } else {
+      provider.hideLoader();
+      APIError apiError = response;
+      print(apiError.error);
+
+      showInSnackBar(apiError.error);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<AuthProvider>(context);
@@ -127,11 +179,11 @@ class _PaymentDialogState extends State<VerificationProfiles> {
                         new SizedBox(
                           height: 5,
                         ),
-                        getData(
+                        /*   getData(
                             "Bank Account",
                             "Set up a Recieving Bank Account with iban digits. The amount you will be paid for any favor will be deposited to this account.",
                             0,
-                            false)
+                            false)*/
                       ],
                     ),
                   ),
@@ -190,13 +242,18 @@ class _PaymentDialogState extends State<VerificationProfiles> {
                   color: AppColors.grayLight.withOpacity(0.9)),
             ),
           ),
-          Container(
-            margin: new EdgeInsets.only(top: 20),
-            padding: new EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            color: AppColors.colorDarkCyan,
-            child: new Text(
-              "Send verification",
-              style: new TextStyle(fontSize: 14, color: Colors.white),
+          InkWell(
+            onTap: () {
+              hitApi();
+            },
+            child: Container(
+              margin: new EdgeInsets.only(top: 20),
+              padding: new EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              color: AppColors.colorDarkCyan,
+              child: new Text(
+                "Send verification",
+                style: new TextStyle(fontSize: 14, color: Colors.white),
+              ),
             ),
           ),
           new SizedBox(

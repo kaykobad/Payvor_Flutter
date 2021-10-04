@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:payvor/chat/decorator_view.dart';
 import 'package:payvor/notifications/notification.dart';
 import 'package:payvor/pages/payment/search_message.dart';
+import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -72,7 +73,7 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                 ),
                                 color: Colors.transparent),
                             tabBar: new TabBar(
-                                indicatorColor: Color.fromRGBO(37, 26, 101, 1),
+                                indicatorColor: AppColors.colorDarkCyan,
                                 labelStyle: new TextStyle(
                                     fontSize: 18,
                                     fontFamily: AssetStrings.circulerMedium),
@@ -83,11 +84,9 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                     fontSize: 18,
                                     fontFamily: AssetStrings.circulerMedium),
                                 unselectedLabelColor:
-                                    Color.fromRGBO(103, 99, 99, 1),
-                                labelColor: Color.fromRGBO(37, 26, 101, 1),
-                                labelPadding: new EdgeInsets.only(left: 15.0),
-                                indicatorPadding:
-                                    new EdgeInsets.only(left: 15.0),
+                                Color.fromRGBO(103, 99, 99, 1),
+                                labelColor: AppColors.colorDarkCyan,
+
                                 controller: tabBarController,
                                 tabs: <Widget>[
                                   new Tab(text: "Messages"),

@@ -374,7 +374,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
                     Container(
                         margin: new EdgeInsets.only(left: 20.0),
                         child: new Text(
-                          ResString().get('welcome_back'),
+                           "Login Perimity",
                           style: TextThemes.extraBold,
                         )),
                     Container(
@@ -409,7 +409,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
                         AssetStrings.passPng,
                         obsectextType: true),
                     new SizedBox(
-                      height: 51.0,
+                      height: 24.0,
                     ),
                     new Container(
                       margin: new EdgeInsets.only(left: 20.0, right: 20.0),
@@ -502,17 +502,38 @@ class _LoginScreenState extends State<LoginScreenNew> {
                       ),
                     ),
                     new SizedBox(
-                      height: 32.0,
+                      height: 25.0,
                     ),
                     Container(
                         child: getSetupButtonNew(
                             callback, ResString().get('login'), 20)),
-                    Container(
-                      alignment: Alignment.center,
+                    new Container(
                       margin:
-                          new EdgeInsets.only(left: 20.0, right: 20.0, top: 51),
-                      child: new Text(ResString().get('or_login_with'),
-                          style: TextThemes.greyTextFieldMedium),
+                          new EdgeInsets.only(left: 20.0, right: 20.0, top: 32),
+                      child: new Row(
+                        children: [
+                          Expanded(
+                            child: new Container(
+                              height: 1.0,
+                              color: AppColors.colorGray,
+                            ),
+                          ),
+                          new Container(
+                            margin: new EdgeInsets.only(left: 8, right: 8),
+                            child: new Text(
+                              "OR LOGIN WITH",
+                              style: new TextStyle(
+                                  color: AppColors.lightGrayNew, fontSize: 12),
+                            ),
+                          ),
+                          Expanded(
+                            child: new Container(
+                              height: 1.0,
+                              color: AppColors.colorGray,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     space(),
                     Container(
@@ -579,7 +600,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
                     ),
                     space(),
                     new SizedBox(
-                      height: 17.0,
+                      height: 40.0,
                     ),
                     Container(
                       alignment: Alignment.center,

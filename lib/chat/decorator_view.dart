@@ -16,7 +16,7 @@ class DecoratedTabBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Positioned.fill(
               child: Container(
-                  padding: new EdgeInsets.only(left: 40.0),
+                 // padding: new EdgeInsets.only(left: 40.0),
                   decoration: decoration)),
           tabBar,
         ],

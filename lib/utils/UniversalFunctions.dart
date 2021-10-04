@@ -6,9 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
-import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/pages/login/login.dart';
+import 'package:payvor/provider/location_provider.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/Messages.dart';
 
@@ -563,6 +565,133 @@ void showAlert(
 // Closes keyboard by clicking any where on screen
 void closeKeyboard() {
   SystemChannels.textInput.invokeMethod('TextInput.hide');
+}
+
+Future<dynamic> currentPosition(
+    int type, BuildContext context, LocationProvider provider) async {
+  try {
+    //  provider.setLoading();
+
+    var geolocator = await Geolocator.isLocationServiceEnabled();
+    print("aviiii $geolocator");
+    if (geolocator) {
+      var permissionCheck = await Geolocator.checkPermission();
+
+      if (permissionCheck == LocationPermission.denied) {
+        print("aviiii denied");
+        permissionCheck = await Geolocator.requestPermission();
+
+        if (permissionCheck == LocationPermission.always ||
+            permissionCheck == LocationPermission.whileInUse) {
+          Position position = await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high);
+          print(position);
+          print("aviiii");
+
+          var lat = position.latitude;
+          var long = position.longitude;
+          print("lat $lat");
+          print("long $long");
+
+          final coordinates = new Coordinates(lat, long);
+          var addresses =
+              await Geocoder.local.findAddressesFromCoordinates(coordinates);
+          var first = addresses.first;
+
+          MemoryManagement.setLocationName(geo: first?.addressLine);
+
+          if (provider != null) {
+            provider.locationProvider
+                .add(lat.toString() + "," + long.toString());
+          }
+
+          MemoryManagement.setGeo(geo: lat.toString() + "," + long.toString());
+
+          /* Future.delayed(new Duration(seconds: 3), () {
+              provider.hideLoader();
+            });*/
+
+          if (type == 1) {
+            closeKeyboard();
+          } else {
+            // provider.hideLoader();
+          }
+
+          if (type == 1) {
+            return 1;
+          }
+        } else {
+          // provider.hideLoader();
+        }
+      } else if (permissionCheck == LocationPermission.deniedForever) {
+        // provider.hideLoader();
+        print("aviiii forever");
+        showAlert(
+          context: context,
+          titleText: "Permission Alert",
+          message:
+              "Some core functionality of the app might not work correctly without Location permissions. Please go to settings and enable it for District Lead.",
+          actionCallbacks: {
+            "OK": () {
+              Geolocator?.openAppSettings();
+            }
+          },
+        );
+
+        /* return Future.error(
+         'Location permissions are permantly denied, we cannot request permissions.');*/
+      } else {
+        print("aviiii allow");
+
+        Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high);
+        print(position);
+        print("aviiii");
+
+        var lat = position.latitude;
+        var long = position.longitude;
+
+        print("lat $lat");
+        print("long $long");
+        final coordinates = new Coordinates(lat, long);
+        var addresses =
+            await Geocoder.local.findAddressesFromCoordinates(coordinates);
+        Address first = addresses.first;
+
+        MemoryManagement.setLocationName(geo: first?.addressLine);
+
+        if (provider != null) {
+          provider.locationProvider.add(lat.toString() + "," + long.toString());
+        }
+        MemoryManagement.setGeo(geo: lat.toString() + "," + long.toString());
+
+        if (type == 1) {
+          closeKeyboard();
+        } else {
+          // provider.hideLoader();
+        }
+        if (type == 1) {
+          return 1;
+        }
+      }
+    } else {
+      //  provider.hideLoader();
+
+      showAlert(
+        context: context,
+        titleText: "Location",
+        message:
+            "It seems your location settings are turned Off. Please turn on to get most accurate location",
+        actionCallbacks: {
+          "OK": () {
+            Geolocator?.openLocationSettings();
+          }
+        },
+      );
+    }
+  } catch (e, stacktrace) {
+    print("excepption $e");
+  }
 }
 
 //cached Network image

@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lottie/lottie.dart';
 import 'package:payvor/pages/create_credential/create_credential.dart';
-import 'package:payvor/pages/dashboard/dashboard.dart';
+import 'package:payvor/pages/guest_view/guest_intro_screen.dart';
 import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
 import 'package:payvor/utils/AppColors.dart';
+import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/memory_management.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -122,12 +122,18 @@ class FadeIn extends State<SplashScreen> {
           margin: new EdgeInsets.only(top: 80.0),
           alignment: Alignment.center,
           child: new Column(children: <Widget>[
-            Lottie.asset('assets/payvor.json',
+            /* Lottie.asset('assets/payvor.json',
                 repeat: true,
                 reverse: false,
                 animate: true,
                 width: 240,
-                height: 240),
+                height: 240),*/
+
+            Image.asset(
+              AssetStrings.splashLogo,
+              height: 240,
+              width: 240,
+            )
           ]),
         ),
       ),
@@ -196,7 +202,7 @@ class FadeIn extends State<SplashScreen> {
     //
 
     var screenType = MemoryManagement.getScreenType();
-    Timer _timer = new Timer(const Duration(seconds: 2), () {
+    Timer _timer = new Timer(const Duration(seconds: 3), () {
       if (screenType == "1") {
         Navigator.pushAndRemoveUntil(
           context,
@@ -222,7 +228,7 @@ class FadeIn extends State<SplashScreen> {
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
             return (status)
-                ? new DashBoardScreen()
+                ? new GuestIntroScreen()
                 : new SplashIntroScreenNew();
           }),
           (route) => false,

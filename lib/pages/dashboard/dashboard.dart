@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/chat/chat_screen.dart';
+import 'package:payvor/model/category/category_response.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/update_firebase_token/update_token_request.dart';
 import 'package:payvor/pages/chat/private_chat.dart';
@@ -24,6 +25,7 @@ import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/search_home.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
+import 'package:payvor/provider/location_provider.dart';
 import 'package:payvor/review/review_post.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -66,6 +68,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   String userName = "";
   String userId = "";
+  LocationProvider locationProvider;
   String profile = "";
 
   Future<bool> _onBackPressed() async {
@@ -155,13 +158,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   void _redirect(Widget screen) async {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+
     var value = await Navigator.push(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {
         return screen;
       }),
     );
+
     print("callback $value");
+
     (currentTab == 0)
         ? SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light)
         : SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
@@ -187,6 +193,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   void initState() {
     MemoryManagement.setScreenType(type: "3");
     _firebaseMessaging = FirebaseMessaging();
+    Future.delayed(new Duration(microseconds: 2000), () {
+      setCategory();
+      print("call fun");
+    });
     configurePushNotification();
 
     _initPushNotification();
@@ -297,7 +307,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           }
         }
       },
-      onReceive: (Map<String, dynamic> message) async {
+      /*  onReceive: (Map<String, dynamic> message) async {
         print("config Notification onReceive");
         //  print("onResume: ${message}");
         print("onResume: ${message['data']['type']}");
@@ -314,7 +324,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             showNotification(title, description, message, type, favid, userid);
           }
         }
-      },
+      },*/
       onResume: (Map<String, dynamic> message) async {
         print("config Notification onResume");
         //  print("onResume: ${message}");
@@ -494,6 +504,23 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     }
   }
 
+  void setCategory() async {
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {},
+      onSuccess: () {},
+    );
+
+    if (gotInternetConnection) {
+      var response = await authProvider.setCategory(context);
+      if (response is CategoryResponse) {
+        MemoryManagement.setCategory(userInfo: jsonEncode(response));
+      }
+    }
+  }
+
   void getDeviceToken() {
     //  var response=   authProvider.updateTokenRequest( context);
   }
@@ -591,12 +618,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   Widget build(BuildContext context) {
     _firebaseProvider = Provider.of<FirebaseProvider>(context);
     authProvider = Provider.of<AuthProvider>(context);
+    locationProvider = Provider.of<LocationProvider>(context);
     _firebaseProvider.setHomeContext(context);
     authProvider.setHomeContext(context);
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
         backgroundColor: AppColors.kAppScreenBackGround,
+        resizeToAvoidBottomInset: false,
 //      body: PageStorage(
 //        child: screens[currentTab],
 //        bucket: bucket,

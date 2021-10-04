@@ -2,39 +2,33 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:payvor/filter/refer_request.dart';
 import 'package:payvor/filter/refer_response.dart';
-import 'package:payvor/filter/refer_user.dart';
-import 'package:payvor/filter/refer_user_response.dart';
 import 'package:payvor/model/apierror.dart';
-import 'package:payvor/pages/chat_message_details.dart';
+import 'package:payvor/pages/location/search_map.dart';
 import 'package:payvor/provider/auth_provider.dart';
-import 'package:payvor/shimmers/refer_shimmer_loader.dart';
+import 'package:payvor/provider/location_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
-class SearchHomeByName extends StatefulWidget {
-  final String lat;
-  final String long;
-  final String id;
-  final String description;
+class SearchLocation extends StatefulWidget {
+  LocationProvider provider;
 
-  SearchHomeByName({this.lat, this.long, this.id, this.description});
+  SearchLocation({this.provider});
 
   @override
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<SearchHomeByName>
-    with AutomaticKeepAliveClientMixin<SearchHomeByName> {
+class _HomeState extends State<SearchLocation>
+    with AutomaticKeepAliveClientMixin<SearchLocation> {
   var screenSize;
 
   String searchkey = null;
@@ -108,14 +102,14 @@ class _HomeState extends State<SearchHomeByName>
     var newRequest;
 
     var type = 1;
-    if (data.isNotEmpty && data.trim().length > 0) {
+    /*if (data.isNotEmpty && data.trim().length > 0) {
       request = ReferRequest(
           lat: widget?.lat ?? "", long: widget?.long ?? "", name: data);
     } else {
       type = 2;
       newRequest =
-          ReferRequestNew(lat: widget?.lat ?? "", long: widget?.long ?? "");
-    }
+          ReferRequestNew(lat: widget?.lat ?? "", long:  "");
+    }*/
 
     var response = await provider.getReferList(
         request, context, currentPage, newRequest, type);
@@ -177,6 +171,14 @@ class _HomeState extends State<SearchHomeByName>
     });
   }
 
+  void hitLocation() async {
+    var data = await currentPosition(1, context, widget?.provider);
+    if (data is int && data == 1) {
+      print("back alled");
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
@@ -184,6 +186,7 @@ class _HomeState extends State<SearchHomeByName>
 
     return Scaffold(
       key: _scaffoldKey,
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.bluePrimary,
       body: Stack(
         children: <Widget>[
@@ -204,7 +207,13 @@ class _HomeState extends State<SearchHomeByName>
                     color: AppColors.dividerColor,
                   ),
                 ),
-                getTopItem("Use my current location", 1),
+                InkWell(
+                  onTap: () {
+                    hitLocation();
+                  },
+                  child: Container(
+                      child: getTopItem("Use my current location", 1)),
+                ),
                 Opacity(
                   opacity: 0.7,
                   child: new Container(
@@ -213,7 +222,19 @@ class _HomeState extends State<SearchHomeByName>
                     color: AppColors.dividerColor,
                   ),
                 ),
-                getTopItem("Set location on map", 2),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      new CupertinoPageRoute(builder: (BuildContext context) {
+                        return new SearchMapView(
+                          provider: widget?.provider,
+                        );
+                      }),
+                    );
+                  },
+                  child: Container(child: getTopItem("Set location on map", 2)),
+                ),
                 Opacity(
                   opacity: 0.7,
                   child: new Container(
@@ -222,7 +243,7 @@ class _HomeState extends State<SearchHomeByName>
                     color: AppColors.dividerColor,
                   ),
                 ),
-                Container(
+                /*Container(
                   margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
                   child: new Text(
                     "Suggestions",
@@ -231,18 +252,18 @@ class _HomeState extends State<SearchHomeByName>
                         fontFamily: AssetStrings.circulerMedium,
                         fontSize: 18.0),
                   ),
-                ),
+                ),*/
                 new SizedBox(
                   height: 10,
                 ),
-                (provider.getLoading())
+                /* (provider.getLoading())
                     ? Expanded(
                         child: Container(
                           height: double.infinity,
                           child: HomeShimmerRefer(),
                         ),
                       )
-                    : _buildContestList(),
+                    : _buildContestList(),*/
               ],
             ),
           ),
@@ -297,7 +318,7 @@ class _HomeState extends State<SearchHomeByName>
       return;
     }
 
-    ReferUserRequest loginRequest = new ReferUserRequest(
+    /* ReferUserRequest loginRequest = new ReferUserRequest(
         user_id: id,
         favour_id: widget?.id,
         description: widget?.description ?? "");
@@ -313,7 +334,7 @@ class _HomeState extends State<SearchHomeByName>
       print(apiError.error);
 
       showInSnackBar(apiError.messag);
-    }
+    }*/
   }
 
   Widget getTopItem(String text, int type) {
@@ -391,11 +412,29 @@ class _HomeState extends State<SearchHomeByName>
                   Expanded(
                     child: Container(
                       padding: new EdgeInsets.only(left: 16, right: 5.0),
-                      child: getLocationNew(_LocationController, context,
-                          _streamControllerShowLoader, true, _LatLongController,
-                          iconData: AssetStrings.location),
+                      child: getLocationNew(
+                        _LocationController,
+                        context,
+                        _streamControllerShowLoader,
+                        true,
+                        _LatLongController,
+                        iconData: AssetStrings.location,
+                        onTap: () {
+                          if (_LatLongController?.text != null &&
+                              _LatLongController.text.contains(",")) {
+                            MemoryManagement.setLocationName(
+                                geo: _LocationController?.text);
+                            MemoryManagement.setGeo(
+                                geo: _LatLongController?.text);
+                            widget?.provider?.locationProvider
+                                ?.add(_LatLongController?.text);
+                            Navigator.pop(context);
+                          }
+                        },
+                      ),
                     ),
                   ),
+
                   /*  Flexible(
                     child: new TextField(
                       controller: _controller,
@@ -463,6 +502,8 @@ class _HomeState extends State<SearchHomeByName>
       ),
     ));
   }
+
+  void callback() {}
 
   Widget buildItem() {
     return InkWell(

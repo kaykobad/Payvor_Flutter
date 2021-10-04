@@ -9,6 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:payvor/model/category/category_response.dart';
 import 'package:payvor/model/create_payvor/payvorcreate.dart';
 import 'package:payvor/model/favour_details_response/favour_details_response.dart';
 import 'package:payvor/networkmodel/APIs.dart';
@@ -55,9 +56,14 @@ class _HomeState extends State<PostFavour>
   FocusNode _DescriptionField = new FocusNode();
   FocusNode _LocationField = new FocusNode();
 
+  List<DataCategory> categoryList = [];
+
   File _image; //to store profile image
   String profile;
   bool isValid = false;
+
+  String text = "";
+  String id = "";
 
   final StreamController<bool> _streamControllerShowLoader =
       StreamController<bool>();
@@ -82,8 +88,8 @@ class _HomeState extends State<PostFavour>
           widget?.favourDetailsResponse?.data?.location ?? "";
       profile = widget?.favourDetailsResponse?.data?.image ?? "";
 
-
-      _LatLongController.text = widget?.favourDetailsResponse?.data?.lat + "," +
+      _LatLongController.text = widget?.favourDetailsResponse?.data?.lat +
+          "," +
           widget?.favourDetailsResponse?.data?.long;
 
       /*  print("lat ${widget?.favourDetailsResponse?.data?.lat}");
@@ -93,6 +99,11 @@ class _HomeState extends State<PostFavour>
 
     _setScrollListener();
 
+    Future.delayed(new Duration(microseconds: 2000), () {
+      getCategory();
+      print("call fun");
+    });
+
     super.initState();
   }
 
@@ -101,6 +112,63 @@ class _HomeState extends State<PostFavour>
     _streamControllerShowLoader.close(); //close the stream on dispose
 
     super.dispose();
+  }
+
+  void getCategory() {
+    var data = MemoryManagement.getCategory() ?? "";
+    if (data?.isNotEmpty) {
+      var infoData = jsonDecode(data);
+      var catData = CategoryResponse.fromJson(infoData);
+      categoryList?.addAll(catData?.data);
+
+      print("cat ${categoryList?.length}");
+
+      setCategoryLocal();
+
+      setState(() {});
+    } else {
+      setCategory();
+    }
+  }
+
+  void setCategoryLocal() {
+    if (widget.favourDetailsResponse != null &&
+        widget?.favourDetailsResponse?.data?.category_id != null &&
+        widget?.favourDetailsResponse?.data?.category_id?.isNotEmpty) {
+      id = widget?.favourDetailsResponse?.data?.category_id;
+
+      for (var data in categoryList) {
+        if (id == data?.id?.toString()) {
+          text = data?.name;
+        }
+      }
+    }
+
+    setState(() {});
+  }
+
+  void setCategory() async {
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {},
+      onSuccess: () {},
+    );
+
+    if (gotInternetConnection) {
+      var response = await provider.setCategory(context);
+      if (response is CategoryResponse) {
+        MemoryManagement.setCategory(userInfo: jsonEncode(response));
+        categoryList?.clear();
+        categoryList?.addAll(response?.data);
+        print("cat ${categoryList?.length}");
+
+        setCategoryLocal();
+
+        setState(() {});
+      }
+    }
   }
 
   hitApi(int type) async {
@@ -169,6 +237,7 @@ class _HomeState extends State<PostFavour>
     request.fields['location'] = _LocationController.text;
     request.fields['description'] = _DescriptionController.text;
     request.fields['price'] = _PriceController.text;
+    request.fields['category_id'] = id;
     request.fields['lat'] = lat;
     request.fields['long'] = long;
 
@@ -462,6 +531,9 @@ class _HomeState extends State<PostFavour>
     } else if (latlong.isEmpty || latlong.length == 0) {
       showInSnackBar("No location info found please try again.");
       return false;
+    } else if (id == null || id.isEmpty) {
+      showInSnackBar("Please select a category.");
+      return false;
     } else {
       isValid = false;
       return true;
@@ -585,18 +657,109 @@ class _HomeState extends State<PostFavour>
                         0,
                         newColor: AppColors.colorDarkCyan),
                       ),
+                  Container(
+                    height: 56,
+                  )
+                ],
+              )));
+        });
+  }
 
+  buildContestListSearch(StateSetter setState) {
+    return Container(
+      child: new ListView.builder(
+        padding: new EdgeInsets.only(top: 10),
+        itemBuilder: (BuildContext context, int index) {
+          return buildItemRecentSearch(index, categoryList[index], setState);
+        },
+        itemCount: categoryList.length,
+      ),
+    );
+  }
 
-                      Container(
-                        height: 56,
-                      )
-                    ],
-                  )));
+  Widget buildItemRecentSearch(
+      int index, DataCategory data, StateSetter setStateMain) {
+    return InkWell(
+      onTap: () {
+        for (var localData in categoryList) {
+          localData?.isSelect = false;
+        }
+        data?.isSelect = true;
+        text = data?.name;
+        id = data?.id?.toString();
+
+        setStateMain(() {});
+
+        setState(() {});
+
+        Navigator.pop(context);
+      },
+      child: new Container(
+        padding: new EdgeInsets.only(top: 15, left: 20, right: 20),
+        child: Column(
+          children: [
+            new Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: new EdgeInsets.only(left: 5),
+                  child: Text(
+                    data.name,
+                    textAlign: TextAlign.center,
+                    style: new TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontFamily: AssetStrings.circulerNormal),
+                  ),
+                ),
+                new Container(
+                  child: data?.isSelect != null && data?.isSelect
+                      ? new Icon(
+                          Icons.radio_button_checked,
+                          color: AppColors.colorDarkCyan,
+                        )
+                      : new Icon(
+                          Icons.radio_button_unchecked,
+                          color: AppColors.kBlack.withOpacity(0.2),
+                        ),
+                )
+              ],
+            ),
+            Opacity(
+              opacity: 0.12,
+              child: new Container(
+                height: 1.0,
+                margin: new EdgeInsets.only(top: 15),
+                color: AppColors.dividerColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void showBottomSheets() {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
+        ),
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setStateMain) {
+            return Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: Container(
+                    height: getScreenSize(context: context).height / 1.5,
+                    child: buildContestListSearch(setStateMain)));
+          });
         });
   }
 
   void callbackFavourPage() async {
-    if ((widget?.isEdit??false) && widget?.voidcallback != null) {
+    if ((widget?.isEdit ?? false) && widget?.voidcallback != null) {
       widget?.voidcallback(1);
       Navigator.pop(context);
     }
@@ -843,12 +1006,12 @@ class _HomeState extends State<PostFavour>
                       TextInputType.text,
                       8),
                   new SizedBox(
-                    height: 9.0,
+                    height: 1.0,
                   ),
                   new Container(
                     color: Colors.white,
                     height: 64.0,
-                    margin: new EdgeInsets.only(top: 9.0),
+                    margin: new EdgeInsets.only(top: 0.0),
                     padding: new EdgeInsets.only(right: 16),
                     child: new Row(
                       children: [
@@ -891,6 +1054,59 @@ class _HomeState extends State<PostFavour>
                               fontSize: 16),
                           textAlign: TextAlign.center,
                         ),*/
+                      ],
+                    ),
+                  ),
+                  new SizedBox(
+                    height: 1.0,
+                  ),
+                  Container(
+                    padding: new EdgeInsets.only(
+                        left: 16, top: 25, right: 16, bottom: 25),
+                    width: getScreenSize(context: context).width,
+                    color: Colors.white,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            color: Colors.white,
+                            child: new Text(
+                              "Category",
+                              style: new TextStyle(
+                                  fontFamily: AssetStrings.circulerMedium,
+                                  color: Colors.black,
+                                  fontSize: 16),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            showBottomSheets();
+                          },
+                          child: Container(
+                            alignment: Alignment.centerRight,
+                            constraints: new BoxConstraints(maxWidth: 180),
+                            color: Colors.white,
+                            child: new Text(
+                              text != null && text?.isNotEmpty ? text : "None",
+                              style: new TextStyle(
+                                  fontFamily: AssetStrings.circulerNormal,
+                                  color: AppColors.colorDarkCyan,
+                                  fontSize: 14),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: new EdgeInsets.only(left: 2),
+                          child: new Icon(
+                            Icons.arrow_forward_ios,
+                            size: 15,
+                            color: AppColors.colorDarkCyan,
+                          ),
+                        )
                       ],
                     ),
                   ),

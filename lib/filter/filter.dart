@@ -1,17 +1,23 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/filter/data.dart';
 import 'package:payvor/filter/filter_request.dart';
+import 'package:payvor/model/category/category_response.dart';
+import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
+import 'package:provider/provider.dart';
 
 class Filter extends StatefulWidget {
   ValueSetter<FilterRequest> voidcallback;
@@ -31,6 +37,10 @@ class _HomeState extends State<Filter>
       new StreamController<bool>();
   ScrollController scrollController = new ScrollController();
 
+  List<DataCategory> categoryList = [];
+
+  String text = "";
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
@@ -43,14 +53,15 @@ class _HomeState extends State<Filter>
 
   var _currentSliderValue = 0.0;
 
-
   var _paymentMin = 0;
   var _paymentMax = 100;
+  AuthProvider authProvider;
+
   TextEditingController _LocationController = new TextEditingController();
   TextEditingController _LatLongController = new TextEditingController();
 
   final StreamController<bool> _streamControllerShowLoader =
-  StreamController<bool>();
+      StreamController<bool>();
 
   var list = List<DataModel>();
 
@@ -60,32 +71,27 @@ class _HomeState extends State<Filter>
   void initState() {
     _setScrollListener();
 
-    var data = DataModel(name: "Newest post first",
-        isSelect: false,
-        sendTitle: "newest_first",
-        id: 1);
-    var data1 = DataModel(name: "Most relevant",
+    var data = DataModel(
+        name: "Most Recent", isSelect: false, sendTitle: "newest_first", id: 1);
+    var data1 = DataModel(
+        name: "Nearest to me",
         isSelect: false,
         sendTitle: "most_relevent",
         id: 2);
-    var data2 = DataModel(name: "Closest location first",
+    var data2 = DataModel(
+        name: "Cheapest",
         isSelect: false,
         sendTitle: "nearest_location",
         id: 3);
-    var data3 = DataModel(name: "Price low to high",
+    var data3 = DataModel(
+        name: "Most Expensive",
         isSelect: false,
         sendTitle: "price_low_to_high",
         id: 4);
-    var data4 = DataModel(name: "Price high to low",
-        isSelect: false,
-        sendTitle: "price_high_to_low",
-        id: 5);
     list.add(data);
     list.add(data1);
     list.add(data2);
     list.add(data3);
-    list.add(data4);
-
 
     if (widget.filterRequest != null) {
       if (widget.filterRequest.list != null) {
@@ -101,6 +107,11 @@ class _HomeState extends State<Filter>
       _LatLongController.text = widget.filterRequest.latlongData ?? "";
     }
 
+    Future.delayed(new Duration(microseconds: 2000), () {
+      getCategory();
+      print("call fun");
+    });
+
     super.initState();
   }
 
@@ -109,64 +120,227 @@ class _HomeState extends State<Filter>
 
   void _setScrollListener() {}
 
-  Iterable<Widget> get actorWidgets sync* {
-    for (DataModel data in list) {
-      yield InkWell(
-        onTap: () {
-          data.isSelect = !data.isSelect;
-
-          var id = data.id;
-
-          if ((id == 4 || id == 5) && data.isSelect) {
-            if (id == 4) {
-              list[4].isSelect = false;
-            }
-            else {
-              list[3].isSelect = false;
-            }
-          }
-
-
-          setState(() {});
-        },
-        child: data.isSelect
-            ? Container(
-                margin:
-                    new EdgeInsets.symmetric(vertical: 5.0, horizontal: 4.0),
-                padding:
-                    new EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-                decoration: new BoxDecoration(
-                  color: AppColors.colorDarkCyan,
-                  borderRadius: new BorderRadius.circular(5.0),
-                ),
-                child: Text(
-                  data.name,
-                  textAlign: TextAlign.center,
-                  style: new TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
-                      fontFamily: AssetStrings.circulerNormal),
-                ),
-              )
-            : Container(
-                margin:
-                    new EdgeInsets.symmetric(vertical: 5.0, horizontal: 4.0),
-                padding:
-                    new EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-                decoration: new BoxDecoration(
-                  color: AppColors.lightCyan,
-                  borderRadius: new BorderRadius.circular(5.0),
-                ),
-                child: Text(
-                  data.name,
-                  style: new TextStyle(
-                      color: AppColors.colorDarkCyan,
-                      fontSize: 13,
-                      fontFamily: AssetStrings.circulerNormal),
-                ),
-        ),
-      );
+  void getCategory() {
+    var data = MemoryManagement.getCategory() ?? "";
+    if (data?.isNotEmpty) {
+      var infoData = jsonDecode(data);
+      var catData = CategoryResponse.fromJson(infoData);
+      categoryList?.addAll(catData?.data);
+      print("cat ${categoryList?.length}");
+      setState(() {});
+    } else {
+      setCategory();
     }
+  }
+
+  void setCategory() async {
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {},
+      onSuccess: () {},
+    );
+
+    if (gotInternetConnection) {
+      var response = await authProvider.setCategory(context);
+      if (response is CategoryResponse) {
+        MemoryManagement.setCategory(userInfo: jsonEncode(response));
+        categoryList?.clear();
+        categoryList?.addAll(response?.data);
+        print("cat ${categoryList?.length}");
+        setState(() {});
+      }
+    }
+  }
+
+  Iterable<Widget> get categoryWidget sync* {
+    for (DataCategory data in categoryList) {
+      yield InkWell(
+          onTap: () {
+            if (data.isSelect == null) {
+              data.isSelect = false;
+            }
+            data.isSelect = !data.isSelect;
+
+            var id = data.id;
+
+            if ((id == 4 || id == 5) && data.isSelect) {
+              if (id == 4) {
+                list[4].isSelect = false;
+              } else {
+                list[3].isSelect = false;
+              }
+            }
+
+            setState(() {});
+          },
+          child: Container(
+            margin: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 4.0),
+            padding: new EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+            decoration: new BoxDecoration(
+                borderRadius: new BorderRadius.circular(20.0),
+                border: new Border.all(color: AppColors.desabledGray)),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                new Container(
+                  width: 18,
+                  height: 18,
+                  decoration: new BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: data?.isSelect != null && data?.isSelect
+                          ? AppColors.colorDarkCyan
+                          : Colors.transparent,
+                      border: new Border.all(
+                          color: data?.isSelect != null && data?.isSelect
+                              ? Colors.transparent
+                              : AppColors.desabledGray)),
+                  child: new Icon(
+                    Icons.check,
+                    color: AppColors.kWhite,
+                    size: 12,
+                  ),
+                ),
+                Container(
+                  margin: new EdgeInsets.only(left: 5),
+                  child: Text(
+                    data.name,
+                    textAlign: TextAlign.center,
+                    style: new TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontFamily: AssetStrings.circulerNormal),
+                  ),
+                ),
+              ],
+            ),
+          ));
+    }
+  }
+
+  buildContestListSearch(StateSetter setState) {
+    return Container(
+      child: new ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return buildItemRecentSearch(index, list[index], setState);
+        },
+        itemCount: list.length,
+      ),
+    );
+  }
+
+  Widget buildItemRecentSearch(
+      int index, DataModel data, StateSetter setStateMain) {
+    return InkWell(
+      onTap: () {
+        for (var localData in list) {
+          localData?.isSelect = false;
+        }
+        data?.isSelect = true;
+        text = data?.name;
+
+        setStateMain(() {});
+
+        setState(() {});
+
+        Navigator.pop(context);
+      },
+      child: new Container(
+        padding: new EdgeInsets.only(top: 15, left: 20, right: 20),
+        child: Column(
+          children: [
+            new Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: new EdgeInsets.only(left: 5),
+                  child: Text(
+                    data.name,
+                    textAlign: TextAlign.center,
+                    style: new TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontFamily: AssetStrings.circulerNormal),
+                  ),
+                ),
+                new Container(
+                  child: data?.isSelect
+                      ? new Icon(
+                          Icons.radio_button_checked,
+                          color: AppColors.colorDarkCyan,
+                        )
+                      : new Icon(
+                          Icons.radio_button_unchecked,
+                          color: AppColors.kBlack.withOpacity(0.2),
+                        ),
+                )
+              ],
+            ),
+            Opacity(
+              opacity: 0.12,
+              child: new Container(
+                height: 1.0,
+                margin: new EdgeInsets.only(top: 15),
+                color: AppColors.dividerColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void showBottomSheets() {
+    /*showModalBottomSheet<void>(
+        isScrollControlled: true,
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
+        ),
+        builder: (BuildContext bc) {
+          return Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Container(
+                  child: new Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+
+                      new SizedBox(
+                        height: 10,
+                      ),
+                      buildContestListSearch()
+                    ],
+                  )));
+        });
+*/
+
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
+        ),
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setStateMain) {
+            return Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: Container(
+                    child: new Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    new SizedBox(
+                      height: 10,
+                    ),
+                    buildContestListSearch(setStateMain)
+                  ],
+                )));
+          });
+        });
   }
 
   void callback() {
@@ -192,15 +366,14 @@ class _HomeState extends State<Filter>
 
   @override
   Widget build(BuildContext context) {
-    screenSize = MediaQuery
-        .of(context)
-        .size;
+    screenSize = MediaQuery.of(context).size;
+    authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       key: _scaffoldKey,
       body: Stack(
         children: <Widget>[
           new Container(
-            color: AppColors.whiteGray,
+            color: AppColors.kWhite,
             height: screenSize.height,
             child: SingleChildScrollView(
               child: new Column(
@@ -282,14 +455,14 @@ class _HomeState extends State<Filter>
                       color: AppColors.dividerColor,
                     ),
                   ),
-                  new Container(
+                  /* new Container(
                     color: Colors.white,
                     height: 64.0,
                     margin: new EdgeInsets.only(top: 9.0),
                     padding: new EdgeInsets.only(right: 16),
                     child: new Row(
                       children: [
-                        /*   new Text(
+                        */ /*   new Text(
                           ResString().get('location'),
                           style: new TextStyle(
                               fontFamily: AssetStrings.circulerNormal,
@@ -297,7 +470,7 @@ class _HomeState extends State<Filter>
                               fontSize: 16),
                           textAlign: TextAlign.center,
                         ),
-*/
+*/ /*
                         Expanded(
                           child: Container(
                             padding: new EdgeInsets.only(left: 16, right: 5.0),
@@ -313,21 +486,20 @@ class _HomeState extends State<Filter>
                         new SizedBox(
                           width: 15,
                         ),
-                        /*  new Text(
+                        */ /*  new Text(
                           ">",
                           style: new TextStyle(
                               fontFamily: AssetStrings.circulerNormal,
                               color: AppColors.lightGrey,
                               fontSize: 16),
                           textAlign: TextAlign.center,
-                        ),*/
+                        ),*/ /*
                       ],
                     ),
-                  ),
+                  ),*/
                   new Container(
                     color: Colors.white,
-                    margin: new EdgeInsets.only(top: 9.0),
-                    padding: new EdgeInsets.only(left: 16, right: 16, top: 10),
+                    padding: new EdgeInsets.only(left: 16, right: 16, top: 20),
                     child: new Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -342,9 +514,7 @@ class _HomeState extends State<Filter>
                         new Text(
                           _currentSliderValue.toInt().toString() + " km",
                           style: new TextStyle(
-                              fontFamily: AssetStrings.circulerMedium,
-                              color: AppColors.colorDarkCyan,
-                              fontSize: 14),
+                              color: Colors.black, fontSize: 14),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -368,6 +538,14 @@ class _HomeState extends State<Filter>
                       },
                     ),
                   ),
+                  Opacity(
+                    opacity: 0.12,
+                    child: new Container(
+                      height: 1.0,
+                      margin: new EdgeInsets.only(left: 16, right: 16),
+                      color: AppColors.dividerColor,
+                    ),
+                  ),
                   new Container(
                     color: Colors.white,
                     margin: new EdgeInsets.only(top: 9.0),
@@ -386,9 +564,7 @@ class _HomeState extends State<Filter>
                         new Text(
                           "€$_paymentMin" + "-" "€$_paymentMax",
                           style: new TextStyle(
-                              fontFamily: AssetStrings.circulerMedium,
-                              color: AppColors.colorDarkCyan,
-                              fontSize: 14),
+                              color: Colors.black, fontSize: 14),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -417,16 +593,90 @@ class _HomeState extends State<Filter>
                       },
                     ),
                   ),
-                  new SizedBox(
-                    height: 9.0,
+                  Opacity(
+                    opacity: 0.12,
+                    child: new Container(
+                      height: 1.0,
+                      margin: new EdgeInsets.only(left: 16, right: 16),
+                      color: AppColors.dividerColor,
+                    ),
                   ),
                   Container(
-                    padding: new EdgeInsets.only(left: 16, top: 10),
+                    margin: new EdgeInsets.only(left: 16, top: 25, right: 16),
+                    width: getScreenSize(context: context).width,
+                    color: Colors.white,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            color: Colors.white,
+                            child: new Text(
+                              "Sort By",
+                              style: new TextStyle(
+                                  fontFamily: AssetStrings.circulerMedium,
+                                  color: Colors.black,
+                                  fontSize: 16),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            showBottomSheets();
+                          },
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            color: Colors.white,
+                            child: new Text(
+                              text != null && text?.isNotEmpty
+                                  ? text
+                                  : "Most Recent",
+                              style: new TextStyle(
+                                  fontFamily: AssetStrings.circulerNormal,
+                                  color: Colors.black,
+                                  fontSize: 14),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: new EdgeInsets.only(left: 2),
+                          child: new Icon(
+                            Icons.arrow_forward_ios,
+                            size: 15,
+                            color: AppColors.colorDarkCyan,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  /* Container(
+                      color: Colors.white,
+                      padding:
+                          new EdgeInsets.only(left: 12, top: 16, bottom: 16.0),
+                      width: getScreenSize(context: context).width,
+                      child: new Wrap(
+                        runSpacing: 2.0,
+                        spacing: 2.0,
+                        children: actorWidgets.toList(),
+                      )),*/
+
+                  Opacity(
+                    opacity: 0.12,
+                    child: new Container(
+                      height: 1.0,
+                      margin: new EdgeInsets.only(left: 16, right: 16, top: 25),
+                      color: AppColors.dividerColor,
+                    ),
+                  ),
+                  Container(
+                    padding: new EdgeInsets.only(left: 16, top: 20),
                     width: getScreenSize(context: context).width,
                     alignment: Alignment.centerLeft,
                     color: Colors.white,
                     child: new Text(
-                      "Sort By",
+                      "Category",
                       style: new TextStyle(
                           fontFamily: AssetStrings.circulerMedium,
                           color: Colors.black,
@@ -442,7 +692,7 @@ class _HomeState extends State<Filter>
                       child: new Wrap(
                         runSpacing: 2.0,
                         spacing: 2.0,
-                        children: actorWidgets.toList(),
+                        children: categoryWidget.toList(),
                       )),
                   new SizedBox(
                     height: 100.0,

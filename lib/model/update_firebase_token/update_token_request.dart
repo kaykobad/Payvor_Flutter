@@ -16,3 +16,19 @@ class UpdateTokenRequest {
     return data;
   }
 }
+
+class AddStripeRequest {
+  String strtoken;
+
+  AddStripeRequest({this.strtoken});
+
+  AddStripeRequest.fromJson(Map<String, dynamic> json) {
+    strtoken = json['strtoken'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['strtoken'] = this.strtoken;
+    return data;
+  }
+}

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:payvor/pages/join_community/join_community.dart';
 import 'package:payvor/pages/login/login.dart';
-import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
@@ -36,13 +35,18 @@ class FadeIn extends State<GuestView> {
               children: <Widget>[
                 //  BackgroundImage(),
                 new Column(children: <Widget>[
-                  Container(
-                    alignment: Alignment.topLeft,
-                    margin: new EdgeInsets.only(top: 20, left: 24),
-                    child: new Icon(
-                      Icons.clear,
-                      color: Colors.white,
-                      size: 24,
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      alignment: Alignment.topLeft,
+                      margin: new EdgeInsets.only(top: 20, left: 24),
+                      child: new Icon(
+                        Icons.clear,
+                        color: Colors.white,
+                        size: 24,
+                      ),
                     ),
                   ),
                   Container(
@@ -119,7 +123,7 @@ class FadeIn extends State<GuestView> {
     Navigator.push(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {
-        return new JoinCommunityNew();
+        return new LoginScreenNew();
       }),
     );
   }
@@ -128,7 +132,7 @@ class FadeIn extends State<GuestView> {
     Navigator.push(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {
-        return new LoginScreenNew();
+        return new JoinCommunityNew();
       }),
     );
   }

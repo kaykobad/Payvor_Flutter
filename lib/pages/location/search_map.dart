@@ -1,28 +1,28 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:payvor/filter/refer_request.dart';
 import 'package:payvor/filter/refer_response.dart';
-import 'package:payvor/filter/refer_user.dart';
-import 'package:payvor/filter/refer_user_response.dart';
-import 'package:payvor/model/apierror.dart';
-import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/provider/auth_provider.dart';
-import 'package:payvor/shimmers/refer_shimmer_loader.dart';
+import 'package:payvor/provider/location_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
-import 'package:payvor/utils/constants.dart';
-import 'package:payvor/utils/themes_styles.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:provider/provider.dart';
 
 class SearchMapView extends StatefulWidget {
+  LocationProvider provider;
+
+  SearchMapView({this.provider});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -38,6 +38,8 @@ class _HomeState extends State<SearchMapView>
   bool offstagenodata = true;
   bool loader = false;
   String title = "";
+  double lat = 37.42796133580664;
+  double long = -122.085749655962;
 
   List<DataRefer> listResult = List();
 
@@ -54,23 +56,128 @@ class _HomeState extends State<SearchMapView>
   TextEditingController _LocationController = new TextEditingController();
   TextEditingController _LatLongController = new TextEditingController();
   Completer<GoogleMapController> _controller = Completer();
+  LatLng center;
+  MarkerId markerId;
+  LatLng _lastMapPosition;
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
+  CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
+
+  int _markerIdCounter = 1;
+  Set<Marker> markers = Set();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
         .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
+  moveToCamera() async {
+    final GoogleMapController controller = await _controller.future;
+
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(_lastMapPosition.latitude, _lastMapPosition.longitude),
+        zoom: 10.0,
+      ),
+    ));
+  }
+
+  void _add(double lat, double long, String text) async {
+    markers?.clear();
+    var markerIdVal = "Marker";
+    markerId = MarkerId(markerIdVal);
+
+    _kGooglePlex = CameraPosition(
+      target: LatLng(lat, long),
+      zoom: 10,
+    );
+
+    _lastMapPosition = LatLng(lat, long);
+    // creating a new MARKER
+    final Marker marker = Marker(
+      markerId: markerId,
+      position: LatLng(
+        lat,
+        long,
+      ),
+      infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
+    );
+
+    final coordinates = new Coordinates(lat, long);
+    var addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    Address first = addresses.first;
+
+    _LocationController?.text = first?.addressLine;
+
+    if (text?.isNotEmpty) {
+      _LocationController?.text = text;
+    }
+
+    var latLong = lat?.toString() + "," + long?.toString();
+
+    MemoryManagement.setLocationName(geo: _LocationController?.text);
+    MemoryManagement.setGeo(geo: latLong);
+
+    moveToCamera();
+
+    setState(() {
+      // adding a new marker to map
+      markers.add(marker);
+    });
+  }
+
+  _onCameraMove(CameraPosition position) {
+    _lastMapPosition = position.target;
+  }
+
+  Future<BitmapDescriptor> _getAssetIcon(BuildContext context) async {
+    final Completer<BitmapDescriptor> bitmapIcon =
+        Completer<BitmapDescriptor>();
+    final ImageConfiguration config = createLocalImageConfiguration(context);
+
+    const AssetImage(AssetStrings.location)
+        .resolve(config)
+        .addListener(ImageStreamListener((ImageInfo image, bool sync) async {
+      final ByteData bytes =
+          await image.image.toByteData(format: ImageByteFormat.png);
+      if (bytes == null) {
+        bitmapIcon.completeError(Exception('Unable to encode icon'));
+        return;
+      }
+      final BitmapDescriptor bitmap =
+          BitmapDescriptor.fromBytes(bytes.buffer.asUint8List());
+      bitmapIcon.complete(bitmap);
+    }));
+
+    return await bitmapIcon.future;
+  }
+
   @override
   void initState() {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      //   hitSearchApi("");
-    });
-    //  _setScrollListener();
+    center = LatLng(lat, long);
+
+    var latlong = MemoryManagement.getGeo();
+    var location = MemoryManagement.getLocationName();
+
+    if (latlong != null && latlong?.isNotEmpty) {
+      var datas = latlong.trim().toString().split(",");
+
+      try {
+        var lat = datas[0].toString();
+        var long = datas[1].toString();
+
+        double latitude = double.parse(lat);
+        double longitide = double.parse(long);
+
+        _add(latitude, longitide, location);
+      } catch (e) {}
+    } else {
+      _add(lat, long, "");
+    }
     super.initState();
   }
 
@@ -81,7 +188,7 @@ class _HomeState extends State<SearchMapView>
 
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: AppColors.bluePrimary,
+      backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
           new Container(
@@ -104,8 +211,17 @@ class _HomeState extends State<SearchMapView>
                 ),
                 Expanded(
                   child: GoogleMap(
-                    mapType: MapType.hybrid,
+                    mapType: MapType.normal,
                     initialCameraPosition: _kGooglePlex,
+                    markers: markers,
+                    onCameraMove: _onCameraMove,
+                    onTap: (data) {
+                      print(data?.longitude);
+                      _LatLongController?.text = data?.latitude?.toString() +
+                          "," +
+                          data?.longitude?.toString();
+                      _add(data?.latitude, data?.longitude, "");
+                    },
                     onMapCreated: (GoogleMapController controller) {
                       _controller.complete(controller);
                     },
@@ -128,7 +244,16 @@ class _HomeState extends State<SearchMapView>
     );
   }
 
-  void callback() {}
+  void callback() {
+    if (_LatLongController?.text?.isNotEmpty &&
+        _LocationController?.text?.isNotEmpty) {
+      widget?.provider?.locationProvider?.add(_LatLongController?.text);
+      Navigator.pop(context);
+      Navigator.pop(context);
+    } else {
+      showInSnackBar("Please select a location");
+    }
+  }
 
   Widget getTopItem(String text, int type) {
     return Container(
@@ -205,9 +330,34 @@ class _HomeState extends State<SearchMapView>
                   Expanded(
                     child: Container(
                       padding: new EdgeInsets.only(left: 16, right: 5.0),
-                      child: getLocationNew(_LocationController, context,
-                          _streamControllerShowLoader, true, _LatLongController,
-                          iconData: AssetStrings.location),
+                      child: getLocationNew(
+                        _LocationController,
+                        context,
+                        _streamControllerShowLoader,
+                        true,
+                        _LatLongController,
+                        iconData: AssetStrings.location,
+                        onTap: () {
+                          if (_LatLongController?.text != null &&
+                              _LatLongController.text.contains(",")) {
+                            var datas = _LatLongController?.text
+                                .trim()
+                                .toString()
+                                .split(",");
+
+                            try {
+                              var lat = datas[0].toString();
+                              var long = datas[1].toString();
+
+                              double latitude = double.parse(lat);
+                              double longitide = double.parse(long);
+
+                              _add(latitude, longitide,
+                                  _LocationController?.text);
+                            } catch (e) {}
+                          }
+                        },
+                      ),
                     ),
                   ),
                   /*  Flexible(
@@ -237,7 +387,10 @@ class _HomeState extends State<SearchMapView>
                     width: 4.0,
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      _LocationController?.text = "";
+                      _LatLongController?.text = "";
+                    },
                     child: new Image.asset(
                       AssetStrings.clean,
                       width: 18.0,

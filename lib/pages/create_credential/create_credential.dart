@@ -54,13 +54,13 @@ class _LoginScreenState extends State<CreateCredential> {
   void initState() {
     listPassword.addAll([new LengthLimitingTextInputFormatter(20)]);
 
-    var emails = MemoryManagement.getUserEmail();
-    var names = MemoryManagement.getuserName();
+    // var emails = MemoryManagement.getUserEmail()??"";
+    //   var names = MemoryManagement.getuserName()??"";
 
-    var infoData = jsonDecode(MemoryManagement.getUserInfo());
+    /* var infoData = jsonDecode(MemoryManagement.getUserInfo());
     var userinfo = LoginSignupResponse.fromJson(infoData);
     name = userinfo?.user?.name ?? "";
-    email = userinfo?.user?.email ?? "";
+    email = userinfo?.user?.email ?? "";*/
     super.initState();
   }
 
@@ -343,7 +343,7 @@ class _LoginScreenState extends State<CreateCredential> {
         children: [
           Scaffold(
             key: _scaffoldKeys,
-            appBar: widget.type
+            appBar: widget.type != null && widget.type
                 ? getAppBarNewBlank(context)
                 : getAppBarNew(context),
             backgroundColor: Colors.white,
@@ -360,20 +360,20 @@ class _LoginScreenState extends State<CreateCredential> {
                     Container(
                         margin: new EdgeInsets.only(left: 20.0),
                         child: new Text(
-                          ResString().get('enter_credential'),
+                          "New Password",
                           style: TextThemes.extraBold,
                         )),
                     Container(
                       margin:
                           new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
                       child: new Text(
-                        ResString().get('set_password'),
+                        "Enter the new Password and confirm with Repeat Password field",
                         style: TextThemes.grayNormal,
                       ),
                     ),
-                    getUserData(),
+                    //  getUserData(),
                     new SizedBox(
-                      height: 38.0,
+                      height: 32.0,
                     ),
                     getTextField(
                         ResString().get('password'),
@@ -396,14 +396,12 @@ class _LoginScreenState extends State<CreateCredential> {
                         AssetStrings.passPng,
                         2,
                         obsecureTextConfirm),
-                    new SizedBox(
-                      height: 10.0,
-                    ),
-                    termAndConditionWidget,
+
+                    //  termAndConditionWidget,
                     Container(
-                        margin: new EdgeInsets.only(top: 170),
+                        margin: new EdgeInsets.only(top: 30),
                         child: getSetupButtonNew(
-                            callback, ResString().get('create_account'), 20)),
+                            callback, "Set up New Password", 20)),
                     new SizedBox(
                       height: 35.0,
                     ),
@@ -503,9 +501,6 @@ class _LoginScreenState extends State<CreateCredential> {
       return;
     } else if (password.length < 6 || password.length > 20) {
       showInSnackBar(ResString().get('password_should_6_20_char'));
-      return;
-    } else if (!_termAndConditionCheck) {
-      showInSnackBar(ResString().get('accept_term_and_condition'));
       return;
     }
     hitApi();

@@ -3,6 +3,7 @@ class SharedPrefsKeys {
 
   static const String IS_USER_SIGNED_IN = "is_user_signed_in";
   static const String USER_INFO = "user_info";
+  static const String USER_CATEGORY = "user_caregories";
   static const String ACCESS_TOKEN = "access_token";
   static const String DEVICE_ID = "device_id";
   static const String USER_TYPE = "user_type";
@@ -21,6 +22,8 @@ class SharedPrefsKeys {
   static const String PROJECT_NAME = "project_name";
   static const String IS_UPGRADED_ACCOUNT = "is_upgraded_account";
   static const String HIDE_PROFILE = "hide_profile";
+  static const String USER_GEO = "USER_GEO";
+  static const String USER_GEO_LOCATION = "USER_GEO_LOCATION";
 
   // Paginating list storage keys
   static const String ASSET_MILLS = "ASSET_MILLS";

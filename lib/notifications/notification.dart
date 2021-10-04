@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/notifications/notification_response.dart';
 import 'package:payvor/pages/original_post/original_post_data.dart';
@@ -178,12 +177,13 @@ class _HomeState extends State<Notifications>
                   children: [
                     InkWell(
                       onTap: () {},
-                      child: new SvgPicture.asset(
-                        AssetStrings.notification,
+                      child: new Image.asset(
+                        AssetStrings.empty_notification_new,
+                        width: 150,
+                        height: 150,
                       ),
                     ),
                     Container(
-                      margin: new EdgeInsets.only(top: 42),
                       child: new Text(
                         "No Notifications",
                         style: new TextStyle(
@@ -251,11 +251,27 @@ class _HomeState extends State<Notifications>
   }
 
   Widget buildItem(Data data) {
+    String image = AssetStrings.bag;
+
+    if (data?.type == 1) {
+      //hire user
+      image = AssetStrings.bag;
+    } else if (data?.type == 2) {
+      //paid user
+    } else if (data?.type == 3) {
+      //rated user
+      image = AssetStrings.thumbLeft;
+    } else if (data?.type == 4) {
+      image = AssetStrings.person;
+    } else {
+      image = AssetStrings.thumbLeft;
+    }
+
     return Container(
       margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 14),
       child: Row(
         children: <Widget>[
-          new Container(
+          /* new Container(
             width: 49.0,
             height: 49.0,
             alignment: Alignment.center,
@@ -268,6 +284,23 @@ class _HomeState extends State<Notifications>
                   fit: BoxFit.fill,
                   size: 49),
             ),
+          ),*/
+
+          new Container(
+            width: 49.0,
+            height: 49.0,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle, color: AppColors.notiBackground),
+            child: Container(
+              // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+
+              child: Image.asset(
+                image,
+                width: 22,
+                height: 22,
+              ),
+            ),
           ),
           Expanded(
             child: Column(
@@ -279,26 +312,26 @@ class _HomeState extends State<Notifications>
                         margin: new EdgeInsets.only(left: 14.0),
                         child: new RichText(
                           text: new TextSpan(
-                            text: data?.user?.name ?? "",
+                      text: data?.user?.name ?? "",
+                      style: new TextStyle(
+                          fontSize: 16.0,
+                          fontFamily: AssetStrings.circulerBoldStyle,
+                          color: Color.fromRGBO(23, 23, 23, 1)),
+                      children: <TextSpan>[
+                        new TextSpan(
+                            text: " ${data?.description ?? ""}",
                             style: new TextStyle(
-                                fontSize: 16.0,
-                                fontFamily: AssetStrings.circulerBoldStyle,
-                                color: Color.fromRGBO(23, 23, 23, 1)),
-                            children: <TextSpan>[
-                              new TextSpan(
-                                  text: " ${data?.description ?? ""}",
-                                  style: new TextStyle(
-                                      fontFamily: AssetStrings.circulerNormal,
-                                      color: Color.fromRGBO(103, 99, 99, 1))),
-                            ],
-                          ),
-                        ),
-                      )
+                                fontFamily: AssetStrings.circulerNormal,
+                                color: Color.fromRGBO(103, 99, 99, 1))),
+                      ],
+                    ),
+                  ),
+                )
                     : Container(
-                        margin: const EdgeInsets.only(left: 14),
-                        alignment: Alignment.centerLeft,
-                        child: Html(
-                            shrinkToFit: true, data: "${data?.description}")),
+                    margin: const EdgeInsets.only(left: 14),
+                    alignment: Alignment.centerLeft,
+                    child: Html(
+                        shrinkToFit: true, data: "${data?.description}")),
                 Container(
                   margin: new EdgeInsets.only(left: 14.0),
                   child: new Text("\"${data?.favour?.title ?? ""}\" ",

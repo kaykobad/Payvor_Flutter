@@ -51,6 +51,7 @@ class Data {
   num perc;
   String title;
   String price;
+  String category_id;
   String description;
   String lat;
   String long;
@@ -78,17 +79,18 @@ class Data {
       this.lat,
       this.long,
       this.location,
+      this.category_id,
       this.image,
       this.createdAt,
       this.updatedAt,
       this.user,
       this.rating,
       this.ratingCount,
-    this.ratingAvg,
-    this.service_fee,
-    this.receiving,
-    this.service_perc,
-    this.is_user_applied});
+      this.ratingAvg,
+      this.service_fee,
+      this.receiving,
+      this.service_perc,
+      this.is_user_applied});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -100,6 +102,7 @@ class Data {
     description = json['description'];
     lat = json['lat'];
     long = json['long'];
+    category_id = json['category_id'];
     location = json['location'];
     image = json['image'];
     createdAt = json['created_at'];
@@ -128,6 +131,7 @@ class Data {
     data['is_active'] = this.isActive;
     data['title'] = this.title;
     data['price'] = this.price;
+    data['category_id'] = this.category_id;
     data['perc'] = this.perc;
     data['description'] = this.description;
     data['lat'] = this.lat;

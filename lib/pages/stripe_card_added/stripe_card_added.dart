@@ -4,13 +4,8 @@ import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:payvor/filter/search_item.dart';
 import 'package:payvor/model/apierror.dart';
-import 'package:payvor/model/post_details/report_post_response.dart';
-import 'package:payvor/model/rating/give_rating_request.dart';
-import 'package:payvor/pages/report_problem.dart';
+import 'package:payvor/model/stripe/stripe_get_users.dart';
 import 'package:payvor/pages/stripe_card_added/add_stripe_card.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
@@ -18,7 +13,6 @@ import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
-import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class StripeCardAddedList extends StatefulWidget {
@@ -30,10 +24,8 @@ class _HomeState extends State<StripeCardAddedList>
     with AutomaticKeepAliveClientMixin<StripeCardAddedList> {
   var screenSize;
 
-  TextEditingController _DescriptionController = new TextEditingController();
-  FocusNode _DesField = new FocusNode();
-
-  List<DataModelReport> listRecent = List();
+  List<Data> listRecent = List();
+  GetStripeUsers response;
 
   Widget widgets;
 
@@ -41,11 +33,8 @@ class _HomeState extends State<StripeCardAddedList>
       new StreamController<bool>();
 
   AuthProvider provider;
-  IconData _selectedIcon;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  double _rating;
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(
@@ -55,13 +44,13 @@ class _HomeState extends State<StripeCardAddedList>
   @override
   void initState() {
     super.initState();
+
+    Future.delayed(const Duration(milliseconds: 300), () {
+      hitStripeApi();
+    });
   }
 
-  hitRatingApi() async {
-    if (_rating < 1.0) {
-      showInSnackBar("Please give a rating");
-      return;
-    }
+  hitStripeApi() async {
     provider.setLoading();
 
     bool gotInternetConnection = await hasInternetConnection(
@@ -78,17 +67,14 @@ class _HomeState extends State<StripeCardAddedList>
       return;
     }
 
-    var request = new GiveRatingRequest(
-        favour_id: "",
-        rating: _rating.toString(),
-        description: _DescriptionController.text.toString());
+    var response = await provider.getAddedCards(context);
 
-    var response = await provider.giveUserRating(request, context);
-
-    if (response is ReportResponse) {
+    if (response is GetStripeUsers) {
       provider.hideLoader();
 
-      if (response != null && response?.status?.code == 200) {}
+      if (response != null && response?.status?.code == 200) {
+        listRecent?.addAll(response?.data);
+      }
 
       setState(() {});
 
@@ -96,8 +82,7 @@ class _HomeState extends State<StripeCardAddedList>
     } else {
       provider.hideLoader();
       APIError apiError = response;
-      print(apiError.error);
-      showInSnackBar("Rating already given");
+      showInSnackBar(apiError.error);
     }
   }
 
@@ -195,7 +180,10 @@ class _HomeState extends State<StripeCardAddedList>
                                   width: 84.0,
                                   child: ClipOval(
                                     child: getCachedNetworkImageWithurl(
-                                      url: "" ?? "",
+                                      url: response != null &&
+                                              response?.user != null
+                                          ? response?.user?.profilePic
+                                          : "",
                                       size: 84,
                                       fit: BoxFit.cover,
                                     ),
@@ -207,7 +195,9 @@ class _HomeState extends State<StripeCardAddedList>
                                 margin: new EdgeInsets.only(
                                     top: 16, left: 10, right: 10),
                                 child: new Text(
-                                  "Avinash Tiwary" ?? "",
+                                  response != null && response?.user != null
+                                      ? response?.user?.name
+                                      : "",
                                   style: new TextStyle(
                                       fontFamily: AssetStrings.circulerMedium,
                                       fontSize: 20,
@@ -227,13 +217,13 @@ class _HomeState extends State<StripeCardAddedList>
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     new Image.asset(
-                                      AssetStrings.searches,
-                                      width: 18.0,
-                                      height: 18.0,
+                                      AssetStrings.moneyNew,
+                                      width: 23.0,
+                                      height: 23.0,
                                       color: AppColors.redLight,
                                     ),
                                     Container(
-                                      margin: new EdgeInsets.only(left: 10),
+                                      margin: new EdgeInsets.only(left: 8),
                                       constraints:
                                           new BoxConstraints(maxWidth: 100),
                                       child: new Text(
@@ -258,7 +248,7 @@ class _HomeState extends State<StripeCardAddedList>
                       margin: new EdgeInsets.only(top: 24, left: 16, right: 16),
                       child: getSetupButtonNewCustom(
                           callback, "Pay with Apple", 0,
-                          imagePath: AssetStrings.paypal,
+                          imagePath: AssetStrings.appleNew,
                           newColor: AppColors.kBlack,
                           textColor: AppColors.kWhite),
                     ),
@@ -302,10 +292,12 @@ class _HomeState extends State<StripeCardAddedList>
                         ],
                       ),
                     ),
-                    Container(
-                      alignment: Alignment.center,
-                      child: buildContestListSearch(),
-                    ),
+                    listRecent != null && listRecent?.length > 0
+                        ? Container(
+                            alignment: Alignment.center,
+                            child: buildContestListSearch(),
+                          )
+                        : Container(),
                     InkWell(
                       onTap: () {
                         Navigator.push(
@@ -388,14 +380,14 @@ class _HomeState extends State<StripeCardAddedList>
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
-          return buildItemRecentSearch(index);
+          return buildItemRecentSearch(listRecent[index]);
         },
-        itemCount: 3,
+        itemCount: listRecent?.length,
       ),
     );
   }
 
-  Widget buildItemRecentSearch(int index) {
+  Widget buildItemRecentSearch(Data data) {
     return InkWell(
       onTap: () {},
       child: Container(
@@ -474,7 +466,6 @@ class _HomeState extends State<StripeCardAddedList>
   void callbackDone() async {}
 
   void callback() async {
-    hitRatingApi();
   }
 
   void callbackReport() async {}

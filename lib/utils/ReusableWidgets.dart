@@ -98,20 +98,20 @@ Widget getSetupButtonNewBorder(
     VoidCallback callback, String text, double margin,
     {Color newColor}) {
   return Container(
-    height: 58.0,
+    height: 54.0,
     margin: new EdgeInsets.only(left: margin, right: margin),
     decoration: new BoxDecoration(
-      borderRadius: new BorderRadius.circular(8.0),
+      borderRadius: new BorderRadius.circular(6.0),
     ),
     child: Material(
-      borderRadius: new BorderRadius.circular(8.0),
+      borderRadius: new BorderRadius.circular(6.0),
       child: Ink(
         decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(8.0),
+            borderRadius: new BorderRadius.circular(6.0),
             color: Colors.transparent,
             border: new Border.all(color: AppColors.colorDarkCyan, width: 1.5)),
         child: InkWell(
-          borderRadius: new BorderRadius.circular(8.0),
+          borderRadius: new BorderRadius.circular(6.0),
           splashColor:
               (newColor == null) ? Colors.transparent : Colors.transparent,
           onTap: () {
@@ -122,7 +122,7 @@ Widget getSetupButtonNewBorder(
             child: new Text(
               text,
               style: new TextStyle(
-                fontFamily: AssetStrings.circulerMedium,
+                fontFamily: AssetStrings.circulerNormal,
                 fontSize: 16,
                 color: AppColors.colorDarkCyan,
               ),
@@ -142,6 +142,7 @@ Widget getLocationNew(
     TextEditingController controllers,
     {String iconData,
     bool colorAlert,
+    Function onTap,
     double iconPadding = 0}) {
   return Container(
     alignment: Alignment.center,
@@ -175,7 +176,7 @@ Widget getLocationNew(
             if (id.length > 0) {
               var response = await dio
                   .get(
-                      "https://maps.googleapis.com/maps/api/geocode/json?place_id=$id&key=AIzaSyCRoMT83W3AeP4JZbKStOTiazbH8OH_Cbo")
+                      "https://maps.googleapis.com/maps/api/geocode/json?place_id=$id&key=AIzaSyDYkqk9oyoiRqLpupcXOuwvokvonNgdA1M")
                   .timeout(timeoutDuration);
 
               LatLongResponse locationList =
@@ -190,6 +191,11 @@ Widget getLocationNew(
                 controllers.text = data?.geometry?.location?.lat?.toString() +
                     "," +
                     data?.geometry?.location?.lng?.toString();
+
+                if (onTap != null) {
+                  onTap();
+                  closeKeyboard();
+                }
               }
             }
 
@@ -224,21 +230,21 @@ Widget getLocationNew(
 Widget getSetupButtonNew(VoidCallback callback, String text, double margin,
     {Color newColor, String imagePath}) {
   return Container(
-    height: 58.0,
+    height: 54.0,
     margin: new EdgeInsets.only(left: margin, right: margin),
     decoration: new BoxDecoration(
-      borderRadius: new BorderRadius.circular(8.0),
+      borderRadius: new BorderRadius.circular(6.0),
     ),
     child: Material(
-      borderRadius: new BorderRadius.circular(8.0),
+      borderRadius: new BorderRadius.circular(6.0),
       child: Ink(
         decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(8.0),
+            borderRadius: new BorderRadius.circular(6.0),
             color: (newColor == null)
                 ? AppColors.kPrimaryBlue
                 : AppColors.colorDarkCyan),
         child: InkWell(
-          borderRadius: new BorderRadius.circular(8.0),
+          borderRadius: new BorderRadius.circular(6.0),
           splashColor: (newColor == null)
               ? AppColors.kPrimaryBlue
               : AppColors.colorDarkCyan,
@@ -254,7 +260,7 @@ Widget getSetupButtonNew(VoidCallback callback, String text, double margin,
               new Text(
                 text,
                 style: new TextStyle(
-                  fontFamily: AssetStrings.circulerMedium,
+                  fontFamily: AssetStrings.circulerNormal,
                   fontSize: 16,
                   color: Colors.white,
                 ),
@@ -274,16 +280,16 @@ Widget getSetupButtonNewCustom(
     height: 54.0,
     margin: new EdgeInsets.only(left: margin, right: margin),
     decoration: new BoxDecoration(
-      borderRadius: new BorderRadius.circular(8.0),
+      borderRadius: new BorderRadius.circular(6.0),
     ),
     child: Material(
-      borderRadius: new BorderRadius.circular(8.0),
+      borderRadius: new BorderRadius.circular(6.0),
       child: Ink(
         decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(8.0),
+            borderRadius: new BorderRadius.circular(6.0),
             color: (newColor != null) ? newColor : AppColors.colorDarkCyan),
         child: InkWell(
-          borderRadius: new BorderRadius.circular(8.0),
+          borderRadius: new BorderRadius.circular(6.0),
           splashColor: (newColor != null) ? newColor : AppColors.colorDarkCyan,
           onTap: () {
             callback();
@@ -295,19 +301,19 @@ Widget getSetupButtonNewCustom(
               (imagePath != null)
                   ? Image.asset(
                       imagePath,
-                      width: 18,
-                      height: 18,
+                      width: 20,
+                      height: 20,
                     )
                   : Container(),
               (imagePath != null)
                   ? SizedBox(
-                      width: 5,
+                width: 10,
                     )
                   : Container(),
               new Text(
                 text,
                 style: new TextStyle(
-                  fontFamily: AssetStrings.circulerMedium,
+                  fontFamily: AssetStrings.circulerNormal,
                   fontSize: 16,
                   color: textColor,
                 ),
@@ -323,19 +329,19 @@ Widget getSetupButtonNewCustom(
 Widget getSetupButtonColor(VoidCallback callback, String text, double margin,
     {Color newColor}) {
   return Container(
-    height: 58.0,
+    height: 54.0,
     margin: new EdgeInsets.only(left: margin, right: margin),
     decoration: new BoxDecoration(
-      borderRadius: new BorderRadius.circular(8.0),
+      borderRadius: new BorderRadius.circular(6.0),
     ),
     child: Material(
-      borderRadius: new BorderRadius.circular(8.0),
+      borderRadius: new BorderRadius.circular(6.0),
       child: Ink(
         decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(8.0),
+            borderRadius: new BorderRadius.circular(6.0),
             color: (newColor == null) ? AppColors.kPrimaryBlue : newColor),
         child: InkWell(
-          borderRadius: new BorderRadius.circular(8.0),
+          borderRadius: new BorderRadius.circular(6.0),
           splashColor: (newColor == null) ? AppColors.kPrimaryBlue : newColor,
           onTap: () {
             callback();
@@ -345,7 +351,7 @@ Widget getSetupButtonColor(VoidCallback callback, String text, double margin,
             child: new Text(
               text,
               style: new TextStyle(
-                fontFamily: AssetStrings.circulerMedium,
+                fontFamily: AssetStrings.circulerNormal,
                 fontSize: 16,
                 color: Colors.white,
               ),
@@ -416,21 +422,21 @@ Widget getSetupButtonBorderNew(VoidCallback callback, String text,
     double margin,
     {Color newColor, Color textColor, Color border}) {
   return Container(
-    height: 58.0,
+    height: 54.0,
     margin: new EdgeInsets.only(left: margin, right: margin),
     decoration: new BoxDecoration(
-      borderRadius: new BorderRadius.circular(8.0),
+      borderRadius: new BorderRadius.circular(6.0),
     ),
     child: Material(
-      borderRadius: new BorderRadius.circular(8.0),
+      borderRadius: new BorderRadius.circular(6.0),
       child: Ink(
         decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(8.0),
+            borderRadius: new BorderRadius.circular(6.0),
             border:
                 new Border.all(color: border != null ? border : Colors.black),
             color: (newColor == null) ? AppColors.kPrimaryBlue : newColor),
         child: InkWell(
-          borderRadius: new BorderRadius.circular(8.0),
+          borderRadius: new BorderRadius.circular(6.0),
           splashColor: (newColor == null) ? AppColors.kPrimaryBlue : newColor,
           onTap: () {
             callback();
@@ -440,7 +446,7 @@ Widget getSetupButtonBorderNew(VoidCallback callback, String text,
             child: new Text(
               text,
               style: new TextStyle(
-                fontFamily: AssetStrings.circulerMedium,
+                fontFamily: AssetStrings.circulerNormal,
                 fontSize: 16,
                 color: textColor != null ? textColor : Colors.white,
               ),
@@ -482,20 +488,20 @@ Widget getSetupDecoratorButtonNew(
     VoidCallback callback, String text, double margin,
     {Color newColor, Color textColor}) {
   return Container(
-    height: 58.0,
+    height: 54.0,
     margin: new EdgeInsets.only(left: margin, right: margin),
     decoration: new BoxDecoration(
-      borderRadius: new BorderRadius.circular(8.0),
+      borderRadius: new BorderRadius.circular(6.0),
     ),
     child: Material(
-      borderRadius: new BorderRadius.circular(8.0),
+      borderRadius: new BorderRadius.circular(6.0),
       child: Ink(
         decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(8.0),
+            borderRadius: new BorderRadius.circular(6.0),
             border: new Border.all(width: 1, color: AppColors.kPrimaryBlue),
             color: Colors.white),
         child: InkWell(
-          borderRadius: new BorderRadius.circular(8.0),
+          borderRadius: new BorderRadius.circular(6.0),
           onTap: () {
             callback();
           },
@@ -504,7 +510,7 @@ Widget getSetupDecoratorButtonNew(
             child: new Text(
               text,
               style: new TextStyle(
-                fontFamily: AssetStrings.circulerMedium,
+                fontFamily: AssetStrings.circulerNormal,
                 fontSize: 16,
                 color: textColor != null ? textColor : AppColors.kPrimaryBlue,
               ),

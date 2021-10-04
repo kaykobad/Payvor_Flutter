@@ -8,17 +8,20 @@ import 'package:payvor/filter/filter_request.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/get_favor_list/favor_list_response.dart';
+import 'package:payvor/pages/location/search_location.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/pages/suggestion_search/suggestion_search.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
+import 'package:payvor/provider/location_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/shimmers/home_shimmer_loader.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
@@ -47,6 +50,7 @@ class HomeState extends State<SearchCompany>
   ScrollController _scrollController = new ScrollController();
   bool _loadMore = false;
   AuthProvider provider;
+  LocationProvider locationProvider;
   FirebaseProvider providerFirebase;
   bool isPullToRefresh = false;
 
@@ -56,6 +60,7 @@ class HomeState extends State<SearchCompany>
 
   FilterRequest filterRequest;
   bool showData = false;
+  String location = "";
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -70,6 +75,24 @@ class HomeState extends State<SearchCompany>
   @override
   void initState() {
     print("search");
+
+    var latlong = MemoryManagement.getGeo();
+    var locationMain = MemoryManagement.getLocationName() ?? "";
+    location = locationMain;
+
+    if (latlong != null && latlong?.isNotEmpty) {
+      locationStreamGet();
+      filterRequest = FilterRequest();
+      filterRequest?.latlongData = latlong;
+
+      // getDataByLatLong(lat,long);
+    } else {
+      locationStreamGet();
+      Future.delayed(new Duration(microseconds: 5000), () {
+        currentPosition(0, context, locationProvider);
+      });
+    }
+
     Future.delayed(const Duration(milliseconds: 300), () {
       hitApi(filterRequest);
     });
@@ -170,10 +193,17 @@ class HomeState extends State<SearchCompany>
                         width: 6,
                       ),
                       Expanded(
-                          child: new Text(
-                        data?.location ?? "",
-                        style: TextThemes.greyDarkTextHomeLocation,
-                      )),
+                        child: Container(
+                          child: Container(
+                            child: new Text(
+                              data?.location + " - " + "235 m way" ?? "",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextThemes.greyDarkTextHomeLocation,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 )
@@ -272,12 +302,36 @@ class HomeState extends State<SearchCompany>
     });
   }
 
+  void locationStreamGet() async {
+    print("stream neww");
+    await Future.delayed(Duration(milliseconds: 300));
+    locationProvider.initListener();
+    locationProvider.locationProvider.stream.listen((value) {
+      if (value != null) {
+        var latlong = value.split(",");
+
+        print("stream called $value");
+
+        location = MemoryManagement.getLocationName();
+
+        filterRequest?.latlongData = value;
+
+        Future.delayed(const Duration(milliseconds: 300), () {
+          hitApi(filterRequest);
+        });
+
+        setState(() {});
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<AuthProvider>(context);
     providerFirebase = Provider.of<FirebaseProvider>(context);
     providerFirebase?.setHomeContextKey(myKey);
     screenSize = MediaQuery.of(context).size;
+    locationProvider = Provider.of<LocationProvider>(context);
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: AppColors.bluePrimary,
@@ -289,14 +343,71 @@ class HomeState extends State<SearchCompany>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 new SizedBox(
-                  height: 40.0,
+                  height: 50.0,
                 ),
-                Container(
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      new CupertinoPageRoute(builder: (BuildContext context) {
+                        return new SearchLocation(
+                          provider: locationProvider,
+                        );
+                      }),
+                    );
+                  },
+                  child: Container(
                     padding: new EdgeInsets.only(left: 16.0, right: 16.0),
-                    child: new Text(
-                      "Find your favors",
-                      style: TextThemes.whiteMedium,
-                    )),
+                    child: Row(
+                      children: [
+                        new Icon(
+                          Icons.location_on_outlined,
+                          color: Colors.white,
+                        ),
+                        Container(
+                          margin: new EdgeInsets.only(left: 8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                  child: new Text(
+                                "Location",
+                                style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontFamily: AssetStrings.circulerNormal),
+                              )),
+                              Row(
+                                children: [
+                                  Container(
+                                      margin: new EdgeInsets.only(top: 3),
+                                      constraints:
+                                          new BoxConstraints(maxWidth: 280),
+                                      child: new Text(
+                                        location.isNotEmpty
+                                            ? location
+                                            : "Select Location",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: new TextStyle(
+                                            color:
+                                                Colors.white.withOpacity(0.8),
+                                            fontSize: 14,
+                                            fontFamily:
+                                                AssetStrings.circulerNormal),
+                                      )),
+                                  Container(
+                                      child: new Icon(Icons.arrow_drop_down,
+                                          color: AppColors.redLight)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 Stack(
                   children: [
                     getTextField(),

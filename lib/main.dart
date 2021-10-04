@@ -1,20 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:payvor/pages/guest_view/guest_view.dart';
-import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/pages/splash/splash_screen_new.dart';
-import 'package:payvor/pages/stripe_card_added/add_stripe_card.dart';
-import 'package:payvor/pages/stripe_card_added/stripe_card_added.dart';
-import 'package:payvor/pages/verify_profile_new/verify_profiles_new.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/provider/language_provider.dart';
+import 'package:payvor/provider/location_provider.dart';
 import 'package:payvor/provider/theme_provider.dart';
 import 'package:payvor/viewmodel/auth_view_model.dart';
 import 'package:payvor/viewmodel/home_view_model.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'enums/flavor.dart';
 
 void main() {
@@ -47,6 +42,9 @@ void main() {
         ),
         ChangeNotifierProvider<FirebaseProvider>(
           create: (context) => FirebaseProvider(),
+        ),
+        ChangeNotifierProvider<LocationProvider>(
+          create: (context) => LocationProvider(),
         ),
       ],
       child: MaterialApp(

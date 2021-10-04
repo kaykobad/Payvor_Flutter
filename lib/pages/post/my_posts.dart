@@ -12,6 +12,7 @@ import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/original_post/original_post_data.dart';
 import 'package:payvor/pages/pay_feedback/pay_feedback_common.dart';
 import 'package:payvor/pages/pay_feedback/pay_give_feedback.dart';
+import 'package:payvor/pages/post/recent_posted_favor.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -232,6 +233,10 @@ class _HomeState extends State<MyPosts>
             child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                /* new Container(
+                  child: ,
+                )*/
+                buildItemNew(),
                 _buildContestList(),
               ],
             ),
@@ -395,6 +400,72 @@ class _HomeState extends State<MyPosts>
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildItemNew() {
+    return InkWell(
+      onTap: () {
+        /*  widget.lauchCallBack(Material(
+            child: Material(
+                child: new OriginalPostData(
+                  id: data.id.toString(),
+                  lauchCallBack: widget.lauchCallBack,
+                  voidcallback: callback,
+                ))));*/
+      },
+      child: InkWell(
+        onTap: () {
+          widget.lauchCallBack(Material(
+              child: Material(
+                  child: new RecentPostedFavor(
+            lauchCallBack: widget?.lauchCallBack,
+          ))));
+        },
+        child: Container(
+          padding:
+              new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
+          margin: new EdgeInsets.only(top: 18.0, left: 18, right: 18),
+          decoration: new BoxDecoration(
+            borderRadius: new BorderRadius.circular(5.0),
+            color: Colors.white,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new Container(
+                      child: new Text(
+                        "Recent Posted Favors (6)",
+                        style: TextThemes.blackCirculerMedium,
+                      ),
+                    ),
+                    Container(
+                      margin: new EdgeInsets.only(top: 7.0),
+                      child: Container(
+                        child: new Text(
+                          "The favors you haven’t hired people yet",
+                          style: TextThemes.grayNormalSmall,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: new EdgeInsets.only(left: 7.0),
+                child: new Icon(
+                  Icons.arrow_forward_ios,
+                  size: 13,
+                  color: Color.fromRGBO(183, 183, 183, 1),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -574,6 +645,180 @@ class _HomeState extends State<MyPosts>
                     ),
                   )
                 ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildItemMainNew(DataNextPost data) {
+    return InkWell(
+      onTap: () {
+        if (data?.status != 3) {
+          if (data?.status == 1) {
+            widget.lauchCallBack(Material(
+                child: Material(
+                    child: new PayFeebackDetails(
+              lauchCallBack: widget?.lauchCallBack,
+              userId: data?.hiredUserId?.toString(),
+              postId: data?.id?.toString(),
+              type: 0,
+              voidcallback: callback,
+            ))));
+          } else {
+            widget.lauchCallBack(Material(
+                child: Material(
+                    child: new PayFeebackDetailsCommon(
+              lauchCallBack: widget?.lauchCallBack,
+              userId: data?.hiredUserId?.toString(),
+              postId: data?.id?.toString(),
+              status: 0,
+              type: 0,
+              voidcallback: callback,
+            ))));
+/*
+            widget.lauchCallBack(Material(
+                child: Material(
+                    child: new PayFeebackDetails(
+              lauchCallBack: widget?.lauchCallBack,
+              userId: data?.hiredUserId?.toString(),
+              postId: data?.id?.toString(),
+              type: 0,
+              voidcallback: callback,
+            ))));*/
+          }
+        } else {
+          widget.lauchCallBack(Material(
+              child: Material(
+                  child: new PayFeebackDetailsCommon(
+            lauchCallBack: widget?.lauchCallBack,
+            userId: data?.hiredUserId?.toString(),
+            postId: data?.id?.toString(),
+            status: 1,
+            type: 0,
+            voidcallback: callback,
+          ))));
+
+          /* widget.lauchCallBack(Material(
+              child: Material(
+                  child: new ChatMessageDetails(
+                    id: data.userId.toString(),
+                    name: data.title,
+                    hireduserId: data?.hiredUserId?.toString(),
+                    image: data?.image,
+                    userButtonMsg: true,
+                  ))));*/
+        }
+      },
+      child: Container(
+        padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 11),
+        margin: new EdgeInsets.only(top: 8.0, left: 18, right: 18),
+        decoration: new BoxDecoration(
+          borderRadius: new BorderRadius.circular(5.0),
+          color: Colors.white,
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                new Container(
+                    width: 49.0,
+                    height: 49.0,
+                    decoration: new BoxDecoration(
+                      color: Colors.grey,
+                      border: new Border.all(color: Colors.white, width: 0.3),
+                      shape: BoxShape.circle,
+                    ),
+                    child: ClipOval(
+                      child: getCachedNetworkImageWithurl(
+                          url: data?.image ?? "", size: 49),
+                    )),
+                Expanded(
+                  child: Container(
+                    margin: new EdgeInsets.only(left: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        new Container(
+                          child: new Text(
+                            data?.title ?? "",
+                            style: TextThemes.blackCirculerMedium,
+                          ),
+                        ),
+                        Container(
+                          margin: new EdgeInsets.only(top: 10.0),
+                          child: new Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                child: new Text(
+                                  data?.status == 3
+                                      ? "You’ve ended job of "
+                                      : "You have hired ",
+                                  style: TextThemes.grayNormalSmall,
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  margin: new EdgeInsets.only(left: 1.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      widget.lauchCallBack(Material(
+                                          child: Material(
+                                              child: new ChatMessageDetails(
+                                        id: data.userId.toString(),
+                                        name: data.hired.name,
+                                        hireduserId:
+                                            data?.hiredUserId?.toString(),
+                                        image: data?.image,
+                                        userButtonMsg: true,
+                                      ))));
+                                    },
+                                    child: new Text(
+                                      data?.hired?.name ?? "",
+                                      style: TextThemes.cyanTextSmallMedium,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              /*   Container(
+                                margin: new EdgeInsets.only(left: 7.0),
+                                child: new Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 13,
+                                  color: Color.fromRGBO(183, 183, 183, 1),
+                                ),
+                              )*/
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Opacity(
+              opacity: 0.12,
+              child: new Container(
+                margin: new EdgeInsets.only(top: 16.0),
+                height: 1.0,
+                color: AppColors.dividerColor,
+              ),
+            ),
+            Container(
+              margin: new EdgeInsets.only(top: 10),
+              child: InkWell(
+                onTap: () {},
+                child: new Text(
+                  "END FAVOR",
+                  style: new TextStyle(
+                      color: AppColors.redLight,
+                      fontSize: 14,
+                      fontFamily: AssetStrings.circulerNormal),
+                ),
               ),
             ),
           ],
