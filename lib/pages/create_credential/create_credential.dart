@@ -46,6 +46,8 @@ class _LoginScreenState extends State<CreateCredential> {
 
   AuthProvider provider;
 
+  bool isVerified = false;
+
   var _termAndConditionCheck = false;
 
   List<TextInputFormatter> listPassword = new List<TextInputFormatter>();
@@ -211,6 +213,16 @@ class _LoginScreenState extends State<CreateCredential> {
         style: TextThemes.blackTextFieldNormal,
         obscureText: obsecure,
         keyboardType: textInputType,
+        onChanged: (value) {
+          if (_PasswordController?.text?.trim().length > 6 &&
+              _ConfirmPasswordController?.text?.trim().length > 6) {
+            isVerified = true;
+          } else {
+            isVerified = false;
+          }
+
+          setState(() {});
+        },
         onSubmitted: (String value) {
           if (focusNodeCurrent == _ConfirmPasswordField) {
             _ConfirmPasswordField.unfocus();
@@ -401,7 +413,10 @@ class _LoginScreenState extends State<CreateCredential> {
                     Container(
                         margin: new EdgeInsets.only(top: 30),
                         child: getSetupButtonNew(
-                            callback, "Set up New Password", 20)),
+                            callback, "Set up New Password", 20,
+                            newColor: isVerified
+                                ? AppColors.kPrimaryBlue
+                                : AppColors.grayDark)),
                     new SizedBox(
                       height: 35.0,
                     ),
@@ -488,21 +503,23 @@ class _LoginScreenState extends State<CreateCredential> {
   }
 
   void callback() {
-    var password = _PasswordController.text;
-    var confirmPassword = _ConfirmPasswordController.text;
-    if (password.isEmpty || password.trim().length == 0) {
-      showInSnackBar(ResString().get('enter_password'));
-      return;
-    } else if (confirmPassword.isEmpty || confirmPassword.length == 0) {
-      showInSnackBar(ResString().get('confirm_password'));
-      return;
-    } else if (password.compareTo(confirmPassword) != 0) {
-      showInSnackBar(ResString().get('password_not_match'));
-      return;
-    } else if (password.length < 6 || password.length > 20) {
-      showInSnackBar(ResString().get('password_should_6_20_char'));
-      return;
+    if (isVerified) {
+      var password = _PasswordController.text;
+      var confirmPassword = _ConfirmPasswordController.text;
+      if (password.isEmpty || password.trim().length == 0) {
+        showInSnackBar(ResString().get('enter_password'));
+        return;
+      } else if (confirmPassword.isEmpty || confirmPassword.length == 0) {
+        showInSnackBar(ResString().get('confirm_password'));
+        return;
+      } else if (password.compareTo(confirmPassword) != 0) {
+        showInSnackBar(ResString().get('password_not_match'));
+        return;
+      } else if (password.length < 6 || password.length > 20) {
+        showInSnackBar(ResString().get('password_should_6_20_char'));
+        return;
+      }
+      hitApi();
     }
-    hitApi();
   }
 }

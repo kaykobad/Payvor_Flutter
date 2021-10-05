@@ -71,7 +71,8 @@ class _HomeState extends State<ReportProblems>
       padding: new EdgeInsets.only(left: 15, right: 15, bottom: 10),
       height: 150,
       decoration: new BoxDecoration(
-          borderRadius: new BorderRadius.circular(8),
+          borderRadius: new BorderRadius.circular(5),
+          color: Colors.white,
           border: new Border.all(color: AppColors.colorGray)),
       child: new TextFormField(
         controller: controller,
@@ -108,7 +109,7 @@ class _HomeState extends State<ReportProblems>
 
   Widget getAppBarNew(BuildContext context) {
     return PreferredSize(
-        preferredSize: Size.fromHeight(53.0),
+        preferredSize: Size.fromHeight(51.0),
         child: Container(
           color: Colors.white,
           child: Column(
@@ -119,7 +120,7 @@ class _HomeState extends State<ReportProblems>
               Material(
                 color: Colors.white,
                 child: Container(
-                  margin: new EdgeInsets.only(top: 10),
+                  margin: new EdgeInsets.only(top: 15),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -143,14 +144,38 @@ class _HomeState extends State<ReportProblems>
                       Expanded(
                         child: Container(
                           alignment: Alignment.center,
-                          margin: new EdgeInsets.only(right: 25.0, top: 10),
+                          margin: new EdgeInsets.only(left: 30.0, top: 10),
                           width: getScreenSize(context: context).width,
                           child: new Text(
-                            "Report a Problem",
+                            "Feedback",
                             style: new TextStyle(
                                 fontFamily: AssetStrings.circulerMedium,
-                                fontSize: 19,
+                                fontSize: 17,
                                 color: Colors.black),
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          /* Navigator.push(
+                            context,
+                            new CupertinoPageRoute(builder: (BuildContext context) {
+                              return Material(
+                                  child: new ReportProblems(
+                                    id: widget?.id?.toString(),
+                                  ));
+                            }),
+                          );*/
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          margin: new EdgeInsets.only(right: 20.0, top: 8),
+                          child: new Text(
+                            "Report",
+                            style: new TextStyle(
+                                fontFamily: AssetStrings.circulerNormal,
+                                fontSize: 17,
+                                color: AppColors.redLight),
                           ),
                         ),
                       )
@@ -171,6 +196,95 @@ class _HomeState extends State<ReportProblems>
         ));
   }
 
+  void showBottomSheetHire() {
+    showModalBottomSheet<void>(
+        isScrollControlled: true,
+        context: context,
+        isDismissible: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
+        ),
+        builder: (BuildContext bc) {
+          return Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Container(
+                  child: new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    margin: new EdgeInsets.only(top: 50),
+                    child: Image.asset(
+                      AssetStrings.cardCal,
+                      height: 80,
+                      width: 80,
+                    ),
+                  ),
+                  new Container(
+                    margin: new EdgeInsets.only(top: 33),
+                    child: new Text(
+                      "Are you sure to Hire?",
+                      style: new TextStyle(
+                          fontFamily: AssetStrings.circulerMedium,
+                          fontSize: 20,
+                          color: Colors.black),
+                    ),
+                  ),
+                  Container(
+                    margin: new EdgeInsets.only(top: 7, left: 35, right: 35),
+                    child: new RichText(
+                      textAlign: TextAlign.center,
+                      text: new TextSpan(
+                        text:
+                            "Once you have allocated the favor you are agreeing to pay the person on completion of the task respecting our",
+                        style: new TextStyle(
+                          fontFamily: AssetStrings.circulerNormal,
+                          fontSize: 16,
+                          height: 1.5,
+                          color: Color.fromRGBO(114, 117, 112, 1),
+                        ),
+                        children: <TextSpan>[
+                          new TextSpan(
+                              text: " Terms of Use.",
+                              style: new TextStyle(
+                                  fontFamily: AssetStrings.circulerNormal,
+                                  color: Color.fromRGBO(9, 165, 255, 1))),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: new EdgeInsets.only(top: 60, left: 16, right: 16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            child: getSetupButtonBorderNew(callback, "Later", 0,
+                                border: Color.fromRGBO(103, 99, 99, 0.25),
+                                newColor: Colors.transparent,
+                                textColor: Colors.black),
+                          ),
+                        ),
+                        new SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Container(
+                            child: getSetupButtonNew(callback, "Hire Now", 0,
+                                newColor: AppColors.colorDarkCyan),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 56,
+                  )
+                ],
+              )));
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
@@ -178,53 +292,137 @@ class _HomeState extends State<ReportProblems>
     return Scaffold(
       key: _scaffoldKey,
       appBar: getAppBarNew(context),
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.whiteGray,
       body: Stack(
         children: <Widget>[
-          listRecent?.length > 0 ? SingleChildScrollView(
-            child: new Container(
-              color: Colors.white,
-              height: getScreenSize(context: context).height,
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _buildContestListSearch(),
-                  Column(
-                    children: [
-                      Container(
-                        margin: new EdgeInsets.only(
-                            left: 16.0, right: 16.0, top: 60),
-                        alignment: Alignment.centerLeft,
-                        child: new Text(
-                          "Write your Problem",
-                          style: new TextStyle(
-                              color: Colors.black,
-                              fontFamily: AssetStrings.circulerMedium,
-                              fontSize: 18.0),
+          listRecent?.length == 0
+              ? SingleChildScrollView(
+                  child: new Container(
+                    color: AppColors.whiteGray,
+                    height: getScreenSize(context: context).height,
+                    child: new Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          margin:
+                              new EdgeInsets.only(left: 20, right: 20, top: 20),
+                          child: Stack(
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                margin: new EdgeInsets.only(top: 30),
+                                height: 170,
+                                decoration: new BoxDecoration(
+                                    border: new Border.all(
+                                        color: AppColors.grayy, width: 1),
+                                    borderRadius:
+                                        new BorderRadius.circular(5.0),
+                                    color: Colors.white),
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    child: new Container(
+                                      height: 84.0,
+                                      width: 84.0,
+                                      child: ClipOval(
+                                        child: getCachedNetworkImageWithurl(
+                                          url: "",
+                                          size: 84,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  new Container(
+                                    alignment: Alignment.center,
+                                    margin: new EdgeInsets.only(
+                                        top: 16, left: 10, right: 10),
+                                    child: new Text(
+                                      "Avinash Tiwary",
+                                      style: new TextStyle(
+                                          fontFamily:
+                                              AssetStrings.circulerMedium,
+                                          fontSize: 20,
+                                          color: Colors.black),
+                                    ),
+                                  ),
+                                  new Container(
+                                    alignment: Alignment.center,
+                                    width: 175,
+                                    margin: new EdgeInsets.only(top: 16),
+                                    padding: new EdgeInsets.symmetric(
+                                        vertical: 5, horizontal: 16),
+                                    decoration: new BoxDecoration(
+                                      color:
+                                          AppColors.greenViews.withOpacity(0.1),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        new Icon(Icons.check_circle,
+                                            color: AppColors.greenViews),
+                                        Container(
+                                          margin: new EdgeInsets.only(left: 8),
+                                          constraints:
+                                              new BoxConstraints(maxWidth: 100),
+                                          child: new Text(
+                                            "€ 50" ?? "",
+                                            maxLines: 2,
+                                            style: new TextStyle(
+                                                fontFamily:
+                                                    AssetStrings.circulerMedium,
+                                                fontSize: 20,
+                                                color: AppColors.greenViews),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
+                        _buildContestListSearch(),
+                        Column(
+                          children: [
+                            Container(
+                              margin: new EdgeInsets.only(
+                                  left: 16.0, right: 16.0, top: 60),
+                              alignment: Alignment.centerLeft,
+                              child: new Text(
+                                "Write your Problem",
+                                style: new TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: AssetStrings.circulerMedium,
+                                    fontSize: 16.0),
+                              ),
                       ),
                       new SizedBox(
                         height: 15.0,
                       ),
                       getTextField(
-                          "Write us about your problem here..",
-                          _DescriptionController,
-                          _DesField,
-                          _DesField,
-                          TextInputType.text,
-                          AssetStrings.emailPng),
-                      new SizedBox(
-                        height: 90.0,
-                      ),
-                      Container(
-                          color: Colors.white,
-                          padding: new EdgeInsets.only(top: 9, bottom: 28),
-                          child: getSetupButtonNew(callback, "End Favor", 16,
-                              newColor: AppColors.colorDarkCyan)),
-                      new SizedBox(
-                        height: 40.0,
-                      ),
-                    ],
+                          "Write Something here..",
+                                _DescriptionController,
+                                _DesField,
+                                _DesField,
+                                TextInputType.text,
+                                AssetStrings.emailPng),
+                            new SizedBox(
+                              height: 90.0,
+                            ),
+                            Container(
+                                padding:
+                                    new EdgeInsets.only(top: 9, bottom: 28),
+                                child: getSetupButtonColor(
+                                    callback, "End Favor with an issue", 16,
+                                    newColor: AppColors.redLight)),
+                            new SizedBox(
+                              height: 40.0,
+                            ),
+                          ],
                   ),
                 ],
               ),
@@ -244,7 +442,8 @@ class _HomeState extends State<ReportProblems>
   }
 
   void callback() async {
-    hitReportApi();
+    // hitReportApi();
+    showBottomSheetHire();
   }
 
   void callbackDone() async {

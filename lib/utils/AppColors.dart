@@ -42,6 +42,7 @@ class AppColors {
   static const Color lightGrey = const Color(0xFFB7B7B7);
   static const Color desabledGray = const Color(0xFFD9D9D9);
   static const Color grayy = const Color(0xFFD5D5D5);
+  static const Color grayDark = const Color(0xFFD2D2D2);
   static const Color lightGray = const Color(0xFF72757A);
   static const Color greyProfile = const Color(0xFFEDEDED);
   static const Color leftChat = const Color(0xFFf0f0f1);
@@ -49,6 +50,7 @@ class AppColors {
   static const Color blue = const Color(0xFF23137D);
   static const Color grayLight = const Color(0xFF72757A);
   static const Color grayView = const Color(0xFFF6F6F6);
+  static const Color greenViews = const Color(0xFF28D175);
 
   //255,107,102
 

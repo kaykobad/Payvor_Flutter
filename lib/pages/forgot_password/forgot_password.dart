@@ -32,6 +32,8 @@ class _LoginScreenState extends State<ForgotPassword> {
 
   AuthProvider provider;
 
+  bool isVerified = false;
+
   Widget space() {
     return new SizedBox(
       height: 30.0,
@@ -107,6 +109,19 @@ class _LoginScreenState extends State<ForgotPassword> {
         controller: controller,
         keyboardType: textInputType,
         style: TextThemes.blackTextFieldNormal,
+        onChanged: (value) {
+          if (value.trim().toString().length > 0) {
+            if (isEmailFormatValid(value.trim())) {
+              isVerified = true;
+            } else {
+              isVerified = false;
+            }
+          } else {
+            isVerified = false;
+          }
+
+          setState(() {});
+        },
         decoration: new InputDecoration(
           enabledBorder: new OutlineInputBorder(
               borderSide: new BorderSide(
@@ -116,7 +131,6 @@ class _LoginScreenState extends State<ForgotPassword> {
           focusedBorder: new OutlineInputBorder(
               borderSide: new BorderSide(
                 color: AppColors.colorCyanPrimary,
-
               ),
               borderRadius: new BorderRadius.circular(8)
 
@@ -196,8 +210,11 @@ class _LoginScreenState extends State<ForgotPassword> {
                         height: 30.0,
                       ),
                       Container(
-                          child: getSetupButtonNew(
-                              callback, "Send reset link", 20)),
+                          child: getSetupButtonColor(
+                              callback, "Send reset link", 20,
+                              newColor: isVerified
+                                  ? AppColors.kPrimaryBlue
+                                  : AppColors.grayDark)),
                       new SizedBox(
                         height: 20.0,
                       ),
@@ -219,16 +236,18 @@ class _LoginScreenState extends State<ForgotPassword> {
   }
 
   void callback() {
-    var email = _EmailController.text;
-    if (_EmailController.text.isEmpty ||
-        _EmailController.text.trim().length == 0) {
-      showInSnackBar(ResString().get('enter_email'));
-      return;
-    } else if (!isEmailFormatValid(email.trim())) {
-      showInSnackBar(ResString().get('enter_valid_email'));
-      return;
-    }
+    if (isVerified) {
+      /*var email = _EmailController.text;
+      if (_EmailController.text.isEmpty ||
+          _EmailController.text.trim().length == 0) {
+        showInSnackBar(ResString().get('enter_email'));
+        return;
+      } else if (!isEmailFormatValid(email.trim())) {
+        showInSnackBar(ResString().get('enter_valid_email'));
+        return;
+      }*/
 
-    hitApi();
+      hitApi();
+    }
   }
 }

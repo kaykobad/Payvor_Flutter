@@ -14,7 +14,6 @@ import 'package:payvor/pages/chat/payvor_firebase_user.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
-import 'package:payvor/pages/reset_password/reset_password.dart';
 import 'package:payvor/pages/social_login.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
@@ -584,7 +583,8 @@ class _LoginScreenState extends State<JoinCommunityNew> {
           name: name, password: password, email: email, type: types);
       response = await provider.signup(loginRequest, context);
       MemoryManagement.socialMediaStatus("0");
-    } else {
+    }
+    else {
       SignUpSocialRequest loginRequest = new SignUpSocialRequest(
           name: name,
           profile_pic: profilePic,
@@ -683,11 +683,19 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       }*/
 
       if (response.isnew == null || response.isnew) {
-        Navigator.push(
+        /* Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
             return new ResetPassword();
           }),
+        );*/
+        MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
+        Navigator.pushAndRemoveUntil(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return DashBoardScreen();
+          }),
+              (route) => false,
         );
       } else {
         MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
