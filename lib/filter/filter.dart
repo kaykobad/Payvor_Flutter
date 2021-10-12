@@ -57,9 +57,6 @@ class _HomeState extends State<Filter>
   var _paymentMax = 100;
   AuthProvider authProvider;
 
-  TextEditingController _LocationController = new TextEditingController();
-  TextEditingController _LatLongController = new TextEditingController();
-
   final StreamController<bool> _streamControllerShowLoader =
       StreamController<bool>();
 
@@ -72,21 +69,21 @@ class _HomeState extends State<Filter>
     _setScrollListener();
 
     var data = DataModel(
-        name: "Most Recent", isSelect: false, sendTitle: "newest_first", id: 1);
+        name: "Most Recent", isSelect: false, sendTitle: "most_recent", id: 1);
     var data1 = DataModel(
         name: "Nearest to me",
         isSelect: false,
-        sendTitle: "most_relevent",
+        sendTitle: "nearest_location",
         id: 2);
     var data2 = DataModel(
         name: "Cheapest",
         isSelect: false,
-        sendTitle: "nearest_location",
+        sendTitle: "price_low_to_high",
         id: 3);
     var data3 = DataModel(
         name: "Most Expensive",
         isSelect: false,
-        sendTitle: "price_low_to_high",
+        sendTitle: "price_high_to_low",
         id: 4);
     list.add(data);
     list.add(data1);
@@ -98,13 +95,18 @@ class _HomeState extends State<Filter>
         list.clear();
         list.addAll(widget.filterRequest.list);
       }
+
+      for (var data in list) {
+        if (data?.isSelect != null && data?.isSelect) {
+          text = data?.name;
+        }
+      }
+
       _paymentMin = widget.filterRequest.minprice ?? 0;
       _paymentMax = widget.filterRequest.maxprice ?? 100;
       _currentRangeValues =
           RangeValues(_paymentMin?.toDouble(), _paymentMax?.toDouble());
       _currentSliderValue = widget.filterRequest.distance?.toDouble() ?? 0.0;
-      _LocationController.text = widget.filterRequest.location ?? "";
-      _LatLongController.text = widget.filterRequest.latlongData ?? "";
     }
 
     Future.delayed(new Duration(microseconds: 2000), () {
@@ -127,6 +129,7 @@ class _HomeState extends State<Filter>
       var catData = CategoryResponse.fromJson(infoData);
       categoryList?.addAll(catData?.data);
       print("cat ${categoryList?.length}");
+      setSelectCategory();
       setState(() {});
     } else {
       setCategory();
@@ -148,9 +151,27 @@ class _HomeState extends State<Filter>
         MemoryManagement.setCategory(userInfo: jsonEncode(response));
         categoryList?.clear();
         categoryList?.addAll(response?.data);
+        setSelectCategory();
         print("cat ${categoryList?.length}");
         setState(() {});
       }
+    }
+  }
+
+  void setSelectCategory() {
+    if (widget.filterRequest != null) {
+      if (widget.filterRequest.listCategory != null &&
+          widget.filterRequest.listCategory.length > 0) {
+        for (var dataitem in widget.filterRequest.listCategory) {
+          for (var data in categoryList) {
+            if (dataitem == data?.id?.toString()) {
+              data?.isSelect = true;
+            }
+          }
+        }
+      }
+
+      setState(() {});
     }
   }
 
@@ -162,16 +183,6 @@ class _HomeState extends State<Filter>
               data.isSelect = false;
             }
             data.isSelect = !data.isSelect;
-
-            var id = data.id;
-
-            if ((id == 4 || id == 5) && data.isSelect) {
-              if (id == 4) {
-                list[4].isSelect = false;
-              } else {
-                list[3].isSelect = false;
-              }
-            }
 
             setState(() {});
           },
@@ -344,20 +355,26 @@ class _HomeState extends State<Filter>
   }
 
   void callback() {
-    if (_LocationController.text.length > 0 &&
-        _LatLongController.text.isEmpty) {
-      showInSnackBar("Please select a specific location");
-      return;
+    var dataList = List<String>();
+
+    print("calllll");
+
+    for (var data in categoryList) {
+      print("isSelect ${data?.isSelect}");
+
+      if (data?.isSelect != null && data?.isSelect) {
+        dataList?.add(data?.id?.toString());
+      }
     }
 
     var filter = FilterRequest(
-      location: _LocationController.text,
-      latlongData: _LatLongController.text,
-      minprice: _paymentMin,
-      maxprice: _paymentMax,
-      distance: _currentSliderValue?.toInt(),
-      list: list,
-    );
+        minprice: _paymentMin,
+        maxprice: _paymentMax,
+        distance: _currentSliderValue?.toInt(),
+        list: list,
+        listCategory: dataList);
+
+    print("calllllss");
 
     widget.voidcallback(filter);
 
@@ -418,15 +435,17 @@ class _HomeState extends State<Filter>
                             _paymentMin = 0;
                             _paymentMax = 100;
                             _currentSliderValue = 0.0;
-                            _LocationController.text = "";
-                            _LatLongController.text = "";
                             for (DataModel data in list) {
                               data.isSelect = false;
                             }
 
-                            setState(() {
+                            for (DataCategory data in categoryList) {
+                              data.isSelect = false;
+                            }
 
-                            });
+                            text = "";
+
+                            setState(() {});
                           },
                           child: Container(
                             height: 20,
@@ -629,9 +648,7 @@ class _HomeState extends State<Filter>
                             alignment: Alignment.centerLeft,
                             color: Colors.white,
                             child: new Text(
-                              text != null && text?.isNotEmpty
-                                  ? text
-                                  : "Most Recent",
+                              text != null && text?.isNotEmpty ? text : "None",
                               style: new TextStyle(
                                   fontFamily: AssetStrings.circulerNormal,
                                   color: Colors.black,

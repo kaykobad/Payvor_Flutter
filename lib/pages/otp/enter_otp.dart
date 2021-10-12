@@ -7,11 +7,8 @@ import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/otp/otp_forgot_request.dart';
 import 'package:payvor/model/otp/otp_request.dart';
-import 'package:payvor/model/otp/otp_verification_response.dart';
 import 'package:payvor/model/otp/resendotpresponse.dart';
-import 'package:payvor/pages/create_credential/create_credential.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
-import 'package:payvor/pages/reset_password/reset_password.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
 import 'package:payvor/utils/Messages.dart';
@@ -59,7 +56,7 @@ class _LoginScreenState extends State<OtoVerification> {
   void initState() {
     super.initState();
 
-    if (widget.type == 0) {
+    /*  if (widget.type == 0) {
       noPhone = widget.phoneNumber != null
           ? "+" + widget.countryCode + widget.phoneNumber
           : "";
@@ -68,8 +65,10 @@ class _LoginScreenState extends State<OtoVerification> {
         hitResendApi();
       });
     } else {
-      noPhone = widget.phoneNumber != null ? widget.phoneNumber : "";
-    }
+
+    }*/
+
+    noPhone = widget.phoneNumber != null ? widget.phoneNumber : "";
   }
 
   Widget getView() {
@@ -132,36 +131,22 @@ class _LoginScreenState extends State<OtoVerification> {
     if (!gotInternetConnection) {
       return;
     }
-    var infoData = jsonDecode(MemoryManagement.getUserInfo());
-    var userinfo = LoginSignupResponse.fromJson(infoData);
 
-    OtpRequest loginRequest = new OtpRequest(
-        otp: pinText, id: userinfo?.user?.id?.toString() ?? "", type: "id");
+    OtpRequest loginRequest =
+        new OtpRequest(otp: pinText, id: noPhone ?? "", type: "email");
     var response = await provider.verifyOtp(loginRequest, context);
     provider.hideLoader();
-    if (response is OtpVerification) {
-      MemoryManagement.setScreenType(type: "2");
-      var data = MemoryManagement.getSocialMediaStatus();
-      if (data == "0") {
-        Navigator.push(
-          context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
-            return Material(
-                child: new CreateCredential(
-              type: false,
-            ));
-          }),
-        );
-      } else {
-        MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
-        Navigator.pushAndRemoveUntil(
-          context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
-            return DashBoardScreen();
-          }),
-          (route) => false,
-        );
-      }
+    if (response is LoginSignupResponse) {
+      MemoryManagement.setAccessToken(accessToken: response.data);
+      MemoryManagement.setUserInfo(userInfo: json.encode(response));
+      MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
+      Navigator.pushAndRemoveUntil(
+        context,
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return DashBoardScreen();
+        }),
+        (route) => false,
+      );
     } else {
       APIError apiError = response;
       //print(apiError.error);
@@ -199,16 +184,17 @@ class _LoginScreenState extends State<OtoVerification> {
         var userinfo = LoginSignupResponse.fromJson(infoData);
         userinfo?.user?.is_email_verified = 1;
 
-        MemoryManagement.setUserInfo(userInfo: json.encode(userinfo));
+        MemoryManagement.setUserInfo(userInfo: json.encode(response));
 
         Navigator.pop(context);
         Navigator.pop(context);
       } else {
+        MemoryManagement.setUserInfo(userInfo: json.encode(response));
         MemoryManagement.setAccessToken(accessToken: response?.data);
         Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
-            return Material(child: new ResetPassword());
+            return Material(child: new DashBoardScreen());
           }),
         );
       }

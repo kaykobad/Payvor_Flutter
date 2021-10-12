@@ -59,6 +59,8 @@ class AppColors {
   static const Color kSecondGradientColor = const Color(0xFF40A087);
   static const Color kAppIntroSubHeadingColor = const Color(0xFF8392A5);
   static const Color kAppIntroHeadingColor = const Color(0xFF3C4858);
+  static const Color statusYellow = const Color(0xFFFFAB00);
+  static const Color statusGreen = const Color(0xFF5FDD89);
 
   static const Color kAppBubbleMainColor = const Color(0xFFC000E6);
   static const Color kAppBubbleSeconderyColor = const Color(0xFF9620D9);

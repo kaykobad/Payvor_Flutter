@@ -72,7 +72,9 @@ class _HomeState extends State<StripeCardAddedList>
     if (response is GetStripeUsers) {
       provider.hideLoader();
 
-      if (response != null && response?.status?.code == 200) {
+      if (response != null &&
+          response?.status?.code == 200 &&
+          response?.data != null) {
         listRecent?.addAll(response?.data);
       }
 

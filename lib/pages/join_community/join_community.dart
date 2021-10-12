@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -13,6 +12,7 @@ import 'package:payvor/model/signup/signuprequest.dart';
 import 'package:payvor/pages/chat/payvor_firebase_user.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/login/login.dart';
+import 'package:payvor/pages/otp/enter_otp.dart';
 import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
 import 'package:payvor/pages/social_login.dart';
 import 'package:payvor/provider/auth_provider.dart';
@@ -598,9 +598,6 @@ class _LoginScreenState extends State<JoinCommunityNew> {
     if (response is LoginSignupResponse) {
       provider.setLoading();
 
-      MemoryManagement.setAccessToken(accessToken: response.data);
-      MemoryManagement.setUserInfo(userInfo: json.encode(response));
-
       var email = _EmailController.text;
 
       switch (type) {
@@ -689,11 +686,13 @@ class _LoginScreenState extends State<JoinCommunityNew> {
             return new ResetPassword();
           }),
         );*/
-        MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
+        // MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
         Navigator.pushAndRemoveUntil(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
-            return DashBoardScreen();
+            return OtoVerification(
+              phoneNumber: email,
+            );
           }),
               (route) => false,
         );

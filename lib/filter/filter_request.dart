@@ -7,11 +7,14 @@ class FilterRequest {
   int maxprice;
   int distance;
   List<DataModel> list;
+  List<String> listCategory;
 
-  FilterRequest({this.location,
-    this.latlongData,
-    this.minprice,
-    this.maxprice,
-    this.distance,
-    this.list});
+  FilterRequest(
+      {this.location,
+      this.latlongData,
+      this.minprice,
+      this.maxprice,
+      this.distance,
+      this.list,
+      this.listCategory});
 }

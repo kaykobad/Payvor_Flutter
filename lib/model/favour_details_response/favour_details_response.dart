@@ -51,6 +51,7 @@ class Data {
   num perc;
   String title;
   String price;
+  String distance;
   String category_id;
   String description;
   String lat;
@@ -59,6 +60,7 @@ class Data {
   String image;
   String createdAt;
   String updatedAt;
+  CatName catName;
   User user;
   List<Rating> rating;
   num ratingCount;
@@ -68,29 +70,30 @@ class Data {
   num service_perc;
   int is_user_applied;
 
-  Data(
-      {this.id,
-      this.userId,
-      this.isActive,
-      this.title,
-      this.perc,
-      this.price,
-      this.description,
-      this.lat,
-      this.long,
-      this.location,
-      this.category_id,
-      this.image,
-      this.createdAt,
-      this.updatedAt,
-      this.user,
-      this.rating,
-      this.ratingCount,
-      this.ratingAvg,
-      this.service_fee,
-      this.receiving,
-      this.service_perc,
-      this.is_user_applied});
+  Data({this.id,
+    this.userId,
+    this.isActive,
+    this.title,
+    this.perc,
+    this.price,
+    this.description,
+    this.lat,
+    this.long,
+    this.distance,
+    this.location,
+    this.category_id,
+    this.image,
+    this.createdAt,
+    this.catName,
+    this.updatedAt,
+    this.user,
+    this.rating,
+    this.ratingCount,
+    this.ratingAvg,
+    this.service_fee,
+    this.receiving,
+    this.service_perc,
+    this.is_user_applied});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -105,10 +108,14 @@ class Data {
     category_id = json['category_id'];
     location = json['location'];
     image = json['image'];
+    distance = json['distance'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     service_fee = json['service_fee'];
     service_perc = json['service_perc'];
+    catName = json['cat_name'] != null
+        ? new CatName.fromJson(json['cat_name'])
+        : null;
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     if (json['rating'] != null) {
       rating = new List<Rating>();
@@ -138,9 +145,13 @@ class Data {
     data['long'] = this.long;
     data['location'] = this.location;
     data['image'] = this.image;
+    data['distance'] = this.distance;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['service_fee'] = this.service_fee;
+    if (this.catName != null) {
+      data['cat_name'] = this.catName.toJson();
+    }
     if (this.user != null) {
       data['user'] = this.user.toJson();
     }
@@ -233,6 +244,23 @@ class User {
     data['location'] = this.location;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    return data;
+  }
+}
+
+
+class CatName {
+  String name;
+
+  CatName({this.name});
+
+  CatName.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
     return data;
   }
 }

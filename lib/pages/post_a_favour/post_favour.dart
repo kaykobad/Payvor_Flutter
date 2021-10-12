@@ -92,6 +92,11 @@ class _HomeState extends State<PostFavour>
           "," +
           widget?.favourDetailsResponse?.data?.long;
 
+      if (widget?.favourDetailsResponse?.data?.catName != null) {
+        id = widget?.favourDetailsResponse?.data?.category_id ?? "";
+        text = widget?.favourDetailsResponse?.data?.catName?.name ?? "";
+      }
+
       /*  print("lat ${widget?.favourDetailsResponse?.data?.lat}");
       print("long ${widget?.favourDetailsResponse?.data?.long}");
       print("latlong ${ _LatLongController.text}");*/
@@ -139,11 +144,10 @@ class _HomeState extends State<PostFavour>
 
       for (var data in categoryList) {
         if (id == data?.id?.toString()) {
-          text = data?.name;
+          data?.isSelect = true;
         }
       }
     }
-
     setState(() {});
   }
 

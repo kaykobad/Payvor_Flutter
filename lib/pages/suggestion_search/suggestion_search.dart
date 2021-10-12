@@ -221,6 +221,7 @@ class _HomeState extends State<SearchHomeByName>
             return Material(
                 child: new PostFavorDetails(
               id: data.id.toString(),
+              distance: data?.distance ?? "",
             ));
           }),
         );
@@ -352,10 +353,17 @@ class _HomeState extends State<SearchHomeByName>
                         width: 6,
                       ),
                       Expanded(
-                          child: new Text(
-                        data?.location ?? "",
-                        style: TextThemes.greyDarkTextHomeLocation,
-                      )),
+                        child: Container(
+                          child: Container(
+                            child: new Text(
+                              data?.location + " - " + data?.distance ?? "",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextThemes.greyDarkTextHomeLocation,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 )

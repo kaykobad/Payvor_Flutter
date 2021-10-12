@@ -176,6 +176,8 @@ class _HomeState extends State<MyProfile>
     } else {
       APIError apiError = response;
       print(apiError.error);
+      print("profilee");
+      print(MemoryManagement.getUserInfo() + "hhh");
       var infoData = jsonDecode(MemoryManagement.getUserInfo());
       var userinfo = LoginSignupResponse.fromJson(infoData);
       MemoryManagement.setPushStatus(
@@ -323,6 +325,7 @@ class _HomeState extends State<MyProfile>
           userResponse?.user?.profilePic = userinfo?.user?.profilePic ?? "";
           userResponse?.user?.name = userinfo?.user?.name ?? "";
           userResponse?.user?.perc = userinfo?.user?.perc ?? 0;
+          userResponse?.user?.is_email_verified = userinfo?.user?.perc ?? 1;
 
           print(userResponse?.user?.profilePic?.toString());
 
@@ -467,23 +470,49 @@ class _HomeState extends State<MyProfile>
                             height: 16,
                             color: Colors.white,
                           ),
-                          InkWell(
-                            onTap: () {
-                              providerFirebase?.changeScreen(
-                                  Material(child: new VerificationProfiles()));
-                            },
-                            child: Container(
-                              color: Colors.white,
-                              alignment: Alignment.center,
-                              child: new Text(
-                                "VERIFY YOUR PROFILE",
-                                style: new TextStyle(
-                                    color: AppColors.redLight,
-                                    fontSize: 14,
-                                    fontFamily: AssetStrings.circulerNormal),
-                              ),
-                            ),
-                          ),
+                          userResponse?.user?.is_email_verified == 0
+                              ? InkWell(
+                                  onTap: () {
+                                    providerFirebase?.changeScreen(Material(
+                                        child: new VerificationProfiles()));
+                                  },
+                                  child: Container(
+                                    color: Colors.white,
+                                    alignment: Alignment.center,
+                                    child: new Text(
+                                      "VERIFY YOUR PROFILE",
+                                      style: new TextStyle(
+                                          color: AppColors.redLight,
+                                          fontSize: 14,
+                                          fontFamily:
+                                              AssetStrings.circulerNormal),
+                                    ),
+                                  ),
+                                )
+                              : new Container(
+                                  color: Colors.white,
+                                  alignment: Alignment.center,
+                                  child: new Row(
+                                    children: [
+                                      Container(
+                                        child: Image.asset(AssetStrings.verify),
+                                        width: 20,
+                                        height: 20,
+                                      ),
+                                      Container(
+                                        margin: new EdgeInsets.only(left: 5),
+                                        child: new Text(
+                                          "VERIFY YOUR PROFILE",
+                                          style: new TextStyle(
+                                              color: AppColors.colorDarkCyan,
+                                              fontSize: 14,
+                                              fontFamily:
+                                                  AssetStrings.circulerNormal),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
 
                           //  buildItem(1, "Verify Profile and Get badge"),
                           //  buildItem(2, "Payment Methods"),

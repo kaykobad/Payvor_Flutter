@@ -31,7 +31,6 @@ import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/my_profile_job_hire/my_profile_job_hire_response.dart';
 import 'package:payvor/model/otp/otp_forgot_request.dart';
 import 'package:payvor/model/otp/otp_request.dart';
-import 'package:payvor/model/otp/otp_verification_response.dart';
 import 'package:payvor/model/otp/resendotpresponse.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
@@ -441,7 +440,8 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      OtpVerification otpVerification = new OtpVerification.fromJson(response);
+      LoginSignupResponse otpVerification =
+          new LoginSignupResponse.fromJson(response);
       //if wrong otp
       if (!otpVerification.status.status) {
         var apiError = APIError(messag: "Wrong OTP", status: 400);
@@ -739,7 +739,6 @@ class AuthProvider with ChangeNotifier {
           try {
             var lat = datas[0].toString();
             var long = datas[1].toString();
-            isFilter = true;
 
             data.write("&lat=$lat&long=$long");
           } catch (e) {}
@@ -747,6 +746,7 @@ class AuthProvider with ChangeNotifier {
       } else {
         var datas = jsonDecode(MemoryManagement.getUserInfo());
         var userinfo = LoginSignupResponse.fromJson(datas);
+
         if (userinfo?.user?.lat != "0" && userinfo?.user?.lat != "0.0") {
           data.write(
               "&lat=${userinfo?.user?.lat}&long=${userinfo?.user?.long}");
@@ -773,13 +773,19 @@ class AuthProvider with ChangeNotifier {
             if (!isData) {
               isData = true;
             }
-            datanew = datanew + dataitem.sendTitle + ",";
+            datanew = datanew + dataitem.sendTitle;
           }
         }
         if (datanew != null && isData) {
           isFilter = true;
           data.write("&sort_by=$datanew");
         }
+      }
+
+      if (filterRequest?.listCategory != null &&
+          filterRequest?.listCategory.length > 0) {
+        isFilter = true;
+        data.write("&category_id=${filterRequest?.listCategory?.toString()}");
       }
 
       if (isFilter) {
@@ -795,7 +801,9 @@ class AuthProvider with ChangeNotifier {
     } else {
       var datas = jsonDecode(MemoryManagement.getUserInfo());
       var userinfo = LoginSignupResponse.fromJson(datas);
-      if (userinfo?.user?.lat != "0" && userinfo?.user?.lat != "0.0") {
+      if (userinfo?.user?.lat != "0" &&
+          userinfo?.user?.lat != "0.0" &&
+          userinfo?.user?.lat != null) {
         data.write("&lat=${userinfo?.user?.lat}&long=${userinfo?.user?.long}");
       }
       voidcallback(false);

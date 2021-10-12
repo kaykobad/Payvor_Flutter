@@ -45,13 +45,13 @@ class Status {
 }
 
 class Data {
-  int userId;
+  num userId;
   String paypalId;
   int type;
   String email;
   String updatedAt;
   String createdAt;
-  int id;
+  num id;
 
   Data(
       {this.userId,

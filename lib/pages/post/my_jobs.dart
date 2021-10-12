@@ -11,6 +11,7 @@ import 'package:payvor/model/applied_user/favour_applied_user.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/pay_feedback/pay_feedback_common.dart';
 import 'package:payvor/pages/pay_feedback/pay_give_feedback.dart';
+import 'package:payvor/pages/post/recent_applied_favor.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
@@ -108,6 +109,8 @@ class _HomeState extends State<MyJobs>
 
     var response = await provider.currentuserhirefavor(context, currentPage);
 
+    provider.hideLoader();
+
     if (response is CurrentUserHiredByFavorResponse) {
       print("res $response");
       isPullToRefresh = false;
@@ -136,7 +139,7 @@ class _HomeState extends State<MyJobs>
           offstagenodata = false;
         }
 
-        hitCurrentUserHire();
+        //  hitCurrentUserHire();
 
         setState(() {});
       }
@@ -246,6 +249,60 @@ class _HomeState extends State<MyJobs>
     });
   }
 
+  Widget buildItemNewTop() {
+    return InkWell(
+      onTap: () {
+        widget.lauchCallBack(Material(
+            child: Material(
+                child: new RecentAppliedFavor(
+          lauchCallBack: widget?.lauchCallBack,
+        ))));
+      },
+      child: Container(
+        padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
+        margin: new EdgeInsets.only(top: 18.0, left: 18, right: 18),
+        decoration: new BoxDecoration(
+          borderRadius: new BorderRadius.circular(5.0),
+          color: Colors.white,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  new Container(
+                    child: new Text(
+                      "Recent Applied Favors (5)",
+                      style: TextThemes.blackCirculerMedium,
+                    ),
+                  ),
+                  Container(
+                    margin: new EdgeInsets.only(top: 7.0),
+                    child: Container(
+                      child: new Text(
+                        "The favors you’ve applied recently but hired",
+                        style: TextThemes.grayNormalSmall,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: new EdgeInsets.only(left: 7.0),
+              child: new Icon(
+                Icons.arrow_forward_ios,
+                size: 13,
+                color: Color.fromRGBO(183, 183, 183, 1),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
@@ -262,6 +319,7 @@ class _HomeState extends State<MyJobs>
             child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                buildItemNewTop(),
                 _buildContestList(),
               ],
             ),
@@ -460,22 +518,19 @@ class _HomeState extends State<MyJobs>
   }
 
   Widget buildItemMain(int index, DataNextJob data) {
-    var dates = formatDateString(data?.createdAt ?? "");
-
     return InkWell(
       onTap: () {
         if (data?.status != 3) {
           widget.lauchCallBack(Material(
               child: Material(
                   child: new PayFeebackDetailsCommon(
-                      lauchCallBack: widget?.lauchCallBack,
-                      userId: data?.hiredUserId?.toString(),
-                      postId: data?.id?.toString(),
-                      status: 1,
-                      type: 1,
-                      voidcallback: callback,
-            ))));
-
+            lauchCallBack: widget?.lauchCallBack,
+            userId: data?.hiredUserId?.toString(),
+            postId: data?.id?.toString(),
+            status: 1,
+            type: 1,
+            voidcallback: callback,
+          ))));
         } else {
           widget.lauchCallBack(Material(
               child: Material(
@@ -501,7 +556,7 @@ class _HomeState extends State<MyJobs>
       },
       child: Container(
         padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
-        margin: new EdgeInsets.only(top: 8.0),
+        margin: new EdgeInsets.only(top: 18.0, left: 18, right: 18),
         decoration: new BoxDecoration(
           borderRadius: new BorderRadius.circular(5.0),
           color: Colors.white,
@@ -509,39 +564,87 @@ class _HomeState extends State<MyJobs>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            /* Container(
-              child: new Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  new Image.asset(
-                    AssetStrings.combine_shape,
-                    height: 18,
-                    width: 18,
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: new EdgeInsets.only(left: 7.0),
-                      child: new Text(
-                        dates,
-                        style: TextThemes.greyDarkTextHomeLocation,
-                      ),
+            Row(
+              children: [
+                new Container(
+                    width: 49.0,
+                    height: 49.0,
+                    decoration: new BoxDecoration(
+                      color: Colors.grey,
+                      border: new Border.all(color: Colors.white, width: 0.3),
+                      shape: BoxShape.circle,
+                    ),
+                    child: ClipOval(
+                      child: getCachedNetworkImageWithurl(
+                          url: data?.image ?? "", size: 49),
+                    )),
+                Expanded(
+                  child: Container(
+                    margin: new EdgeInsets.only(left: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        new Container(
+                          child: new Text(
+                            data?.title ?? "",
+                            style: TextThemes.blackCirculerMedium,
+                          ),
+                        ),
+                        Container(
+                          margin: new EdgeInsets.only(top: 10.0),
+                          child: new Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  widget.lauchCallBack(Material(
+                                      child: Material(
+                                          child: new ChatMessageDetails(
+                                    id: data.userId.toString(),
+                                    name: data.hiredBy.name,
+                                    hireduserId: data?.userId?.toString(),
+                                    image: data?.image,
+                                    userButtonMsg: true,
+                                  ))));
+                                },
+                                child: Container(
+                                  child: new Text(
+                                    data?.hiredBy?.name ?? "someone",
+                                    style: TextThemes.cyanTextSmallMedium,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  margin: new EdgeInsets.only(left: 1.0),
+                                  child: InkWell(
+                                    onTap: () {},
+                                    child: Container(
+                                      margin: new EdgeInsets.only(left: 1.0),
+                                      child: new Text(
+                                        getStatus(data?.status),
+                                        style: TextThemes.grayNormalSmall,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              /*   Container(
+                                margin: new EdgeInsets.only(left: 7.0),
+                                child: new Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 13,
+                                  color: Color.fromRGBO(183, 183, 183, 1),
+                                ),
+                              )*/
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Container(
-                    margin: new EdgeInsets.only(left: 3.0),
-                    child: new Text(
-                      "€${data?.price}",
-                      style: TextThemes.darkRedMediumNew,
-                    ),
-                  )
-                ],
-              ),
-            ),*/
-            new Container(
-              child: new Text(
-                data?.title ?? "",
-                style: TextThemes.blackCirculerMedium,
-              ),
+                ),
+              ],
             ),
             Opacity(
               opacity: 0.12,
@@ -552,47 +655,42 @@ class _HomeState extends State<MyJobs>
               ),
             ),
             Container(
-              margin: new EdgeInsets.only(top: 10.0),
-              child: new Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    child: InkWell(
-                      onTap: () {
-                        widget.lauchCallBack(Material(
-                            child: Material(
-                                child: new ChatMessageDetails(
-                          id: data.userId.toString(),
-                          name: data.hiredBy.name,
-                          hireduserId: data?.userId?.toString(),
-                          image: data?.image,
-                          userButtonMsg: true,
-                        ))));
-                      },
+              margin: new EdgeInsets.only(top: 10),
+              child: InkWell(
+                onTap: () {},
+                child: Row(
+                  children: [
+                    new Text(
+                      "€ ${data?.price ?? ""}",
+                      style: new TextStyle(
+                          color: AppColors.kBlack.withOpacity(0.7),
+                          fontSize: 16,
+                          fontFamily: AssetStrings.circulerNormal),
+                    ),
+                    Expanded(
+                      child: new Container(),
+                    ),
+                    new Container(
+                      width: 8,
+                      height: 8,
+                      decoration: new BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: data?.status == 1
+                              ? AppColors.statusYellow
+                              : AppColors.statusGreen),
+                    ),
+                    Container(
+                      margin: new EdgeInsets.only(left: 5),
                       child: new Text(
-                        data?.hiredBy?.name ?? "someone",
-                        style: TextThemes.cyanTextSmallMedium,
+                        data?.status == 1 ? "Not Paid" : "Paid",
+                        style: new TextStyle(
+                            color: AppColors.kBlack.withOpacity(0.7),
+                            fontSize: 16,
+                            fontFamily: AssetStrings.circulerNormal),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: new EdgeInsets.only(left: 1.0),
-                      child: new Text(
-                        getStatus(data?.status),
-                        style: TextThemes.grayNormalSmall,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: new EdgeInsets.only(left: 7.0),
-                    child: new Icon(
-                      Icons.arrow_forward_ios,
-                      size: 13,
-                      color: Color.fromRGBO(183, 183, 183, 1),
-                    ),
-                  )
-                ],
+                  ],
+                ),
               ),
             ),
           ],

@@ -123,25 +123,28 @@ class Datas {
   String description;
   String lat;
   String long;
+  String distance;
   String location;
   String image;
   String createdAt;
   String updatedAt;
   User user;
 
-  Datas({this.id,
-    this.userId,
-    this.isActive,
-    this.title,
-    this.price,
-    this.description,
-    this.lat,
-    this.long,
-    this.location,
-    this.image,
-    this.createdAt,
-    this.updatedAt,
-    this.user});
+  Datas(
+      {this.id,
+      this.userId,
+      this.isActive,
+      this.title,
+      this.price,
+      this.description,
+      this.distance,
+      this.lat,
+      this.long,
+      this.location,
+      this.image,
+      this.createdAt,
+      this.updatedAt,
+      this.user});
 
   Datas.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -155,6 +158,7 @@ class Datas {
     location = json['location'];
     image = json['image'];
     createdAt = json['created_at'];
+    distance = json['distance'];
     updatedAt = json['updated_at'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
@@ -168,6 +172,7 @@ class Datas {
     data['price'] = this.price;
     data['description'] = this.description;
     data['lat'] = this.lat;
+    data['distance'] = this.distance;
     data['long'] = this.long;
     data['location'] = this.location;
     data['image'] = this.image;

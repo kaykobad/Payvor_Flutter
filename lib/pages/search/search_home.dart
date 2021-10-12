@@ -196,7 +196,7 @@ class HomeState extends State<SearchCompany>
                         child: Container(
                           child: Container(
                             child: new Text(
-                              data?.location + " - " + "235 m way" ?? "",
+                              data?.location + " - " + data?.distance ?? "",
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: TextThemes.greyDarkTextHomeLocation,
@@ -553,9 +553,16 @@ class HomeState extends State<SearchCompany>
     print(filter.list);
     print(filter.location);
     print(filter.distance);
-    print(filter.latlongData);
+    print(filter.listCategory);
 
     filterRequest = filter;
+
+    var latlong = MemoryManagement.getGeo();
+    if (latlong != null && latlong?.isNotEmpty) {
+      filterRequest?.latlongData = latlong;
+    } else {
+      filterRequest?.latlongData = "";
+    }
 
     print("filter $filter");
     isPullToRefresh = false;
@@ -611,8 +618,9 @@ class HomeState extends State<SearchCompany>
         widget.lauchCallBack(Material(
             child: Material(
                 child: new PostFavorDetails(
-          id: data.id.toString(),
+                  id: data.id.toString(),
           voidcallback: callback,
+          distance: data?.distance,
         ))));
       },
       child: Container(

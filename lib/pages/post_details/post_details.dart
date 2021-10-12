@@ -12,13 +12,13 @@ import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
 import 'package:payvor/model/promotion/promotion_response.dart';
-import 'package:payvor/pages/add_payment_method_first/add_payment.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/payment/payment_dialog.dart';
 import 'package:payvor/pages/payment/post_payment.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/pages/search/search_name.dart';
+import 'package:payvor/pages/stripe_card_added/stripe_card_added.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
@@ -37,8 +37,13 @@ class PostFavorDetails extends StatefulWidget {
   final String id;
   ValueSetter<int> voidcallback;
   bool isButtonDesabled;
+  String distance;
 
-  PostFavorDetails({this.id, this.voidcallback, this.isButtonDesabled = false});
+  PostFavorDetails(
+      {this.id,
+      this.voidcallback,
+      this.isButtonDesabled = false,
+      this.distance});
 
   @override
   _HomeState createState() => _HomeState();
@@ -63,6 +68,8 @@ class _HomeState extends State<PostFavorDetails>
   var isCurrentUser = false;
 
   bool offstageLoader = false;
+
+  String distance = "";
 
   FirebaseProvider providerFirebase;
 
@@ -92,6 +99,10 @@ class _HomeState extends State<PostFavorDetails>
       hitApiPromotion(0);
     });
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+
+    if (widget?.distance != null) {
+      distance = widget?.distance;
+    }
 
     super.initState();
   }
@@ -369,7 +380,8 @@ class _HomeState extends State<PostFavorDetails>
         showBottomPaymentMethod();
         MemoryManagement.setFirstPaymentStatus(status: true);
       } else {
-        hitApplyFavApi();
+        //  hitApplyFavApi();
+        showBottomPaymentMethod();
       }
     }
 
@@ -393,8 +405,9 @@ class _HomeState extends State<PostFavorDetails>
 
   void callbackPaymentAddMethod() async {
     Navigator.pop(context); //back to previous screen
-    providerFirebase
-        ?.changeScreen(Material(child: new AddPaymentMethodFirst()));
+    /* providerFirebase
+        ?.changeScreen(Material(child: new AddPaymentMethodFirst()));*/
+    providerFirebase?.changeScreen(Material(child: new StripeCardAddedList()));
   }
 
   void callbackPaymentSuccessBack() async {
@@ -437,10 +450,10 @@ class _HomeState extends State<PostFavorDetails>
                             child: new Text(
                               favoriteResponse?.data.location +
                                       " - " +
-                                      "235 m way" ??
+                                      distance ??
                                   "",
                               overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
+                              maxLines: 4,
                               style: TextThemes.greyDarkTextHomeLocation,
                             ),
                           ),
