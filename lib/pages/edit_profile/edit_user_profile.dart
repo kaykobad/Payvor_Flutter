@@ -170,20 +170,6 @@ class _HomeState extends State<EditProfile>
       return;
     }
 
-    if (_LatLongController.text.length > 0) {
-      var data = _LatLongController.text.trim().toString().split(",");
-
-      try {
-        lat = data[0];
-        long = data[1];
-      } catch (e) {
-        showInSnackBar("Please enter valid location");
-        return;
-      }
-    } else {
-      showInSnackBar("Please enter valid location");
-      return;
-    }
     Map<String, String> headers = {
 //header
       "Content-Type": "multipart/form-data",
@@ -202,7 +188,6 @@ class _HomeState extends State<EditProfile>
     request.headers.addAll(headers);
 
     request.fields['name'] = _NameController.text;
-    request.fields['location'] = _LocationController.text;
 
     if (_NewPasswordController.text.length > 0 &&
         _OldPasswordController.text.length > 0) {
@@ -210,8 +195,6 @@ class _HomeState extends State<EditProfile>
       request.fields['old_password'] = _OldPasswordController.text;
     }
 
-    request.fields['lat'] = lat;
-    request.fields['long'] = long;
 
     if (_image != null) {
       final fileName = _image.path;
@@ -498,17 +481,9 @@ class _HomeState extends State<EditProfile>
     var name = _NameController.text;
     var password = _OldPasswordController.text;
     var newpassword = _NewPasswordController.text;
-    var location = _LocationController.text;
-    var locationLatlong = _LatLongController.text;
 
     if (name.isEmpty || name.length == 0) {
       showInSnackBar("Please enter the name");
-      return false;
-    } else if (location.isEmpty || location.length == 0) {
-      showInSnackBar("Please enter the location");
-      return false;
-    } else if (locationLatlong.isEmpty || locationLatlong.length == 0) {
-      showInSnackBar("No location info found please try again.");
       return false;
     } else {
       if (password.isNotEmpty || password.length > 0) {
