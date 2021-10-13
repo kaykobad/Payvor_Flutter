@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/favour_posted_by_user.dart';
 import 'package:payvor/pages/original_post/original_post_data.dart';
@@ -251,12 +250,14 @@ class _HomeState extends State<RecentPostedFavor>
                   children: [
                     InkWell(
                       onTap: () {},
-                      child: new SvgPicture.asset(
-                        AssetStrings.nopostnojob,
+                      child: new Image.asset(
+                        AssetStrings.noPosts,
+                        width: 150,
+                        height: 150,
                       ),
                     ),
                     Container(
-                      margin: new EdgeInsets.only(top: 42),
+                      margin: new EdgeInsets.only(top: 20),
                       child: new Text(
                         "No Favors",
                         style: new TextStyle(
