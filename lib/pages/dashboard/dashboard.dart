@@ -14,6 +14,7 @@ import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/update_firebase_token/update_token_request.dart';
 import 'package:payvor/pages/chat/private_chat.dart';
 import 'package:payvor/pages/dummy.dart';
+import 'package:payvor/pages/guest_view/guest_view.dart';
 import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/pages/my_profile/my_profile.dart';
 import 'package:payvor/pages/original_post/original_post_data.dart';
@@ -35,6 +36,10 @@ import 'package:payvor/utils/memory_management.dart';
 import 'package:provider/provider.dart';
 
 class DashBoardScreen extends StatefulWidget {
+  bool guestView;
+
+  DashBoardScreen({this.guestView});
+
   @override
   _DashBoardScreenState createState() => _DashBoardScreenState();
 }
@@ -50,7 +55,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   final _profileScreen = GlobalKey<NavigatorState>();
   final _dummyScreen = GlobalKey<NavigatorState>();
 
-  int currentTab = 0; // to keep track of active tab index
+  int currentTab = 0;
+  bool guestViewMain = false;
+
+  // to keep track of active tab index
 
   final PageStorageBucket bucket = PageStorageBucket();
 
@@ -214,6 +222,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       userName = userResponse.user.name ?? "";
       profile = userResponse.user.profilePic ?? "";
       userId = userResponse.user.id.toString();
+    }
+
+    if (widget?.guestView != null) {
+      guestViewMain = widget?.guestView;
     }
   }
 
@@ -614,6 +626,106 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     _firebaseProvider.notificationStreamController.close();
   }
 
+  Widget normalView() {
+    return IndexedStack(
+      index: currentTab,
+      sizing: StackFit.loose,
+      children: <Widget>[
+        Navigator(
+            key: _homeScreen,
+            onGenerateRoute: (route) => MaterialPageRoute(
+                  settings: route,
+                  builder: (context) => SearchCompany(
+                    lauchCallBack: homeCallBack,
+                    callbackmyid: callbackChangePage,
+                    userid: userId?.toString(),
+                  ),
+                )),
+        Navigator(
+          key: _chatScreen,
+          onGenerateRoute: (route) => MaterialPageRoute(
+            settings: route,
+            builder: (context) => PostScreen(
+              lauchCallBack: homeCallBack,
+            ),
+          ),
+        ),
+        Navigator(
+          key: _dummyScreen,
+          onGenerateRoute: (route) => MaterialPageRoute(
+            settings: route,
+            builder: (context) => Dummy(
+              logoutCallBack: logoutCallBack,
+            ),
+          ),
+        ),
+        Navigator(
+          key: _notificationScreen,
+          onGenerateRoute: (route) => MaterialPageRoute(
+            settings: route,
+            builder: (context) => ChatScreen(
+              logoutCallBack: logoutCallBack,
+            ),
+          ),
+        ),
+        Navigator(
+          key: _profileScreen,
+          onGenerateRoute: (route) => MaterialPageRoute(
+            settings: route,
+            builder: (context) => MyProfile(
+              id: userId ?? "",
+              name: userName ?? "",
+              hireduserId: userId ?? "",
+              image: profile ?? "",
+              userButtonMsg: true,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget guestView() {
+    return IndexedStack(
+      index: currentTab,
+      children: <Widget>[
+        Navigator(
+            onGenerateRoute: (route) => MaterialPageRoute(
+                  settings: route,
+                  builder: (context) => SearchCompany(
+                    lauchCallBack: homeCallBack,
+                    callbackmyid: callbackChangePage,
+                    userid: userId?.toString(),
+                  ),
+                )),
+        Navigator(
+          onGenerateRoute: (route) => MaterialPageRoute(
+            settings: route,
+            builder: (context) => GuestView(),
+          ),
+        ),
+        Navigator(
+          onGenerateRoute: (route) => MaterialPageRoute(
+            settings: route,
+            builder: (context) => GuestView(),
+          ),
+        ),
+        Navigator(
+          onGenerateRoute: (route) => MaterialPageRoute(
+            settings: route,
+            builder: (context) => GuestView(),
+          ),
+        ),
+        Navigator(
+          onGenerateRoute: (route) => MaterialPageRoute(
+            settings: route,
+            builder: (context) => GuestView(),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     _firebaseProvider = Provider.of<FirebaseProvider>(context);
@@ -630,62 +742,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 //        child: screens[currentTab],
 //        bucket: bucket,
 //      ),
-        body: IndexedStack(
-          index: currentTab,
-          sizing: StackFit.loose,
-          children: <Widget>[
-            Navigator(
-                key: _homeScreen,
-                onGenerateRoute: (route) => MaterialPageRoute(
-                      settings: route,
-                      builder: (context) => SearchCompany(
-                        lauchCallBack: homeCallBack,
-                        callbackmyid: callbackChangePage,
-                        userid: userId?.toString(),
-                      ),
-                    )),
-            Navigator(
-              key: _chatScreen,
-              onGenerateRoute: (route) => MaterialPageRoute(
-                settings: route,
-                builder: (context) => PostScreen(
-                  lauchCallBack: homeCallBack,
-                ),
-              ),
-            ),
-            Navigator(
-              key: _dummyScreen,
-              onGenerateRoute: (route) => MaterialPageRoute(
-                settings: route,
-                builder: (context) => Dummy(
-                  logoutCallBack: logoutCallBack,
-                ),
-              ),
-            ),
-            Navigator(
-              key: _notificationScreen,
-              onGenerateRoute: (route) => MaterialPageRoute(
-                settings: route,
-                builder: (context) => ChatScreen(
-                  logoutCallBack: logoutCallBack,
-                ),
-              ),
-            ),
-            Navigator(
-              key: _profileScreen,
-              onGenerateRoute: (route) => MaterialPageRoute(
-                settings: route,
-                builder: (context) => MyProfile(
-                  id: userId ?? "",
-                  name: userName ?? "",
-                  hireduserId: userId ?? "",
-                  image: profile ?? "",
-                  userButtonMsg: true,
-                ),
-              ),
-            ),
-          ],
-        ),
+        body: widget.guestView != null && widget.guestView
+            ? guestView()
+            : normalView(),
         floatingActionButton: Container(
           margin: const EdgeInsets.only(top: 24),
           height: Constants.FLOATING_BUTTON_SIZE,
@@ -698,7 +757,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             elevation: 0.0,
             child: CustomFloatingButton(),
             onPressed: () {
-              redirect();
+              if (widget.guestView != null && widget.guestView) {
+                Navigator.push(
+                  context,
+                  new CupertinoPageRoute(builder: (BuildContext context) {
+                    return Material(child: new GuestView());
+                  }),
+                );
+              } else {
+                redirect();
+              }
             },
           ),
         ),

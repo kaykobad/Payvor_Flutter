@@ -29,6 +29,7 @@ import 'package:payvor/model/logged_in_user/logged_in_user_response.dart';
 import 'package:payvor/model/login/loginrequest.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/my_profile_job_hire/my_profile_job_hire_response.dart';
+import 'package:payvor/model/my_profile_job_hire/my_profile_response.dart';
 import 'package:payvor/model/otp/otp_forgot_request.dart';
 import 'package:payvor/model/otp/otp_request.dart';
 import 'package:payvor/model/otp/resendotpresponse.dart';
@@ -48,7 +49,6 @@ import 'package:payvor/model/update_firebase_token/update_firebase_token_respons
 import 'package:payvor/model/update_firebase_token/update_token_request.dart';
 import 'package:payvor/model/update_profile/update_profile_request.dart';
 import 'package:payvor/model/update_profile/update_profile_response.dart';
-import 'package:payvor/model/update_profile/user_hired_favor_response.dart';
 import 'package:payvor/model/update_status/update_status_request.dart';
 import 'package:payvor/networkmodel/APIHandler.dart';
 import 'package:payvor/networkmodel/APIs.dart';
@@ -744,12 +744,15 @@ class AuthProvider with ChangeNotifier {
           } catch (e) {}
         }
       } else {
-        var datas = jsonDecode(MemoryManagement.getUserInfo());
-        var userinfo = LoginSignupResponse.fromJson(datas);
+        if (MemoryManagement.getUserInfo() != null &&
+            MemoryManagement.getUserInfo().isNotEmpty) {
+          var datas = jsonDecode(MemoryManagement.getUserInfo());
+          var userinfo = LoginSignupResponse.fromJson(datas);
 
-        if (userinfo?.user?.lat != "0" && userinfo?.user?.lat != "0.0") {
-          data.write(
-              "&lat=${userinfo?.user?.lat}&long=${userinfo?.user?.long}");
+          if (userinfo?.user?.lat != "0" && userinfo?.user?.lat != "0.0") {
+            data.write(
+                "&lat=${userinfo?.user?.lat}&long=${userinfo?.user?.long}");
+          }
         }
       }
 
@@ -799,13 +802,18 @@ class AuthProvider with ChangeNotifier {
         uri = uri + data.toString();
       }
     } else {
-      var datas = jsonDecode(MemoryManagement.getUserInfo());
-      var userinfo = LoginSignupResponse.fromJson(datas);
-      if (userinfo?.user?.lat != "0" &&
-          userinfo?.user?.lat != "0.0" &&
-          userinfo?.user?.lat != null) {
-        data.write("&lat=${userinfo?.user?.lat}&long=${userinfo?.user?.long}");
+      if (MemoryManagement.getUserInfo() != null &&
+          MemoryManagement.getUserInfo()?.isNotEmpty) {
+        var datas = jsonDecode(MemoryManagement.getUserInfo());
+        var userinfo = LoginSignupResponse.fromJson(datas);
+        if (userinfo?.user?.lat != "0" &&
+            userinfo?.user?.lat != "0.0" &&
+            userinfo?.user?.lat != null) {
+          data.write(
+              "&lat=${userinfo?.user?.lat}&long=${userinfo?.user?.long}");
+        }
       }
+
       voidcallback(false);
       uri = uri + data.toString();
     }
@@ -1139,8 +1147,8 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      UserProfileFavorResponse resendOtpResponse =
-          new UserProfileFavorResponse.fromJson(response);
+      MyProfileResponse resendOtpResponse =
+          new MyProfileResponse.fromJson(response);
       print("other profile response ${resendOtpResponse.toJson()}");
 
       completer.complete(resendOtpResponse);

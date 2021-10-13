@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:payvor/pages/guest_view/guest_view.dart';
+import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/join_community/join_community.dart';
 import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/utils/AppColors.dart';
@@ -37,13 +37,22 @@ class FadeIn extends State<GuestIntroScreen> {
               new Column(children: <Widget>[
                 Container(
                   alignment: Alignment.center,
-                  margin: new EdgeInsets.only(top: 124),
+                  margin: new EdgeInsets.only(top: 100),
                   child: new Image.asset(
-                    AssetStrings.logopng,
-                    width: 140,
-                    height: 123,
+                    AssetStrings.payvorIntro,
+                    width: 100,
+                    height: 80,
                   ),
                 ),
+                new Container(
+                  child: new Text(
+                    "Perimity",
+                    style: new TextStyle(
+                        color: AppColors.kPrimaryBlue,
+                        fontSize: 36,
+                        fontFamily: AssetStrings.circulerBoldStyle),
+                  ),
+                )
               ]),
               Positioned(
                 bottom: 0.0,
@@ -116,7 +125,7 @@ class FadeIn extends State<GuestIntroScreen> {
     Navigator.push(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {
-        return new GuestView();
+        return new DashBoardScreen(guestView: true);
       }),
     );
   }

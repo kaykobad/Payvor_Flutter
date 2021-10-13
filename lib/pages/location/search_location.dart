@@ -212,7 +212,8 @@ class _HomeState extends State<SearchLocation>
                     hitLocation();
                   },
                   child: Container(
-                      child: getTopItem("Use my current location", 1)),
+                      child: getTopItem("Use my current location", 1,
+                          AssetStrings.sendMsg, 21.0, 40)),
                 ),
                 Opacity(
                   opacity: 0.7,
@@ -233,7 +234,9 @@ class _HomeState extends State<SearchLocation>
                       }),
                     );
                   },
-                  child: Container(child: getTopItem("Set location on map", 2)),
+                  child: Container(
+                      child: getTopItem("Set location on map", 2,
+                          AssetStrings.map, 25.0, 35)),
                 ),
                 Opacity(
                   opacity: 0.7,
@@ -337,7 +340,8 @@ class _HomeState extends State<SearchLocation>
     }*/
   }
 
-  Widget getTopItem(String text, int type) {
+  Widget getTopItem(
+      String text, int type, String image, double size, double margin) {
     return Container(
       height: 60,
       alignment: Alignment.center,
@@ -347,18 +351,24 @@ class _HomeState extends State<SearchLocation>
           new SizedBox(
             width: 15.0,
           ),
-          new Image.asset(
-            AssetStrings.searches,
-            width: 18.0,
-            height: 18.0,
+          Container(
+            margin: new EdgeInsets.only(left: 10),
+            child: new Image.asset(
+              image,
+              width: size,
+              height: size,
+            ),
           ),
           new SizedBox(
-            width: 10.0,
+            width: margin,
           ),
           new Container(
             child: new Text(
               text,
-              style: new TextStyle(color: AppColors.kBlack, fontSize: 18),
+              style: new TextStyle(
+                  color: AppColors.kBlack,
+                  fontSize: 18,
+                  fontFamily: AssetStrings.circulerNormal),
             ),
           )
         ],

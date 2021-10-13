@@ -27,15 +27,20 @@ class AssetStrings {
   static const String appIntroPage4 = 'assets/png/app_intro_page4.webp';
   static const String appSettings = 'assets/png/settings.png';
   static const String settingEdit = 'assets/png/setting_edit.png';
+  static const String sendMsg = 'assets/png/send_msg.png';
   static const String artworkPayment = 'assets/png/artwork_payment.png';
   static const String settingNoti = 'assets/png/setting_noti.png';
   static const String settingHelp = 'assets/png/setting_help.png';
+  static const String payvorIntro = 'assets/png/payvor_new.png';
+  static const String map = 'assets/png/map.png';
+  static const String curent = 'assets/png/current.png';
   static const String settingPrivacy = 'assets/png/setting_privacy.png';
   static const String settingRate = 'assets/png/setting_rate.png';
   static const String settingShare = 'assets/png/setting_share.png';
   static const String settingTerms = 'assets/png/setting_terms.png';
   static const String nextArrowIcon = 'assets/svg/next_arrow.svg';
   static const String iconTicks = 'assets/png/icon_ticks.png';
+  static const String noPosts = 'assets/png/no_posts.png';
 
   //app icon
 

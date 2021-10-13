@@ -4,17 +4,12 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:payvor/chat/decorator_view.dart';
 import 'package:payvor/model/apierror.dart';
-import 'package:payvor/model/favour_details_response/favour_details_response.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
-import 'package:payvor/model/update_profile/user_hired_favor_response.dart';
-import 'package:payvor/pages/add_payment_method_first/add_payment.dart';
-import 'package:payvor/pages/my_profile/ended_favor.dart';
-import 'package:payvor/pages/my_profile/ended_jobs.dart';
-import 'package:payvor/pages/post_a_favour/post_favour.dart';
+import 'package:payvor/model/my_profile_job_hire/my_profile_response.dart';
+import 'package:payvor/pages/my_profile_details/my_profile_details.dart';
+import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/pages/settings/settings.dart';
-import 'package:payvor/pages/verify_profile.dart';
 import 'package:payvor/pages/verify_profile_new/verify_profiles_new.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
@@ -70,12 +65,11 @@ class _HomeState extends State<MyProfile>
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
   FocusNode _DescriptionField = new FocusNode();
 
-  FavourDetailsResponse favoriteResponse;
   bool isPullToRefresh = false;
   bool offstagenodata = true;
 
-  UserProfileFavorResponse userResponse = null;
-  List<DataUserFavour> list = List<DataUserFavour>();
+  MyProfileResponse userResponse = null;
+  List<Data> list = List<Data>();
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
@@ -93,12 +87,11 @@ class _HomeState extends State<MyProfile>
     Future.delayed(const Duration(milliseconds: 300), () {
       hitUserApi();
     });
-    //  _setScrollListener();
+    _setScrollListener();
     //   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
     super.initState();
   }
-
 
   hitUserApi() async {
     if (!isPullToRefresh) {
@@ -127,35 +120,34 @@ class _HomeState extends State<MyProfile>
     var response = await provider.userProfileDetails(
         context, currentPage, widget?.hireduserId);
 
-    if (response is UserProfileFavorResponse) {
+    if (response is MyProfileResponse) {
       isPullToRefresh = false;
       if (response != null && response.data != null) {
         if (currentPage == 1) {
           list.clear();
-        }
+          userResponse = response;
+          print("user_data ${userResponse.user.toJson()}");
+          widget.image = response.user.profilePic;
+          widget.name = response.user.name;
+          if (response?.user != null) {
+            var infoData = jsonDecode(MemoryManagement.getUserInfo());
+            var userinfo = LoginSignupResponse.fromJson(infoData);
 
-        userResponse = response;
-        print("user_data ${userResponse.user.toJson()}");
-        widget.image = response.user.profilePic;
-        widget.name = response.user.name;
+            userinfo.user = response?.user;
 
-        if (response?.user != null) {
-          var infoData = jsonDecode(MemoryManagement.getUserInfo());
-          var userinfo = LoginSignupResponse.fromJson(infoData);
+            MemoryManagement.setPushStatus(
+                token: userinfo?.user?.disable_push?.toString() ?? "0");
 
-          userinfo.user = response?.user;
+            if (userinfo.user?.payment_method > 0) {
+              MemoryManagement.setPaymentStatus(status: true);
+            } else {
+              MemoryManagement.setPaymentStatus(status: false);
+            }
 
-          MemoryManagement.setPushStatus(
-              token: userinfo?.user?.disable_push?.toString() ?? "0");
-
-          if (userinfo.user?.payment_method > 0) {
-            MemoryManagement.setPaymentStatus(status: true);
-          } else {
-            MemoryManagement.setPaymentStatus(status: false);
+            MemoryManagement.setUserInfo(userInfo: json.encode(userinfo));
           }
-
-          MemoryManagement.setUserInfo(userInfo: json.encode(userinfo));
         }
+
 
         list.addAll(response.data.data);
 
@@ -188,25 +180,6 @@ class _HomeState extends State<MyProfile>
     provider.hideLoader();
   }
 
-  void _setScrollListener() {
-    //crollController.position.isScrollingNotifier.addListener(() { print("called");});
-
-    _scrollController = new ScrollController();
-    _scrollController.addListener(() {
-      if (_scrollController.position.maxScrollExtent ==
-          _scrollController.offset) {
-        print("size ${list.length}");
-
-        if (list.length >= (Constants.PAGINATION_SIZE * currentPage)) {
-          isPullToRefresh = true;
-          hitUserApi();
-          showInSnackBar("Loading data...");
-        } else {
-          print("not called");
-        }
-      }
-    });
-  }
 
 
   @override
@@ -217,7 +190,7 @@ class _HomeState extends State<MyProfile>
   }
 
   redirect() async {
-    Navigator.push(
+    /* Navigator.push(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {
         return Material(
@@ -226,81 +199,201 @@ class _HomeState extends State<MyProfile>
           isEdit: true,
         ));
       }),
+    );*/
+  }
+
+  void _setScrollListener() {
+    //scrollController.position.isScrollingNotifier.addListener(() { print("called");});
+
+    scrollController = new ScrollController();
+    scrollController.addListener(() {
+      if (scrollController.position.maxScrollExtent ==
+          scrollController.offset) {
+        if (list.length >= (Constants.PAGINATION_SIZE * currentPage)) {
+          isPullToRefresh = true;
+          hitUserApi();
+          showInSnackBar("Loading data...");
+        }
+      }
+    });
+  }
+
+  _buildContestList() {
+    return RefreshIndicator(
+      key: _refreshIndicatorKey,
+      onRefresh: () async {
+        isPullToRefresh = true;
+        _loadMore = false;
+        currentPage = 1;
+
+        await hitUserApi();
+      },
+      child: Container(
+        child: new ListView.builder(
+          padding: new EdgeInsets.all(0.0),
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) {
+            return buildItemNew(list[index]);
+            ;
+          },
+          itemCount: list.length,
+        ),
+      ),
     );
   }
 
+  Widget buildItemSecondNew(Data data) {
+    return Container(
+      margin: new EdgeInsets.only(left: 16.0, right: 16.0),
+      child: Row(
+        children: <Widget>[
+          new Container(
+            decoration: BoxDecoration(shape: BoxShape.circle),
+            alignment: Alignment.center,
+            child: ClipOval(
+              // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
+              child: getCachedNetworkImageWithurl(
+                  url: userResponse?.user?.profilePic ?? "",
+                  fit: BoxFit.cover,
+                  size: 40),
+            ),
+          ),
+          Expanded(
+            child: new Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Row(
+                      children: [
+                        new Text(
+                          userResponse?.user?.name ?? "",
+                          style: TextThemes.blackCirculerMedium,
+                        ),
+                        new SizedBox(
+                          width: 8,
+                        ),
+                        userResponse?.user?.perc == 100
+                            ? new Image.asset(
+                                AssetStrings.verify,
+                                width: 16,
+                                height: 16,
+                              )
+                            : Container(),
+                      ],
+                    )),
+                Container(
+                  margin: new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                  child: Row(
+                    children: [
+                      new Image.asset(
+                        AssetStrings.locationHome,
+                        width: 11,
+                        height: 14,
+                      ),
+                      new SizedBox(
+                        width: 6,
+                      ),
+                      Expanded(
+                          child: new Text(
+                        userResponse?.user?.location ?? "",
+                        style: TextThemes.greyDarkTextHomeLocation,
+                      )),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          Align(
+              alignment: Alignment.center,
+              child: new Text(
+                "€${data?.price ?? "0"}",
+                style: TextThemes.blackDarkHeaderSub,
+              )),
+        ],
+      ),
+    );
+  }
 
-
-
-  Widget buildItem(int index, String data) {
+  Widget buildItemNew(Data data) {
     return InkWell(
       onTap: () {
-        if (index == 1) {
-          providerFirebase?.changeScreen(Material(child: new VerifyProfile()));
-        } else if (index == 2) {
-          providerFirebase
-              ?.changeScreen(Material(child: new AddPaymentMethodFirst()));
-        } else {
-          providerFirebase?.changeScreen(Material(
-              child: new ReviewPost(
-            id: widget?.hireduserId?.toString() ?? "",
-          )));
-        }
-        /*Navigator.push(
-          context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
-            return Material(
-                child: new PostFavorDetails(
-                  id: data?.favourId?.toString(),
-                  isButtonDesabled: true,
-                ));
-          }),
-        );*/
+        providerFirebase.changeScreen(Material(
+            child: new MyProfileDetails(
+          type: 2,
+          postId: data?.id?.toString(),
+        )));
       },
       child: Container(
-        padding: new EdgeInsets.only(left: 16, right: 16),
-        decoration: new BoxDecoration(
-          borderRadius: new BorderRadius.circular(5.0),
-          color: Colors.white,
-        ),
+        color: Colors.white,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            new Container(
+              height: 8.0,
+              color: AppColors.whiteGray,
+            ),
+            new SizedBox(
+              height: 16.0,
+            ),
+            buildItemSecondNew(data),
             Opacity(
               opacity: 0.12,
               child: new Container(
                 height: 1.0,
-                margin: new EdgeInsets.only(top: 16),
+                margin: new EdgeInsets.only(left: 17.0, right: 17.0, top: 16.0),
                 color: AppColors.dividerColor,
               ),
             ),
-            Container(
-              margin: new EdgeInsets.only(top: 16.0),
-              child: new Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Container(
-                      child: new Text(
-                        data,
-                        style: TextThemes.blackCirculerMedium,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
+            data?.image != null
+                ? new Container(
+                    height: 147,
+                    width: double.infinity,
+                    margin:
+                        new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
+                    child: ClipRRect(
+                      // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                      borderRadius: new BorderRadius.circular(10.0),
+
+                      child: getCachedNetworkImageRect(
+                        url: data?.image ?? "",
+                        fit: BoxFit.cover,
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: new EdgeInsets.only(left: 7.0),
-                    child: new Icon(
-                      Icons.arrow_forward_ios,
-                      size: 13,
-                      color: Color.fromRGBO(183, 183, 183, 1),
-                    ),
                   )
-                ],
+                : Container(),
+            Container(
+                width: double.infinity,
+                color: Colors.white,
+                margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+                alignment: Alignment.centerLeft,
+                child: new Text(
+                  data?.title ?? "",
+                  style: TextThemes.blackCirculerMediumHeight,
+                )),
+            Container(
+              margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+              width: double.infinity,
+              color: Colors.white,
+              child: ReadMoreText(
+                data?.description ?? "",
+                trimLines: 4,
+                colorClickableText: AppColors.colorDarkCyan,
+                trimMode: TrimMode.Line,
+                style: new TextStyle(
+                  color: AppColors.moreText,
+                  fontFamily: AssetStrings.circulerNormal,
+                  fontSize: 14.0,
+                ),
+                trimCollapsedText: '...more',
+                textAlign: TextAlign.start,
+                trimExpandedText: ' less',
               ),
             ),
+            new SizedBox(
+              height: 15.0,
+            )
           ],
         ),
       ),
@@ -493,6 +586,7 @@ class _HomeState extends State<MyProfile>
                                   color: Colors.white,
                                   alignment: Alignment.center,
                                   child: new Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Container(
                                         child: Image.asset(AssetStrings.verify),
@@ -502,7 +596,7 @@ class _HomeState extends State<MyProfile>
                                       Container(
                                         margin: new EdgeInsets.only(left: 5),
                                         child: new Text(
-                                          "VERIFY YOUR PROFILE",
+                                          "PROFILE VERIFIED",
                                           style: new TextStyle(
                                               color: AppColors.colorDarkCyan,
                                               fontSize: 14,
@@ -524,7 +618,7 @@ class _HomeState extends State<MyProfile>
                           Container(
                             alignment: Alignment.centerLeft,
                             margin: new EdgeInsets.only(
-                                left: 16, right: 16, top: 16, bottom: 16),
+                                left: 16, right: 16, top: 24, bottom: 16),
                             child: new Text(
                               "History",
                               style: new TextStyle(
@@ -533,7 +627,13 @@ class _HomeState extends State<MyProfile>
                                   fontFamily: AssetStrings.circulerNormal),
                             ),
                           ),
-                          Material(
+
+                          Container(
+                            height: screenSize.height / 2.1,
+                            child: _buildContestList(),
+                          ),
+
+                          /* Material(
                             child: Container(
                               decoration:
                                   new BoxDecoration(color: Colors.white),
@@ -590,8 +690,8 @@ class _HomeState extends State<MyProfile>
                                 ],
                               ),
                             ),
-                          ),
-                          Container(
+                          ),*/
+                          /* Container(
                             height: screenSize.height / 2.1,
                             child: new TabBarView(
                               controller: tabBarController,
@@ -607,7 +707,7 @@ class _HomeState extends State<MyProfile>
                                 )
                               ],
                             ),
-                          ),
+                          ),*/
                         ],
                       ),
                     )

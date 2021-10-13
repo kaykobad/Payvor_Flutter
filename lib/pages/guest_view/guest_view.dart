@@ -35,7 +35,7 @@ class FadeIn extends State<GuestView> {
               children: <Widget>[
                 //  BackgroundImage(),
                 new Column(children: <Widget>[
-                  InkWell(
+                 /* InkWell(
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -48,7 +48,7 @@ class FadeIn extends State<GuestView> {
                         size: 24,
                       ),
                     ),
-                  ),
+                  ),*/
                   Container(
                     alignment: Alignment.center,
                     margin: new EdgeInsets.only(top: 124),

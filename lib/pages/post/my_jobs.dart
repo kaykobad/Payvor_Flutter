@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:payvor/current_user_hired_by_favor/current_user_hire_favor.dart';
 import 'package:payvor/model/apierror.dart';
@@ -335,12 +334,14 @@ class _HomeState extends State<MyJobs>
                   children: [
                     InkWell(
                       onTap: () {},
-                      child: new SvgPicture.asset(
-                        AssetStrings.nopostnojob,
+                      child: new Image.asset(
+                        AssetStrings.noPosts,
+                        width: 150,
+                        height: 150,
                       ),
                     ),
                     Container(
-                      margin: new EdgeInsets.only(top: 42),
+                      margin: new EdgeInsets.only(top: 10),
                       child: new Text(
                         "No Jobs",
                         style: new TextStyle(
