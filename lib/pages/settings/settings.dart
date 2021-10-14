@@ -9,6 +9,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/pages/edit_profile/edit_user_profile.dart';
+import 'package:payvor/pages/guest_view/guest_intro_screen.dart';
 import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
@@ -70,7 +71,7 @@ class _HomeState extends State<Settings>
     Navigator.pushAndRemoveUntil(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {
-        return new SplashIntroScreenNew();
+        return new GuestIntroScreen();
       }),
       (route) => false,
     );

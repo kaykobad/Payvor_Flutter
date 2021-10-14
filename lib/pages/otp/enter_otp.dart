@@ -189,6 +189,8 @@ class _LoginScreenState extends State<OtoVerification> {
         Navigator.pop(context);
         Navigator.pop(context);
       } else {
+        MemoryManagement.setGuestUser(type: false);
+
         MemoryManagement.setUserInfo(userInfo: json.encode(response));
         MemoryManagement.setAccessToken(accessToken: response?.data);
         Navigator.push(

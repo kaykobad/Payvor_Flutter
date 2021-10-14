@@ -24,6 +24,7 @@ class SharedPrefsKeys {
   static const String HIDE_PROFILE = "hide_profile";
   static const String USER_GEO = "USER_GEO";
   static const String USER_GEO_LOCATION = "USER_GEO_LOCATION";
+  static const String GUEST_USER = "user_guest";
 
   // Paginating list storage keys
   static const String ASSET_MILLS = "ASSET_MILLS";

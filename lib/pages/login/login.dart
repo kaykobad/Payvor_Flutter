@@ -268,6 +268,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
 
       provider.hideLoader();
       MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
+      MemoryManagement.setGuestUser(type: false);
       Navigator.push(
         context,
         new CupertinoPageRoute(builder: (BuildContext context) {

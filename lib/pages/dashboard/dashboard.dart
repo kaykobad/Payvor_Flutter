@@ -36,9 +36,6 @@ import 'package:payvor/utils/memory_management.dart';
 import 'package:provider/provider.dart';
 
 class DashBoardScreen extends StatefulWidget {
-  bool guestView;
-
-  DashBoardScreen({this.guestView});
 
   @override
   _DashBoardScreenState createState() => _DashBoardScreenState();
@@ -81,36 +78,41 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   Future<bool> _onBackPressed() async {
     bool canPop = false;
-    switch (currentTab) {
-      case 0:
-        {
-          canPop = _homeScreen.currentState.canPop();
-          if (canPop) _homeScreen.currentState.pop();
-          break;
-        }
-      case 3:
-        {
-          canPop = _profileScreen.currentState.canPop();
-          if (canPop) _profileScreen.currentState.pop();
+    if (guestViewMain == null || !guestViewMain) {
+      switch (currentTab) {
+        case 0:
+          {
+            canPop = _homeScreen.currentState.canPop();
+            if (canPop) _homeScreen.currentState.pop();
+            break;
+          }
+        case 3:
+          {
+            canPop = _profileScreen.currentState.canPop();
+            if (canPop) _profileScreen.currentState.pop();
 
-          break;
-        }
+            break;
+          }
 
-      case 1:
-        {
-          canPop = _chatScreen.currentState.canPop();
-          if (canPop) _chatScreen.currentState.pop();
+        case 1:
+          {
+            canPop = _chatScreen.currentState.canPop();
+            if (canPop) _chatScreen.currentState.pop();
 
-          break;
-        }
-      case 2:
-        {
-          canPop = _notificationScreen.currentState.canPop();
-          if (canPop) _notificationScreen.currentState.pop();
+            break;
+          }
+        case 2:
+          {
+            canPop = _notificationScreen.currentState.canPop();
+            if (canPop) _notificationScreen.currentState.pop();
 
-          break;
-        }
+            break;
+          }
+      }
+    } else {
+      canPop = false;
     }
+
     if (!canPop) //check if screen popped or not and showing home tab data
       return showDialog<void>(
             context: context,
@@ -223,9 +225,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       profile = userResponse.user.profilePic ?? "";
       userId = userResponse.user.id.toString();
     }
-
-    if (widget?.guestView != null) {
-      guestViewMain = widget?.guestView;
+    var guestUser = MemoryManagement.getGuestUser();
+    if (guestUser != null) {
+      guestViewMain = guestUser;
     }
   }
 
@@ -701,25 +703,33 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         Navigator(
           onGenerateRoute: (route) => MaterialPageRoute(
             settings: route,
-            builder: (context) => GuestView(),
+            builder: (context) => GuestView(
+              lauchCallBack: homeCallBack,
+            ),
           ),
         ),
         Navigator(
           onGenerateRoute: (route) => MaterialPageRoute(
             settings: route,
-            builder: (context) => GuestView(),
+            builder: (context) => GuestView(
+              lauchCallBack: homeCallBack,
+            ),
           ),
         ),
         Navigator(
           onGenerateRoute: (route) => MaterialPageRoute(
             settings: route,
-            builder: (context) => GuestView(),
+            builder: (context) => GuestView(
+              lauchCallBack: homeCallBack,
+            ),
           ),
         ),
         Navigator(
           onGenerateRoute: (route) => MaterialPageRoute(
             settings: route,
-            builder: (context) => GuestView(),
+            builder: (context) => GuestView(
+              lauchCallBack: homeCallBack,
+            ),
           ),
         ),
       ],
@@ -742,9 +752,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 //        child: screens[currentTab],
 //        bucket: bucket,
 //      ),
-        body: widget.guestView != null && widget.guestView
-            ? guestView()
-            : normalView(),
+        body:
+            guestViewMain != null && guestViewMain ? guestView() : normalView(),
         floatingActionButton: Container(
           margin: const EdgeInsets.only(top: 24),
           height: Constants.FLOATING_BUTTON_SIZE,
@@ -757,11 +766,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             elevation: 0.0,
             child: CustomFloatingButton(),
             onPressed: () {
-              if (widget.guestView != null && widget.guestView) {
+              if (guestViewMain != null && guestViewMain) {
                 Navigator.push(
                   context,
                   new CupertinoPageRoute(builder: (BuildContext context) {
-                    return Material(child: new GuestView());
+                    return Material(
+                        child: new GuestView(
+                      lauchCallBack: homeCallBack,
+                    ));
                   }),
                 );
               } else {

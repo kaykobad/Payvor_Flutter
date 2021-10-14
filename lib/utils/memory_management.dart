@@ -188,6 +188,14 @@ class MemoryManagement {
     return prefs.getString(SharedPrefsKeys.USER_INFO);
   }
 
+  static void setGuestUser({@required bool type}) {
+    prefs.setBool(SharedPrefsKeys.GUEST_USER, type);
+  }
+
+  static bool getGuestUser() {
+    return prefs.getBool(SharedPrefsKeys.GUEST_USER) ?? false;
+  }
+
   static void setCategory({@required String userInfo}) {
     prefs.setString(SharedPrefsKeys.USER_CATEGORY, userInfo);
   }

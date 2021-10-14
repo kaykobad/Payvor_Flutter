@@ -8,6 +8,10 @@ import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 
 class GuestView extends StatefulWidget {
+  final ValueChanged<Widget> lauchCallBack;
+
+  GuestView({@required this.lauchCallBack});
+
   @override
   State<StatefulWidget> createState() => FadeIn();
 }
@@ -120,20 +124,30 @@ class FadeIn extends State<GuestView> {
   }
 
   void callback() {
-    Navigator.push(
-      context,
-      new CupertinoPageRoute(builder: (BuildContext context) {
-        return new LoginScreenNew();
-      }),
-    );
+    if (widget.lauchCallBack != null) {
+      widget.lauchCallBack(
+          Material(child: Material(child: new LoginScreenNew())));
+    } else {
+      Navigator.push(
+        context,
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return new LoginScreenNew();
+        }),
+      );
+    }
   }
 
   void callbackSignin() {
-    Navigator.push(
-      context,
-      new CupertinoPageRoute(builder: (BuildContext context) {
-        return new JoinCommunityNew();
-      }),
-    );
+    if (widget.lauchCallBack != null) {
+      widget.lauchCallBack(
+          Material(child: Material(child: new JoinCommunityNew())));
+    } else {
+      Navigator.push(
+        context,
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return new JoinCommunityNew();
+        }),
+      );
+    }
   }
 }
