@@ -43,6 +43,8 @@ class _HomeState extends State<MyJobs>
   bool loader = false;
   String title = "";
 
+  int favourapplied = 0;
+
   List<Object> listResult = List();
 
   final StreamController<bool> _loaderStreamController =
@@ -116,6 +118,7 @@ class _HomeState extends State<MyJobs>
 
       if (response != null && response.data != null) {
         if (currentPage == 1) {
+          favourapplied = response?.favourapplied ?? 0;
           listResult.clear();
 
           if (response?.data?.length > 0) {
@@ -150,7 +153,7 @@ class _HomeState extends State<MyJobs>
       APIError apiError = response;
       print(apiError.error);
 
-      hitCurrentUserHire();
+      //hitCurrentUserHire();
 
       //  showInSnackBar(apiError.error);
     }
@@ -272,7 +275,7 @@ class _HomeState extends State<MyJobs>
                 children: <Widget>[
                   new Container(
                     child: new Text(
-                      "Recent Applied Favors (5)",
+                      "Recent Applied Favors ($favourapplied)",
                       style: TextThemes.blackCirculerMedium,
                     ),
                   ),
@@ -318,7 +321,9 @@ class _HomeState extends State<MyJobs>
             child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                buildItemNewTop(),
+                favourapplied != null && favourapplied > 0
+                    ? buildItemNewTop()
+                    : Container(),
                 _buildContestList(),
               ],
             ),
@@ -395,7 +400,7 @@ class _HomeState extends State<MyJobs>
         await hitJobsPost();
       },
       child: Container(
-        margin: new EdgeInsets.only(left: 16, right: 16),
+        margin: new EdgeInsets.only(left: 18, right: 18),
         child: new ListView.builder(
           padding: new EdgeInsets.all(0.0),
           physics: const AlwaysScrollableScrollPhysics(),
@@ -557,7 +562,7 @@ class _HomeState extends State<MyJobs>
       },
       child: Container(
         padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
-        margin: new EdgeInsets.only(top: 18.0, left: 18, right: 18),
+        margin: new EdgeInsets.only(top: 18.0),
         decoration: new BoxDecoration(
           borderRadius: new BorderRadius.circular(5.0),
           color: Colors.white,

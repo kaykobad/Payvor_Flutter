@@ -821,10 +821,10 @@ class PrivateChatScreenState extends State<PrivateChat> {
             userName,
             style: TextThemes.chatUUserTextBold,
           ),
-          Padding(
+        /*  Padding(
             padding: const EdgeInsets.all(8.0),
             child: _userStatus(),
-          )
+          )*/
         ],
       ),
       centerTitle: true,
@@ -1069,25 +1069,29 @@ class PrivateChatScreenState extends State<PrivateChat> {
 
   Widget _timeSectionWidget(String text) {
     return Center(
-      child: Wrap(
-        direction: Axis.vertical,
-        children: [
-          Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Color.fromRGBO(143, 146, 161, 1.0),
-                      width: 0.5
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(20))
+      child: Container(
+        margin: new EdgeInsets.only(left: 14, right: 14),
+        child: Row(
+          children: [
+            Expanded(
+              child: new Container(
+                height: 0.3,
+                color: AppColors.kBlack.withOpacity(0.7),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(child: Text(
-                    text.toUpperCase(),
-                    style: TextThemes.chatSectionItemTheme)),
-              )
-          ),
-        ],
+            ),
+            Container(
+                margin: new EdgeInsets.only(left: 14, right: 14),
+                child: Center(
+                    child: Text(text.toUpperCase(),
+                        style: TextThemes.chatSectionItemTheme))),
+            Expanded(
+              child: new Container(
+                height: 0.3,
+                color: AppColors.kBlack.withOpacity(0.7),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

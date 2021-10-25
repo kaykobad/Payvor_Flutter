@@ -40,6 +40,7 @@ class _HomeState extends State<MyPosts>
   bool offstagenodata = true;
   bool loader = false;
   String title = "";
+  int myFavorCount = 0;
 
   List<Object> listResult = List();
 
@@ -112,6 +113,7 @@ class _HomeState extends State<MyPosts>
 
       if (response != null && response.data != null) {
         if (currentPage == 1) {
+          myFavorCount = response?.myfavour ?? 0;
           listResult.clear();
 
           if (response?.data?.length > 0) {
@@ -134,7 +136,8 @@ class _HomeState extends State<MyPosts>
         } else {
           offstagenodata = false;
         }
-        hitHireJobApi();
+
+        //  hitHireJobApi();
 
         setState(() {});
       }
@@ -235,7 +238,9 @@ class _HomeState extends State<MyPosts>
                 /* new Container(
                   child: ,
                 )*/
-                buildItemNew(),
+                myFavorCount != null && myFavorCount > 0
+                    ? buildItemNew()
+                    : Container(),
                 _buildContestList(),
               ],
             ),
@@ -313,7 +318,7 @@ class _HomeState extends State<MyPosts>
         await hitPostedApi();
       },
       child: Container(
-        margin: new EdgeInsets.only(left: 16, right: 16),
+        margin: new EdgeInsets.only(left: 18, right: 18),
         child: new ListView.builder(
           padding: new EdgeInsets.all(0.0),
           physics: const AlwaysScrollableScrollPhysics(),
@@ -321,7 +326,7 @@ class _HomeState extends State<MyPosts>
             if (listResult[index] is String) {
               widgets = buildItemHeader(listResult[index]);
             } else if (listResult[index] is DataNextPost) {
-              widgets = buildItemMain(listResult[index]);
+              widgets = buildItemMainNew(listResult[index]);
             } else if (listResult[index] is DataFavour) {
               widgets = buildItem(listResult[index]);
             }
@@ -441,7 +446,7 @@ class _HomeState extends State<MyPosts>
                   children: <Widget>[
                     new Container(
                       child: new Text(
-                        "Recent Posted Favors (6)",
+                        "Recent Posted Favors ($myFavorCount)",
                         style: TextThemes.blackCirculerMedium,
                       ),
                     ),
@@ -715,7 +720,7 @@ class _HomeState extends State<MyPosts>
       },
       child: Container(
         padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 11),
-        margin: new EdgeInsets.only(top: 8.0, left: 18, right: 18),
+        margin: new EdgeInsets.only(top: 8.0),
         decoration: new BoxDecoration(
           borderRadius: new BorderRadius.circular(5.0),
           color: Colors.white,

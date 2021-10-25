@@ -380,8 +380,8 @@ class _HomeState extends State<PostFavorDetails>
         showBottomPaymentMethod();
         MemoryManagement.setFirstPaymentStatus(status: true);
       } else {
-        //  hitApplyFavApi();
-        showBottomPaymentMethod();
+        hitApplyFavApi();
+        // showBottomPaymentMethod();
       }
     }
 

@@ -1,12 +1,15 @@
 class CurrentUserHiredFavorResponse {
   Status status;
   List<DataNextPost> data;
+  num myfavour;
 
-  CurrentUserHiredFavorResponse({this.status, this.data});
+  CurrentUserHiredFavorResponse({this.status, this.data, this.myfavour});
 
   CurrentUserHiredFavorResponse.fromJson(Map<String, dynamic> json) {
     status =
         json['status'] != null ? new Status.fromJson(json['status']) : null;
+    myfavour = json['myfavour'];
+
     if (json['data'] != null) {
       data = new List<DataNextPost>();
       json['data'].forEach((v) {
@@ -23,6 +26,8 @@ class CurrentUserHiredFavorResponse {
     if (this.data != null) {
       data['data'] = this.data.map((v) => v.toJson()).toList();
     }
+    data['myfavour'] = this.myfavour;
+
     return data;
   }
 }

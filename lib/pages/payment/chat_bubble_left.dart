@@ -64,7 +64,7 @@ class ChatBubbleLeft extends StatelessWidget {
                       ),
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.leftChat,
+                        color: AppColors.colorCyanPrimary,
                         border: new Border.all(
                           color: Color.fromRGBO(151, 151, 151, 0.2),
                           width: 0.5,
@@ -76,15 +76,15 @@ class ChatBubbleLeft extends StatelessWidget {
                       ),
                       child: Linkify(
                           onOpen: (link) async {
-                             if (await canLaunch(link.url)) {
+                            if (await canLaunch(link.url)) {
                               await launch(link.url);
                             } else {
                               throw 'Could not launch $link';
                             }
                           },
-                          text:message??"",
-                          linkStyle: TextStyle(color: Colors.blue),
-                          style: TextThemes.chatMessageThemeActive),
+                          text: message ?? "",
+                          linkStyle: TextStyle(color: AppColors.kWhite),
+                          style: TextThemes.chatMessageLeft),
                     ),
                   ],
                 ),
