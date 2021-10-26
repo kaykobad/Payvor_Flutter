@@ -203,6 +203,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   void initState() {
     MemoryManagement.setScreenType(type: "3");
     _firebaseMessaging = FirebaseMessaging();
+
     Future.delayed(new Duration(microseconds: 2000), () {
       setCategory();
       print("call fun");
