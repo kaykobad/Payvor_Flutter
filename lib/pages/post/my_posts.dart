@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:payvor/current_user_hired_by_favor/current_user_favor_hire.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/favour_posted_by_user.dart';
+import 'package:payvor/model/stripe/stripe_get_users.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/original_post/original_post_data.dart';
 import 'package:payvor/pages/pay_feedback/pay_feedback_common.dart';
@@ -241,12 +242,15 @@ class _HomeState extends State<MyPosts>
                 myFavorCount != null && myFavorCount > 0
                     ? buildItemNew()
                     : Container(),
-                _buildContestList(),
+                listResult != null && listResult.length > 1
+                    ? _buildContestList()
+                    : Container(),
               ],
             ),
           ),
           Offstage(
-            offstage: offstagenodata,
+            offstage:
+                listResult != null && listResult.length > 1 ? true : false,
             child: Container(
               height: screenSize.height,
               padding: new EdgeInsets.only(bottom: 40),
@@ -495,6 +499,38 @@ class _HomeState extends State<MyPosts>
     }
   }
 
+  hitEndedFavours(DataNextPost data) async {
+    provider.setLoading();
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    var responses = await provider.endedFavours(context, data?.id?.toString());
+
+    if (responses is GetStripeResponse) {
+      provider.hideLoader();
+
+      listResult?.remove(data);
+
+      setState(() {});
+    } else {
+      provider.hideLoader();
+      APIError apiError = responses;
+      showInSnackBar(apiError.error);
+    }
+  }
+
   Widget buildItemMain(DataNextPost data) {
     var dates = formatDateString(data?.createdAt ?? "");
     return InkWell(
@@ -504,7 +540,7 @@ class _HomeState extends State<MyPosts>
             widget.lauchCallBack(Material(
                 child: Material(
                     child: new PayFeebackDetails(
-                      lauchCallBack: widget?.lauchCallBack,
+              lauchCallBack: widget?.lauchCallBack,
                       userId: data?.hiredUserId?.toString(),
                       postId: data?.id?.toString(),
                       type: 0,
@@ -817,7 +853,9 @@ class _HomeState extends State<MyPosts>
             Container(
               margin: new EdgeInsets.only(top: 10),
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  hitEndedFavours(data);
+                },
                 child: new Text(
                   "END FAVOR",
                   style: new TextStyle(

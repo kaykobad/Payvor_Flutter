@@ -973,6 +973,25 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<dynamic> endedFavours(BuildContext context, String id) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response =
+        await APIHandler.get(context: context, url: APIs.endFavours + id);
+    print("addStripeUsers ${APIs.endFavours}");
+
+    log(jsonEncode(response));
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      GetStripeResponse resendOtpResponse =
+          new GetStripeResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
   Future<dynamic> addStripeCards(
       BuildContext context, AddStripeRequest request) async {
     Completer<dynamic> completer = new Completer<dynamic>();
