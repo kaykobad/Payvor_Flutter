@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:payvor/current_user_hired_by_favor/current_user_favor_hire.dart';
@@ -958,11 +959,14 @@ class AuthProvider with ChangeNotifier {
     var response =
         await APIHandler.get(context: context, url: APIs.getStripeUsers);
     print("addStripeUsers ${APIs.getStripeUsers}");
+
+    log(jsonEncode(response));
     if (response is APIError) {
       completer.complete(response);
       return completer.future;
     } else {
-      GetStripeUsers resendOtpResponse = new GetStripeUsers.fromJson(response);
+      GetStripeResponse resendOtpResponse =
+          new GetStripeResponse.fromJson(response);
       completer.complete(resendOtpResponse);
       notifyListeners();
       return completer.future;

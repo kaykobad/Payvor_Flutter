@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 class AddStripeCardDetails extends StatefulWidget {
   ValueSetter<int> voidcallback;
@@ -82,10 +84,11 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
   void initState() {
     // TODO: implement initState
 
-    /* StripePayment.setOptions(StripeOptions(
-        publishableKey: "pk_test_aSaULNS8cJU6Tvo20VAXy6rp",
+    StripePayment.setOptions(StripeOptions(
+        publishableKey:
+            "pk_test_51IGZpGBWL8vL5RdKb9vByUN7q9V0nv46coA9Ngo7sceVBBIlJM9SFtZ0nPv1VW3XhSoyiecsrcy0u7uS7JDQ4v2500Heb148HL",
         merchantId: "Test",
-        androidPayMode: 'test'));*/
+        androidPayMode: 'test'));
 
     listCardNumber.addAll([
       WhitelistingTextInputFormatter.digitsOnly,
@@ -103,9 +106,6 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
       new LengthLimitingTextInputFormatter(4)
     ]);
 
-    Future.delayed(const Duration(milliseconds: 300), () {
-      hitStripeApi();
-    });
 
     super.initState();
   }
@@ -167,9 +167,7 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
         ));
   }
 
-  hitStripeApi() async {
-    provider.setLoading();
-
+  hitStripeApi(String id) async {
     bool gotInternetConnection = await hasInternetConnection(
       context: context,
       mounted: mounted,
@@ -183,16 +181,18 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
     if (!gotInternetConnection) {
       return;
     }
-    AddStripeRequest updateTokenRequest = AddStripeRequest(strtoken: "");
+    AddStripeRequest updateTokenRequest = AddStripeRequest(strtoken: id);
 
     var response = await provider.addStripeCards(context, updateTokenRequest);
 
     if (response is AddStripeUsers) {
       provider.hideLoader();
 
-      if (response != null && response.data == 200) {}
-
-      setState(() {});
+      if (response != null) {
+        widget?.voidcallback(1);
+        showInSnackBar("Payment added successfully");
+        Navigator.pop(context);
+      }
 
       print(response);
     } else {
@@ -214,192 +214,192 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
       backgroundColor: AppColors.backgroundGray,
       body: Container(
           child: ClipRRect(
-        child: Stack(
-          children: [
-            Form(
-              key: _fieldKey,
-              child: Column(
-                children: [
-                  Container(
-                    margin: new EdgeInsets.only(left: 16, right: 16, top: 16),
-                    padding: new EdgeInsets.only(bottom: 25, top: 10),
-                    decoration: new BoxDecoration(
-                        border:
+            child: Stack(
+              children: [
+                Form(
+                  key: _fieldKey,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: new EdgeInsets.only(left: 16, right: 16, top: 16),
+                        padding: new EdgeInsets.only(bottom: 25, top: 10),
+                        decoration: new BoxDecoration(
+                            border:
                             new Border.all(color: AppColors.grayy, width: 1),
-                        borderRadius: new BorderRadius.circular(5.0),
-                        color: Colors.white),
-                    child: new Column(
-                      children: [
-                        Container(
-                          margin: new EdgeInsets.only(left: 16, right: 16),
-                          child: getTextField(
-                              validatorCard,
-                              "Card Holder Name",
-                              _NameController,
-                              _NameField,
-                              _AccountField,
-                              0,
-                              mNameEmpty,
-                              listNormalText,
-                              AssetStrings.cardPerson,
-                              TextInputType.text),
-                        ),
-                        mNameEmpty
-                            ? new Container(
-                                margin: new EdgeInsets.only(top: 6, left: 24),
-                                alignment: Alignment.centerLeft,
-                                child: new Text(
-                                  textAccount,
-                                  style: new TextStyle(
-                                    fontFamily: AssetStrings.circulerNormal,
-                                    fontSize: 13,
-                                    color: Color.fromRGBO(205, 107, 102, 1),
-                                  ),
+                            borderRadius: new BorderRadius.circular(5.0),
+                            color: Colors.white),
+                        child: new Column(
+                          children: [
+                            Container(
+                              margin: new EdgeInsets.only(left: 16, right: 16),
+                              child: getTextField(
+                                  validatorCard,
+                                  "Card Holder Name",
+                                  _NameController,
+                                  _NameField,
+                                  _AccountField,
+                                  0,
+                                  mNameEmpty,
+                                  listNormalText,
+                                  AssetStrings.cardPerson,
+                                  TextInputType.text),
+                            ),
+                            mNameEmpty
+                                ? new Container(
+                              margin: new EdgeInsets.only(top: 6, left: 24),
+                              alignment: Alignment.centerLeft,
+                              child: new Text(
+                                textAccount,
+                                style: new TextStyle(
+                                  fontFamily: AssetStrings.circulerNormal,
+                                  fontSize: 13,
+                                  color: Color.fromRGBO(205, 107, 102, 1),
                                 ),
-                              )
-                            : Container(),
-                        new SizedBox(
-                          height: 8.0,
-                        ),
-                        Container(
-                          margin: new EdgeInsets.only(left: 16, right: 16),
-                          child: getTextField(
-                              validatorCvv,
-                              "Card Number",
-                              _AccountController,
-                              _AccountField,
-                              _MonthField,
-                              0,
-                              mCardEmpty,
-                              listCardNumber,
-                              AssetStrings.card,
-                              TextInputType.number),
-                        ),
-                        mCardEmpty
-                            ? new Container(
-                                margin: new EdgeInsets.only(top: 6, left: 24),
-                                alignment: Alignment.centerLeft,
-                                child: new Text(
-                                  textName,
-                                  style: new TextStyle(
-                                    fontFamily: AssetStrings.circulerNormal,
-                                    fontSize: 13,
-                                    color: Color.fromRGBO(205, 107, 102, 1),
-                                  ),
+                              ),
+                            )
+                                : Container(),
+                            new SizedBox(
+                              height: 8.0,
+                            ),
+                            Container(
+                              margin: new EdgeInsets.only(left: 16, right: 16),
+                              child: getTextField(
+                                  validatorCvv,
+                                  "Card Number",
+                                  _AccountController,
+                                  _AccountField,
+                                  _MonthField,
+                                  0,
+                                  mCardEmpty,
+                                  listCardNumber,
+                                  AssetStrings.card,
+                                  TextInputType.number),
+                            ),
+                            mCardEmpty
+                                ? new Container(
+                              margin: new EdgeInsets.only(top: 6, left: 24),
+                              alignment: Alignment.centerLeft,
+                              child: new Text(
+                                textName,
+                                style: new TextStyle(
+                                  fontFamily: AssetStrings.circulerNormal,
+                                  fontSize: 13,
+                                  color: Color.fromRGBO(205, 107, 102, 1),
                                 ),
-                              )
-                            : Container(),
-                        new Container(
-                          margin:
+                              ),
+                            )
+                                : Container(),
+                            new Container(
+                              margin:
                               new EdgeInsets.only(right: 16, left: 16, top: 8),
-                          child: new Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: getTextField(
-                                    validatorCvv,
-                                    "Expiry Date",
-                                    _MonthController,
-                                    _MonthField,
-                                    _CvvField,
-                                    1,
-                                    mMonthEmpty,
-                                    listExpDate,
-                                    AssetStrings.cardCal,
-                                    TextInputType.number),
+                              child: new Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: getTextField(
+                                        validatorCvv,
+                                        "Expiry Date",
+                                        _MonthController,
+                                        _MonthField,
+                                        _CvvField,
+                                        1,
+                                        mMonthEmpty,
+                                        listExpDate,
+                                        AssetStrings.cardCal,
+                                        TextInputType.number),
+                                  ),
+                                  new SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: getTextField(
+                                        validatorCvv,
+                                        "CVV",
+                                        _CvvController,
+                                        _CvvField,
+                                        _CvvField,
+                                        1,
+                                        mCvvEmpty,
+                                        listcvv,
+                                        AssetStrings.cardLock,
+                                        TextInputType.number),
+                                  ),
+                                ],
                               ),
-                              new SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: getTextField(
-                                    validatorCvv,
-                                    "CVV",
-                                    _CvvController,
-                                    _CvvField,
-                                    _CvvField,
-                                    1,
-                                    mCvvEmpty,
-                                    listcvv,
-                                    AssetStrings.cardLock,
-                                    TextInputType.number),
-                              ),
-                            ],
-                          ),
-                        ),
-                        new Container(
-                          child: new Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: mMonthEmpty
-                                    ? new Container(
-                                        margin: new EdgeInsets.only(
-                                            top: 16, left: 24),
-                                        alignment: Alignment.centerLeft,
-                                        child: new Text(
-                                          textMonth,
-                                          style: new TextStyle(
-                                            fontFamily:
-                                                AssetStrings.circulerNormal,
-                                            fontSize: 13,
-                                            color: Color.fromRGBO(
-                                                205, 107, 102, 1),
-                                          ),
+                            ),
+                            new Container(
+                              child: new Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: mMonthEmpty
+                                        ? new Container(
+                                      margin: new EdgeInsets.only(
+                                          top: 16, left: 24),
+                                      alignment: Alignment.centerLeft,
+                                      child: new Text(
+                                        textMonth,
+                                        style: new TextStyle(
+                                          fontFamily:
+                                          AssetStrings.circulerNormal,
+                                          fontSize: 13,
+                                          color: Color.fromRGBO(
+                                              205, 107, 102, 1),
                                         ),
-                                      )
-                                    : Container(),
-                              ),
-                              new SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: mCvvEmpty
-                                    ? new Container(
-                                        margin: new EdgeInsets.only(
-                                            top: 16, right: 24),
-                                        alignment: Alignment.centerLeft,
-                                        child: new Text(
-                                          textCvv,
-                                          style: new TextStyle(
-                                            fontFamily:
-                                                AssetStrings.circulerNormal,
-                                            fontSize: 13,
-                                            color: Color.fromRGBO(
-                                                205, 107, 102, 1),
-                                          ),
+                                      ),
+                                    )
+                                        : Container(),
+                                  ),
+                                  new SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: mCvvEmpty
+                                        ? new Container(
+                                      margin: new EdgeInsets.only(
+                                          top: 16, right: 24),
+                                      alignment: Alignment.centerLeft,
+                                      child: new Text(
+                                        textCvv,
+                                        style: new TextStyle(
+                                          fontFamily:
+                                          AssetStrings.circulerNormal,
+                                          fontSize: 13,
+                                          color: Color.fromRGBO(
+                                              205, 107, 102, 1),
                                         ),
-                                      )
-                                    : Container(),
+                                      ),
+                                    )
+                                        : Container(),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
+                      Container(
+                        margin: new EdgeInsets.only(top: 25, left: 16, right: 16),
+                        child: getSetupButtonNew(callback, "Add Card", 0,
+                            newColor: AppColors.colorDarkCyan),
+                      ),
+                      Container(
+                        height: 26,
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  child: new Center(
+                    child: getHalfScreenLoader(
+                      status: provider.getLoading(),
+                      context: context,
                     ),
                   ),
-                  Container(
-                    margin: new EdgeInsets.only(top: 25, left: 16, right: 16),
-                    child: getSetupButtonNew(callback, "Add Card", 0,
-                        newColor: AppColors.colorDarkCyan),
-                  ),
-                  Container(
-                    height: 26,
-                  )
-                ],
-              ),
-            ),
-            Container(
-              child: new Center(
-                child: getHalfScreenLoader(
-                  status: provider.getLoading(),
-                  context: context,
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      )),
+          )),
     );
   }
 
@@ -455,8 +455,7 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
     }
   }
 
-  Widget getTextField(
-      Function validators,
+  Widget getTextField(Function validators,
       String labelText,
       TextEditingController controller,
       FocusNode focusNodeCurrent,
@@ -484,15 +483,15 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
         decoration: new InputDecoration(
           enabledBorder: card
               ? new UnderlineInputBorder(
-                  borderSide: new BorderSide(
-                    color: Colors.red.withOpacity(0.5),
-                  ),
-                  borderRadius: new BorderRadius.circular(8))
+              borderSide: new BorderSide(
+                color: Colors.red.withOpacity(0.5),
+              ),
+              borderRadius: new BorderRadius.circular(8))
               : new UnderlineInputBorder(
-                  borderSide: new BorderSide(
-                    color: Colors.grey.withOpacity(0.5),
-                  ),
-                  borderRadius: new BorderRadius.circular(8)),
+              borderSide: new BorderSide(
+                color: Colors.grey.withOpacity(0.5),
+              ),
+              borderRadius: new BorderRadius.circular(8)),
           focusedBorder: new UnderlineInputBorder(
               borderSide: new BorderSide(
                 color: card
@@ -503,9 +502,9 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
           contentPadding: new EdgeInsets.only(top: 10.0, left: 0),
           prefixIcon: image != null
               ? Container(
-                  padding: new EdgeInsets.only(top: 12, bottom: 12, right: 1),
-                  child: new Image.asset(image),
-                )
+            padding: new EdgeInsets.only(top: 12, bottom: 12, right: 1),
+            child: new Image.asset(image),
+          )
               : Container(),
           hintText: labelText,
           hintStyle: TextThemes.greyTextFieldHintNormal,
@@ -581,7 +580,9 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
           return false;
         }
 
-        /*  final CreditCard testCard = CreditCard(
+        provider.setLoading();
+
+        final CreditCard testCard = CreditCard(
             number: account,
             expMonth: monthCard,
             expYear: yearCard,
@@ -591,10 +592,10 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
         StripePayment.createTokenWithCard(
           testCard,
         ).then((token) {
-          showInSnackBar(token?.tokenId);
+          hitStripeApi(token?.tokenId);
 
           //  _paymentToken = token;
-        }).catchError(setError);*/
+        }).catchError(setError);
 
 /*
           StripePayment.createPaymentMethod(
@@ -619,6 +620,7 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
 
   void setError(dynamic error) {
     showInSnackBar(error.toString());
+    provider.hideLoader();
   }
 
   void showInSnackBar(String value) {

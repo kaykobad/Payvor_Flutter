@@ -51,7 +51,7 @@ class Data {
   String email;
   String updatedAt;
   String createdAt;
-  num id;
+  String id;
 
   Data(
       {this.userId,

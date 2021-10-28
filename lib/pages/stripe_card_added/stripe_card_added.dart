@@ -25,7 +25,7 @@ class _HomeState extends State<StripeCardAddedList>
   var screenSize;
 
   List<Data> listRecent = List();
-  GetStripeUsers response;
+  GetStripeResponse response;
 
   Widget widgets;
 
@@ -67,15 +67,16 @@ class _HomeState extends State<StripeCardAddedList>
       return;
     }
 
-    var response = await provider.getAddedCards(context);
+    var responses = await provider.getAddedCards(context);
 
-    if (response is GetStripeUsers) {
+    if (responses is GetStripeResponse) {
       provider.hideLoader();
 
-      if (response != null &&
-          response?.status?.code == 200 &&
-          response?.data != null) {
-        listRecent?.addAll(response?.data);
+      if (responses != null &&
+          responses?.status?.code == 200 &&
+          responses?.customer != null) {
+        response = responses;
+        listRecent?.addAll(responses?.customer.data);
       }
 
       setState(() {});
@@ -83,7 +84,7 @@ class _HomeState extends State<StripeCardAddedList>
       print(response);
     } else {
       provider.hideLoader();
-      APIError apiError = response;
+      APIError apiError = responses;
       showInSnackBar(apiError.error);
     }
   }
@@ -142,6 +143,10 @@ class _HomeState extends State<StripeCardAddedList>
         ));
   }
 
+  Future<ValueSetter> voidCallBacks(int type) async {
+    hitStripeApi();
+  }
+
   @override
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
@@ -182,10 +187,7 @@ class _HomeState extends State<StripeCardAddedList>
                                   width: 84.0,
                                   child: ClipOval(
                                     child: getCachedNetworkImageWithurl(
-                                      url: response != null &&
-                                              response?.user != null
-                                          ? response?.user?.profilePic
-                                          : "",
+                                      url: response != null ? "" : "",
                                       size: 84,
                                       fit: BoxFit.cover,
                                     ),
@@ -197,9 +199,7 @@ class _HomeState extends State<StripeCardAddedList>
                                 margin: new EdgeInsets.only(
                                     top: 16, left: 10, right: 10),
                                 child: new Text(
-                                  response != null && response?.user != null
-                                      ? response?.user?.name
-                                      : "",
+                                  response != null ? "" : "",
                                   style: new TextStyle(
                                       fontFamily: AssetStrings.circulerMedium,
                                       fontSize: 20,
@@ -306,7 +306,9 @@ class _HomeState extends State<StripeCardAddedList>
                           context,
                           new CupertinoPageRoute(
                               builder: (BuildContext context) {
-                            return AddStripeCardDetails();
+                                return AddStripeCardDetails(
+                              voidcallback: voidCallBacks,
+                            );
                           }),
                         );
                       },
@@ -391,7 +393,19 @@ class _HomeState extends State<StripeCardAddedList>
 
   Widget buildItemRecentSearch(Data data) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        print("callled");
+        if (response != null &&
+            response?.customer != null &&
+            response?.customer?.data != null) {
+          for (var dataItem in response?.customer?.data) {
+            dataItem?.isCheck = false;
+          }
+          data?.isCheck = true;
+
+          setState(() {});
+        }
+      },
       child: Container(
         padding: new EdgeInsets.only(left: 14.0, right: 14.0, top: 12),
         child: Column(
@@ -419,7 +433,9 @@ class _HomeState extends State<StripeCardAddedList>
                   Expanded(
                     child: Container(
                       child: new Text(
-                        "Master Card ending in 2468",
+                        data != null
+                            ? "${data?.brand} ending in ${data?.last4}"
+                            : "",
                         style: new TextStyle(
                           color: Colors.black.withOpacity(0.5),
                           fontFamily: AssetStrings.circulerMedium,
@@ -434,15 +450,14 @@ class _HomeState extends State<StripeCardAddedList>
                   new SizedBox(
                     width: 5,
                   ),
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                      child: new Container(
-                        child: new Icon(
-                          Icons.check,
-                          color: AppColors.colorDarkCyan,
-                          size: 18,
-                        ),
+                  Container(
+                    child: new Container(
+                      child: new Icon(
+                        Icons.check,
+                        color: data?.isCheck != null && data?.isCheck
+                            ? AppColors.colorDarkCyan
+                            : Colors.transparent,
+                        size: 18,
                       ),
                     ),
                   )

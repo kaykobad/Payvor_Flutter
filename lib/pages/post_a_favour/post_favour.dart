@@ -463,14 +463,16 @@ class _HomeState extends State<PostFavour>
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
               hintText: labelText,
-
               contentPadding: new EdgeInsets.only(right: 50.0),
-//              prefix: new Text(
-//                  focusNodeCurrent == _PriceField&&_PriceField.hasFocus
-//                      ? "€ "
-//                      : ""),
-              hintStyle: controller.text.length == 0 && isValid ? TextThemes
-                  .readAlert : TextThemes.greyTextFieldHintNormal,
+              prefix: new Text(
+                focusNodeCurrent == _PriceField && _PriceField.hasFocus
+                    ? "€ "
+                    : "",
+                style: new TextStyle(color: AppColors.colorDarkCyan),
+              ),
+              hintStyle: controller.text.length == 0 && isValid
+                  ? TextThemes.readAlert
+                  : TextThemes.greyTextFieldHintNormal,
             ),
           ),
 
@@ -615,9 +617,9 @@ class _HomeState extends State<PostFavour>
                         margin: new EdgeInsets.only(top: 38),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: Color.fromRGBO(37, 26, 101, 1),
-                          shape: BoxShape.circle,
-                        ),
+                          color: AppColors.greenDark,
+                      shape: BoxShape.circle,
+                    ),
                         child: new SvgPicture.asset(
                           AssetStrings.check,
                           width: 42.0,

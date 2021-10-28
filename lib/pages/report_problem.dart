@@ -705,7 +705,7 @@ class _HomeState extends State<ReportProblems>
                     margin: new EdgeInsets.only(top: 38),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(37, 26, 101, 1),
+                      color: AppColors.greenDark,
                       shape: BoxShape.circle,
                     ),
                     child: GestureDetector(
