@@ -297,7 +297,7 @@ class _HomeState extends State<MyPosts>
             margin: new EdgeInsets.only(top: 130),
             child: new Center(
               child: getHalfScreenLoader(
-                status: loader,
+                status: provider?.getLoading(),
                 context: context,
               ),
             ),

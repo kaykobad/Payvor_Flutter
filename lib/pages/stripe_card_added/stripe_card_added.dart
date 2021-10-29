@@ -75,6 +75,7 @@ class _HomeState extends State<StripeCardAddedList>
       if (responses != null &&
           responses?.status?.code == 200 &&
           responses?.customer != null) {
+        listRecent?.clear();
         response = responses;
         listRecent?.addAll(responses?.customer.data);
       }
@@ -187,7 +188,10 @@ class _HomeState extends State<StripeCardAddedList>
                                   width: 84.0,
                                   child: ClipOval(
                                     child: getCachedNetworkImageWithurl(
-                                      url: response != null ? "" : "",
+                                      url: response != null &&
+                                              response?.user != null
+                                          ? response?.user?.profilePic
+                                          : "",
                                       size: 84,
                                       fit: BoxFit.cover,
                                     ),
@@ -199,7 +203,9 @@ class _HomeState extends State<StripeCardAddedList>
                                 margin: new EdgeInsets.only(
                                     top: 16, left: 10, right: 10),
                                 child: new Text(
-                                  response != null ? "" : "",
+                                  response != null && response?.user != null
+                                      ? response?.user?.name
+                                      : "",
                                   style: new TextStyle(
                                       fontFamily: AssetStrings.circulerMedium,
                                       fontSize: 20,
@@ -229,7 +235,10 @@ class _HomeState extends State<StripeCardAddedList>
                                       constraints:
                                           new BoxConstraints(maxWidth: 100),
                                       child: new Text(
-                                        "€ 50" ?? "",
+                                        response != null &&
+                                                response?.user != null
+                                            ? "€ 50"
+                                            : "",
                                         maxLines: 2,
                                         style: new TextStyle(
                                             fontFamily:
