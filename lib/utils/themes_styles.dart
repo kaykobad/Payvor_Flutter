@@ -257,14 +257,21 @@ class TextThemes {
   static final TextStyle chatMessageThemeActive = TextStyle(
     fontFamily: AssetStrings.circulerNormal,
     fontSize: 14,
-    color:AppColors.kBlack,
+    color: AppColors.kBlack,
+  );
+
+  static final TextStyle chatMessageLeft = TextStyle(
+    fontFamily: AssetStrings.circulerNormal,
+    fontSize: 14,
+    color: AppColors.kWhite,
   );
 
   static final TextStyle chatMessageThemeInActive = TextStyle(
     fontFamily: AssetStrings.circulerNormal,
     fontSize: 14,
-    color:Color.fromRGBO(103, 99, 99, 1.0),
+    color: Color.fromRGBO(103, 99, 99, 1.0),
   );
+
   //chat user name
   static final TextStyle chatUUserTextBold = TextStyle(
     fontFamily: AssetStrings.circulerBoldStyle,

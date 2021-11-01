@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:payvor/current_user_hired_by_favor/current_user_favor_hire.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/favour_posted_by_user.dart';
+import 'package:payvor/model/stripe/stripe_get_users.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/original_post/original_post_data.dart';
 import 'package:payvor/pages/pay_feedback/pay_feedback_common.dart';
@@ -40,6 +41,7 @@ class _HomeState extends State<MyPosts>
   bool offstagenodata = true;
   bool loader = false;
   String title = "";
+  int myFavorCount = 0;
 
   List<Object> listResult = List();
 
@@ -112,6 +114,7 @@ class _HomeState extends State<MyPosts>
 
       if (response != null && response.data != null) {
         if (currentPage == 1) {
+          myFavorCount = response?.myfavour ?? 0;
           listResult.clear();
 
           if (response?.data?.length > 0) {
@@ -134,7 +137,8 @@ class _HomeState extends State<MyPosts>
         } else {
           offstagenodata = false;
         }
-        hitHireJobApi();
+
+        //  hitHireJobApi();
 
         setState(() {});
       }
@@ -235,13 +239,18 @@ class _HomeState extends State<MyPosts>
                 /* new Container(
                   child: ,
                 )*/
-                buildItemNew(),
-                _buildContestList(),
+                myFavorCount != null && myFavorCount > 0
+                    ? buildItemNew()
+                    : Container(),
+                listResult != null && listResult.length > 1
+                    ? _buildContestList()
+                    : Container(),
               ],
             ),
           ),
           Offstage(
-            offstage: offstagenodata,
+            offstage:
+                listResult != null && listResult.length > 1 ? true : false,
             child: Container(
               height: screenSize.height,
               padding: new EdgeInsets.only(bottom: 40),
@@ -288,7 +297,7 @@ class _HomeState extends State<MyPosts>
             margin: new EdgeInsets.only(top: 130),
             child: new Center(
               child: getHalfScreenLoader(
-                status: loader,
+                status: provider?.getLoading(),
                 context: context,
               ),
             ),
@@ -313,7 +322,7 @@ class _HomeState extends State<MyPosts>
         await hitPostedApi();
       },
       child: Container(
-        margin: new EdgeInsets.only(left: 16, right: 16),
+        margin: new EdgeInsets.only(left: 18, right: 18),
         child: new ListView.builder(
           padding: new EdgeInsets.all(0.0),
           physics: const AlwaysScrollableScrollPhysics(),
@@ -321,7 +330,7 @@ class _HomeState extends State<MyPosts>
             if (listResult[index] is String) {
               widgets = buildItemHeader(listResult[index]);
             } else if (listResult[index] is DataNextPost) {
-              widgets = buildItemMain(listResult[index]);
+              widgets = buildItemMainNew(listResult[index]);
             } else if (listResult[index] is DataFavour) {
               widgets = buildItem(listResult[index]);
             }
@@ -441,7 +450,7 @@ class _HomeState extends State<MyPosts>
                   children: <Widget>[
                     new Container(
                       child: new Text(
-                        "Recent Posted Favors (6)",
+                        "Recent Posted Favors ($myFavorCount)",
                         style: TextThemes.blackCirculerMedium,
                       ),
                     ),
@@ -490,6 +499,38 @@ class _HomeState extends State<MyPosts>
     }
   }
 
+  hitEndedFavours(DataNextPost data) async {
+    provider.setLoading();
+
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+
+    if (!gotInternetConnection) {
+      return;
+    }
+
+    var responses = await provider.endedFavours(context, data?.id?.toString());
+
+    if (responses is GetStripeResponse) {
+      provider.hideLoader();
+
+      listResult?.remove(data);
+
+      setState(() {});
+    } else {
+      provider.hideLoader();
+      APIError apiError = responses;
+      showInSnackBar(apiError.error);
+    }
+  }
+
   Widget buildItemMain(DataNextPost data) {
     var dates = formatDateString(data?.createdAt ?? "");
     return InkWell(
@@ -499,7 +540,7 @@ class _HomeState extends State<MyPosts>
             widget.lauchCallBack(Material(
                 child: Material(
                     child: new PayFeebackDetails(
-                      lauchCallBack: widget?.lauchCallBack,
+              lauchCallBack: widget?.lauchCallBack,
                       userId: data?.hiredUserId?.toString(),
                       postId: data?.id?.toString(),
                       type: 0,
@@ -715,7 +756,7 @@ class _HomeState extends State<MyPosts>
       },
       child: Container(
         padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 11),
-        margin: new EdgeInsets.only(top: 8.0, left: 18, right: 18),
+        margin: new EdgeInsets.only(top: 8.0),
         decoration: new BoxDecoration(
           borderRadius: new BorderRadius.circular(5.0),
           color: Colors.white,
@@ -812,7 +853,9 @@ class _HomeState extends State<MyPosts>
             Container(
               margin: new EdgeInsets.only(top: 10),
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  hitEndedFavours(data);
+                },
                 child: new Text(
                   "END FAVOR",
                   style: new TextStyle(

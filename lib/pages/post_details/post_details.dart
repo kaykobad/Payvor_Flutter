@@ -380,8 +380,11 @@ class _HomeState extends State<PostFavorDetails>
         showBottomPaymentMethod();
         MemoryManagement.setFirstPaymentStatus(status: true);
       } else {
-        //  hitApplyFavApi();
         showBottomPaymentMethod();
+        // hitApplyFavApi();
+        //  showInSnackBar(response.status.message);
+
+        // showBottomPaymentMethod();
       }
     }
 
@@ -991,7 +994,7 @@ class _HomeState extends State<PostFavorDetails>
                     margin: new EdgeInsets.only(top: 10, left: 35, right: 35),
                     alignment: Alignment.center,
                     child: new Text(
-                      "You’ve to add a paypal account to apply for the favors. You’ll be paid to the account you are going to add ",
+                      "You’ve to add a account to apply for the favors. You’ll be paid to the account you are going to add ",
                       textAlign: TextAlign.center,
                       style: new TextStyle(
                         fontFamily: AssetStrings.circulerNormal,
@@ -1037,7 +1040,7 @@ class _HomeState extends State<PostFavorDetails>
                     margin: new EdgeInsets.only(top: 38),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(37, 26, 101, 1),
+                      color: AppColors.greenDark,
                       shape: BoxShape.circle,
                     ),
                     child: GestureDetector(

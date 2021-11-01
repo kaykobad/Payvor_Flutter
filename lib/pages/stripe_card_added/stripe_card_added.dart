@@ -25,7 +25,7 @@ class _HomeState extends State<StripeCardAddedList>
   var screenSize;
 
   List<Data> listRecent = List();
-  GetStripeUsers response;
+  GetStripeResponse response;
 
   Widget widgets;
 
@@ -67,15 +67,17 @@ class _HomeState extends State<StripeCardAddedList>
       return;
     }
 
-    var response = await provider.getAddedCards(context);
+    var responses = await provider.getAddedCards(context);
 
-    if (response is GetStripeUsers) {
+    if (responses is GetStripeResponse) {
       provider.hideLoader();
 
-      if (response != null &&
-          response?.status?.code == 200 &&
-          response?.data != null) {
-        listRecent?.addAll(response?.data);
+      if (responses != null &&
+          responses?.status?.code == 200 &&
+          responses?.customer != null) {
+        listRecent?.clear();
+        response = responses;
+        listRecent?.addAll(responses?.customer.data);
       }
 
       setState(() {});
@@ -83,7 +85,7 @@ class _HomeState extends State<StripeCardAddedList>
       print(response);
     } else {
       provider.hideLoader();
-      APIError apiError = response;
+      APIError apiError = responses;
       showInSnackBar(apiError.error);
     }
   }
@@ -140,6 +142,10 @@ class _HomeState extends State<StripeCardAddedList>
             ],
           ),
         ));
+  }
+
+  Future<ValueSetter> voidCallBacks(int type) async {
+    hitStripeApi();
   }
 
   @override
@@ -229,7 +235,10 @@ class _HomeState extends State<StripeCardAddedList>
                                       constraints:
                                           new BoxConstraints(maxWidth: 100),
                                       child: new Text(
-                                        "€ 50" ?? "",
+                                        response != null &&
+                                                response?.user != null
+                                            ? "€ 50"
+                                            : "",
                                         maxLines: 2,
                                         style: new TextStyle(
                                             fontFamily:
@@ -306,7 +315,9 @@ class _HomeState extends State<StripeCardAddedList>
                           context,
                           new CupertinoPageRoute(
                               builder: (BuildContext context) {
-                            return AddStripeCardDetails();
+                                return AddStripeCardDetails(
+                              voidcallback: voidCallBacks,
+                            );
                           }),
                         );
                       },
@@ -391,7 +402,19 @@ class _HomeState extends State<StripeCardAddedList>
 
   Widget buildItemRecentSearch(Data data) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        print("callled");
+        if (response != null &&
+            response?.customer != null &&
+            response?.customer?.data != null) {
+          for (var dataItem in response?.customer?.data) {
+            dataItem?.isCheck = false;
+          }
+          data?.isCheck = true;
+
+          setState(() {});
+        }
+      },
       child: Container(
         padding: new EdgeInsets.only(left: 14.0, right: 14.0, top: 12),
         child: Column(
@@ -419,7 +442,9 @@ class _HomeState extends State<StripeCardAddedList>
                   Expanded(
                     child: Container(
                       child: new Text(
-                        "Master Card ending in 2468",
+                        data != null
+                            ? "${data?.brand} ending in ${data?.last4}"
+                            : "",
                         style: new TextStyle(
                           color: Colors.black.withOpacity(0.5),
                           fontFamily: AssetStrings.circulerMedium,
@@ -434,15 +459,14 @@ class _HomeState extends State<StripeCardAddedList>
                   new SizedBox(
                     width: 5,
                   ),
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                      child: new Container(
-                        child: new Icon(
-                          Icons.check,
-                          color: AppColors.colorDarkCyan,
-                          size: 18,
-                        ),
+                  Container(
+                    child: new Container(
+                      child: new Icon(
+                        Icons.check,
+                        color: data?.isCheck != null && data?.isCheck
+                            ? AppColors.colorDarkCyan
+                            : Colors.transparent,
+                        size: 18,
                       ),
                     ),
                   )

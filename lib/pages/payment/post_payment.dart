@@ -292,7 +292,7 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: type == 1
-                          ? Color.fromRGBO(37, 26, 101, 1)
+                          ? AppColors.greenDark
                           : Color.fromRGBO(255, 107, 102, 1.0),
                       shape: BoxShape.circle,
                     ),
