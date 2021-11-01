@@ -9,7 +9,7 @@ class GetStripeResponse {
     status =
         json['status'] != null ? new Status.fromJson(json['status']) : null;
     customer = json['customer'] != null
-        ? new Customer.fromJson(json['customer'])
+        ? (json['customer'] is Map<String, dynamic>)?new Customer.fromJson(json['customer']):null
         : null;
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
