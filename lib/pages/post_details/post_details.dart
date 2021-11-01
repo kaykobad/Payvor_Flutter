@@ -56,6 +56,7 @@ class _HomeState extends State<PostFavorDetails>
   final StreamController<bool> _loaderStreamController =
       new StreamController<bool>();
   ScrollController scrollController = new ScrollController();
+  bool guestViewMain = false;
 
   List<String> listOption = ["Report", "Share", "Hide Post"];
 
@@ -93,6 +94,11 @@ class _HomeState extends State<PostFavorDetails>
     var infoData = jsonDecode(MemoryManagement.getUserInfo());
     var userinfo = LoginSignupResponse.fromJson(infoData);
     ids = userinfo?.user?.id.toString() ?? "";
+
+    var guestUser = MemoryManagement.getGuestUser();
+    if (guestUser != null) {
+      guestViewMain = guestUser;
+    }
 
     Future.delayed(const Duration(milliseconds: 300), () {
       hitApi();
@@ -380,8 +386,8 @@ class _HomeState extends State<PostFavorDetails>
         showBottomPaymentMethod();
         MemoryManagement.setFirstPaymentStatus(status: true);
       } else {
-        showBottomPaymentMethod();
-        // hitApplyFavApi();
+        // showBottomPaymentMethod();
+        hitApplyFavApi();
         //  showInSnackBar(response.status.message);
 
         // showBottomPaymentMethod();
@@ -1385,21 +1391,25 @@ class _HomeState extends State<PostFavorDetails>
                       bottom: 0.0,
                       left: 0.0,
                       right: 0.0,
-                      child: Material(
-                        elevation: 18.0,
-                        child: Container(
-                            color: Colors.white,
-                            padding: new EdgeInsets.only(top: 9, bottom: 28),
-                            child: getSetupButtonColor(
-                                callback, ResString().get('apply_for_fav'), 16,
-                                newColor: (widget.isButtonDesabled != null &&
-                                            widget.isButtonDesabled) ||
-                                        favoriteResponse
-                                                ?.data?.is_user_applied ==
-                                            1
-                                    ? AppColors.desabledGray
-                                    : AppColors.colorDarkCyan)),
-                      ),
+            child: !guestViewMain
+                          ? Material(
+                              elevation: 18.0,
+                              child: Container(
+                                  color: Colors.white,
+                                  padding:
+                                      new EdgeInsets.only(top: 9, bottom: 28),
+                                  child: getSetupButtonColor(callback,
+                                      ResString().get('apply_for_fav'), 16,
+                                      newColor: (widget.isButtonDesabled !=
+                                                      null &&
+                                                  widget.isButtonDesabled) ||
+                                              favoriteResponse
+                                                      ?.data?.is_user_applied ==
+                                                  1
+                                          ? AppColors.desabledGray
+                                          : AppColors.colorDarkCyan)),
+                            )
+                          : Container(),
                     )
                   : Positioned(
                       bottom: 0.0,
@@ -1408,13 +1418,14 @@ class _HomeState extends State<PostFavorDetails>
                       child: widget.isButtonDesabled != null &&
                               !widget.isButtonDesabled
                           ? Material(
-                              elevation: 18.0,
+                        // elevation: 18.0,
                               child: Container(
-                                  color: Colors.white,
+                                  /*  color: Colors.white,
                                   padding:
                                       new EdgeInsets.only(top: 9, bottom: 28),
                                   child: getSetupButtonNew(callbackPromote,
-                                      "Promote your Favor", 16)),
+                                      "Promote your Favor", 16)*/
+                                  ),
                             )
                           : Container(),
                     )
