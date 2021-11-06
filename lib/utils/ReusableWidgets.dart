@@ -209,7 +209,7 @@ Widget getLocationNew(
             print("called $text");
           },
           controller: controller,
-          suggestionStyle: Theme.of(context).textTheme.body1,
+          suggestionStyle: Theme.of(context).textTheme.bodyText1,
           getSuggestionsMethod: getLocationSuggestionsList,
           tfTextAlign: TextAlign.left,
           tfTextDecoration: InputDecoration(
@@ -582,7 +582,6 @@ Widget getLocation(
               }
             }
 
-
             // addData(text);
             //print(text);
           },
@@ -593,7 +592,7 @@ Widget getLocation(
             //print("called $text");
           },
           controller: controller,
-          suggestionStyle: Theme.of(context).textTheme.body1,
+          suggestionStyle: Theme.of(context).textTheme.bodyText1,
           getSuggestionsMethod: getLocationSuggestionsList,
           tfTextAlign: TextAlign.left,
           tfTextDecoration: InputDecoration(

@@ -7,12 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/apierror.dart';
-import 'package:payvor/model/favour_details_response/favour_details_response.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
-import 'package:payvor/model/post_details/report_post_response.dart';
-import 'package:payvor/model/post_details/report_request.dart';
-import 'package:payvor/model/update_profile/user_hired_favor_response.dart';
-import 'package:payvor/pages/post_a_favour/post_favour.dart';
+import 'package:payvor/model/my_profile_job_hire/my_profile_response.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/provider/auth_provider.dart';
@@ -68,12 +64,12 @@ class _HomeState extends State<ChatMessageDetails>
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
   FocusNode _DescriptionField = new FocusNode();
 
-  FavourDetailsResponse favoriteResponse;
+  //FavourDetailsResponse favoriteResponse;
   bool isPullToRefresh = false;
   bool offstagenodata = true;
 
-  UserProfileFavorResponse userResponse = null;
-  List<DataUserFavour> list = List<DataUserFavour>();
+  MyProfileResponse userResponse = null;
+  List<Data> list = List();
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
@@ -93,52 +89,6 @@ class _HomeState extends State<ChatMessageDetails>
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
     super.initState();
-  }
-
-  hitApi() async {
-    provider.setLoading();
-
-    bool gotInternetConnection = await hasInternetConnection(
-      context: context,
-      mounted: mounted,
-      canShowAlert: true,
-      onFail: () {
-        provider.hideLoader();
-      },
-      onSuccess: () {},
-    );
-
-    if (!gotInternetConnection) {
-      return;
-    }
-
-    var response =
-        await provider.getFavorPostDetails(context, widget.hireduserId);
-
-    if (response is FavourDetailsResponse) {
-      provider.hideLoader();
-
-      if (response != null && response.data != null) {
-        favoriteResponse = response;
-
-        var userid = favoriteResponse?.data?.userId.toString();
-
-        if (userid == ids) {
-          isCurrentUser = true;
-        }
-      }
-
-      print(response);
-
-    } else {
-      provider.hideLoader();
-      APIError apiError = response;
-      print(apiError.error);
-
-      showInSnackBar(apiError.error);
-    }
-
-    setState(() {});
   }
 
 
@@ -170,7 +120,7 @@ class _HomeState extends State<ChatMessageDetails>
     var response = await provider.userProfileDetails(
         context, currentPage, widget?.hireduserId);
 
-    if (response is UserProfileFavorResponse) {
+    if (response is MyProfileResponse) {
       isPullToRefresh = false;
       if (response != null && response.data != null) {
         if (currentPage == 1) {
@@ -230,7 +180,7 @@ class _HomeState extends State<ChatMessageDetails>
     });
   }
 
-  hitReportApi() async {
+  /* hitReportApi() async {
     offstageLoader = true;
     setState(() {});
 
@@ -271,7 +221,8 @@ class _HomeState extends State<ChatMessageDetails>
     }
 
     setState(() {});
-  }
+  }*/
+/*
 
   hitDeletePostApi() async {
     offstageLoader = true;
@@ -315,6 +266,7 @@ class _HomeState extends State<ChatMessageDetails>
 
     setState(() {});
   }
+*/
 
   @override
   bool get wantKeepAlive => true;
@@ -355,7 +307,7 @@ class _HomeState extends State<ChatMessageDetails>
     }
   }
 
-  redirect() async {
+  /*redirect() async {
     Navigator.push(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {
@@ -366,7 +318,7 @@ class _HomeState extends State<ChatMessageDetails>
         ));
       }),
     );
-  }
+  }*/
 
   _buildContestList() {
     return
@@ -393,7 +345,7 @@ class _HomeState extends State<ChatMessageDetails>
   }
 
 
-  Widget buildItemSecondNew(DataUserFavour datas) {
+  Widget buildItemSecondNew(Data datas) {
     return Container(
       margin: new EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
@@ -470,7 +422,7 @@ class _HomeState extends State<ChatMessageDetails>
     );
   }
 
-  Widget buildItemNew(DataUserFavour datas) {
+  Widget buildItemNew(Data datas) {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -478,9 +430,9 @@ class _HomeState extends State<ChatMessageDetails>
           new CupertinoPageRoute(builder: (BuildContext context) {
             return Material(
                 child: new PostFavorDetails(
-                  id: datas?.id?.toString(),
-                  isButtonDesabled: true,
-                ));
+              id: datas?.id?.toString(),
+              isButtonDesabled: true,
+            ));
           }),
         );
       },
