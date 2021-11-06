@@ -14,7 +14,7 @@ import 'package:payvor/model/update_status/update_status_request.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/rating/rating_bar_new.dart';
-import 'package:payvor/paypalpayment/webviewpayment.dart';
+import 'package:payvor/pages/stripe_card_added/stripe_card_added.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
@@ -325,10 +325,7 @@ class _HomeState extends State<PayFeebackDetails>
         var getdata = await Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
-            return new WebviewPayment(
-              type: "favour",
-              itemId: widget?.postId?.toString(),
-            );
+            return new StripeCardAddedList();
           }),
         );
 
