@@ -30,8 +30,7 @@ class MyJobs extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<MyJobs>
-    with AutomaticKeepAliveClientMixin<MyJobs> {
+class _HomeState extends State<MyJobs> {
   var screenSize;
 
   String searchkey = null;

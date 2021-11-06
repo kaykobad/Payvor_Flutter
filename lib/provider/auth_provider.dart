@@ -1098,7 +1098,6 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      print("res $jsonDecode($response)");
       GettingReportReason resendOtpResponse =
           new GettingReportReason.fromJson(response);
       completer.complete(resendOtpResponse);
@@ -1125,7 +1124,6 @@ class AuthProvider with ChangeNotifier {
       completer.complete(response);
       return completer.future;
     } else {
-      print("res $jsonDecode($response)");
       CurrentUserHiredFavorResponse resendOtpResponse =
           new CurrentUserHiredFavorResponse.fromJson(response);
       completer.complete(resendOtpResponse);

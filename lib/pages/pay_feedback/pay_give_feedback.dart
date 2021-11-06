@@ -13,7 +13,7 @@ import 'package:payvor/model/post_details/report_request.dart';
 import 'package:payvor/model/update_status/update_status_request.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
-import 'package:payvor/pages/rating/rating_bar.dart';
+import 'package:payvor/pages/rating/rating_bar_new.dart';
 import 'package:payvor/paypalpayment/webviewpayment.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
@@ -233,18 +233,17 @@ class _HomeState extends State<PayFeebackDetails>
 
         firebaseProvider.changeScreen(Material(
             child: Material(
-                child: new RatingBarNew(
+                child: new RatingBarNewBar(
           id: widget?.postId?.toString(),
           type: widget?.type,
           image: widget.type == 0
               ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? ""
               : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
           name: widget.type == 0
-              ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? "" : hiredUserDetailsResponse?.data
-                      ?.postedbyuser?.name ?? "",
-                  userId: widget.type == 0
-                      ? hiredUserDetailsResponse?.data?.hiredUser?.id
-                      ?.toString() ?? ""
+              ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
+              : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
+          userId: widget.type == 0
+              ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
                       : hiredUserDetailsResponse?.data?.postedbyuser?.id
                       ?.toString() ?? "",
                   paymentAmount: hiredUserDetailsResponse?.data?.receiving
@@ -350,7 +349,7 @@ class _HomeState extends State<PayFeebackDetails>
 
       firebaseProvider.changeScreen(Material(
           child: Material(
-              child: new RatingBarNew(
+              child: new RatingBarNewBar(
         id: widget?.postId?.toString(),
         type: widget?.type,
         image: widget.type == 0

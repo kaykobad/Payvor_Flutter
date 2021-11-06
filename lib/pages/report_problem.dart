@@ -19,8 +19,17 @@ import 'package:provider/provider.dart';
 
 class ReportProblems extends StatefulWidget {
   final String id;
+  final int type;
+  final String image;
+  final String name;
+  final String paymentAmount;
 
-  ReportProblems({@required this.id});
+  ReportProblems(
+      {@required this.id,
+      this.type,
+      this.image,
+      this.name,
+      this.paymentAmount});
 
   @override
   _HomeState createState() => _HomeState();
@@ -144,7 +153,7 @@ class _HomeState extends State<ReportProblems>
                       Expanded(
                         child: Container(
                           alignment: Alignment.center,
-                          margin: new EdgeInsets.only(left: 30.0, top: 10),
+                          margin: new EdgeInsets.only(top: 10),
                           width: getScreenSize(context: context).width,
                           child: new Text(
                             "Feedback",
@@ -171,7 +180,7 @@ class _HomeState extends State<ReportProblems>
                           alignment: Alignment.center,
                           margin: new EdgeInsets.only(right: 20.0, top: 8),
                           child: new Text(
-                            "Report",
+                            "",
                             style: new TextStyle(
                                 fontFamily: AssetStrings.circulerNormal,
                                 fontSize: 17,
@@ -295,11 +304,10 @@ class _HomeState extends State<ReportProblems>
       backgroundColor: AppColors.whiteGray,
       body: Stack(
         children: <Widget>[
-          listRecent?.length == 0
+          listRecent?.length > 0
               ? SingleChildScrollView(
                   child: new Container(
                     color: AppColors.whiteGray,
-                    height: getScreenSize(context: context).height,
                     child: new Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -328,7 +336,9 @@ class _HomeState extends State<ReportProblems>
                                       width: 84.0,
                                       child: ClipOval(
                                         child: getCachedNetworkImageWithurl(
-                                          url: "",
+                                          url: widget?.image != null
+                                              ? widget?.image
+                                              : "",
                                           size: 84,
                                           fit: BoxFit.cover,
                                         ),
@@ -340,7 +350,7 @@ class _HomeState extends State<ReportProblems>
                                     margin: new EdgeInsets.only(
                                         top: 16, left: 10, right: 10),
                                     child: new Text(
-                                      "Avinash Tiwary",
+                                      widget?.name != null ? widget?.name : "",
                                       style: new TextStyle(
                                           fontFamily:
                                               AssetStrings.circulerMedium,
@@ -368,7 +378,8 @@ class _HomeState extends State<ReportProblems>
                                           constraints:
                                               new BoxConstraints(maxWidth: 100),
                                           child: new Text(
-                                            "€ 50" ?? "",
+                                            "€ ${widget?.paymentAmount != null ? widget?.paymentAmount : "0"}" ??
+                                                "",
                                             maxLines: 2,
                                             style: new TextStyle(
                                                 fontFamily:
@@ -385,12 +396,15 @@ class _HomeState extends State<ReportProblems>
                             ],
                           ),
                         ),
+                        new SizedBox(
+                          height: 15.0,
+                        ),
                         _buildContestListSearch(),
                         Column(
                           children: [
                             Container(
                               margin: new EdgeInsets.only(
-                                  left: 16.0, right: 16.0, top: 60),
+                                  left: 16.0, right: 16.0, top: 20),
                               alignment: Alignment.centerLeft,
                               child: new Text(
                                 "Write your Problem",
@@ -399,7 +413,7 @@ class _HomeState extends State<ReportProblems>
                                     fontFamily: AssetStrings.circulerMedium,
                                     fontSize: 16.0),
                               ),
-                      ),
+                            ),
                       new SizedBox(
                         height: 15.0,
                       ),
@@ -411,7 +425,7 @@ class _HomeState extends State<ReportProblems>
                                 TextInputType.text,
                                 AssetStrings.emailPng),
                             new SizedBox(
-                              height: 90.0,
+                              height: 40.0,
                             ),
                             Container(
                                 padding:
@@ -442,8 +456,8 @@ class _HomeState extends State<ReportProblems>
   }
 
   void callback() async {
-    // hitReportApi();
-    showBottomSheetHire();
+    hitReportApi();
+    // showBottomSheetHire();
   }
 
   void callbackDone() async {
@@ -549,7 +563,7 @@ class _HomeState extends State<ReportProblems>
       provider.hideLoader();
 
       if (response != null && response?.status?.code == 200) {
-        var report = DataReport(id: 1, title: "");
+        var report = DataReport(id: 1, title: "sdsadasd");
         listRecent?.add(report);
         listRecent?.addAll(response?.data);
       }
@@ -571,20 +585,21 @@ class _HomeState extends State<ReportProblems>
 
   Widget buildItemRecent(int pos, DataReport report) {
     return Container(
+      color: AppColors.whiteGray,
       child: Column(
         children: [
           pos == 0
               ? Container(
-            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 5),
+                  margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 5),
                   alignment: Alignment.centerLeft,
                   child: new Text(
                     "Select a reason",
                     style: new TextStyle(
                         color: Colors.black,
                         fontFamily: AssetStrings.circulerMedium,
-                        fontSize: 18.0),
-                  ),
-                )
+                  fontSize: 18.0),
+            ),
+          )
               : buildItemRecentSearch(pos, report),
 
 
@@ -618,7 +633,7 @@ class _HomeState extends State<ReportProblems>
         padding: new EdgeInsets.only(left: 16.0, right: 16.0, top: 12),
         child: Container(
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               /* new Container(
                 width: 19,

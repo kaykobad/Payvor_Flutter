@@ -30,8 +30,7 @@ class MyPosts extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<MyPosts>
-    with AutomaticKeepAliveClientMixin<MyPosts> {
+class _HomeState extends State<MyPosts> {
   var screenSize;
 
   String searchkey = null;
@@ -107,6 +106,7 @@ class _HomeState extends State<MyPosts>
     }
 
     var response = await provider.hiredFavourPost(context, currentPage);
+    provider.hideLoader();
 
     if (response is CurrentUserHiredFavorResponse) {
       print("res $response");
@@ -242,9 +242,7 @@ class _HomeState extends State<MyPosts>
                 myFavorCount != null && myFavorCount > 0
                     ? buildItemNew()
                     : Container(),
-                listResult != null && listResult.length > 1
-                    ? _buildContestList()
-                    : Container(),
+                _buildContestList()
               ],
             ),
           ),
@@ -294,7 +292,6 @@ class _HomeState extends State<MyPosts>
             ),
           ),
           Container(
-            margin: new EdgeInsets.only(top: 130),
             child: new Center(
               child: getHalfScreenLoader(
                 status: provider?.getLoading(),
@@ -850,21 +847,23 @@ class _HomeState extends State<MyPosts>
                 color: AppColors.dividerColor,
               ),
             ),
-            Container(
-              margin: new EdgeInsets.only(top: 10),
-              child: InkWell(
-                onTap: () {
-                  hitEndedFavours(data);
-                },
-                child: new Text(
-                  "END FAVOR",
-                  style: new TextStyle(
-                      color: AppColors.redLight,
-                      fontSize: 14,
-                      fontFamily: AssetStrings.circulerNormal),
-                ),
-              ),
-            ),
+            data?.status == 3
+                ? Container(
+                    margin: new EdgeInsets.only(top: 10),
+                    child: InkWell(
+                      onTap: () {
+                        hitEndedFavours(data);
+                      },
+                      child: new Text(
+                        "END FAVOR",
+                        style: new TextStyle(
+                            color: AppColors.redLight,
+                            fontSize: 14,
+                            fontFamily: AssetStrings.circulerNormal),
+                      ),
+                    ),
+                  )
+                : Container(),
           ],
         ),
       ),

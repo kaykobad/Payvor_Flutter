@@ -10,6 +10,7 @@ import 'package:payvor/filter/search_item.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/rating/give_rating_request.dart';
+import 'package:payvor/pages/report_problem.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -20,6 +21,25 @@ import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class RatingBarNewBar extends StatefulWidget {
+  final String id;
+  final int type;
+  final String image;
+  final String name;
+  final String userId;
+  final String paymentType;
+  final String paymentAmount;
+  final ValueSetter<int> voidcallback;
+
+  RatingBarNewBar(
+      {@required this.id,
+      this.type,
+      this.image,
+      this.name,
+      this.userId,
+      this.paymentType,
+      this.paymentAmount,
+      this.voidcallback});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -110,7 +130,7 @@ class _HomeState extends State<RatingBarNewBar>
     }
 
     var request = new GiveRatingRequest(
-        favour_id: "12",
+        favour_id: widget?.id ?? "",
         rating: _rating.toString(),
         description: _DescriptionController.text.toString());
 
@@ -184,15 +204,19 @@ class _HomeState extends State<RatingBarNewBar>
                       ),
                       InkWell(
                         onTap: () {
-                          /* Navigator.push(
+                          Navigator.push(
                             context,
-                            new CupertinoPageRoute(builder: (BuildContext context) {
+                            new CupertinoPageRoute(
+                                builder: (BuildContext context) {
                               return Material(
                                   child: new ReportProblems(
-                                    id: widget?.id?.toString(),
-                                  ));
+                                id: widget?.id?.toString(),
+                                name: widget?.name,
+                                image: widget?.image,
+                                paymentAmount: widget?.paymentAmount,
+                              ));
                             }),
-                          );*/
+                          );
                         },
                         child: Container(
                           alignment: Alignment.center,
@@ -262,7 +286,9 @@ class _HomeState extends State<RatingBarNewBar>
                                 width: 84.0,
                                 child: ClipOval(
                                   child: getCachedNetworkImageWithurl(
-                                    url: "",
+                                    url: widget?.image != null
+                                        ? widget?.image
+                                        : "",
                                     size: 84,
                                     fit: BoxFit.cover,
                                   ),
@@ -274,7 +300,7 @@ class _HomeState extends State<RatingBarNewBar>
                               margin: new EdgeInsets.only(
                                   top: 16, left: 10, right: 10),
                               child: new Text(
-                                "Avinash Tiwary",
+                                widget?.name != null ? widget?.name : "",
                                 style: new TextStyle(
                                     fontFamily: AssetStrings.circulerMedium,
                                     fontSize: 20,
@@ -300,7 +326,8 @@ class _HomeState extends State<RatingBarNewBar>
                                     constraints:
                                         new BoxConstraints(maxWidth: 100),
                                     child: new Text(
-                                      "€ 50" ?? "",
+                                      "€ ${widget?.paymentAmount != null ? widget?.paymentAmount : "0"}" ??
+                                          "",
                                       maxLines: 2,
                                       style: new TextStyle(
                                           fontFamily:
