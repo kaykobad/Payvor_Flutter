@@ -58,10 +58,10 @@ class Datas {
   int from;
   int lastPage;
   String lastPageUrl;
-  Null nextPageUrl;
+  String nextPageUrl;
   String path;
   int perPage;
-  Null prevPageUrl;
+  String prevPageUrl;
   int to;
   int total;
 
@@ -136,8 +136,8 @@ class Data {
   String image;
   String paymentType;
   String hireDate;
-  Null paymentDate;
-  Null contractEndDate;
+  String paymentDate;
+  String contractEndDate;
   int isUserRat;
   int isHireUserRat;
   String createdAt;
