@@ -222,6 +222,8 @@ class _HomeState extends State<SearchMapView>
                           data?.longitude?.toString();
                       _add(data?.latitude, data?.longitude, "");
                     },
+                    zoomGesturesEnabled: true,
+                    zoomControlsEnabled: true,
                     onMapCreated: (GoogleMapController controller) {
                       _controller.complete(controller);
                     },
@@ -241,7 +243,31 @@ class _HomeState extends State<SearchMapView>
           ),*/
         ],
       ),
+      floatingActionButton: FloatingActionButton.small(
+        onPressed: hitLocation,
+        child: new Icon(Icons.gps_fixed),
+      ),
     );
+  }
+
+  void hitLocation() async {
+    var data = await currentPosition(1, context, widget?.provider);
+    if (data is int && data == 1) {
+      var latlong = MemoryManagement.getGeo();
+      if (latlong != null && latlong?.isNotEmpty) {
+        var datas = latlong.trim().toString().split(",");
+
+        try {
+          var lat = datas[0].toString();
+          var long = datas[1].toString();
+
+          double latitude = double.parse(lat);
+          double longitide = double.parse(long);
+
+          _add(latitude, longitide, "");
+        } catch (e) {}
+      }
+    }
   }
 
   void callback() {
