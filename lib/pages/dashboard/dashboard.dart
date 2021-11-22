@@ -52,6 +52,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   final _profileScreen = GlobalKey<NavigatorState>();
   final _dummyScreen = GlobalKey<NavigatorState>();
 
+  GlobalKey<HomeState> _HomeKey = new GlobalKey<HomeState>();
+
   int currentTab = 0;
   bool guestViewMain = false;
 
@@ -151,6 +153,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         return Material(child: new PostFavour());
       }),
     );
+
+    if (data is bool && data) {
+      if (_HomeKey != null && _HomeKey.currentState != null) {
+        _HomeKey.currentState.hitApiDashboard();
+      }
+    }
 
     (currentTab == 0)
         ? SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light)
@@ -322,7 +330,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           }
         }
       },
-      /*  onReceive: (Map<String, dynamic> message) async {
+      onReceive: (Map<String, dynamic> message) async {
         print("config Notification onReceive");
         //  print("onResume: ${message}");
         print("onResume: ${message['data']['type']}");
@@ -339,7 +347,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             showNotification(title, description, message, type, favid, userid);
           }
         }
-      },*/
+      },
       onResume: (Map<String, dynamic> message) async {
         print("config Notification onResume");
         //  print("onResume: ${message}");
@@ -642,6 +650,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     lauchCallBack: homeCallBack,
                     callbackmyid: callbackChangePage,
                     userid: userId?.toString(),
+                    key: _HomeKey,
                   ),
                 )),
         Navigator(
@@ -699,6 +708,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     lauchCallBack: homeCallBack,
                     callbackmyid: callbackChangePage,
                     userid: userId?.toString(),
+                    key: _HomeKey,
                   ),
                 )),
         Navigator(

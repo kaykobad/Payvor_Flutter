@@ -770,7 +770,7 @@ class _HomeState extends State<PostFavour>
       Navigator.pop(context);
     }
     Navigator.pop(context);
-    Navigator.pop(context);
+    Navigator.of(context).pop(true);
   }
 
   Future<ValueSetter> voidCallBackDialog(int type) async {

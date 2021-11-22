@@ -30,7 +30,9 @@ class SearchCompany extends StatefulWidget {
   final ValueChanged<int> callbackmyid;
   final String userid;
 
-  SearchCompany({@required this.lauchCallBack, this.callbackmyid, this.userid});
+  SearchCompany(
+      {Key key, @required this.lauchCallBack, this.callbackmyid, this.userid})
+      : super(key: key);
 
   @override
   HomeState createState() => HomeState();
@@ -75,14 +77,13 @@ class HomeState extends State<SearchCompany>
   @override
   void initState() {
     print("search");
-
+    filterRequest = FilterRequest();
     var latlong = MemoryManagement.getGeo();
     var locationMain = MemoryManagement.getLocationName() ?? "";
     location = locationMain;
 
     if (latlong != null && latlong?.isNotEmpty) {
       locationStreamGet();
-      filterRequest = FilterRequest();
       filterRequest?.latlongData = latlong;
 
       // getDataByLatLong(lat,long);
@@ -219,6 +220,10 @@ class HomeState extends State<SearchCompany>
         ],
       ),
     );
+  }
+
+  hitApiDashboard() async {
+    hitApi(filterRequest);
   }
 
   hitApi(FilterRequest filterRequest) async {
