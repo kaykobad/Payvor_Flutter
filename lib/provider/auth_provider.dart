@@ -730,6 +730,7 @@ class AuthProvider with ChangeNotifier {
     var uri = APIs.getFavorList + "?page=$page";
 
     var data = new StringBuffer();
+    print("calllledddd");
 
     if (filterRequest != null) {
       var isFilter = false;

@@ -520,6 +520,16 @@ class _HomeState extends State<MyPosts> {
 
       listResult?.remove(data);
 
+      widget.lauchCallBack(Material(
+          child: Material(
+              child: new PayFeebackDetails(
+        lauchCallBack: widget?.lauchCallBack,
+        userId: data?.hiredUserId?.toString(),
+        postId: data?.id?.toString(),
+        type: 1,
+        voidcallback: callback,
+      ))));
+
       setState(() {});
     } else {
       provider.hideLoader();
