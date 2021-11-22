@@ -300,6 +300,11 @@ class _HomeState extends State<SearchHomeByName>
   }
 
   Widget buildItemSearchNew(Datas data) {
+    String distance = "";
+    if (data?.distance != null) {
+      distance = data?.distance;
+    }
+
     return Container(
       margin: new EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
@@ -333,10 +338,10 @@ class _HomeState extends State<SearchHomeByName>
                         ),
                         data?.user?.perc == 100
                             ? new Image.asset(
-                                AssetStrings.verify,
-                                width: 16,
-                                height: 16,
-                              )
+                          AssetStrings.verify,
+                          width: 16,
+                          height: 16,
+                        )
                             : Container(),
                       ],
                     )),
@@ -356,7 +361,7 @@ class _HomeState extends State<SearchHomeByName>
                         child: Container(
                           child: Container(
                             child: new Text(
-                              data?.location + " - " + data?.distance ?? "",
+                              data?.location + " - " + distance,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: TextThemes.greyDarkTextHomeLocation,
