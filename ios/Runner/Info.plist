@@ -54,6 +54,15 @@
 	<string>This information required during registration process so that later system can use to delivery nearby data later.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) picking photos from gallery while creating post.</string>
+    
+    <key>NSLocationWhenInUseUsageDescription</key>
+        <string>The example App requires access to the devices location.</string>
+        <key>NSLocationTemporaryUsageDescriptionDictionary</key>
+        <dict>
+            <key>TemporaryPreciseAccuracy</key>
+            <string>The example App requires temporary access to the devices precise location.</string>
+        </dict>
+        
 	<key>Payvor</key>
 	<string>Payvor</string>
 	<key>UIBackgroundModes</key>

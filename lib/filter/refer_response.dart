@@ -124,7 +124,7 @@ class DataRefer {
   String long;
   int userType;
   int isActive;
-  int rating_avg;
+  num rating_avg;
   int rating_count;
   String snsId;
   String profilePic;
