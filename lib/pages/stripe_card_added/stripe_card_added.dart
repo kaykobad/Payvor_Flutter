@@ -492,6 +492,7 @@ class _HomeState extends State<StripeCardAddedList>
   void callbackDone() async {}
 
   void callback() async {
+    Navigator.of(context).pop(true);
   }
 
   void callbackReport() async {}

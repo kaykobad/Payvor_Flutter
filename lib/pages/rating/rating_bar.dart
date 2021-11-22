@@ -171,7 +171,7 @@ class _HomeState extends State<RatingBarNew>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       widget?.paymentType != null &&
-                              widget?.paymentType != "Card/Paypal"
+                              widget?.paymentType != "Card"
                           ? Container(
                               alignment: Alignment.topLeft,
                               margin: new EdgeInsets.only(left: 17.0, top: 10),
@@ -319,11 +319,11 @@ class _HomeState extends State<RatingBarNew>
                   widget?.type == 0 ? new Column(
                     children: [
                       widget?.paymentType != null &&
-                                    widget?.paymentType != "Card/Paypal"
+                          widget?.paymentType != "Card"
                                 ? getRowTop()
                                 : Container(),
                       widget?.paymentType != null &&
-                                    widget?.paymentType != "Card/Paypal"
+                          widget?.paymentType != "Card"
                                 ? getRowBottom()
                                 : Container(),
                             Opacity(

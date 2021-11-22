@@ -244,14 +244,12 @@ class _HomeState extends State<PayFeebackDetails>
               : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
           userId: widget.type == 0
               ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
-                      : hiredUserDetailsResponse?.data?.postedbyuser?.id
-                      ?.toString() ?? "",
-                  paymentAmount: hiredUserDetailsResponse?.data?.receiving
-                      ?.toString(),
-                  paymentType: type == 1 ? "Hand Cash" : "Card/Paypal",
-                  voidcallback: callbackApi,
-
-                ))));
+              : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ??
+                  "",
+          paymentAmount: hiredUserDetailsResponse?.data?.receiving?.toString(),
+          paymentType: type == 1 ? "Hand Cash" : "Card",
+          voidcallback: callbackApi,
+        ))));
       }
 
       print(response);
@@ -360,7 +358,7 @@ class _HomeState extends State<PayFeebackDetails>
             : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ??
                 "",
         paymentAmount: hiredUserDetailsResponse?.data?.receiving?.toString(),
-        paymentType: type == 1 ? "Hand Cash" : "Card/Paypal",
+        paymentType: type == 1 ? "Hand Cash" : "Card",
         voidcallback: callbackApi,
       ))));
     }
@@ -919,9 +917,9 @@ class _HomeState extends State<PayFeebackDetails>
                     ),
                   ) : Container(),
                   widget?.type == 0
-                      ? buildPaymentType(2, "Card/Paypal",
-                      "You can Pay to the receiver by debit/credit/paypal. Receiver will cost 3% fee.")
-                      : Container(),
+                            ? buildPaymentType(2, "Card",
+                                "You can Pay to the receiver by debit/credit/paypal. Receiver will cost 3% fee.")
+                            : Container(),
                   Container(
                       color: Colors.white,
                       padding: new EdgeInsets.only(

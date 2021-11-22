@@ -231,15 +231,12 @@ class _HomeState extends State<PayFeebackDetailsCommon>
               ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
               : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
           userId: widget.type == 0
-              ? hiredUserDetailsResponse?.data?.hiredUser?.id
-                      ?.toString() ?? ""
-                      : hiredUserDetailsResponse?.data?.postedbyuser?.id
-                      ?.toString() ??
-                      "",
-                  paymentAmount: hiredUserDetailsResponse?.data?.receiving
-                      ?.toString(),
-                  paymentType: type == 1 ? "Hand Cash" : "Card/Paypal",
-                  voidcallback: callbackApi,
+              ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
+              : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ??
+                  "",
+          paymentAmount: hiredUserDetailsResponse?.data?.receiving?.toString(),
+          paymentType: type == 1 ? "Hand Cash" : "Card",
+          voidcallback: callbackApi,
         ))));
       }
 
@@ -322,7 +319,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
           ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
           : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ?? "",
       paymentAmount: hiredUserDetailsResponse?.data?.receiving?.toString(),
-      paymentType: type == 1 ? "Hand Cash" : "Card/Paypal",
+      paymentType: type == 1 ? "Hand Cash" : "Card",
       voidcallback: callbackApi,
     ))));
   }
