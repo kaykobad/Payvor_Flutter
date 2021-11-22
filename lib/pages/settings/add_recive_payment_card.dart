@@ -11,17 +11,16 @@ import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/Messages.dart';
-import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:provider/provider.dart';
 
-class StripeCardAddedList extends StatefulWidget {
+class AddReceivePaymentCard extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<StripeCardAddedList>
-    with AutomaticKeepAliveClientMixin<StripeCardAddedList> {
+class _HomeState extends State<AddReceivePaymentCard>
+    with AutomaticKeepAliveClientMixin<AddReceivePaymentCard> {
   var screenSize;
 
   List<Data> listRecent = List();
@@ -107,19 +106,24 @@ class _HomeState extends State<StripeCardAddedList>
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                          margin: new EdgeInsets.only(left: 15),
-                          child: new Icon(
-                            Icons.clear,
-                            color: Colors.black87,
-                          )),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                            margin: new EdgeInsets.only(left: 15),
+                            child: new Icon(
+                              Icons.arrow_back,
+                              color: Colors.black87,
+                            )),
+                      ),
                       Expanded(
                         child: Container(
                           alignment: Alignment.center,
                           margin: new EdgeInsets.only(right: 25.0, left: 10),
                           width: getScreenSize(context: context).width,
                           child: new Text(
-                            "Make Payment",
+                            "Receiving Payment AC",
                             style: new TextStyle(
                                 fontFamily: AssetStrings.circulerMedium,
                                 fontSize: 19,
@@ -155,152 +159,33 @@ class _HomeState extends State<StripeCardAddedList>
     return Scaffold(
       key: _scaffoldKey,
       appBar: getAppBarNew(context),
-      backgroundColor: AppColors.backgroundGray,
+      backgroundColor: AppColors.whiteGray,
       body: SafeArea(
         child: Stack(
           children: <Widget>[
             SingleChildScrollView(
               child: new Container(
-                color: AppColors.backgroundGray,
                 child: new Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Container(
-                      margin: new EdgeInsets.only(left: 20, right: 20, top: 20),
-                      child: Stack(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            margin: new EdgeInsets.only(top: 30),
-                            height: 170,
-                            decoration: new BoxDecoration(
-                                border: new Border.all(
-                                    color: AppColors.grayy, width: 1),
-                                borderRadius: new BorderRadius.circular(5.0),
-                                color: Colors.white),
-                          ),
-                          Column(
-                            children: [
-                              Container(
-                                alignment: Alignment.center,
-                                child: new Container(
-                                  height: 84.0,
-                                  width: 84.0,
-                                  child: ClipOval(
-                                    child: getCachedNetworkImageWithurl(
-                                      url: response != null &&
-                                              response?.user != null
-                                          ? response?.user?.profilePic
-                                          : "",
-                                      size: 84,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              new Container(
-                                alignment: Alignment.center,
-                                margin: new EdgeInsets.only(
-                                    top: 16, left: 10, right: 10),
-                                child: new Text(
-                                  response != null && response?.user != null
-                                      ? response?.user?.name
-                                      : "",
-                                  style: new TextStyle(
-                                      fontFamily: AssetStrings.circulerMedium,
-                                      fontSize: 20,
-                                      color: Colors.black),
-                                ),
-                              ),
-                              new Container(
-                                alignment: Alignment.center,
-                                width: 175,
-                                margin: new EdgeInsets.only(top: 16),
-                                padding: new EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 16),
-                                decoration: new BoxDecoration(
-                                  color: AppColors.redLight.withOpacity(0.1),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    new Image.asset(
-                                      AssetStrings.moneyNew,
-                                      width: 23.0,
-                                      height: 23.0,
-                                      color: AppColors.redLight,
-                                    ),
-                                    Container(
-                                      margin: new EdgeInsets.only(left: 8),
-                                      constraints:
-                                          new BoxConstraints(maxWidth: 100),
-                                      child: new Text(
-                                        response != null &&
-                                                response?.user != null
-                                            ? "€ 50"
-                                            : "",
-                                        maxLines: 2,
-                                        style: new TextStyle(
-                                            fontFamily:
-                                                AssetStrings.circulerMedium,
-                                            fontSize: 20,
-                                            color: AppColors.redLight),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                    new Container(
+                      margin: new EdgeInsets.only(top: 16, left: 20, right: 10),
+                      child: new Text(
+                        "Add Bank (iban) Account",
+                        style: new TextStyle(
+                            fontFamily: AssetStrings.circulerMedium,
+                            fontSize: 18,
+                            color: Colors.black),
                       ),
                     ),
-                    Container(
-                      margin: new EdgeInsets.only(top: 24, left: 16, right: 16),
-                      child: getSetupButtonNewCustom(
-                          callback, "Pay with Apple", 0,
-                          imagePath: AssetStrings.appleNew,
-                          newColor: AppColors.kBlack,
-                          textColor: AppColors.kWhite),
-                    ),
                     new Container(
-                      height: 16,
-                    ),
-                    Container(
-                      margin: new EdgeInsets.only(left: 20, right: 20),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Opacity(
-                              opacity: 0.2,
-                              child: new Container(
-                                height: 1.0,
-                                color: AppColors.dividerColor,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin:
-                                new EdgeInsets.only(left: 11.0, right: 11.0),
-                            alignment: Alignment.centerLeft,
-                            child: new Text(
-                              "OR PAY WITH",
-                              style: new TextStyle(
-                                  color: AppColors.lightGray.withOpacity(0.6),
-                                  fontFamily: AssetStrings.circulerMedium,
-                                  fontSize: 12.0),
-                            ),
-                          ),
-                          Expanded(
-                            child: Opacity(
-                              opacity: 0.2,
-                              child: new Container(
-                                height: 1.0,
-                                color: AppColors.dividerColor,
-                              ),
-                            ),
-                          ),
-                        ],
+                      margin: new EdgeInsets.only(top: 6, left: 20, right: 10),
+                      child: new Text(
+                        "Please note the that the amount you will be paid for any favor will be deposited to this account.",
+                        style: new TextStyle(
+                            fontFamily: AssetStrings.circulerNormal,
+                            fontSize: 16,
+                            color: AppColors.moreText),
                       ),
                     ),
                     listRecent != null && listRecent?.length > 0
@@ -315,7 +200,7 @@ class _HomeState extends State<StripeCardAddedList>
                           context,
                           new CupertinoPageRoute(
                               builder: (BuildContext context) {
-                                return AddStripeCardDetails(
+                            return AddStripeCardDetails(
                               voidcallback: voidCallBacks,
                             );
                           }),
@@ -323,7 +208,7 @@ class _HomeState extends State<StripeCardAddedList>
                       },
                       child: Container(
                           margin:
-                              new EdgeInsets.only(top: 15, left: 20, right: 20),
+                              new EdgeInsets.only(top: 25, left: 20, right: 20),
                           padding: new EdgeInsets.symmetric(
                               vertical: 12, horizontal: 8),
                           decoration: new BoxDecoration(
@@ -356,17 +241,6 @@ class _HomeState extends State<StripeCardAddedList>
                     ),
                     new SizedBox(
                       height: 20.0,
-                    ),
-                    listRecent != null && listRecent?.length > 0
-                        ? Container(
-                            margin:
-                                new EdgeInsets.only(left: 20.0, right: 20.0),
-                            child: getSetupButtonNew(
-                                callback, "Pay with Card", 0,
-                                newColor: AppColors.colorDarkCyan))
-                        : Container(),
-                    new SizedBox(
-                      height: 40.0,
                     ),
                   ],
                 ),
@@ -407,7 +281,7 @@ class _HomeState extends State<StripeCardAddedList>
   Widget buildItemRecentSearch(Data data) {
     return InkWell(
       onTap: () {
-        print("callled");
+        /*  print("callled");
         if (response != null &&
             response?.customer != null &&
             response?.customer?.data != null) {
@@ -417,7 +291,7 @@ class _HomeState extends State<StripeCardAddedList>
           data?.isCheck = true;
 
           setState(() {});
-        }
+        }*/
       },
       child: Container(
         padding: new EdgeInsets.only(left: 14.0, right: 14.0, top: 12),
@@ -496,23 +370,7 @@ class _HomeState extends State<StripeCardAddedList>
   void callbackDone() async {}
 
   void callback() async {
-    var isChecked = false;
-    if (response != null &&
-        response?.customer != null &&
-        response?.customer?.data != null) {
-      for (var dataItem in response?.customer?.data) {
-        if (dataItem?.isCheck != null && dataItem?.isCheck) {
-          isChecked = true;
-          break;
-        }
-      }
-    }
-
-    if (isChecked) {
-      Navigator.of(context).pop(true);
-    } else {
-      showInSnackBar("Please select a card for payment");
-    }
+    Navigator.of(context).pop(true);
   }
 
   void callbackReport() async {}

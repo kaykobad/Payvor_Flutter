@@ -10,7 +10,7 @@ class AppColors {
   static const Color kGrey = const Color(0xFF232323);
   static const Color kBackgroundColor = const Color(0xFFF9FAFC);
   static const Color borderWhiteButton = const Color(0xFFE7E7E7);
-  static const Color backgroundGray = const Color(0xFFE5E5E5);
+  static const Color backgroundGray = const Color(0xFFFAF9F9);
 
   //player screen
   static const Color kPlayerButtonBackground = const Color(0xFF9D9C98);

@@ -255,6 +255,7 @@ class _HomeState extends State<SearchMapView>
     if (data is int && data == 1) {
       var latlong = MemoryManagement.getGeo();
       if (latlong != null && latlong?.isNotEmpty) {
+        _LatLongController.text = latlong;
         var datas = latlong.trim().toString().split(",");
 
         try {

@@ -10,7 +10,7 @@ import 'package:launch_review/launch_review.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/pages/edit_profile/edit_user_profile.dart';
 import 'package:payvor/pages/guest_view/guest_intro_screen.dart';
-import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
+import 'package:payvor/pages/settings/add_recive_payment_card.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
@@ -194,6 +194,8 @@ class _HomeState extends State<Settings>
                     height: 8,
                   ),
                   buildItemRecentSearch(
+                      0, "Receiving Payment AC", AssetStrings.settingEdit),
+                  buildItemRecentSearch(
                       1, "Edit Account", AssetStrings.settingEdit),
                   buildItemRecentSearch(
                       2, "Push Notifications", AssetStrings.settingNoti),
@@ -255,7 +257,10 @@ class _HomeState extends State<Settings>
   Widget buildItemRecentSearch(int type, String data, String icon) {
     return InkWell(
       onTap: () {
-        if (type == 1) {
+        if (type == 0) {
+          firebaseProvider
+              .changeScreen(Material(child: new AddReceivePaymentCard()));
+        } else if (type == 1) {
           firebaseProvider.changeScreen(Material(child: new EditProfile()));
         } else if (type == 3) {
           _launchURL(Constants.TermOfUses);
@@ -263,8 +268,8 @@ class _HomeState extends State<Settings>
           _launchURL(Constants.privacyPolicy);
         } //review app
         else if (type == 7) {
-          LaunchReview.launch(androidAppId: "com.app.payvor",
-              iOSAppId: "1558962094");
+          LaunchReview.launch(
+              androidAppId: "com.app.payvor", iOSAppId: "1558962094");
         } else if (type == 6) {
           Share.share('check out the app https://payvor.page.link/app');
         }
