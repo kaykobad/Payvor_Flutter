@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +9,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/hired_user_response_details/hired_user_response-details.dart';
+import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
 import 'package:payvor/model/update_status/update_status_request.dart';
+import 'package:payvor/pages/chat/private_chat.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
 import 'package:payvor/pages/rating/rating_bar_new.dart';
@@ -20,6 +23,7 @@ import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
@@ -430,6 +434,44 @@ class _HomeState extends State<PayFeebackDetailsCommon>
     );
   }
 
+  void goToChat() async {
+    var currentUserId;
+    var _userName;
+    var _userProfilePic;
+    var userData = MemoryManagement.getUserInfo();
+    if (userData != null) {
+      Map<String, dynamic> data = jsonDecode(userData);
+      LoginSignupResponse userResponse = LoginSignupResponse.fromJson(data);
+      _userName = userResponse.user.name ?? "";
+      _userProfilePic = userResponse.user.profilePic ?? "";
+      currentUserId = userResponse.user.id.toString();
+    }
+    var screen = PrivateChat(
+      peerId: widget.type == 0
+          ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString()
+          : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString(),
+      peerAvatar: widget.type == 0
+          ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic
+          : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic,
+      userName: widget.type == 0
+          ? hiredUserDetailsResponse?.data?.hiredUser?.name
+          : hiredUserDetailsResponse?.data?.postedbyuser?.name,
+      isGroup: false,
+      currentUserId: currentUserId,
+      currentUserName: _userName,
+      currentUserProfilePic: _userProfilePic,
+    );
+    //move to private chat screen
+    //widget.fullScreenWidget(screen);
+
+    Navigator.push(
+      context,
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return Material(child: screen);
+      }),
+    );
+  }
+
   Widget buildItemUser() {
     return InkWell(
       onTap: () {
@@ -602,6 +644,273 @@ class _HomeState extends State<PayFeebackDetailsCommon>
     );
   }
 
+  Widget buildItemNew() {
+    return Container(
+      color: Colors.white,
+      child: new Column(
+        children: [
+          Container(
+            padding: new EdgeInsets.only(
+                left: 16.0, right: 16.0, top: 10, bottom: 10),
+            margin: new EdgeInsets.only(top: 4),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                new Container(
+                  width: 56.0,
+                  height: 56.0,
+                  alignment: Alignment.center,
+                  child: new ClipOval(
+                    child: getCachedNetworkImageWithurl(
+                        url: widget.type == 0
+                            ? hiredUserDetailsResponse
+                                    ?.data?.hiredUser?.profilePic ??
+                                ""
+                            : hiredUserDetailsResponse
+                                    ?.data?.postedbyuser?.profilePic ??
+                                "",
+                        fit: BoxFit.fill,
+                        size: 50),
+                  ),
+                ),
+                Expanded(
+                  child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: new EdgeInsets.only(
+                          left: 10.0,
+                          right: 10.0,
+                        ),
+                        child: new Text(
+                          widget.type == 0
+                              ? hiredUserDetailsResponse?.data?.hiredUser?.name
+                              : hiredUserDetailsResponse
+                                  ?.data?.postedbyuser?.name,
+                          style: TextThemes.blackCirculerLarge,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            new CupertinoPageRoute(
+                                builder: (BuildContext context) {
+                              return Material(
+                                  child: new ChatMessageDetails(
+                                hireduserId: widget.type == 0
+                                    ? hiredUserDetailsResponse
+                                        ?.data?.hiredUser?.id
+                                        ?.toString()
+                                    : hiredUserDetailsResponse
+                                        ?.data?.postedbyuser?.id
+                                        ?.toString(),
+                                userButtonMsg: true,
+                              ));
+                            }),
+                          );
+                        },
+                        child: new Container(
+                          width: double.infinity,
+                          margin: new EdgeInsets.only(
+                              left: 10.0, right: 10.0, top: 5),
+                          color: Colors.white,
+                          child: new Text(
+                            "View Profile",
+                            style: TextThemes.blueTextFieldMediumm,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: InkWell(
+                    onTap: () {
+                      goToChat();
+                    },
+                    child: Container(
+                      decoration: new BoxDecoration(
+                          border: new Border.all(
+                              color: AppColors.lightGrey.withOpacity(0.5),
+                              width: 1),
+                          shape: BoxShape.circle),
+                      padding: new EdgeInsets.all(5),
+                      child: Icon(
+                        Icons.chat_outlined,
+                        color: AppColors.kTinderSwipeLikeDislikeTextColor,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Opacity(
+            opacity: 0.12,
+            child: new Container(
+              height: 1.0,
+              margin: new EdgeInsets.only(left: 17.0, right: 17.0),
+              color: AppColors.dividerColor,
+            ),
+          ),
+          Container(
+            color: Colors.white,
+            alignment: Alignment.centerLeft,
+            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
+            child: new Text(
+              hiredUserDetailsResponse?.data?.title ?? "",
+              style: TextThemes.blackCirculerMedium,
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                new CupertinoPageRoute(builder: (BuildContext context) {
+                  return Material(
+                      child: new PostFavorDetails(
+                    id: widget?.postId,
+                    isButtonDesabled: true,
+                  ));
+                }),
+              );
+            },
+            child: Container(
+              color: Colors.white,
+              alignment: Alignment.centerLeft,
+              margin: new EdgeInsets.only(
+                  left: 16.0, right: 16.0, top: 7, bottom: 16),
+              child: new Text(
+                "View Original Post",
+                style: TextThemes.blueTextFieldMediumm,
+              ),
+            ),
+          ),
+          Opacity(
+            opacity: 0.12,
+            child: new Container(
+              height: 1.0,
+              margin: new EdgeInsets.only(left: 17.0, right: 17.0),
+              color: AppColors.dividerColor,
+            ),
+          ),
+          Container(
+            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
+            child: new Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Container(
+                      child: new Text(
+                    "Posted Date",
+                    style: TextThemes.greyTextFieldNormalNw,
+                  )),
+                ),
+                Container(
+                  child: Container(
+                      child: new Text(
+                    "Hiring Date",
+                    style: TextThemes.greyTextFieldNormalNw,
+                  )),
+                )
+              ],
+            ),
+          ),
+          Container(
+            margin: new EdgeInsets.only(
+                left: 16.0, right: 16.0, top: 7, bottom: 16),
+            child: new Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: new Text(
+                    formatDateString(
+                        hiredUserDetailsResponse?.data?.createdAt?.toString() ??
+                            ""),
+                    style: TextThemes.blackCirculerMedium,
+                  ),
+                ),
+                Container(
+                  child: new Text(
+                    formatDateString(
+                        hiredUserDetailsResponse?.data?.hireDate?.toString() ??
+                            ""),
+                    style: TextThemes.blackCirculerMedium,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Opacity(
+            opacity: 0.12,
+            child: new Container(
+              height: 1.0,
+              margin: new EdgeInsets.only(left: 17.0, right: 17.0),
+              color: AppColors.dividerColor,
+            ),
+          ),
+          Container(
+            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
+            child: new Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Container(
+                      child: new Text(
+                    "Amount",
+                    style: TextThemes.greyTextFieldNormalNw,
+                  )),
+                ),
+                Container(
+                  child: Container(
+                      child: new Text(
+                    "Favor Status",
+                    style: TextThemes.greyTextFieldNormalNw,
+                  )),
+                )
+              ],
+            ),
+          ),
+          Container(
+            margin: new EdgeInsets.only(
+                left: 16.0, right: 16.0, top: 7, bottom: 16),
+            child: new Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: new Text(
+                    "€ " + hiredUserDetailsResponse?.data?.price?.toString() ??
+                        "",
+                    style: TextThemes.blackCirculerMedium,
+                  ),
+                ),
+                Container(
+                  child: new Text(
+                    hiredUserDetailsResponse?.data?.status == 1
+                        ? "Active"
+                        : "Inactive",
+                    style: TextThemes.readAlert,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Opacity(
+            opacity: 0.12,
+            child: new Container(
+              height: 1.0,
+              margin: new EdgeInsets.only(left: 17.0, right: 17.0),
+              color: AppColors.dividerColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<AuthProvider>(context);
@@ -620,11 +929,11 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         new Container(
-                          height: 40,
+                          height: 60,
                           width: double.infinity,
                           color: Colors.white,
                         ),
-                        Container(
+                        /*   Container(
                           color: Colors.white,
                           alignment: Alignment.center,
                           child: Stack(
@@ -755,14 +1064,15 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                               style: TextThemes.blueTextFieldMedium,
                             ),
                           ),
-                        ),
-                        buildItemUser(),
-                        buildItemRating(
+                        ),*/
+                        buildItemNew(),
+                        //    buildItemUser(),
+                        /*  buildItemRating(
                             2,
                             formatDateString(hiredUserDetailsResponse
                                     ?.data?.hireDate
                                     ?.toString() ??
-                                "")),
+                                "")),*/
                         Container(
                             color: Colors.white,
                             padding: new EdgeInsets.only(

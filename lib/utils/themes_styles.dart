@@ -117,6 +117,12 @@ class TextThemes {
     color: Color.fromRGBO(9, 165, 255, 1.0),
   );
 
+  static final TextStyle blueTextFieldMediumm = TextStyle(
+    fontFamily: AssetStrings.circulerMedium,
+    fontSize: 14,
+    color: Color.fromRGBO(9, 165, 255, 1.0),
+  );
+
   static final TextStyle greyTextFieldNormal = TextStyle(
     fontFamily: AssetStrings.circulerNormal,
     fontSize: 14,
