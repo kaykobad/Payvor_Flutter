@@ -365,9 +365,18 @@ class HomeState extends State<SearchCompany>
                     padding: new EdgeInsets.only(left: 16.0, right: 16.0),
                     child: Row(
                       children: [
-                        new Icon(
-                          Icons.location_on_outlined,
-                          color: Colors.white,
+                        new Container(
+                          width: 38,
+                          height: 38,
+                          padding: new EdgeInsets.all(12),
+                          decoration: new BoxDecoration(
+                              color: Color.fromRGBO(255, 255, 255, 0.1),
+                              shape: BoxShape.circle),
+                          child: new Image.asset(
+                            AssetStrings.locations,
+                            width: 18,
+                            height: 18,
+                          ),
                         ),
                         Container(
                           margin: new EdgeInsets.only(left: 8),
@@ -385,7 +394,6 @@ class HomeState extends State<SearchCompany>
                               Row(
                                 children: [
                                   Container(
-                                      margin: new EdgeInsets.only(top: 3),
                                       constraints:
                                           new BoxConstraints(maxWidth: 280),
                                       child: new Text(
