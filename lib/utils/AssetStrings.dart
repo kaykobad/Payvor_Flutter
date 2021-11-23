@@ -109,6 +109,7 @@ class AssetStrings {
   static const String iconTick = 'assets/png/card_tick.png';
   static const String addPaypal = 'assets/png/add_paypal.png';
   static const String addCard = 'assets/png/card_normal.png';
+  static const String locations = 'assets/png/locations.png';
   static const String lockProfile = 'assets/png/lock_profile.png';
   static const String addPayment = 'assets/png/add_payment.png';
   static const String card = 'assets/png/card_card.png';

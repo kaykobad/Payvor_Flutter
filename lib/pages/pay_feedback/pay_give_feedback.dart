@@ -352,16 +352,18 @@ class _HomeState extends State<PayFeebackDetails>
               child: new RatingBarNewBar(
         id: widget?.postId?.toString(),
         type: widget?.type,
-        image: widget.type == 0
+        image: /* widget.type == 0
             ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? ""
-            : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
-        name: widget.type == 0
+            :*/
+            hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
+        name: /*widget.type == 0
             ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
-            : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
-        userId: widget.type == 0
+            :*/
+            hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
+        userId: /* widget.type == 0
             ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
-            : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ??
-                "",
+            :*/
+            hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ?? "",
         paymentAmount: hiredUserDetailsResponse?.data?.receiving?.toString(),
         paymentType: type == 1 ? "Hand Cash" : "Card",
         voidcallback: callbackApi,
@@ -582,15 +584,18 @@ class _HomeState extends State<PayFeebackDetails>
       currentUserId = userResponse.user.id.toString();
     }
     var screen = PrivateChat(
-      peerId: widget.type == 0
+      peerId: /* widget.type == 0
           ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString()
-          : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString(),
-      peerAvatar: widget.type == 0
+          :*/
+          hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString(),
+      peerAvatar: /* widget.type == 0
           ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic
-          : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic,
-      userName: widget.type == 0
+          :*/
+          hiredUserDetailsResponse?.data?.postedbyuser?.profilePic,
+      userName: /* widget.type == 0
           ? hiredUserDetailsResponse?.data?.hiredUser?.name
-          : hiredUserDetailsResponse?.data?.postedbyuser?.name,
+          :*/
+          hiredUserDetailsResponse?.data?.postedbyuser?.name,
       isGroup: false,
       currentUserId: currentUserId,
       currentUserName: _userName,
@@ -625,11 +630,12 @@ class _HomeState extends State<PayFeebackDetails>
                   alignment: Alignment.center,
                   child: new ClipOval(
                     child: getCachedNetworkImageWithurl(
-                        url: widget.type == 0
+                        url: /*widget.type == 0
                             ? hiredUserDetailsResponse
                                     ?.data?.hiredUser?.profilePic ??
                                 ""
-                            : hiredUserDetailsResponse
+                            :*/
+                            hiredUserDetailsResponse
                                     ?.data?.postedbyuser?.profilePic ??
                                 "",
                         fit: BoxFit.fill,
@@ -646,10 +652,10 @@ class _HomeState extends State<PayFeebackDetails>
                           right: 10.0,
                         ),
                         child: new Text(
-                          widget.type == 0
+                          /* widget.type == 0
                               ? hiredUserDetailsResponse?.data?.hiredUser?.name
-                              : hiredUserDetailsResponse
-                                  ?.data?.postedbyuser?.name,
+                              :*/
+                          hiredUserDetailsResponse?.data?.postedbyuser?.name,
                           style: TextThemes.blackCirculerLarge,
                         ),
                       ),
@@ -661,11 +667,12 @@ class _HomeState extends State<PayFeebackDetails>
                                 builder: (BuildContext context) {
                               return Material(
                                   child: new ChatMessageDetails(
-                                hireduserId: widget.type == 0
+                                    hireduserId: /*widget.type == 0
                                     ? hiredUserDetailsResponse
                                         ?.data?.hiredUser?.id
                                         ?.toString()
-                                    : hiredUserDetailsResponse
+                                    :*/
+                                    hiredUserDetailsResponse
                                         ?.data?.postedbyuser?.id
                                         ?.toString(),
                                 userButtonMsg: true,

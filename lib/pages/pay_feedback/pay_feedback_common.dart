@@ -447,15 +447,18 @@ class _HomeState extends State<PayFeebackDetailsCommon>
       currentUserId = userResponse.user.id.toString();
     }
     var screen = PrivateChat(
-      peerId: widget.type == 0
+      peerId: /*widget.type == 0
           ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString()
-          : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString(),
-      peerAvatar: widget.type == 0
+          :*/
+          hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString(),
+      peerAvatar: /*widget.type == 0
           ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic
-          : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic,
-      userName: widget.type == 0
+          :*/
+          hiredUserDetailsResponse?.data?.postedbyuser?.profilePic,
+      userName: /* widget.type == 0
           ? hiredUserDetailsResponse?.data?.hiredUser?.name
-          : hiredUserDetailsResponse?.data?.postedbyuser?.name,
+          :*/
+          hiredUserDetailsResponse?.data?.postedbyuser?.name,
       isGroup: false,
       currentUserId: currentUserId,
       currentUserName: _userName,
@@ -480,10 +483,10 @@ class _HomeState extends State<PayFeebackDetailsCommon>
           new CupertinoPageRoute(builder: (BuildContext context) {
             return Material(
                 child: new ChatMessageDetails(
-              hireduserId: widget.type == 0
+                  hireduserId: /* widget.type == 0
                   ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString()
-                  : hiredUserDetailsResponse?.data?.postedbyuser?.id
-                      ?.toString(),
+                  :*/
+                  hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString(),
               userButtonMsg: false,
             ));
           }),
@@ -662,11 +665,12 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                   alignment: Alignment.center,
                   child: new ClipOval(
                     child: getCachedNetworkImageWithurl(
-                        url: widget.type == 0
+                        url: /* widget.type == 0
                             ? hiredUserDetailsResponse
                                     ?.data?.hiredUser?.profilePic ??
                                 ""
-                            : hiredUserDetailsResponse
+                            :*/
+                            hiredUserDetailsResponse
                                     ?.data?.postedbyuser?.profilePic ??
                                 "",
                         fit: BoxFit.fill,
@@ -683,10 +687,10 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                           right: 10.0,
                         ),
                         child: new Text(
-                          widget.type == 0
+                          /* widget.type == 0
                               ? hiredUserDetailsResponse?.data?.hiredUser?.name
-                              : hiredUserDetailsResponse
-                                  ?.data?.postedbyuser?.name,
+                              :*/
+                          hiredUserDetailsResponse?.data?.postedbyuser?.name,
                           style: TextThemes.blackCirculerLarge,
                         ),
                       ),
@@ -698,11 +702,12 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                                 builder: (BuildContext context) {
                               return Material(
                                   child: new ChatMessageDetails(
-                                hireduserId: widget.type == 0
+                                    hireduserId: /*widget.type == 0
                                     ? hiredUserDetailsResponse
                                         ?.data?.hiredUser?.id
                                         ?.toString()
-                                    : hiredUserDetailsResponse
+                                    :*/
+                                    hiredUserDetailsResponse
                                         ?.data?.postedbyuser?.id
                                         ?.toString(),
                                 userButtonMsg: true,
