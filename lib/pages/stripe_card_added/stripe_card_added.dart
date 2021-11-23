@@ -430,14 +430,10 @@ class _HomeState extends State<StripeCardAddedList>
                   new Container(
                     width: 30,
                     height: 30,
-                    padding: new EdgeInsets.all(9),
-                    decoration: new BoxDecoration(
-                        color: Color.fromRGBO(238, 238, 238, 1),
-                        shape: BoxShape.circle),
                     child: new Image.asset(
-                      AssetStrings.addPaypal,
-                      width: 18,
-                      height: 18,
+                      getCardImage(data?.brand),
+                      width: 25,
+                      height: 25,
                     ),
                   ),
                   new SizedBox(

@@ -281,8 +281,17 @@ class HomeState extends State<SearchCompany>
     } else {
       APIError apiError = response;
       print(apiError.error);
+      if (currentPage == 1) {
+        list.clear();
+      }
+      if (list.length > 0) {
+        offstagenodata = true;
+      } else {
+        offstagenodata = false;
+      }
 
       showInSnackBar(apiError.error);
+      setState(() {});
     }
     provider.hideLoader();
   }

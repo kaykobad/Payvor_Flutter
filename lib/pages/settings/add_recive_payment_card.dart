@@ -171,7 +171,7 @@ class _HomeState extends State<AddReceivePaymentCard>
                     new Container(
                       margin: new EdgeInsets.only(top: 16, left: 20, right: 10),
                       child: new Text(
-                        "Add Bank (iban) Account",
+                        "Add Card Number",
                         style: new TextStyle(
                             fontFamily: AssetStrings.circulerMedium,
                             fontSize: 18,
@@ -181,7 +181,7 @@ class _HomeState extends State<AddReceivePaymentCard>
                     new Container(
                       margin: new EdgeInsets.only(top: 6, left: 20, right: 10),
                       child: new Text(
-                        "Please note the that the amount you will be paid for any favor will be deposited to this account.",
+                        "Please note the that the amount you will be paid for any favor will be deposited to this card.",
                         style: new TextStyle(
                             fontFamily: AssetStrings.circulerNormal,
                             fontSize: 16,
@@ -194,18 +194,19 @@ class _HomeState extends State<AddReceivePaymentCard>
                             child: buildContestListSearch(),
                           )
                         : Container(),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          new CupertinoPageRoute(
-                              builder: (BuildContext context) {
-                            return AddStripeCardDetails(
-                              voidcallback: voidCallBacks,
-                            );
-                          }),
-                        );
-                      },
+                    listRecent == null || listRecent?.length == 0
+                        ? InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                new CupertinoPageRoute(
+                                    builder: (BuildContext context) {
+                                  return AddStripeCardDetails(
+                                    voidcallback: voidCallBacks,
+                                  );
+                                }),
+                              );
+                            },
                       child: Container(
                           margin:
                               new EdgeInsets.only(top: 25, left: 20, right: 20),
@@ -228,17 +229,19 @@ class _HomeState extends State<AddReceivePaymentCard>
                                 Container(
                                   margin: new EdgeInsets.only(left: 8.0),
                                   child: new Text(
-                                    "Add New Card",
-                                    style: new TextStyle(
-                                        color: AppColors.redLight,
-                                        fontFamily: AssetStrings.circulerMedium,
-                                        fontSize: 16.0),
+                                          "Add New Card",
+                                          style: new TextStyle(
+                                              color: AppColors.redLight,
+                                              fontFamily:
+                                                  AssetStrings.circulerMedium,
+                                              fontSize: 16.0),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          )),
-                    ),
+                                )),
+                          )
+                        : Container(),
                     new SizedBox(
                       height: 20.0,
                     ),
@@ -304,14 +307,10 @@ class _HomeState extends State<AddReceivePaymentCard>
                   new Container(
                     width: 30,
                     height: 30,
-                    padding: new EdgeInsets.all(9),
-                    decoration: new BoxDecoration(
-                        color: Color.fromRGBO(238, 238, 238, 1),
-                        shape: BoxShape.circle),
                     child: new Image.asset(
-                      AssetStrings.addPaypal,
-                      width: 18,
-                      height: 18,
+                      getCardImage(data?.brand),
+                      width: 25,
+                      height: 25,
                     ),
                   ),
                   new SizedBox(
