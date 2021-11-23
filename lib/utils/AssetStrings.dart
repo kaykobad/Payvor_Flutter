@@ -113,6 +113,7 @@ class AssetStrings {
   static const String addPayment = 'assets/png/add_payment.png';
   static const String card = 'assets/png/card_card.png';
   static const String cardCal = 'assets/png/calender_card.png';
+  static const String agreement = 'assets/png/agreement.png';
   static const String cardPerson = 'assets/png/user_card.png';
   static const String cardLock = 'assets/png/lock_card.png';
   static const String splashLogo = 'assets/png/splash_logo.gif';

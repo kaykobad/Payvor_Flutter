@@ -222,6 +222,8 @@ class _HomeState extends State<SearchMapView>
                           data?.longitude?.toString();
                       _add(data?.latitude, data?.longitude, "");
                     },
+                    myLocationButtonEnabled: false,
+                    myLocationEnabled: true,
                     zoomGesturesEnabled: true,
                     zoomControlsEnabled: true,
                     onMapCreated: (GoogleMapController controller) {
@@ -243,10 +245,20 @@ class _HomeState extends State<SearchMapView>
           ),*/
         ],
       ),
-      floatingActionButton: FloatingActionButton.small(
-        onPressed: hitLocation,
-        child: new Icon(Icons.gps_fixed),
+      floatingActionButton: Container(
+        margin: new EdgeInsets.only(top: 150),
+        height: 50,
+        width: 40,
+        child: FloatingActionButton.small(
+          onPressed: hitLocation,
+          child: new Icon(
+            Icons.gps_fixed,
+            color: Colors.black54,
+          ),
+          backgroundColor: Colors.white,
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
     );
   }
 
