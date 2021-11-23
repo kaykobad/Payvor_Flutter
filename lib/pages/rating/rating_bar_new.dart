@@ -582,7 +582,7 @@ class _HomeState extends State<RatingBarNewBar>
                   new Container(
                     margin: new EdgeInsets.only(top: 40),
                     child: new Text(
-                      "Favor End!",
+                      "Favor Ended!",
                       style: new TextStyle(
                           fontFamily: AssetStrings.circulerMedium,
                           fontSize: 20,
@@ -593,7 +593,7 @@ class _HomeState extends State<RatingBarNewBar>
                     margin: new EdgeInsets.only(top: 10, left: 35, right: 35),
                     alignment: Alignment.center,
                     child: new Text(
-                      "You have ended the favor Contract.",
+                      "You have ended the Favor.",
                       textAlign: TextAlign.center,
                       style: new TextStyle(
                         fontFamily: AssetStrings.circulerNormal,
@@ -605,7 +605,7 @@ class _HomeState extends State<RatingBarNewBar>
                   ),
                   Container(
                     margin: new EdgeInsets.only(top: 60, left: 16, right: 16),
-                    child: getSetupButtonNew(callbackDone, "Done", 0,
+                    child: getSetupButtonNew(callbackDone, "Take me Home", 0,
                         newColor: AppColors.colorDarkCyan),
                   ),
                   Container(

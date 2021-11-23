@@ -333,11 +333,12 @@ class _HomeState extends State<PayFeebackDetails>
 
         if (getdata is bool) {
           if (getdata == true) {
-            showBottomSheet("Successful!", "Payment Successful!.", 1);
+            showBottomSheet("Payment Successful!",
+                "You have paid the Helper successfully.", 1);
             /*Navigator.pop(context);
         widget.voidcallback(1);*/
           } else {
-            showBottomSheet("Failed!", "Payment Failed!.", 0);
+            showBottomSheet("Payment Failed!", "Payment Failed!.", 0);
           }
         }
       } else {
@@ -391,7 +392,7 @@ class _HomeState extends State<PayFeebackDetails>
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: type == 1
-                          ? Color.fromRGBO(37, 26, 101, 1)
+                          ? AppColors.greenDark
                           : Color.fromRGBO(255, 107, 102, 1.0),
                       shape: BoxShape.circle,
                     ),
@@ -434,7 +435,7 @@ class _HomeState extends State<PayFeebackDetails>
                     margin: new EdgeInsets.only(top: 60, left: 16, right: 16),
                     child: getSetupButtonNew(
                         type == 1 ? callbackSuccess : callbackSuccessFailed,
-                        "Ok",
+                        type == 1 ? "Rate Helper" : "Ok",
                         0,
                         newColor: AppColors.colorDarkCyan),
                   ),
