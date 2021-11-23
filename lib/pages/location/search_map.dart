@@ -247,7 +247,6 @@ class _HomeState extends State<SearchMapView>
         onPressed: hitLocation,
         child: new Icon(Icons.gps_fixed),
         mini: true,
-        
       ),
     );
   }
