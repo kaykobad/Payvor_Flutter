@@ -518,7 +518,7 @@ class _HomeState extends State<MyPosts> {
     if (responses is GetStripeResponse) {
       provider.hideLoader();
 
-      listResult?.remove(data);
+      //listResult?.remove(data);
 
       widget.lauchCallBack(Material(
           child: Material(
@@ -705,27 +705,31 @@ class _HomeState extends State<MyPosts> {
   Widget buildItemMainNew(DataNextPost data) {
     return InkWell(
       onTap: () {
+        print("data status ${data?.status}");
         if (data?.status != 3) {
           if (data?.status == 1) {
-            widget.lauchCallBack(Material(
-                child: Material(
-                    child: new PayFeebackDetails(
-              lauchCallBack: widget?.lauchCallBack,
-              userId: data?.hiredUserId?.toString(),
-              postId: data?.id?.toString(),
-              type: 0,
-              voidcallback: callback,
-            ))));
-          } else {
             widget.lauchCallBack(Material(
                 child: Material(
                     child: new PayFeebackDetailsCommon(
               lauchCallBack: widget?.lauchCallBack,
               userId: data?.hiredUserId?.toString(),
               postId: data?.id?.toString(),
+              type: 0,
+              status: 1,
+              voidcallback: callback,
+              userType: 0,
+            ))));
+          } else {
+            widget.lauchCallBack(Material(
+                child: Material(
+                    child: new PayFeebackDetailsCommon(
+                      lauchCallBack: widget?.lauchCallBack,
+              userId: data?.hiredUserId?.toString(),
+              postId: data?.id?.toString(),
               status: 0,
               type: 0,
               voidcallback: callback,
+              userType: 0,
             ))));
 /*
             widget.lauchCallBack(Material(
@@ -742,12 +746,13 @@ class _HomeState extends State<MyPosts> {
           widget.lauchCallBack(Material(
               child: Material(
                   child: new PayFeebackDetailsCommon(
-            lauchCallBack: widget?.lauchCallBack,
+                    lauchCallBack: widget?.lauchCallBack,
             userId: data?.hiredUserId?.toString(),
             postId: data?.id?.toString(),
             status: 1,
             type: 0,
             voidcallback: callback,
+            userType: 0,
           ))));
 
           /* widget.lauchCallBack(Material(

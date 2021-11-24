@@ -35,13 +35,15 @@ class PayFeebackDetails extends StatefulWidget {
   final String postId;
   final int type;
   final ValueSetter<int> voidcallback;
+  final int userType;
 
   PayFeebackDetails(
       {@required this.lauchCallBack,
       this.userId,
       this.postId,
       this.type,
-      this.voidcallback});
+      this.voidcallback,
+      this.userType});
 
 /*  final String id;
 
@@ -240,13 +242,13 @@ class _HomeState extends State<PayFeebackDetails>
                 child: new RatingBarNewBar(
           id: widget?.postId?.toString(),
           type: widget?.type,
-          image: widget.type == 0
+                  image: widget.userType == 0
               ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? ""
               : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
-          name: widget.type == 0
+                  name: widget.userType == 0
               ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
               : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
-          userId: widget.type == 0
+                  userId: widget.userType == 0
               ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
               : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ??
                   "",
@@ -350,20 +352,18 @@ class _HomeState extends State<PayFeebackDetails>
       firebaseProvider.changeScreen(Material(
           child: Material(
               child: new RatingBarNewBar(
-        id: widget?.postId?.toString(),
-        type: widget?.type,
-        image: /* widget.type == 0
+                id: widget?.postId?.toString(),
+        type: widget?.userType,
+        image: widget.userType == 0
             ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? ""
-            :*/
-            hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
-        name: /*widget.type == 0
+            : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
+        name: widget.userType == 0
             ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
-            :*/
-            hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
-        userId: /* widget.type == 0
+            : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
+        userId: widget.userType == 0
             ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
-            :*/
-            hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ?? "",
+            : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ??
+                "",
         paymentAmount: hiredUserDetailsResponse?.data?.receiving?.toString(),
         paymentType: type == 1 ? "Hand Cash" : "Card",
         voidcallback: callbackApi,
@@ -584,18 +584,15 @@ class _HomeState extends State<PayFeebackDetails>
       currentUserId = userResponse.user.id.toString();
     }
     var screen = PrivateChat(
-      peerId: /* widget.type == 0
+      peerId: widget.userType == 0
           ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString()
-          :*/
-          hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString(),
-      peerAvatar: /* widget.type == 0
+          : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString(),
+      peerAvatar: widget.userType == 0
           ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic
-          :*/
-          hiredUserDetailsResponse?.data?.postedbyuser?.profilePic,
-      userName: /* widget.type == 0
+          : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic,
+      userName: widget.userType == 0
           ? hiredUserDetailsResponse?.data?.hiredUser?.name
-          :*/
-          hiredUserDetailsResponse?.data?.postedbyuser?.name,
+          : hiredUserDetailsResponse?.data?.postedbyuser?.name,
       isGroup: false,
       currentUserId: currentUserId,
       currentUserName: _userName,
@@ -630,12 +627,11 @@ class _HomeState extends State<PayFeebackDetails>
                   alignment: Alignment.center,
                   child: new ClipOval(
                     child: getCachedNetworkImageWithurl(
-                        url: /*widget.type == 0
+                        url: widget.userType == 0
                             ? hiredUserDetailsResponse
                                     ?.data?.hiredUser?.profilePic ??
                                 ""
-                            :*/
-                            hiredUserDetailsResponse
+                            : hiredUserDetailsResponse
                                     ?.data?.postedbyuser?.profilePic ??
                                 "",
                         fit: BoxFit.fill,
@@ -652,10 +648,9 @@ class _HomeState extends State<PayFeebackDetails>
                           right: 10.0,
                         ),
                         child: new Text(
-                          /* widget.type == 0
+                          widget.userType == 0
                               ? hiredUserDetailsResponse?.data?.hiredUser?.name
-                              :*/
-                          hiredUserDetailsResponse?.data?.postedbyuser?.name,
+                              : hiredUserDetailsResponse?.data?.postedbyuser?.name,
                           style: TextThemes.blackCirculerLarge,
                         ),
                       ),
@@ -667,12 +662,11 @@ class _HomeState extends State<PayFeebackDetails>
                                 builder: (BuildContext context) {
                               return Material(
                                   child: new ChatMessageDetails(
-                                    hireduserId: /*widget.type == 0
+                                    hireduserId: widget.userType == 0
                                     ? hiredUserDetailsResponse
                                         ?.data?.hiredUser?.id
                                         ?.toString()
-                                    :*/
-                                    hiredUserDetailsResponse
+                                    : hiredUserDetailsResponse
                                         ?.data?.postedbyuser?.id
                                         ?.toString(),
                                 userButtonMsg: true,
@@ -889,9 +883,10 @@ class _HomeState extends State<PayFeebackDetails>
           new CupertinoPageRoute(builder: (BuildContext context) {
             return Material(
                 child: new ChatMessageDetails(
-              hireduserId: widget.type == 0
-                  ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() : hiredUserDetailsResponse
-                      ?.data?.postedbyuser?.id?.toString(),
+                  hireduserId: widget.userType == 0
+                  ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString()
+                  : hiredUserDetailsResponse?.data?.postedbyuser?.id
+                      ?.toString(),
                   userButtonMsg: true,
                 ));
           }),
@@ -911,9 +906,13 @@ class _HomeState extends State<PayFeebackDetails>
               alignment: Alignment.center,
               child: new ClipOval(
                 child: getCachedNetworkImageWithurl(
-                    url: widget.type == 0 ? hiredUserDetailsResponse?.data
-                        ?.hiredUser?.profilePic ?? "" : hiredUserDetailsResponse
-                        ?.data?.postedbyuser?.profilePic ?? "",
+                    url: widget.userType == 0
+                        ? hiredUserDetailsResponse
+                                ?.data?.hiredUser?.profilePic ??
+                            ""
+                        : hiredUserDetailsResponse
+                                ?.data?.postedbyuser?.profilePic ??
+                            "",
                     fit: BoxFit.fill,
                     size: 50),
               ),
@@ -925,9 +924,9 @@ class _HomeState extends State<PayFeebackDetails>
                   Container(
                     margin: new EdgeInsets.only(left: 10.0, right: 10.0),
                     child: new Text(
-                      widget.type == 0 ? hiredUserDetailsResponse?.data
-                          ?.hiredUser?.name : hiredUserDetailsResponse?.data
-                          ?.postedbyuser?.name,
+                      widget.userType == 0
+                          ? hiredUserDetailsResponse?.data?.hiredUser?.name
+                          : hiredUserDetailsResponse?.data?.postedbyuser?.name,
                       style: TextThemes.blackCirculerMedium,
                     ),
                   ),
@@ -977,6 +976,65 @@ class _HomeState extends State<PayFeebackDetails>
         ),
       ),
     );
+  }
+
+  Widget getAppBarNew(BuildContext context) {
+    return PreferredSize(
+        preferredSize: Size.fromHeight(53.0),
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              new SizedBox(
+                height: 20,
+              ),
+              Material(
+                color: Colors.white,
+                child: Container(
+                  margin: new EdgeInsets.only(top: 15),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        alignment: Alignment.topLeft,
+                        margin: new EdgeInsets.only(left: 17.0, top: 10),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: new Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: new SvgPicture.asset(
+                              AssetStrings.back,
+                              width: 16.0,
+                              height: 16.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.center,
+                          margin: new EdgeInsets.only(right: 25.0, top: 10),
+                          width: getScreenSize(context: context).width,
+                          child: new Text(
+                            widget?.userType == 0
+                                ? "Hired Favors"
+                                : "Next Jobs",
+                            style: new TextStyle(
+                                fontFamily: AssetStrings.circulerMedium,
+                                fontSize: 19,
+                                color: Colors.black),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 
   Widget buildPaymentType(int mainType, String title, String desc) {
@@ -1054,6 +1112,7 @@ class _HomeState extends State<PayFeebackDetails>
     screenSize = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
+      appBar: getAppBarNew(context),
       backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
@@ -1062,11 +1121,11 @@ class _HomeState extends State<PayFeebackDetails>
             height: screenSize.height,
             child: hiredUserDetailsResponse != null
                 ? SingleChildScrollView(
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
+                    child: new Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
                   new Container(
-                    height: 60,
+                    height: 0,
                           width: double.infinity,
                           color: Colors.white,
                         ),
@@ -1345,7 +1404,7 @@ class _HomeState extends State<PayFeebackDetails>
               ),
             ),
           ),
-          Positioned(
+          /*Positioned(
               top: 0.0,
               left: 0.0,
               right: 0.0,
@@ -1385,7 +1444,7 @@ class _HomeState extends State<PayFeebackDetails>
                     ],
                   ),
                 ),
-              )),
+              )),*/
           hiredUserDetailsResponse != null
               ? Positioned(
                   bottom: 0.0,
