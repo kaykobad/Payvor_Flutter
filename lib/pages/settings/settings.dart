@@ -194,7 +194,7 @@ class _HomeState extends State<Settings>
                     height: 8,
                   ),
                   buildItemRecentSearch(
-                      0, "Receiving Payment AC", AssetStrings.settingEdit),
+                      0, "Receiving Payment AC", AssetStrings.receiveData),
                   buildItemRecentSearch(
                       1, "Edit Account", AssetStrings.settingEdit),
                   buildItemRecentSearch(
@@ -288,8 +288,8 @@ class _HomeState extends State<Settings>
             children: <Widget>[
               Image.asset(
                 icon,
-                height: 20,
-                width: 20,
+                height: type == 0 ? 23 : 20,
+                width: type == 0 ? 23 : 20,
               ),
               new SizedBox(
                 width: 24,

@@ -694,6 +694,39 @@ Future<dynamic> currentPosition(
   }
 }
 
+String getCardImage(String brand) {
+  String image = AssetStrings.visaCard;
+
+  switch (brand?.toLowerCase()) {
+    case "visa":
+      image = AssetStrings.visaCard;
+      break;
+    case "mastercard":
+      image = AssetStrings.materCard;
+      break;
+    case "american express":
+      image = AssetStrings.amexCard;
+      break;
+    case "discover & diners":
+      image = AssetStrings.amexCard;
+      break;
+    case "china unionpay":
+      image = AssetStrings.amexCard;
+      break;
+    case "japan credit bureau":
+      image = AssetStrings.amexCard;
+      break;
+    case "cartes bancaires":
+      image = AssetStrings.amexCard;
+      break;
+    case "Interac":
+      image = AssetStrings.amexCard;
+      break;
+  }
+
+  return image;
+}
+
 //cached Network image
 Widget getCachedNetworkImage(
     {@required String url, BoxFit fit, height, width}) {
