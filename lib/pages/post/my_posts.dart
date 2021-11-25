@@ -242,7 +242,7 @@ class _HomeState extends State<MyPosts> {
                 myFavorCount != null && myFavorCount > 0
                     ? buildItemNew()
                     : Container(),
-                _buildContestList()
+                _buildContestList(),
               ],
             ),
           ),
@@ -327,7 +327,7 @@ class _HomeState extends State<MyPosts> {
             if (listResult[index] is String) {
               widgets = buildItemHeader(listResult[index]);
             } else if (listResult[index] is DataNextPost) {
-              widgets = buildItemMainNew(listResult[index]);
+              widgets = buildItemMainNew(listResult[index], index);
             } else if (listResult[index] is DataFavour) {
               widgets = buildItem(listResult[index]);
             }
@@ -702,7 +702,8 @@ class _HomeState extends State<MyPosts> {
     );
   }
 
-  Widget buildItemMainNew(DataNextPost data) {
+  Widget buildItemMainNew(DataNextPost data, int index) {
+    print(index);
     return InkWell(
       onTap: () {
         print("data status ${data?.status}");
@@ -766,121 +767,132 @@ class _HomeState extends State<MyPosts> {
                   ))));*/
         }
       },
-      child: Container(
-        padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 11),
-        margin: new EdgeInsets.only(top: 8.0),
-        decoration: new BoxDecoration(
-          borderRadius: new BorderRadius.circular(5.0),
-          color: Colors.white,
-        ),
-        child: Column(
-          children: [
-            Row(
+      child: Column(
+        children: [
+          Container(
+            padding:
+                new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 11),
+            margin: new EdgeInsets.only(top: 8.0),
+            decoration: new BoxDecoration(
+              borderRadius: new BorderRadius.circular(5.0),
+              color: Colors.white,
+            ),
+            child: Column(
               children: [
-                new Container(
-                    width: 49.0,
-                    height: 49.0,
-                    decoration: new BoxDecoration(
-                      color: Colors.grey,
-                      border: new Border.all(color: Colors.white, width: 0.3),
-                      shape: BoxShape.circle,
-                    ),
-                    child: ClipOval(
-                      child: getCachedNetworkImageWithurl(
-                          url: data?.image ?? "", size: 49),
-                    )),
-                Expanded(
-                  child: Container(
-                    margin: new EdgeInsets.only(left: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        new Container(
-                          child: new Text(
-                            data?.title ?? "",
-                            style: TextThemes.blackCirculerMedium,
-                          ),
+                Row(
+                  children: [
+                    new Container(
+                        width: 49.0,
+                        height: 49.0,
+                        decoration: new BoxDecoration(
+                          color: Colors.grey,
+                          border:
+                              new Border.all(color: Colors.white, width: 0.3),
+                          shape: BoxShape.circle,
                         ),
-                        Container(
-                          margin: new EdgeInsets.only(top: 10.0),
-                          child: new Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                child: new Text(
-                                  data?.status == 3
-                                      ? "You’ve ended job of "
-                                      : "You have hired ",
-                                  style: TextThemes.grayNormalSmall,
-                                ),
+                        child: ClipOval(
+                          child: getCachedNetworkImageWithurl(
+                              url: data?.image ?? "", size: 49),
+                        )),
+                    Expanded(
+                      child: Container(
+                        margin: new EdgeInsets.only(left: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            new Container(
+                              child: new Text(
+                                data?.title ?? "",
+                                style: TextThemes.blackCirculerMedium,
                               ),
-                              Expanded(
-                                child: Container(
-                                  margin: new EdgeInsets.only(left: 1.0),
-                                  child: InkWell(
-                                    onTap: () {
-                                      widget.lauchCallBack(Material(
-                                          child: Material(
-                                              child: new ChatMessageDetails(
-                                        id: data.userId.toString(),
-                                        name: data.hired.name,
-                                        hireduserId:
-                                            data?.hiredUserId?.toString(),
-                                        image: data?.image,
-                                        userButtonMsg: true,
-                                      ))));
-                                    },
+                            ),
+                            Container(
+                              margin: new EdgeInsets.only(top: 10.0),
+                              child: new Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
                                     child: new Text(
-                                      data?.hired?.name ?? "",
-                                      style: TextThemes.cyanTextSmallMedium,
+                                      data?.status == 3
+                                          ? "You’ve ended job of "
+                                          : "You have hired ",
+                                      style: TextThemes.grayNormalSmall,
                                     ),
                                   ),
-                                ),
+                                  Expanded(
+                                    child: Container(
+                                      margin: new EdgeInsets.only(left: 1.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          widget.lauchCallBack(Material(
+                                              child: Material(
+                                                  child: new ChatMessageDetails(
+                                            id: data.userId.toString(),
+                                            name: data.hired.name,
+                                            hireduserId:
+                                                data?.hiredUserId?.toString(),
+                                            image: data?.image,
+                                            userButtonMsg: true,
+                                          ))));
+                                        },
+                                        child: new Text(
+                                          data?.hired?.name ?? "",
+                                          style: TextThemes.cyanTextSmallMedium,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  /*   Container(
+                                    margin: new EdgeInsets.only(left: 7.0),
+                                    child: new Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 13,
+                                      color: Color.fromRGBO(183, 183, 183, 1),
+                                    ),
+                                  )*/
+                                ],
                               ),
-                              /*   Container(
-                                margin: new EdgeInsets.only(left: 7.0),
-                                child: new Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 13,
-                                  color: Color.fromRGBO(183, 183, 183, 1),
-                                ),
-                              )*/
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Opacity(
-              opacity: 0.12,
-              child: new Container(
-                margin: new EdgeInsets.only(top: 16.0),
-                height: 1.0,
-                color: AppColors.dividerColor,
-              ),
-            ),
-            data?.status == 3
-                ? Container(
-                    margin: new EdgeInsets.only(top: 10),
-                    child: InkWell(
-                      onTap: () {
-                        hitEndedFavours(data);
-                      },
-                      child: new Text(
-                        "END FAVOR",
-                        style: new TextStyle(
-                            color: AppColors.redLight,
-                            fontSize: 14,
-                            fontFamily: AssetStrings.circulerNormal),
                       ),
                     ),
-                  )
-                : Container(),
-          ],
-        ),
+                  ],
+                ),
+                Opacity(
+                  opacity: 0.12,
+                  child: new Container(
+                    margin: new EdgeInsets.only(top: 16.0),
+                    height: 1.0,
+                    color: AppColors.dividerColor,
+                  ),
+                ),
+                data?.status == 3
+                    ? Container(
+                        margin: new EdgeInsets.only(top: 10),
+                        child: InkWell(
+                          onTap: () {
+                            hitEndedFavours(data);
+                          },
+                          child: new Text(
+                            "END FAVOR",
+                            style: new TextStyle(
+                                color: AppColors.redLight,
+                                fontSize: 14,
+                                fontFamily: AssetStrings.circulerNormal),
+                          ),
+                        ),
+                      )
+                    : Container(),
+              ],
+            ),
+          ),
+          index == listResult?.length - 1
+              ? SizedBox(
+                  height: 30,
+                )
+              : Container()
+        ],
       ),
     );
   }
