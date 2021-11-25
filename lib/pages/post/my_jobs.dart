@@ -535,17 +535,19 @@ class _HomeState extends State<MyJobs> {
               postId: data?.id?.toString(),
               type: 0,
               voidcallback: callback,
+              userType: 1,
             ))));
           } else {
             widget.lauchCallBack(Material(
                 child: Material(
                     child: new PayFeebackDetailsCommon(
-              lauchCallBack: widget?.lauchCallBack,
+                      lauchCallBack: widget?.lauchCallBack,
               userId: data?.hiredUserId?.toString(),
               postId: data?.id?.toString(),
               status: 1,
               type: 1,
               voidcallback: callback,
+              userType: 1,
             ))));
           }
         } else {
@@ -553,11 +555,12 @@ class _HomeState extends State<MyJobs> {
               child: Material(
                   child: new PayFeebackDetails(
                     lauchCallBack: widget?.lauchCallBack,
-                    userId: data?.hiredUserId?.toString(),
-                    postId: data?.id?.toString(),
-                    type: 1,
-                    voidcallback: callback,
-                  ))));
+            userId: data?.hiredUserId?.toString(),
+            postId: data?.id?.toString(),
+            type: 1,
+            voidcallback: callback,
+            userType: 1,
+          ))));
 
           /*
           widget.lauchCallBack(Material(
