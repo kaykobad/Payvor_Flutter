@@ -295,7 +295,6 @@ class _HomeState extends State<SearchHomeByName>
       loader = false;
       APIError apiError = response;
       print(apiError.error);
-
       showInSnackBar(apiError.messag);
     }
   }

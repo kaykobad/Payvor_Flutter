@@ -249,7 +249,8 @@ class _HomeState extends State<SearchMapView>
         margin: new EdgeInsets.only(top: 150),
         height: 50,
         width: 40,
-        child: FloatingActionButton.small(
+        child: FloatingActionButton(
+          mini: true,
           onPressed: hitLocation,
           child: new Icon(
             Icons.gps_fixed,
