@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:payvor/filter/refer_response.dart';
 import 'package:payvor/provider/auth_provider.dart';
@@ -106,12 +106,16 @@ class _HomeState extends State<SearchMapView>
       infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
     );
 
-    final coordinates = new Coordinates(lat, long);
+    /*   final coordinates = new Coordinates(lat, long);
     var addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    Address first = addresses.first;
+    Address first = addresses.first;*/
 
-    _LocationController?.text = first?.addressLine;
+    var location = await getAddressFromLatLong(lat, long);
+
+    MemoryManagement.setLocationName(geo: location);
+
+    _LocationController?.text = location;
 
     if (text?.isNotEmpty) {
       _LocationController?.text = text;
@@ -128,6 +132,16 @@ class _HomeState extends State<SearchMapView>
       // adding a new marker to map
       markers.add(marker);
     });
+  }
+
+  Future<String> getAddressFromLatLong(double lat, double long) async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
+    print(placemarks);
+    Placemark place = placemarks[0];
+    String address =
+        '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+
+    return address;
   }
 
   _onCameraMove(CameraPosition position) {

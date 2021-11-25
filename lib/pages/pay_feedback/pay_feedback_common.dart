@@ -1154,16 +1154,18 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                             "-€${hiredUserDetailsResponse?.data?.serviceFee?.toString() ?? ""}",
                             9.0),*/
 
-                        getRowsPayment(
+                        widget?.userType == 1 ? getRowsPayment(
                             !isCurrentUser
                                 ? ResString().get('payvor_service_fee') +
-                                    "(${hiredUserDetailsResponse?.data?.servicePerc?.toString()}%)"
+                                "(${hiredUserDetailsResponse?.data?.servicePerc
+                                    ?.toString()}%)"
                                 : ResString().get('payvor_service_fee') +
-                                    "(0%)",
+                                "(0%)",
                             isCurrentUser
                                 ? "-€0"
-                                : "-€${hiredUserDetailsResponse?.data?.serviceFee}",
-                            9.0),
+                                : "-€${hiredUserDetailsResponse?.data
+                                ?.serviceFee}",
+                            9.0) : Container(),
                         new Container(
                           height: 13,
                           color: Colors.white,
@@ -1173,7 +1175,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                           child: new Container(
                             height: 1.0,
                             margin:
-                                new EdgeInsets.only(left: 17.0, right: 17.0),
+                            new EdgeInsets.only(left: 17.0, right: 17.0),
                             color: AppColors.dividerColor,
                           ),
                         ),
@@ -1204,7 +1206,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
 */
 
                               new Text(
-                                isCurrentUser
+                                isCurrentUser || widget?.userType == 0
                                     ? "€${hiredUserDetailsResponse?.data?.price}"
                                     : "€${hiredUserDetailsResponse?.data?.receiving}",
                                 style: new TextStyle(

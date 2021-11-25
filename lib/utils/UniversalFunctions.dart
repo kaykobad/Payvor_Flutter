@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:payvor/pages/login/login.dart';
@@ -593,12 +593,16 @@ Future<dynamic> currentPosition(
           print("lat $lat");
           print("long $long");
 
-          final coordinates = new Coordinates(lat, long);
+          /*    final coordinates = new Coordinates(lat, long);
           var addresses =
               await Geocoder.local.findAddressesFromCoordinates(coordinates);
-          var first = addresses.first;
+          var first = addresses.first;*/
 
-          MemoryManagement.setLocationName(geo: first?.addressLine);
+          var location = await GetAddressFromLatLong(position);
+
+          MemoryManagement.setLocationName(geo: location);
+
+          // MemoryManagement.setLocationName(geo: first?.addressLine);
 
           if (provider != null) {
             provider.locationProvider
@@ -653,12 +657,14 @@ Future<dynamic> currentPosition(
 
         print("lat $lat");
         print("long $long");
-        final coordinates = new Coordinates(lat, long);
+        /* final coordinates = new Coordinates(lat, long);
         var addresses =
             await Geocoder.local.findAddressesFromCoordinates(coordinates);
-        Address first = addresses.first;
+        Address first = addresses.first;*/
 
-        MemoryManagement.setLocationName(geo: first?.addressLine);
+        var location = await GetAddressFromLatLong(position);
+
+        MemoryManagement.setLocationName(geo: location);
 
         if (provider != null) {
           provider.locationProvider.add(lat.toString() + "," + long.toString());
@@ -692,6 +698,17 @@ Future<dynamic> currentPosition(
   } catch (e, stacktrace) {
     print("excepption $e");
   }
+}
+
+Future<String> GetAddressFromLatLong(Position position) async {
+  List<Placemark> placemarks =
+      await placemarkFromCoordinates(position.latitude, position.longitude);
+  print(placemarks);
+  Placemark place = placemarks[0];
+  String address =
+      '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+
+  return address;
 }
 
 String getCardImage(String brand) {
