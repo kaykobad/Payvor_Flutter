@@ -707,7 +707,6 @@ Future<String> GetAddressFromLatLong(Position position) async {
   Placemark place = placemarks[0];
   String address =
       '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
-
   return address;
 }
 

@@ -135,12 +135,16 @@ class _HomeState extends State<SearchMapView>
   }
 
   Future<String> getAddressFromLatLong(double lat, double long) async {
-    List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
-    print(placemarks);
-    Placemark place = placemarks[0];
-    String address =
-        '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
-
+    String address = MemoryManagement.getLocationName();
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
+      print(placemarks);
+      Placemark place = placemarks[0];
+      address =
+          '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+    } catch (ex) {
+      print("error ${ex.toString()}");
+    }
     return address;
   }
 

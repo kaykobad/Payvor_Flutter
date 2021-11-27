@@ -320,7 +320,6 @@ class _HomeState extends State<PayFeebackDetails>
   void callback() async {
     if (widget.type == 0 && type == 0) {
       showInSnackBar("Please select payment type");
-
       return;
     }
 
@@ -329,7 +328,7 @@ class _HomeState extends State<PayFeebackDetails>
         var getdata = await Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
-            return new StripeCardAddedList();
+            return new StripeCardAddedList(payingAmount: hiredUserDetailsResponse?.data?.price,);
           }),
         );
 
@@ -364,7 +363,7 @@ class _HomeState extends State<PayFeebackDetails>
             ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
             : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ??
                 "",
-        paymentAmount: hiredUserDetailsResponse?.data?.receiving?.toString(),
+        paymentAmount: hiredUserDetailsResponse?.data?.price?.toString(),
         paymentType: type == 1 ? "Hand Cash" : "Card",
         voidcallback: callbackApi,
       ))));
@@ -1320,12 +1319,12 @@ class _HomeState extends State<PayFeebackDetails>
                       9.0),*/
 
                         getRowsPayment(
-                            !isCurrentUser
+                            widget?.type == 1
                                 ? ResString().get('payvor_service_fee') +
                                     "(${hiredUserDetailsResponse?.data?.servicePerc?.toString()}%)"
                                 : ResString().get('payvor_service_fee') +
                                     "(0%)",
-                            isCurrentUser
+                            widget?.type == 0
                                 ? "-€0"
                                 : "-€${hiredUserDetailsResponse?.data?.serviceFee}",
                             9.0),
@@ -1369,7 +1368,7 @@ class _HomeState extends State<PayFeebackDetails>
                               ),*/
 
                               new Text(
-                                isCurrentUser
+                                widget?.type == 0
                                     ? "€${hiredUserDetailsResponse?.data?.price}"
                                     : "€${hiredUserDetailsResponse?.data?.receiving}",
                                 style: new TextStyle(

@@ -77,7 +77,7 @@ dev_dependencies:
   geocoder:
   stripe_payment:
   intl:
-  geocoding: ^2.0.1
+  geocoding:
 
 
 

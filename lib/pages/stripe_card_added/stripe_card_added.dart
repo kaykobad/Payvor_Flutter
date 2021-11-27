@@ -16,6 +16,10 @@ import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:provider/provider.dart';
 
 class StripeCardAddedList extends StatefulWidget {
+  final String payingAmount;
+
+  StripeCardAddedList({@required this.payingAmount});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -109,9 +113,14 @@ class _HomeState extends State<StripeCardAddedList>
                     children: [
                       Container(
                           margin: new EdgeInsets.only(left: 15),
-                          child: new Icon(
-                            Icons.clear,
-                            color: Colors.black87,
+                          child: InkWell(
+                            child: new Icon(
+                              Icons.clear,
+                              color: Colors.black87,
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
                           )),
                       Expanded(
                         child: Container(
@@ -237,7 +246,7 @@ class _HomeState extends State<StripeCardAddedList>
                                       child: new Text(
                                         response != null &&
                                                 response?.user != null
-                                            ? "€ 50"
+                                            ? "€ ${widget.payingAmount}"
                                             : "",
                                         maxLines: 2,
                                         style: new TextStyle(

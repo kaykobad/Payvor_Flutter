@@ -570,12 +570,12 @@ class HomeState extends State<SearchCompany>
   Future<ValueSetter> voidCallBacks(FilterRequest filter) async {
     currentPage = 1;
 
-    print(filter.minprice);
-    print(filter.maxprice);
-    print(filter.list);
-    print(filter.location);
-    print(filter.distance);
-    print(filter.listCategory);
+    // print(filter.minprice);
+    // print(filter.maxprice);
+    // print(filter.list);
+    // print(filter.location);
+    // print(filter.distance);
+    // print(filter.listCategory);
 
     filterRequest = filter;
 

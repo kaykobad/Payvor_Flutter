@@ -416,7 +416,7 @@ class _HomeState extends State<PostFavorDetails>
     Navigator.pop(context); //back to previous screen
     /* providerFirebase
         ?.changeScreen(Material(child: new AddPaymentMethodFirst()));*/
-    providerFirebase?.changeScreen(Material(child: new StripeCardAddedList()));
+    providerFirebase?.changeScreen(Material(child: new StripeCardAddedList(payingAmount: "0",)));
   }
 
   void callbackPaymentSuccessBack() async {

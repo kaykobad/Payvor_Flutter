@@ -450,21 +450,19 @@ class FirebaseProvider with ChangeNotifier {
   }
 
   Future<String> signIn(String email, String password) async {
-    UserCredential result = await _firebaseAuth.signInWithEmailAndPassword(
+    FirebaseUser user = await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
-    User user = result.user;
     return user.uid;
   }
 
   Future<String> signUp(String email, String password) async {
-    UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(
+    FirebaseUser user = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
-    User user = result.user;
     return user.uid;
   }
 
-  Future<User> getCurrentUser() async {
-    User user = await _firebaseAuth.currentUser;
+  Future<FirebaseUser> getCurrentUser() async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
     return user;
   }
 

@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:core';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -223,7 +223,9 @@ class PrivateChatScreenState extends State<PrivateChat> {
       if (snapshot.data == null) {
         userWindowStatus = false;
       } else {
-        userWindowStatus = (snapshot.data()==null)?false:snapshot.data()["isOnline"];
+        userWindowStatus = (snapshot.data() == null)
+            ? false
+            : (snapshot.data() as Map<String, dynamic>)["isOnline"];
       }
       print("isonline $userWindowStatus");
       _streamControllerUserStatus.add(userWindowStatus);
@@ -243,7 +245,9 @@ class PrivateChatScreenState extends State<PrivateChat> {
       if (result.data == null) {
         isUserBlocked = false;
       } else {
-        isUserBlocked = (result.data()==null)?false:result.data()["isBlocked"];
+        isUserBlocked = (result.data() == null)
+            ? false
+            : (result.data() as Map<String, dynamic>)["isBlocked"];
       }
     });
 
@@ -259,7 +263,9 @@ class PrivateChatScreenState extends State<PrivateChat> {
       if (result.data == null) {
         isUserBlockedBy = false;
       } else {
-        isUserBlockedBy = (result.data()==null)?false:result.data()["isBlocked"];
+        isUserBlockedBy = (result.data() == null)
+            ? false
+            : (result.data() as Map<String, dynamic>)["isBlocked"];
       }
     });
   }
@@ -308,23 +314,27 @@ class PrivateChatScreenState extends State<PrivateChat> {
   Future uploadFile() async {
     var user = "user+${widget.currentUserId}";
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    Reference reference =
-        FirebaseStorage.instance.ref().child(user).child(fileName);
-    UploadTask uploadTask = reference.putFile(imageFile);
-    TaskSnapshot storageTaskSnapshot = await uploadTask.snapshot;
-    storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
-      imageUrl = downloadUrl;
-      setState(() {
-        isLoading = false;
-        onSendMessage(imageUrl, 1);
-      });
-    }, onError: (err) {
-      setState(() {
-        isLoading = false;
-      });
-
-      showInSnackBar('This file is not an image');
+    var reference = FirebaseStorage.instance.ref().child(user).child(fileName);
+    StorageUploadTask uploadTask = reference.putFile(imageFile);
+    UploadTaskSnapshot storageTaskSnapshot = await uploadTask.future;
+    imageUrl = storageTaskSnapshot.downloadUrl.toString();
+    setState(() {
+      isLoading = false;
+      onSendMessage(imageUrl, 1);
     });
+    // storageTaskSnapshot.getDownloadURL().then((downloadUrl) {
+    //   imageUrl = downloadUrl;
+    //   setState(() {
+    //     isLoading = false;
+    //     onSendMessage(imageUrl, 1);
+    //   });
+    // }, onError: (err) {
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    //
+    //   showInSnackBar('This file is not an image');
+    // });
   }
 
   void onSendMessage(String content, int type) async {
@@ -418,7 +428,8 @@ class PrivateChatScreenState extends State<PrivateChat> {
 
   Widget _otherChatMessageBubble(String content, num timeStamp, int index) {
     var isLiked = false;
-    var likedBy = listMessage[index].data()['likedby'];
+    var likedBy =
+        (listMessage[index].data() as Map<String, dynamic>)['likedby'];
     print("liked by $likedBy");
     if (likedBy != null) {
       isLiked =
@@ -448,22 +459,22 @@ class PrivateChatScreenState extends State<PrivateChat> {
   }
 
   Widget buildItem(int index, QueryDocumentSnapshot doc) {
-    if (doc.data()['idFrom'] == currentUseerId) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    if (data['idFrom'] == currentUseerId) {
       // Right (my message)
       return Column(
         children: <Widget>[
-          doc.data()['type'] == 0
+          data['type'] == 0
               // Text
-              ? _myChatBubbleMessage(
-                  doc.data()['content'], doc.data()['timestamp'], index)
-              : doc.data()['type'] == 1
+              ? _myChatBubbleMessage(data['content'], data['timestamp'], index)
+              : data['type'] == 1
                   // Image
                   ? _myChatBubbleImage(
-                      doc.data()['content'], doc.data()['timestamp'], index)
+                      data['content'], data['timestamp'], index)
                   // Sticker
                   : Container(
                       child: new Image.asset(
-                        'images/${doc.data()['content']}.gif',
+                        'images/${data['content']}.gif',
                         width: 100.0,
                         height: 100.0,
                         fit: BoxFit.cover,
@@ -506,26 +517,26 @@ class PrivateChatScreenState extends State<PrivateChat> {
 //                      )
 //                    :
                 : Container(),
-            doc.data()['type'] == 0
+            data['type'] == 0
                 ? _otherChatMessageBubble(
-                    doc.data()['content'], doc.data()['timestamp'], index)
-                : doc.data()['type'] == 1
-                ? Container(
-              child: _otherChatImageBubble(
-                  doc.data()['content'], doc.data()['timestamp'], index),
-              margin: EdgeInsets.only(left: 10.0),
-            )
-                : Container(
+                    data['content'], data['timestamp'], index)
+                : data['type'] == 1
+                    ? Container(
+                        child: _otherChatImageBubble(
+                            data['content'], data['timestamp'], index),
+                        margin: EdgeInsets.only(left: 10.0),
+                      )
+                    : Container(
 //                  child: new Image.asset(
 //                    'images/${doc.data()['content']}.gif',
 //                    width: 100.0,
 //                    height: 100.0,
 //                    fit: BoxFit.cover,
 //                  ),
-              margin: EdgeInsets.only(
-                  bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                  right: 10.0),
-            ),
+                        margin: EdgeInsets.only(
+                            bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                            right: 10.0),
+                      ),
 
             // Time
 //            isLastMessageLeft(index)
@@ -554,7 +565,8 @@ class PrivateChatScreenState extends State<PrivateChat> {
   bool isLastMessageLeft(int index) {
     if ((index > 0 &&
             listMessage != null &&
-            listMessage[index - 1].data()['idFrom'] == currentUseerId) ||
+            (listMessage[index - 1].data() as Map<String, dynamic>)['idFrom'] ==
+                currentUseerId) ||
         index == 0) {
       return true;
     } else {
@@ -565,7 +577,8 @@ class PrivateChatScreenState extends State<PrivateChat> {
   bool isLastMessageRight(int index) {
     if ((index > 0 &&
             listMessage != null &&
-            listMessage[index - 1].data()['idFrom'] != currentUseerId) ||
+            (listMessage[index - 1].data() as Map<String, dynamic>)['idFrom'] !=
+                currentUseerId) ||
         index == 0) {
       return true;
     } else {
@@ -1040,16 +1053,16 @@ class PrivateChatScreenState extends State<PrivateChat> {
             var messageList = List<Widget>();
             var index = 0;
             for (var doc in snapshot.data.docs) {
-              var timeSection = TimeAgo.timeString(doc.data()['timestamp']);
+              var timeSection = TimeAgo.timeString(
+                  (doc.data() as Map<String, dynamic>)['timestamp']);
               if (_timeSection != timeSection) {
                 messageList.add(_timeSectionWidget(_timeSection));
-                 _timeSection = timeSection;
+                _timeSection = timeSection;
               }
               messageList.add(buildItem(index, snapshot.data.docs[index]));
               index++;
-
             }
-             if(messageList.length>0)
+            if(messageList.length>0)
              messageList.add(_timeSectionWidget(_timeSection));
 
             _timeSection="Today";
