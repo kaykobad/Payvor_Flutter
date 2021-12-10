@@ -78,6 +78,7 @@ class AssetStrings {
   static const String fullname = 'assets/png/fullname.png';
   static const String combineUser = 'assets/png/combine_user.png';
   static const String combine_shape = 'assets/png/combine_shape.png';
+  static const String money = 'assets/png/money.png';
   static const String spice = 'assets/png/spice.png';
   static const String view_profile = 'assets/png/view_profile.svg';
   static const String imagePlaceholder = 'assets/png/shape.png';

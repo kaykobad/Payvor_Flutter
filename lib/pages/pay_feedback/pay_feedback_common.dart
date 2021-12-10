@@ -35,6 +35,7 @@ class PayFeebackDetailsCommon extends StatefulWidget {
   final bool giveFeedback;
   final ValueSetter<int> voidcallback;
   final int userType;
+  final int paidUnpaid;
 
   PayFeebackDetailsCommon(
       {@required this.lauchCallBack,
@@ -42,7 +43,8 @@ class PayFeebackDetailsCommon extends StatefulWidget {
       this.postId,
       this.giveFeedback,
       this.voidcallback,
-      this.userType});
+      this.userType,
+      this.paidUnpaid});
 
 /*  final String id;
 
@@ -887,14 +889,27 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                     style: TextThemes.blackCirculerMedium,
                   ),
                 ),
-                Container(
-                  child: new Text(
-                    hiredUserDetailsResponse?.data?.status == 1
-                        ? "Active"
-                        : "Inactive",
-                    style: TextThemes.readAlert,
-                  ),
-                ),
+                widget?.paidUnpaid != null && widget?.paidUnpaid == 1
+                    ? Container(
+                        child: new Text(
+                        hiredUserDetailsResponse?.data?.status == 1
+                            ? "Not Paid"
+                            : "Paid",
+                        style: new TextStyle(
+                            fontFamily: AssetStrings.circulerNormal,
+                            fontSize: 16,
+                            color: hiredUserDetailsResponse?.data?.status == 1
+                                ? AppColors.statusYellow
+                                : AppColors.statusGreen),
+                      ))
+                    : Container(
+                        child: new Text(
+                          hiredUserDetailsResponse?.data?.status == 1
+                              ? "Active"
+                              : "Inactive",
+                          style: TextThemes.readAlert,
+                        ),
+                      ),
               ],
             ),
           ),

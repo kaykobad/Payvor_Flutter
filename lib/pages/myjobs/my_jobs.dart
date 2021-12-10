@@ -535,6 +535,7 @@ class _HomeState extends State<MyJobs> {
             giveFeedback: false,
             voidcallback: callback,
             userType: Constants.EMPLOYER,
+            paidUnpaid: 1,
           ))));
         } else {
           widget.lauchCallBack(new PayFeebackDetails(
@@ -543,6 +544,7 @@ class _HomeState extends State<MyJobs> {
             type: 1,
             voidcallback: callback,
             userType: Constants.HELPER,
+            paidUnpaid: 1,
           ));
 
           /*

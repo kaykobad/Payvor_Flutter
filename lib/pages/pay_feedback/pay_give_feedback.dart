@@ -36,13 +36,15 @@ class PayFeebackDetails extends StatefulWidget {
   final int type;
   final ValueSetter<int> voidcallback;
   final int userType;
+  final int paidUnpaid;
 
   PayFeebackDetails(
       {this.userId,
       this.postId,
       this.type,
       this.voidcallback,
-      this.userType});
+      this.userType,
+      this.paidUnpaid});
 
   @override
   _HomeState createState() => _HomeState();
@@ -466,7 +468,7 @@ class _HomeState extends State<PayFeebackDetails>
         margin: new EdgeInsets.only(top: 4),
         child: Row(
           children: <Widget>[
-            new Container(
+            /*  new Container(
               width: 50.0,
               height: 50.0,
               decoration: BoxDecoration(
@@ -479,6 +481,14 @@ class _HomeState extends State<PayFeebackDetails>
               type == 1 ? AssetStrings.checkTick : AssetStrings.combine_shape,
                 height: 18,
                 width: 18,
+              ),
+            ),*/
+            new Container(
+              width: 50.0,
+              height: 50.0,
+              alignment: Alignment.center,
+              child: new Image.asset(
+                AssetStrings.money,
               ),
             ),
             Expanded(
@@ -497,7 +507,9 @@ class _HomeState extends State<PayFeebackDetails>
                         new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
                     child: Container(
                         child: new Text(
-                      type == 1 ? "Owner has ended the favor" : "Hiring Date",
+                          type == 1
+                          ? "Favor Owner has paid & ended the job. You can give a feedback in return."
+                          : "Hiring Date",
                       style: TextThemes.greyTextFieldNormalNw,
                     )),
                   )
@@ -818,14 +830,27 @@ class _HomeState extends State<PayFeebackDetails>
                     style: TextThemes.blackCirculerMedium,
                   ),
                 ),
-                Container(
-                  child: new Text(
-                    hiredUserDetailsResponse?.data?.status == 1
-                        ? "Active"
-                        : "Inactive",
-                    style: TextThemes.readAlert,
-                  ),
-                ),
+                widget?.paidUnpaid != null && widget?.paidUnpaid == 1
+                    ? Container(
+                        child: new Text(
+                        hiredUserDetailsResponse?.data?.status == 1
+                            ? "Not Paid"
+                            : "Paid",
+                        style: new TextStyle(
+                            fontFamily: AssetStrings.circulerNormal,
+                            fontSize: 16,
+                            color: hiredUserDetailsResponse?.data?.status == 1
+                                ? AppColors.statusYellow
+                                : AppColors.statusGreen),
+                      ))
+                    : Container(
+                        child: new Text(
+                          hiredUserDetailsResponse?.data?.status == 1
+                              ? "Active"
+                              : "Inactive",
+                          style: TextThemes.readAlert,
+                        ),
+                      ),
               ],
             ),
           ),
@@ -1348,9 +1373,10 @@ class _HomeState extends State<PayFeebackDetails>
                             ],
                           ),
                         ),
-                  widget?.type == 1
-                      ? buildItemRating(1, "Favor Ended")
-                      : Container(),
+                        widget?.type == 1
+                            ? buildItemRating(
+                                1, /* "Favor Ended"*/ "Congratz! You’re paid.")
+                            : Container(),
                   new SizedBox(
                     height: 150.0,
                   ),
