@@ -7,13 +7,13 @@ import 'package:intl/intl.dart';
 import 'package:payvor/current_user_hired_by_favor/current_user_favor_hire.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/favour_posted_by_user.dart';
-import 'package:payvor/model/stripe/stripe_get_users.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/original_post/original_post_data.dart';
 import 'package:payvor/pages/pay_feedback/pay_feedback_common.dart';
 import 'package:payvor/pages/pay_feedback/pay_give_feedback.dart';
 import 'package:payvor/pages/post/recent_posted_favor.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
@@ -35,6 +35,7 @@ class _HomeState extends State<MyPosts> {
 
   String searchkey = null;
   AuthProvider provider;
+  FirebaseProvider providerFirebase;
   int currentPage = 1;
   bool isPullToRefresh = false;
   bool offstagenodata = true;
@@ -90,11 +91,9 @@ class _HomeState extends State<MyPosts> {
       },
       onSuccess: () {},
     );
-
     if (!gotInternetConnection) {
       return;
     }
-
     if (!isPullToRefresh) {
       provider.setLoading();
     }
@@ -143,8 +142,7 @@ class _HomeState extends State<MyPosts> {
         setState(() {});
       }
 
-      print(response);
-      try {} catch (ex) {}
+
     } else {
       provider.hideLoader();
       APIError apiError = response;
@@ -224,7 +222,7 @@ class _HomeState extends State<MyPosts> {
   Widget build(BuildContext context) {
     screenSize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
-
+    providerFirebase = Provider.of<FirebaseProvider>(context);
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: AppColors.whiteGray,
@@ -496,210 +494,77 @@ class _HomeState extends State<MyPosts> {
     }
   }
 
-  hitEndedFavours(DataNextPost data) async {
-    provider.setLoading();
-
-    bool gotInternetConnection = await hasInternetConnection(
-      context: context,
-      mounted: mounted,
-      canShowAlert: true,
-      onFail: () {
-        provider.hideLoader();
-      },
-      onSuccess: () {},
-    );
-
-    if (!gotInternetConnection) {
-      return;
-    }
-
-    var responses = await provider.endedFavours(context, data?.id?.toString());
-
-    if (responses is GetStripeResponse) {
-      provider.hideLoader();
-
-      //listResult?.remove(data);
-
-      widget.lauchCallBack(Material(
-          child: Material(
-              child: new PayFeebackDetails(
-        lauchCallBack: widget?.lauchCallBack,
+  hitEndedFavours(DataNextPost data) {
+    print("clicked_data_status ${data.status}");
+    if (data?.status != 3) {
+      if (data?.status == 1) {
+        providerFirebase.changeScreen(new PayFeebackDetails(
+          userId: data?.hiredUserId?.toString(),
+          postId: data?.id?.toString(),
+          type: 0,
+          voidcallback: callback,
+          userType: Constants.HELPER,
+        ));
+      } else {
+        providerFirebase.changeScreen(Material(
+            child: Material(
+                child: new PayFeebackDetailsCommon(
+          lauchCallBack: widget?.lauchCallBack,
+          userId: data?.hiredUserId?.toString(),
+          postId: data?.id?.toString(),
+          giveFeedback: false,
+          voidcallback: callback,
+          userType: Constants.HELPER,
+        ))));
+      }
+    } else {
+      providerFirebase.changeScreen(new PayFeebackDetails(
         userId: data?.hiredUserId?.toString(),
         postId: data?.id?.toString(),
         type: 1,
         voidcallback: callback,
-      ))));
-
-      setState(() {});
-    } else {
-      provider.hideLoader();
-      APIError apiError = responses;
-      showInSnackBar(apiError.error);
+        userType: 1,
+      ));
     }
-  }
-
-  Widget buildItemMain(DataNextPost data) {
-    var dates = formatDateString(data?.createdAt ?? "");
-    return InkWell(
-      onTap: () {
-        if (data?.status != 3) {
-          if (data?.status == 1) {
-            widget.lauchCallBack(Material(
-                child: Material(
-                    child: new PayFeebackDetails(
-              lauchCallBack: widget?.lauchCallBack,
-                      userId: data?.hiredUserId?.toString(),
-                      postId: data?.id?.toString(),
-                      type: 0,
-                      voidcallback: callback,
-            ))));
-          } else {
-              widget.lauchCallBack(Material(
-                child: Material(
-                    child: new PayFeebackDetailsCommon(
-              lauchCallBack: widget?.lauchCallBack,
-              userId: data?.hiredUserId?.toString(),
-              postId: data?.id?.toString(),
-              status: 0,
-              type: 0,
-              voidcallback: callback,
-            ))));
-/*
-            widget.lauchCallBack(Material(
-                child: Material(
-                    child: new PayFeebackDetails(
-              lauchCallBack: widget?.lauchCallBack,
-              userId: data?.hiredUserId?.toString(),
-              postId: data?.id?.toString(),
-              type: 0,
-              voidcallback: callback,
-            ))));*/
-          }
-        } else {
-          widget.lauchCallBack(Material(
-              child: Material(
-                  child: new PayFeebackDetailsCommon(
-                    lauchCallBack: widget?.lauchCallBack,
-                    userId: data?.hiredUserId?.toString(),
-                    postId: data?.id?.toString(),
-                    status: 1,
-                    type: 0,
-                    voidcallback: callback,
-                  ))));
-
-          /* widget.lauchCallBack(Material(
-              child: Material(
-                  child: new ChatMessageDetails(
-                    id: data.userId.toString(),
-                    name: data.title,
-                    hireduserId: data?.hiredUserId?.toString(),
-                    image: data?.image,
-                    userButtonMsg: true,
-                  ))));*/
-        }
-      },
-      child: Container(
-        padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
-        margin: new EdgeInsets.only(top: 8.0),
-        decoration: new BoxDecoration(
-          borderRadius: new BorderRadius.circular(5.0),
-          color: Colors.white,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            /* Container(
-              child: new Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  new Image.asset(
-                    AssetStrings.combine_shape,
-                    height: 18,
-                    width: 18,
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: new EdgeInsets.only(left: 7.0),
-                      child: new Text(
-                        dates,
-                        style: TextThemes.greyDarkTextHomeLocation,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: new EdgeInsets.only(left: 3.0),
-                    child: new Text(
-                      "€${data?.price ?? "0"}",
-                      style: TextThemes.darkRedMediumNew,
-                    ),
-                  )
-                ],
-              ),
-            ),*/
-            new Container(
-              child: new Text(
-                data?.title ?? "",
-                style: TextThemes.blackCirculerMedium,
-              ),
-            ),
-            Opacity(
-              opacity: 0.12,
-              child: new Container(
-                margin: new EdgeInsets.only(top: 16.0),
-                height: 1.0,
-                color: AppColors.dividerColor,
-              ),
-            ),
-            Container(
-              margin: new EdgeInsets.only(top: 10.0),
-              child: new Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    child: new Text(
-                      data?.status == 3
-                          ? "You’ve ended job of "
-                          : "You have hired ",
-                      style: TextThemes.grayNormalSmall,
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: new EdgeInsets.only(left: 1.0),
-                      child: InkWell(
-                        onTap: () {
-                          widget.lauchCallBack(Material(
-                              child: Material(
-                                  child: new ChatMessageDetails(
-                            id: data.userId.toString(),
-                            name: data.hired.name,
-                            hireduserId: data?.hiredUserId?.toString(),
-                            image: data?.image,
-                            userButtonMsg: true,
-                          ))));
-                        },
-                        child: new Text(
-                          data?.hired?.name ?? "",
-                          style: TextThemes.cyanTextSmallMedium,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: new EdgeInsets.only(left: 7.0),
-                    child: new Icon(
-                      Icons.arrow_forward_ios,
-                      size: 13,
-                      color: Color.fromRGBO(183, 183, 183, 1),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    // provider.setLoading();
+    //
+    // bool gotInternetConnection = await hasInternetConnection(
+    //   context: context,
+    //   mounted: mounted,
+    //   canShowAlert: true,
+    //   onFail: () {
+    //     provider.hideLoader();
+    //   },
+    //   onSuccess: () {},
+    // );
+    //
+    // if (!gotInternetConnection) {
+    //   return;
+    // }
+    //
+    // var responses = await provider.endedFavours(context, data?.id?.toString());
+    //
+    // if (responses is GetStripeResponse) {
+    //   provider.hideLoader();
+    //
+    //   //listResult?.remove(data);
+    //
+    //   widget.lauchCallBack(Material(
+    //       child: Material(
+    //           child: new PayFeebackDetails(
+    //     lauchCallBack: widget?.lauchCallBack,
+    //     userId: data?.hiredUserId?.toString(),
+    //     postId: data?.id?.toString(),
+    //     type: 1,
+    //     voidcallback: callback,
+    //   ))));
+    //
+    //   setState(() {});
+    // } else {
+    //   provider.hideLoader();
+    //   APIError apiError = responses;
+    //   showInSnackBar(apiError.error);
+    // }
   }
 
   Widget buildItemMainNew(DataNextPost data, int index) {
@@ -715,63 +580,39 @@ class _HomeState extends State<MyPosts> {
               lauchCallBack: widget?.lauchCallBack,
               userId: data?.hiredUserId?.toString(),
               postId: data?.id?.toString(),
-              type: 0,
-              status: 1,
+              giveFeedback: false,
               voidcallback: callback,
-              userType: 0,
+              userType: Constants.HELPER,
             ))));
           } else {
+            // status=3 favour is ended give feedback now
             widget.lauchCallBack(Material(
                 child: Material(
                     child: new PayFeebackDetailsCommon(
-                      lauchCallBack: widget?.lauchCallBack,
-              userId: data?.hiredUserId?.toString(),
-              postId: data?.id?.toString(),
-              status: 0,
-              type: 0,
-              voidcallback: callback,
-              userType: 0,
-            ))));
-/*
-            widget.lauchCallBack(Material(
-                child: Material(
-                    child: new PayFeebackDetails(
               lauchCallBack: widget?.lauchCallBack,
               userId: data?.hiredUserId?.toString(),
               postId: data?.id?.toString(),
-              type: 0,
+              giveFeedback: true,
               voidcallback: callback,
-            ))));*/
+              userType: Constants.HELPER,
+            ))));
           }
         } else {
-          widget.lauchCallBack(Material(
-              child: Material(
-                  child: new PayFeebackDetailsCommon(
-                    lauchCallBack: widget?.lauchCallBack,
+          widget.lauchCallBack(new PayFeebackDetailsCommon(
+            lauchCallBack: widget?.lauchCallBack,
             userId: data?.hiredUserId?.toString(),
             postId: data?.id?.toString(),
-            status: 1,
-            type: 0,
+            giveFeedback: true,
             voidcallback: callback,
-            userType: 0,
-          ))));
-
-          /* widget.lauchCallBack(Material(
-              child: Material(
-                  child: new ChatMessageDetails(
-                    id: data.userId.toString(),
-                    name: data.title,
-                    hireduserId: data?.hiredUserId?.toString(),
-                    image: data?.image,
-                    userButtonMsg: true,
-                  ))));*/
+            userType: Constants.HELPER,
+          ));
         }
       },
       child: Column(
         children: [
           Container(
             padding:
-                new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 11),
+                new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 0),
             margin: new EdgeInsets.only(top: 8.0),
             decoration: new BoxDecoration(
               borderRadius: new BorderRadius.circular(5.0),
@@ -867,19 +708,23 @@ class _HomeState extends State<MyPosts> {
                     color: AppColors.dividerColor,
                   ),
                 ),
-                data?.status == 3
+                data?.status == 1
                     ? Container(
-                        margin: new EdgeInsets.only(top: 10),
+                        height: 40,
+                        width: double.infinity,
                         child: InkWell(
                           onTap: () {
                             hitEndedFavours(data);
                           },
-                          child: new Text(
-                            "END FAVOR",
-                            style: new TextStyle(
-                                color: AppColors.redLight,
-                                fontSize: 14,
-                                fontFamily: AssetStrings.circulerNormal),
+                          child: Center(
+                            child: new Text(
+                              "END FAVOR",
+                              style: new TextStyle(
+                                  color: AppColors.redLight,
+                                  fontSize: 14,
+                                  fontFamily: AssetStrings.circulerNormal),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       )
@@ -887,7 +732,7 @@ class _HomeState extends State<MyPosts> {
               ],
             ),
           ),
-          index == listResult?.length - 1
+          index == (listResult?.length ?? 0) - 1
               ? SizedBox(
                   height: 30,
                 )

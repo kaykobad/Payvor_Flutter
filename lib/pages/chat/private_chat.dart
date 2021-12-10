@@ -223,9 +223,8 @@ class PrivateChatScreenState extends State<PrivateChat> {
       if (snapshot.data == null) {
         userWindowStatus = false;
       } else {
-        userWindowStatus = (snapshot.data() == null)
-            ? false
-            : (snapshot.data() as Map<String, dynamic>)["isOnline"];
+        userWindowStatus =
+            (snapshot.data() == null) ? false : snapshot.data()["isOnline"];
       }
       print("isonline $userWindowStatus");
       _streamControllerUserStatus.add(userWindowStatus);
@@ -245,9 +244,8 @@ class PrivateChatScreenState extends State<PrivateChat> {
       if (result.data == null) {
         isUserBlocked = false;
       } else {
-        isUserBlocked = (result.data() == null)
-            ? false
-            : (result.data() as Map<String, dynamic>)["isBlocked"];
+        isUserBlocked =
+            (result.data() == null) ? false : result.data()["isBlocked"];
       }
     });
 
@@ -263,9 +261,8 @@ class PrivateChatScreenState extends State<PrivateChat> {
       if (result.data == null) {
         isUserBlockedBy = false;
       } else {
-        isUserBlockedBy = (result.data() == null)
-            ? false
-            : (result.data() as Map<String, dynamic>)["isBlocked"];
+        isUserBlockedBy =
+            (result.data() == null) ? false : result.data()["isBlocked"];
       }
     });
   }
@@ -314,27 +311,23 @@ class PrivateChatScreenState extends State<PrivateChat> {
   Future uploadFile() async {
     var user = "user+${widget.currentUserId}";
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    var reference = FirebaseStorage.instance.ref().child(user).child(fileName);
-    StorageUploadTask uploadTask = reference.putFile(imageFile);
-    UploadTaskSnapshot storageTaskSnapshot = await uploadTask.future;
-    imageUrl = storageTaskSnapshot.downloadUrl.toString();
-    setState(() {
-      isLoading = false;
-      onSendMessage(imageUrl, 1);
+    Reference reference =
+        FirebaseStorage.instance.ref().child(user).child(fileName);
+    UploadTask uploadTask = reference.putFile(imageFile);
+    TaskSnapshot storageTaskSnapshot = await uploadTask.snapshot;
+    storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
+      imageUrl = downloadUrl;
+      setState(() {
+        isLoading = false;
+        onSendMessage(imageUrl, 1);
+      });
+    }, onError: (err) {
+      setState(() {
+        isLoading = false;
+      });
+
+      showInSnackBar('This file is not an image');
     });
-    // storageTaskSnapshot.getDownloadURL().then((downloadUrl) {
-    //   imageUrl = downloadUrl;
-    //   setState(() {
-    //     isLoading = false;
-    //     onSendMessage(imageUrl, 1);
-    //   });
-    // }, onError: (err) {
-    //   setState(() {
-    //     isLoading = false;
-    //   });
-    //
-    //   showInSnackBar('This file is not an image');
-    // });
   }
 
   void onSendMessage(String content, int type) async {
@@ -428,8 +421,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
 
   Widget _otherChatMessageBubble(String content, num timeStamp, int index) {
     var isLiked = false;
-    var likedBy =
-        (listMessage[index].data() as Map<String, dynamic>)['likedby'];
+    var likedBy = listMessage[index].data()['likedby'];
     print("liked by $likedBy");
     if (likedBy != null) {
       isLiked =
@@ -459,7 +451,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
   }
 
   Widget buildItem(int index, QueryDocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    Map<String, dynamic> data = doc.data();
     if (data['idFrom'] == currentUseerId) {
       // Right (my message)
       return Column(
@@ -565,8 +557,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
   bool isLastMessageLeft(int index) {
     if ((index > 0 &&
             listMessage != null &&
-            (listMessage[index - 1].data() as Map<String, dynamic>)['idFrom'] ==
-                currentUseerId) ||
+        listMessage[index - 1].data()['idFrom'] == currentUseerId) ||
         index == 0) {
       return true;
     } else {
@@ -577,8 +568,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
   bool isLastMessageRight(int index) {
     if ((index > 0 &&
             listMessage != null &&
-            (listMessage[index - 1].data() as Map<String, dynamic>)['idFrom'] !=
-                currentUseerId) ||
+        listMessage[index - 1].data()['idFrom'] != currentUseerId) ||
         index == 0) {
       return true;
     } else {
@@ -1053,8 +1043,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
             var messageList = List<Widget>();
             var index = 0;
             for (var doc in snapshot.data.docs) {
-              var timeSection = TimeAgo.timeString(
-                  (doc.data() as Map<String, dynamic>)['timestamp']);
+              var timeSection = TimeAgo.timeString(doc.data()['timestamp']);
               if (_timeSection != timeSection) {
                 messageList.add(_timeSectionWidget(_timeSection));
                 _timeSection = timeSection;

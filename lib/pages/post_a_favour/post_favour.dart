@@ -289,7 +289,7 @@ class _HomeState extends State<PostFavour>
       profile = null;
 
       showBottomSheet();
-      setState(() {});
+
     }
     else {
       showInSnackBar("Something went wrong!!Please try again");
@@ -475,46 +475,41 @@ class _HomeState extends State<PostFavour>
                   : TextThemes.greyTextFieldHintNormal,
             ),
           ),
-
-          controller.text.length == 0 && isValid ? new Positioned(
-            right: 0.0,
-            child: new Padding(padding: lines > 1
-                ? new EdgeInsets.only(bottom: 4)
-                : new EdgeInsets.only(top: 13),
-              child: new SvgPicture.asset(
-                AssetStrings.notFilled,
-              ),
-            ),
-          ) : Container(),
+          controller.text.length == 0 && isValid
+              ? new Positioned(
+                  right: 0.0,
+                  child: new Padding(
+                    padding: lines > 1
+                        ? new EdgeInsets.only(bottom: 4)
+                        : new EdgeInsets.only(top: 13),
+                    child: new SvgPicture.asset(
+                      AssetStrings.notFilled,
+                    ),
+                  ),
+                )
+              : Container(),
         ],
       ),
     );
   }
 
-  void callback() {
-    if (getResult()) {
+  void callBackUpdateFavour() {
+    if (_validateInputs()) {
       hitApi(1);
-    }
-    else {
-      setState(() {
-
-      });
+    } else {
+      setState(() {});
     }
   }
 
-  void callbackMain() {
-    if (getResult()) {
+  void callBackCreateFavour() {
+    if (_validateInputs()) {
       hitApi(2);
-    }
-    else {
-      setState(() {
-
-      });
+    } else {
+      setState(() {});
     }
   }
 
-
-  bool getResult() {
+  bool _validateInputs() {
     var title = _TitleController.text;
     var price = _PriceController.text;
     var desc = _DescriptionController.text;
@@ -546,9 +541,8 @@ class _HomeState extends State<PostFavour>
     }
   }
 
-
-  void callbackPreview() {
-    if (getResult()) {
+  void _callbackPreviewFavouurPost() {
+    if (_validateInputs()) {
       var lat = "0.0";
       var long = "0.0";
 
@@ -774,7 +768,6 @@ class _HomeState extends State<PostFavour>
   }
 
   Future<ValueSetter> voidCallBackDialog(int type) async {
-    print("calllll");
 
     hitApi(1);
   }
@@ -1149,7 +1142,8 @@ class _HomeState extends State<PostFavour>
                     children: [
                       Expanded(
                         child: getSetupButtonBorderNew(
-                            callbackPreview, ResString().get('preview_favor'),
+                            _callbackPreviewFavouurPost,
+                            ResString().get('preview_favor'),
                             0,
                             border: Color.fromRGBO(103, 99, 99, 0.19),
                             newColor: Color.fromRGBO(248, 248, 250, 1.0),
@@ -1161,11 +1155,12 @@ class _HomeState extends State<PostFavour>
                       Expanded(
                         child: getSetupButtonNew(
                             widget.isEdit != null && widget.isEdit
-                                ? callbackMain
-                                : callback,
+                                ? callBackUpdateFavour
+                                : callBackCreateFavour,
                             widget.isEdit != null && widget.isEdit
                                 ? "Update Favor"
-                                : ResString().get('post_favor'), 0,
+                                : ResString().get('post_favor'),
+                            0,
                             newColor: AppColors.colorDarkCyan),
                       ),
                     ],

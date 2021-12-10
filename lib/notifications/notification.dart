@@ -364,8 +364,7 @@ class _HomeState extends State<Notifications>
                   providerFirebase?.changeScreen(new PayFeebackDetailsCommon(
                     postId: data?.favourId.toString(),
                     userId: data?.userId.toString(),
-                    type: 1,
-                    status: 1,
+                    giveFeedback: false,
                     voidcallback: null,
                     lauchCallBack: null,
                   ));
@@ -377,9 +376,9 @@ class _HomeState extends State<Notifications>
                     userId: data?.userId.toString(),
                     type: 1,
                     voidcallback: null,
-                    lauchCallBack: null,
                   ));
                 } else if (data?.type == 3) {
+                  print("review_post from notification screen");
                   // for rated user
                   providerFirebase?.changeScreen(Material(
                       child: new ReviewPost(

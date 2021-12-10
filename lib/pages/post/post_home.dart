@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:payvor/chat/decorator_view.dart';
-import 'package:payvor/pages/post/my_jobs.dart';
-import 'package:payvor/pages/post/my_posts.dart';
+import 'package:payvor/pages/myjobs/my_jobs.dart';
+import 'package:payvor/pages/myposts/my_posts.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 

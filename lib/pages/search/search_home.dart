@@ -26,13 +26,10 @@ import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class SearchCompany extends StatefulWidget {
-  final ValueChanged<Widget> lauchCallBack;
   final ValueChanged<int> callbackmyid;
   final String userid;
 
-  SearchCompany(
-      {Key key, @required this.lauchCallBack, this.callbackmyid, this.userid})
-      : super(key: key);
+  SearchCompany({Key key, this.callbackmyid, this.userid}) : super(key: key);
 
   @override
   HomeState createState() => HomeState();
@@ -115,13 +112,12 @@ class HomeState extends State<SearchCompany>
                 widget.callbackmyid(4);
               } else {
                 print("flase");
-                widget.lauchCallBack(Material(
-                    child: new ChatMessageDetails(
+                providerFirebase.changeScreen(new ChatMessageDetails(
                   id: data?.id?.toString(),
                   name: data?.user?.name,
                   image: data?.user?.profilePic,
                   hireduserId: data?.userId?.toString(),
-                )));
+                ));
               }
             },
             child: new Container(
@@ -151,13 +147,12 @@ class HomeState extends State<SearchCompany>
                       widget.callbackmyid(4);
                     } else {
                       print("flase");
-                      widget.lauchCallBack(Material(
-                          child: new ChatMessageDetails(
+                      providerFirebase.changeScreen(new ChatMessageDetails(
                         id: data?.id?.toString(),
                         name: data?.user?.name,
                         image: data?.user?.profilePic,
                         hireduserId: data?.userId?.toString(),
-                      )));
+                      ));
                     }
                   },
                   child: Container(
@@ -223,6 +218,9 @@ class HomeState extends State<SearchCompany>
   }
 
   hitApiDashboard() async {
+    isPullToRefresh = false;
+    _loadMore = false;
+    currentPage = 1;
     hitApi(filterRequest);
   }
 
@@ -504,7 +502,7 @@ class HomeState extends State<SearchCompany>
                 autofocus: false,
                 readOnly: true,
                 onTap: () {
-                  widget.lauchCallBack(Material(child: new SearchHomeByName()));
+                  providerFirebase.changeScreen(new SearchHomeByName());
                 },
                 decoration: new InputDecoration(
                   enabledBorder: new OutlineInputBorder(
@@ -533,10 +531,8 @@ class HomeState extends State<SearchCompany>
           ),
           InkWell(
             onTap: () {
-              widget.lauchCallBack(Material(
-                  child: new Filter(
-                      voidcallback: voidCallBacks,
-                      filterRequest: filterRequest)));
+              providerFirebase.changeScreen(new Filter(
+                  voidcallback: voidCallBacks, filterRequest: filterRequest));
             },
             child: new Container(
               width: 55,
@@ -637,13 +633,11 @@ class HomeState extends State<SearchCompany>
   Widget buildItemMain(int pos, Datas data) {
     return InkWell(
       onTap: () {
-        widget.lauchCallBack(Material(
-            child: Material(
-                child: new PostFavorDetails(
-                  id: data.id.toString(),
+        providerFirebase.changeScreen(new PostFavorDetails(
+          id: data.id.toString(),
           voidcallback: callback,
           distance: data?.distance,
-        ))));
+        ));
       },
       child: Container(
         color: Colors.white,

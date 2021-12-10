@@ -25,12 +25,12 @@ import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class PayFeebackDetails extends StatefulWidget {
-  final ValueChanged<Widget> lauchCallBack;
   final String userId;
   final String postId;
   final int type;
@@ -38,16 +38,11 @@ class PayFeebackDetails extends StatefulWidget {
   final int userType;
 
   PayFeebackDetails(
-      {@required this.lauchCallBack,
-      this.userId,
+      {this.userId,
       this.postId,
       this.type,
       this.voidcallback,
       this.userType});
-
-/*  final String id;
-
-  PostFavorDetails({this.id});*/
 
   @override
   _HomeState createState() => _HomeState();
@@ -67,7 +62,6 @@ class _HomeState extends State<PayFeebackDetails>
 
   var isCurrentUser = false;
 
-  bool offstageLoader = false;
   int type = 1;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -87,14 +81,6 @@ class _HomeState extends State<PayFeebackDetails>
 
   @override
   void initState() {
-/*
-
-    var infoData = jsonDecode(MemoryManagement.getUserInfo());
-    var userinfo = LoginSignupResponse.fromJson(infoData);
-    ids = userinfo?.user?.id.toString() ?? "";
-*/
-
-
     Future.delayed(const Duration(milliseconds: 300), () {
       hitApi();
     });
@@ -140,13 +126,9 @@ class _HomeState extends State<PayFeebackDetails>
         if (userid == ids) {
           isCurrentUser = true;
         }
-
-        print("user $userid");
-        print("usermain $ids");
       }
 
       print(response);
-      try {} catch (ex) {}
     } else {
       provider.hideLoader();
       APIError apiError = response;
@@ -160,7 +142,6 @@ class _HomeState extends State<PayFeebackDetails>
 
 
   hitReportApi() async {
-    offstageLoader = true;
     setState(() {});
 
     bool gotInternetConnection = await hasInternetConnection(
@@ -168,7 +149,6 @@ class _HomeState extends State<PayFeebackDetails>
       mounted: mounted,
       canShowAlert: true,
       onFail: () {
-        offstageLoader = false;
         setState(() {});
       },
       onSuccess: () {},
@@ -181,8 +161,6 @@ class _HomeState extends State<PayFeebackDetails>
         favour_id: hiredUserDetailsResponse?.data?.id?.toString());
 
     var response = await provider.reportUser(reportrequest, context);
-
-    offstageLoader = false;
 
     if (response is ReportResponse) {
       if (response != null && response.status.code == 200) {
@@ -204,14 +182,11 @@ class _HomeState extends State<PayFeebackDetails>
 
   updateUserPaymentStatus() async {
     provider.setLoading();
-    setState(() {});
-
     bool gotInternetConnection = await hasInternetConnection(
       context: context,
       mounted: mounted,
       canShowAlert: true,
       onFail: () {
-        offstageLoader = false;
         setState(() {});
       },
       onSuccess: () {},
@@ -220,59 +195,47 @@ class _HomeState extends State<PayFeebackDetails>
     if (!gotInternetConnection) {
       return;
     }
-    var reportrequest = new UpdateStatusRequest(
+    var reportRequest = new UpdateStatusRequest(
         favour_id: hiredUserDetailsResponse?.data?.id?.toString(),
         status: "2",
         payment_type: type?.toString());
 
-    var response = await provider.updateFavStatus(reportrequest, context);
-
-    provider.hideLoader();
-
-    offstageLoader = false;
-
+    var response = await provider.updateFavStatus(reportRequest, context);
+   // var response=null;
     if (response is ReportResponse) {
-      if (response != null && response.status.code == 200) {
-        if (widget.voidcallback != null) {
-          widget.voidcallback(1);
-        }
-
-        firebaseProvider.changeScreen(Material(
-            child: Material(
-                child: new RatingBarNewBar(
-          id: widget?.postId?.toString(),
-          type: widget?.type,
-                  image: widget.userType == 0
-              ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? ""
-              : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
-                  name: widget.userType == 0
-              ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
-              : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
-                  userId: widget.userType == 0
-              ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
-              : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ??
-                  "",
-          paymentAmount: hiredUserDetailsResponse?.data?.receiving?.toString(),
-          paymentType: type == 1 ? "Hand Cash" : "Card",
-          voidcallback: callbackApi,
-        ))));
+      if (widget.voidcallback != null) {
+        widget.voidcallback(1);
       }
-
-      print(response);
-      try {} catch (ex) {}
+      _moveToRatingScreen();
     } else {
-      provider.hideLoader();
       APIError apiError = response;
-      print(apiError.error);
+      showInSnackBar(apiError?.error??"error");
 
-      showInSnackBar(apiError.error);
     }
+  }
 
-    setState(() {});
+  _moveToRatingScreen() {
+    firebaseProvider.changeScreen(Material(
+        child: Material(
+            child: new RatingBarNewBar(
+      id: widget?.postId?.toString(),
+      type: widget?.type,
+      image: widget.userType == Constants.HELPER
+          ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? ""
+          : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
+      name: widget.userType == Constants.HELPER
+          ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
+          : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
+      userId: widget.userType == Constants.HELPER
+          ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
+          : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ?? "",
+      paymentAmount: hiredUserDetailsResponse?.data?.price?.toString(),
+      paymentType: type == 1 ? "Hand Cash" : "Card",
+      voidcallback: callbackApi,
+    ))));
   }
 
   hitDeletePostApi() async {
-    offstageLoader = true;
     setState(() {});
 
     bool gotInternetConnection = await hasInternetConnection(
@@ -280,7 +243,6 @@ class _HomeState extends State<PayFeebackDetails>
       mounted: mounted,
       canShowAlert: true,
       onFail: () {
-        offstageLoader = false;
         setState(() {});
       },
       onSuccess: () {},
@@ -293,8 +255,6 @@ class _HomeState extends State<PayFeebackDetails>
 
     var response = await provider.deletePost(
         hiredUserDetailsResponse?.data?.id?.toString(), context);
-
-    offstageLoader = false;
 
     if (response is ReportResponse) {
       if (response != null && response.status.code == 200) {
@@ -325,10 +285,19 @@ class _HomeState extends State<PayFeebackDetails>
 
     if (widget.type == 0) {
       if (type == 2) {
+        print(
+            "hired_user ${hiredUserDetailsResponse?.data?.hiredUser?.toJson()}");
         var getdata = await Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
-            return new StripeCardAddedList(payingAmount: hiredUserDetailsResponse?.data?.price,);
+            return new StripeCardAddedList(
+              payingAmount: hiredUserDetailsResponse?.data?.price,
+              hiredUserId: hiredUserDetailsResponse?.data?.hiredUser?.id ?? 0,
+              hiredUserName:
+                  hiredUserDetailsResponse?.data?.hiredUser?.name ?? "",
+              hiredUserProfilePic:
+                  hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? "",
+            );
           }),
         );
 
@@ -346,20 +315,19 @@ class _HomeState extends State<PayFeebackDetails>
         updateUserPaymentStatus();
       }
     } else {
-      // updateUserPaymentStatus();
 
       firebaseProvider.changeScreen(Material(
           child: Material(
               child: new RatingBarNewBar(
                 id: widget?.postId?.toString(),
         type: widget?.userType,
-        image: widget.userType == 0
+                image: widget.userType == Constants.HELPER
             ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? ""
             : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
-        name: widget.userType == 0
+                name: widget.userType == Constants.HELPER
             ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
             : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
-        userId: widget.userType == 0
+                userId: widget.userType == Constants.HELPER
             ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
             : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ??
                 "",
@@ -583,13 +551,13 @@ class _HomeState extends State<PayFeebackDetails>
       currentUserId = userResponse.user.id.toString();
     }
     var screen = PrivateChat(
-      peerId: widget.userType == 0
+      peerId: widget.userType == Constants.HELPER
           ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString()
           : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString(),
-      peerAvatar: widget.userType == 0
+      peerAvatar: widget.userType == Constants.HELPER
           ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic
           : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic,
-      userName: widget.userType == 0
+      userName: widget.userType == Constants.HELPER
           ? hiredUserDetailsResponse?.data?.hiredUser?.name
           : hiredUserDetailsResponse?.data?.postedbyuser?.name,
       isGroup: false,
@@ -626,7 +594,7 @@ class _HomeState extends State<PayFeebackDetails>
                   alignment: Alignment.center,
                   child: new ClipOval(
                     child: getCachedNetworkImageWithurl(
-                        url: widget.userType == 0
+                        url: widget.userType == Constants.HELPER
                             ? hiredUserDetailsResponse
                                     ?.data?.hiredUser?.profilePic ??
                                 ""
@@ -647,7 +615,7 @@ class _HomeState extends State<PayFeebackDetails>
                           right: 10.0,
                         ),
                         child: new Text(
-                          widget.userType == 0
+                          widget.userType == Constants.HELPER
                               ? hiredUserDetailsResponse?.data?.hiredUser?.name
                               : hiredUserDetailsResponse?.data?.postedbyuser?.name,
                           style: TextThemes.blackCirculerLarge,
@@ -661,7 +629,7 @@ class _HomeState extends State<PayFeebackDetails>
                                 builder: (BuildContext context) {
                               return Material(
                                   child: new ChatMessageDetails(
-                                    hireduserId: widget.userType == 0
+                                    hireduserId: widget.userType == Constants.HELPER
                                     ? hiredUserDetailsResponse
                                         ?.data?.hiredUser?.id
                                         ?.toString()
@@ -882,7 +850,7 @@ class _HomeState extends State<PayFeebackDetails>
           new CupertinoPageRoute(builder: (BuildContext context) {
             return Material(
                 child: new ChatMessageDetails(
-                  hireduserId: widget.userType == 0
+                  hireduserId: widget.userType == Constants.HELPER
                   ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString()
                   : hiredUserDetailsResponse?.data?.postedbyuser?.id
                       ?.toString(),
@@ -905,7 +873,7 @@ class _HomeState extends State<PayFeebackDetails>
               alignment: Alignment.center,
               child: new ClipOval(
                 child: getCachedNetworkImageWithurl(
-                    url: widget.userType == 0
+                    url: widget.userType == Constants.HELPER
                         ? hiredUserDetailsResponse
                                 ?.data?.hiredUser?.profilePic ??
                             ""
@@ -923,7 +891,7 @@ class _HomeState extends State<PayFeebackDetails>
                   Container(
                     margin: new EdgeInsets.only(left: 10.0, right: 10.0),
                     child: new Text(
-                      widget.userType == 0
+                      widget.userType == Constants.HELPER
                           ? hiredUserDetailsResponse?.data?.hiredUser?.name
                           : hiredUserDetailsResponse?.data?.postedbyuser?.name,
                       style: TextThemes.blackCirculerMedium,
@@ -1017,7 +985,7 @@ class _HomeState extends State<PayFeebackDetails>
                           margin: new EdgeInsets.only(right: 25.0, top: 10),
                           width: getScreenSize(context: context).width,
                           child: new Text(
-                            widget?.userType == 0
+                            widget?.userType == Constants.HELPER
                                 ? "Hired Favors"
                                 : "Next Jobs",
                             style: new TextStyle(

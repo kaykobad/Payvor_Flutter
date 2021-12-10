@@ -351,21 +351,11 @@ class _HomeState extends State<PostFavorDetails>
     offstageLoader = false;
 
     if (response is ReportResponse) {
-      if (response != null && response.status.code == 200) {
-        showBottomSuccessPayment("Apply Successful!",
-            "You have applied to the favor Successfully", "Done", 0);
-
-        //  showInSnackBar(response.status.message);
-      }
-
-      print(response);
-      try {} catch (ex) {}
+      showBottomSuccessPayment("Apply Successful!",
+          "You have applied to the favor Successfully", "Done", 0);
     } else {
-      print("avinashhh");
-      provider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
-
       showInSnackBar(apiError.error);
     }
 
@@ -679,6 +669,7 @@ class _HomeState extends State<PostFavorDetails>
     return InkWell(
       onTap: () {
         if (type == 1) {
+          print("review_post from my post details creen");
           Navigator.push(
             context,
             new CupertinoPageRoute(builder: (BuildContext context) {

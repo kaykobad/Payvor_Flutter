@@ -959,9 +959,7 @@ class AuthProvider with ChangeNotifier {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response =
         await APIHandler.get(context: context, url: APIs.getStripeUsers);
-    print("addStripeUsers ${APIs.getStripeUsers}");
-
-    log(jsonEncode(response));
+    hideLoader();
     if (response is APIError) {
       completer.complete(response);
       return completer.future;
@@ -1038,7 +1036,7 @@ class AuthProvider with ChangeNotifier {
         context: context,
         url: APIs.updateFavStatus,
         requestBody: requests.toJson());
-
+    hideLoader();
     if (response is APIError) {
       completer.complete(response);
       return completer.future;

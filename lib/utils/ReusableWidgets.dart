@@ -582,6 +582,8 @@ Widget getLocation(
               }
             }
 
+            closeKeyboard();
+            FocusScope.of(context).unfocus();
             // addData(text);
             //print(text);
           },

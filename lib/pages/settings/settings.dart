@@ -1,5 +1,6 @@
 import 'dart:core';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -67,7 +68,7 @@ class _HomeState extends State<Settings>
 
   void _logout() async {
     await MemoryManagement.clearMemory();
-
+    await FirebaseMessaging.instance.deleteToken();
     Navigator.pushAndRemoveUntil(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {

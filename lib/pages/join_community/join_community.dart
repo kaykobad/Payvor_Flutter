@@ -423,7 +423,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       child: privacyPolicyLinkAndTermsOfService());
 
   Widget privacyPolicyLinkAndTermsOfService() {
-    return Expanded(
+    return Container(
       child: Text.rich(TextSpan(
           text: 'By continuing, you agree to Payvor’s ',
           style: TextStyle(

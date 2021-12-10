@@ -444,7 +444,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       } else {
         String favid = message['fav_id'];
         String userid = message['user_id'];
-        moveToScreen(int.tryParse(type), favid, userid);
+       // moveToScreen(int.tryParse(type), favid, userid);
       }
     }
   }
@@ -455,8 +455,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       _firebaseProvider?.changeScreen(new PayFeebackDetailsCommon(
         postId: favid,
         userId: userid,
-        type: 1,
-        status: 1,
+        giveFeedback: false,
         voidcallback: null,
         lauchCallBack: null,
       ));
@@ -468,9 +467,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         userId: userid,
         type: 1,
         voidcallback: null,
-        lauchCallBack: null,
       ));
     } else if (type == 3) {
+      print("review_post from dashboard screen");
       // for rated user
       _firebaseProvider?.changeScreen(Material(
           child: new ReviewPost(
@@ -628,8 +627,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       var data = payload.split(",");
       if (data[0] == "7") {
         _moveToChatScreen();
-      } else
-        moveToScreen(int.tryParse(data[0]), data[1], data[2]);
+      } else {}
+      // moveToScreen(int.tryParse(data[0]), data[1], data[2]);
     }
   }
 
@@ -650,7 +649,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             onGenerateRoute: (route) => MaterialPageRoute(
                   settings: route,
                   builder: (context) => SearchCompany(
-                    lauchCallBack: homeCallBack,
                     callbackmyid: callbackChangePage,
                     userid: userId?.toString(),
                     key: _HomeKey,
@@ -708,7 +706,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             onGenerateRoute: (route) => MaterialPageRoute(
                   settings: route,
                   builder: (context) => SearchCompany(
-                    lauchCallBack: homeCallBack,
                     callbackmyid: callbackChangePage,
                     userid: userId?.toString(),
                     key: _HomeKey,

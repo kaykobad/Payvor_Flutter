@@ -450,19 +450,23 @@ class FirebaseProvider with ChangeNotifier {
   }
 
   Future<String> signIn(String email, String password) async {
-    FirebaseUser user = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password);
+    UserCredential userCredential = await _firebaseAuth
+        .signInWithEmailAndPassword(email: email, password: password);
+    User user = userCredential.user;
+
     return user.uid;
   }
 
   Future<String> signUp(String email, String password) async {
-    FirebaseUser user = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, password: password);
+    UserCredential userCredential = await _firebaseAuth
+        .createUserWithEmailAndPassword(email: email, password: password);
+    User user = userCredential.user;
+
     return user.uid;
   }
 
-  Future<FirebaseUser> getCurrentUser() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
+  Future<User> getCurrentUser() async {
+    User user = _firebaseAuth.currentUser;
     return user;
   }
 
@@ -473,7 +477,7 @@ class FirebaseProvider with ChangeNotifier {
   Future<void> createFirebaseUser(PayvorFirebaseUser PayvorFirebaseUser) async {
     var firebaseUser = await getCurrentUser();
     var document =
-    FirebaseFirestore.instance.collection(USERS).doc(firebaseUser.uid);
+        FirebaseFirestore.instance.collection(USERS).doc(firebaseUser.uid);
 
     await document.set(PayvorFirebaseUser.toJson());
   }

@@ -219,7 +219,7 @@ class Data {
   String last4;
   String name;
   String tokenizationMethod;
-  bool isCheck;
+  bool isCheck=false;
 
   Data(
       {this.id,

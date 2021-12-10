@@ -526,41 +526,24 @@ class _HomeState extends State<MyJobs> {
     return InkWell(
       onTap: () {
         if (data?.status != 3) {
-          if (data?.status == 1) {
-            widget.lauchCallBack(Material(
-                child: Material(
-                    child: new PayFeebackDetails(
-              lauchCallBack: widget?.lauchCallBack,
-              userId: data?.hiredUserId?.toString(),
-              postId: data?.id?.toString(),
-              type: 0,
-              voidcallback: callback,
-              userType: 1,
-            ))));
-          } else {
-            widget.lauchCallBack(Material(
-                child: Material(
-                    child: new PayFeebackDetailsCommon(
-                      lauchCallBack: widget?.lauchCallBack,
-              userId: data?.hiredUserId?.toString(),
-              postId: data?.id?.toString(),
-              status: 1,
-              type: 1,
-              voidcallback: callback,
-              userType: 1,
-            ))));
-          }
-        } else {
           widget.lauchCallBack(Material(
               child: Material(
-                  child: new PayFeebackDetails(
-                    lauchCallBack: widget?.lauchCallBack,
+                  child: new PayFeebackDetailsCommon(
+            lauchCallBack: widget?.lauchCallBack,
+            userId: data?.hiredUserId?.toString(),
+            postId: data?.id?.toString(),
+            giveFeedback: false,
+            voidcallback: callback,
+            userType: Constants.EMPLOYER,
+          ))));
+        } else {
+          widget.lauchCallBack(new PayFeebackDetails(
             userId: data?.hiredUserId?.toString(),
             postId: data?.id?.toString(),
             type: 1,
             voidcallback: callback,
-            userType: 1,
-          ))));
+            userType: Constants.HELPER,
+          ));
 
           /*
           widget.lauchCallBack(Material(

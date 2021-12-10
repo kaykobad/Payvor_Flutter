@@ -611,6 +611,7 @@ class _HomeState extends State<ChatMessageDetails>
                               ),
                               InkWell(
                                 onTap: () {
+                                  print("review_post from chat screen");
                                   Navigator.push(
                                     context,
                                     new CupertinoPageRoute(

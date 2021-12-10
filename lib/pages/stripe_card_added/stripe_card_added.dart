@@ -16,9 +16,16 @@ import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:provider/provider.dart';
 
 class StripeCardAddedList extends StatefulWidget {
+  final String hiredUserName;
+  final String hiredUserProfilePic;
+  final int hiredUserId;
   final String payingAmount;
 
-  StripeCardAddedList({@required this.payingAmount});
+  StripeCardAddedList(
+      {this.payingAmount = "0",
+      this.hiredUserName = "",
+      this.hiredUserProfilePic = "",
+      this.hiredUserId = 0});
 
   @override
   _HomeState createState() => _HomeState();
@@ -28,14 +35,8 @@ class _HomeState extends State<StripeCardAddedList>
     with AutomaticKeepAliveClientMixin<StripeCardAddedList> {
   var screenSize;
 
-  List<Data> listRecent = List();
-  GetStripeResponse response;
-
+  List<Data> addedCardList = List();
   Widget widgets;
-
-  final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
-
   AuthProvider provider;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -56,7 +57,6 @@ class _HomeState extends State<StripeCardAddedList>
 
   hitStripeApi() async {
     provider.setLoading();
-
     bool gotInternetConnection = await hasInternetConnection(
       context: context,
       mounted: mounted,
@@ -66,29 +66,15 @@ class _HomeState extends State<StripeCardAddedList>
       },
       onSuccess: () {},
     );
-
     if (!gotInternetConnection) {
       return;
     }
 
     var responses = await provider.getAddedCards(context);
-
     if (responses is GetStripeResponse) {
-      provider.hideLoader();
-
-      if (responses != null &&
-          responses?.status?.code == 200 &&
-          responses?.customer != null) {
-        listRecent?.clear();
-        response = responses;
-        listRecent?.addAll(responses?.customer.data);
-      }
-
-      setState(() {});
-
-      print(response);
+      addedCardList.clear();
+      addedCardList.addAll(responses.customer.data);
     } else {
-      provider.hideLoader();
       APIError apiError = responses;
       showInSnackBar(apiError.error);
     }
@@ -197,10 +183,7 @@ class _HomeState extends State<StripeCardAddedList>
                                   width: 84.0,
                                   child: ClipOval(
                                     child: getCachedNetworkImageWithurl(
-                                      url: response != null &&
-                                              response?.user != null
-                                          ? response?.user?.profilePic
-                                          : "",
+                                      url: widget.hiredUserProfilePic,
                                       size: 84,
                                       fit: BoxFit.cover,
                                     ),
@@ -212,9 +195,7 @@ class _HomeState extends State<StripeCardAddedList>
                                 margin: new EdgeInsets.only(
                                     top: 16, left: 10, right: 10),
                                 child: new Text(
-                                  response != null && response?.user != null
-                                      ? response?.user?.name
-                                      : "",
+                                  widget.hiredUserName,
                                   style: new TextStyle(
                                       fontFamily: AssetStrings.circulerMedium,
                                       fontSize: 20,
@@ -244,10 +225,7 @@ class _HomeState extends State<StripeCardAddedList>
                                       constraints:
                                           new BoxConstraints(maxWidth: 100),
                                       child: new Text(
-                                        response != null &&
-                                                response?.user != null
-                                            ? "€ ${widget.payingAmount}"
-                                            : "",
+                                        "€ ${widget.payingAmount}",
                                         maxLines: 2,
                                         style: new TextStyle(
                                             fontFamily:
@@ -312,19 +290,17 @@ class _HomeState extends State<StripeCardAddedList>
                         ],
                       ),
                     ),
-                    listRecent != null && listRecent?.length > 0
-                        ? Container(
-                            alignment: Alignment.center,
-                            child: buildContestListSearch(),
-                          )
-                        : Container(),
+                    Container(
+                      alignment: Alignment.center,
+                      child: buildContestListSearch(),
+                    ),
                     InkWell(
                       onTap: () {
                         Navigator.push(
                           context,
                           new CupertinoPageRoute(
                               builder: (BuildContext context) {
-                                return AddStripeCardDetails(
+                            return AddStripeCardDetails(
                               voidcallback: voidCallBacks,
                             );
                           }),
@@ -366,7 +342,7 @@ class _HomeState extends State<StripeCardAddedList>
                     new SizedBox(
                       height: 20.0,
                     ),
-                    listRecent != null && listRecent?.length > 0
+                    addedCardList.length > 0
                         ? Container(
                             margin:
                                 new EdgeInsets.only(left: 20.0, right: 20.0),
@@ -406,27 +382,21 @@ class _HomeState extends State<StripeCardAddedList>
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
-          return buildItemRecentSearch(listRecent[index]);
+          return buildItemStripeCard(addedCardList[index]);
         },
-        itemCount: listRecent?.length,
+        itemCount: addedCardList?.length,
       ),
     );
   }
 
-  Widget buildItemRecentSearch(Data data) {
+  Widget buildItemStripeCard(Data data) {
     return InkWell(
       onTap: () {
-        print("callled");
-        if (response != null &&
-            response?.customer != null &&
-            response?.customer?.data != null) {
-          for (var dataItem in response?.customer?.data) {
-            dataItem?.isCheck = false;
-          }
-          data?.isCheck = true;
-
-          setState(() {});
+        for (var dataItem in addedCardList) {
+          dataItem?.isCheck = false;
         }
+        data.isCheck = true;
+        setState(() {});
       },
       child: Container(
         padding: new EdgeInsets.only(left: 14.0, right: 14.0, top: 12),
@@ -502,14 +472,10 @@ class _HomeState extends State<StripeCardAddedList>
 
   void callback() async {
     var isChecked = false;
-    if (response != null &&
-        response?.customer != null &&
-        response?.customer?.data != null) {
-      for (var dataItem in response?.customer?.data) {
-        if (dataItem?.isCheck != null && dataItem?.isCheck) {
-          isChecked = true;
-          break;
-        }
+    for (var dataItem in addedCardList) {
+      if (dataItem.isCheck) {
+        isChecked = true;
+        break;
       }
     }
 

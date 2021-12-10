@@ -69,10 +69,10 @@ class Data {
   User user;
   List<Rating> rating;
   int isUserApplied;
-  int servicePerc;
-  int serviceFee;
-  int receiving;
-  int ratingAvg;
+  num servicePerc;
+  num serviceFee;
+  num receiving;
+  num ratingAvg;
   int ratingCount;
   Rating jobUserRat;
   Rating postUserRat;

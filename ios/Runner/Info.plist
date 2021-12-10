@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Payvor</string>
+	<string>Perimity</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Payvor</string>
+	<string>Perimity</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -50,21 +50,17 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) to click camera while create a post.</string>
+	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+	<dict>
+		<key>TemporaryPreciseAccuracy</key>
+		<string>The example App requires temporary access to the devices precise location.</string>
+	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This information required during registration process so that later system can use to delivery nearby data later.</string>
+	<string>The example App requires access to the devices location.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) picking photos from gallery while creating post.</string>
-    
-    <key>NSLocationWhenInUseUsageDescription</key>
-        <string>The example App requires access to the devices location.</string>
-        <key>NSLocationTemporaryUsageDescriptionDictionary</key>
-        <dict>
-            <key>TemporaryPreciseAccuracy</key>
-            <string>The example App requires temporary access to the devices precise location.</string>
-        </dict>
-        
-	<key>Payvor</key>
-	<string>Payvor</string>
+	<key>Perimity</key>
+	<string>Perimity</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

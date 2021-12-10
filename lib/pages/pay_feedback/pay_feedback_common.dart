@@ -23,6 +23,7 @@ import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
@@ -31,8 +32,7 @@ class PayFeebackDetailsCommon extends StatefulWidget {
   final ValueChanged<Widget> lauchCallBack;
   final String userId;
   final String postId;
-  final int status;
-  final int type;
+  final bool giveFeedback;
   final ValueSetter<int> voidcallback;
   final int userType;
 
@@ -40,8 +40,7 @@ class PayFeebackDetailsCommon extends StatefulWidget {
       {@required this.lauchCallBack,
       this.userId,
       this.postId,
-      this.status,
-      this.type,
+      this.giveFeedback,
       this.voidcallback,
       this.userType});
 
@@ -230,13 +229,13 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                 child: new RatingBarNewBar(
           id: widget?.postId?.toString(),
           type: 1,
-                  image: widget.userType == 0
+                  image: widget.userType == Constants.HELPER
               ? hiredUserDetailsResponse?.data?.hiredUser?.profilePic ?? ""
               : hiredUserDetailsResponse?.data?.postedbyuser?.profilePic ?? "",
-                  name: widget.userType == 0
+                  name: widget.userType == Constants.HELPER
               ? hiredUserDetailsResponse?.data?.hiredUser?.name ?? ""
               : hiredUserDetailsResponse?.data?.postedbyuser?.name ?? "",
-                  userId: widget.userType == 0
+                  userId: widget.userType == Constants.HELPER
               ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString() ?? ""
               : hiredUserDetailsResponse?.data?.postedbyuser?.id?.toString() ??
                   "",
@@ -538,7 +537,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                       children: [
                         Container(
                             child: new Text(
-                          widget?.type == 0
+                              widget?.userType == Constants.HELPER
                               ? "You have hired the person"
                               : "Favor Post Owner",
                           style: TextThemes.greyTextFieldNormalNw,
@@ -1187,8 +1186,9 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               new Text(
-                                widget?.type == 0 ? "You’ll Pay" : ResString()
-                                    .get('you_all_receive'),
+                                widget?.userType == Constants.HELPER
+                                    ? "You’ll Pay"
+                                    : ResString().get('you_all_receive'),
                                 style: new TextStyle(
                                     fontFamily: AssetStrings.circulerBoldStyle,
                                     color: AppColors.bluePrimary,
@@ -1279,7 +1279,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                   ),
                 ),
               )),*/
-          widget?.status == 0
+          widget.giveFeedback
               ? Positioned(
                   bottom: 0.0,
                   left: 0.0,

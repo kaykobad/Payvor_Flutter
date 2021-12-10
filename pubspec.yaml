@@ -62,22 +62,22 @@ dev_dependencies:
   flutter_slidable: ^0.5.7
   flutter_linkify: ^2.1.0
   flutter_rating_bar: ^3.2.0+1
-  cloud_firestore:
+  cloud_firestore: ^0.16.0+1
   firebase_storage:
   firebase_messaging:
-  firebase_auth:
+  firebase_auth: ^0.20.1
   firebase_core:
-  url_launcher: ^6.0.2
+  url_launcher:
   flutter_switch: ^0.2.2
   geolocator:
   flutter_local_notifications:
   flutter_email_sender: ^5.0.0
   sign_in_with_apple: ^3.0.0
   launch_review:
-  geocoder:
+#  geocoder:
   stripe_payment:
   intl:
-  geocoding:
+  geocoding: ^1.0.5
 
 
 
