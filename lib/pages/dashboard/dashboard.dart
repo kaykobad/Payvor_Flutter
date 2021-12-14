@@ -652,6 +652,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     callbackmyid: callbackChangePage,
                     userid: userId?.toString(),
                     key: _HomeKey,
+                    lauchCallBack: homeCallBack,
                   ),
                 )),
         Navigator(
@@ -709,6 +710,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     callbackmyid: callbackChangePage,
                     userid: userId?.toString(),
                     key: _HomeKey,
+                    lauchCallBack: homeCallBack,
                   ),
                 )),
         Navigator(
