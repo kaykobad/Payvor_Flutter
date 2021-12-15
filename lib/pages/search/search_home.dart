@@ -49,18 +49,14 @@ class HomeState extends State<SearchCompany>
 
   TextEditingController _controller = new TextEditingController();
   ScrollController _scrollController = new ScrollController();
-  bool _loadMore = false;
   AuthProvider provider;
   LocationProvider locationProvider;
   FirebaseProvider providerFirebase;
   bool isPullToRefresh = false;
-
-  bool offstagenodata = true;
-
+  bool _loadMore = false;
   int currentPage = 1;
-
   FilterRequest filterRequest;
-  bool showData = false;
+  bool _isFilterApplied = false;
   String location = "";
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -75,17 +71,13 @@ class HomeState extends State<SearchCompany>
 
   @override
   void initState() {
-    print("search");
     filterRequest = FilterRequest();
     var latlong = MemoryManagement.getGeo();
     var locationMain = MemoryManagement.getLocationName() ?? "";
     location = locationMain;
-
-    if (latlong != null && latlong?.isNotEmpty) {
+    if (latlong?.isNotEmpty == true) {
       locationStreamGet();
       filterRequest?.latlongData = latlong;
-
-      // getDataByLatLong(lat,long);
     } else {
       locationStreamGet();
       Future.delayed(new Duration(microseconds: 5000), () {
@@ -255,45 +247,23 @@ class HomeState extends State<SearchCompany>
 
     if (response is GetFavorListResponse) {
       isPullToRefresh = false;
-
-      print("res $response");
-
-      if (response != null && response.data != null) {
         if (currentPage == 1) {
           list.clear();
         }
-
         list.addAll(response.data.data);
-
         if (response.data != null &&
             response.data.data.length < Constants.PAGINATION_SIZE) {
           _loadMore = false;
         } else {
           _loadMore = true;
         }
-
-        if (list.length > 0) {
-          offstagenodata = true;
-        } else {
-          offstagenodata = false;
-        }
-      }
     } else {
       APIError apiError = response;
-      print(apiError.error);
       if (currentPage == 1) {
         list.clear();
       }
-      if (list.length > 0) {
-        offstagenodata = true;
-      } else {
-        offstagenodata = false;
-      }
-
       showInSnackBar(apiError.error);
-      setState(() {});
     }
-    provider.hideLoader();
   }
 
   void _setScrollListener() {
@@ -303,40 +273,36 @@ class HomeState extends State<SearchCompany>
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {
-        print("size ${list.length}");
-
         if (list.length >= (Constants.PAGINATION_SIZE * currentPage)) {
           isPullToRefresh = true;
           hitApi(filterRequest);
           showInSnackBar("Loading data...");
-        } else {
-          print("not called");
         }
       }
     });
   }
 
   void locationStreamGet() async {
-    print("stream neww");
     await Future.delayed(Duration(milliseconds: 300));
     locationProvider.initListener();
     locationProvider.locationProvider.stream.listen((value) {
       if (value != null) {
-        var latlong = value.split(",");
-
-        print("stream called $value");
-
         location = MemoryManagement.getLocationName();
-
         filterRequest?.latlongData = value;
-
         Future.delayed(const Duration(milliseconds: 300), () {
+          currentPage = 1;
+          _loadMore=false;
+          list.clear();
           hitApi(filterRequest);
         });
-
-        setState(() {});
       }
     });
+  }
+
+  Widget _verticalSpace(double value) {
+    return new SizedBox(
+      height: value,
+    );
   }
 
   @override
@@ -349,143 +315,139 @@ class HomeState extends State<SearchCompany>
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: AppColors.bluePrimary,
-      body: Stack(
-        children: <Widget>[
-          new Container(
-            color: AppColors.bluePrimary,
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                new SizedBox(
-                  height: 50.0,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      new CupertinoPageRoute(builder: (BuildContext context) {
-                        return new SearchLocation(
-                          provider: locationProvider,
-                        );
-                      }),
-                    );
-                  },
-                  child: Container(
-                    padding: new EdgeInsets.only(left: 16.0, right: 16.0),
-                    child: Row(
-                      children: [
-                        new Container(
-                          width: 38,
-                          height: 38,
-                          padding: new EdgeInsets.all(12),
-                          decoration: new BoxDecoration(
-                              color: Color.fromRGBO(255, 255, 255, 0.1),
-                              shape: BoxShape.circle),
-                          child: new Image.asset(
-                            AssetStrings.locations,
-                            width: 18,
-                            height: 18,
-                          ),
-                        ),
-                        Container(
-                          margin: new EdgeInsets.only(left: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                  child: new Text(
-                                "Location",
-                                style: new TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                    fontFamily: AssetStrings.circulerNormal),
-                              )),
-                              Row(
-                                children: [
-                                  Container(
-                                      constraints:
-                                          new BoxConstraints(maxWidth: 280),
-                                      child: new Text(
-                                        location.isNotEmpty
-                                            ? location
-                                            : "Select Location",
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: new TextStyle(
-                                            color:
-                                                Colors.white.withOpacity(0.8),
-                                            fontSize: 14,
-                                            fontFamily:
-                                                AssetStrings.circulerNormal),
-                                      )),
-                                  Container(
-                                      child: new Icon(Icons.arrow_drop_down,
-                                          color: AppColors.redLight)),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+      body: new Container(
+        color: AppColors.bluePrimary,
+        child: new Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _verticalSpace(50.0),
+            _topLocationWidget,
+            _getSearchedField,
+            _verticalSpace(16.0),
+            Visibility(visible: list.isNotEmpty, child: _buildContestList()),
+            (provider.getLoading())
+                ? Expanded(
+                    child: Container(
+                      height: double.infinity,
+                      child: HomeShimmer(),
                     ),
-                  ),
-                ),
-                Stack(
-                  children: [
-                    getTextField(),
-                    new Positioned(
-                      right: 0.0,
-                      top: 0.0,
-                      child: Offstage(
-                        offstage: !showData,
-                        child: new Container(
-                          width: 13,
-                          height: 13,
-                          margin: new EdgeInsets.only(right: 14.0, top: 14),
-                          decoration: new BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                              border: new Border.all(
-                                  color: AppColors.bluePrimary, width: 2.5)),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                new SizedBox(
-                  height: 16.0,
-                ),
-                (provider.getLoading())
-                    ? Expanded(
-                        child: Container(
-                          height: double.infinity,
-                          child: HomeShimmer(),
-                        ),
-                      )
-                    : _buildContestList(),
-              ],
-            ),
-          ),
-          Visibility(
-            visible: !offstagenodata,
-            child: Container(
-              margin: new EdgeInsets.only(top: 170),
-              child: new Center(
-                child: new Text(
-                  ResString().get("no_favours"),
-                  textAlign: TextAlign.center,
-                  style: new TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0),
-                ),
-              ),
-            ),
-          ),
-        ],
+                  )
+                : Container(),
+            _emptyFavours
+          ],
+        ),
       ),
     );
   }
+
+  get _topLocationWidget => InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return new SearchLocation(
+                provider: locationProvider,
+              );
+            }),
+          );
+        },
+        child: Container(
+          padding: new EdgeInsets.only(left: 16.0, right: 16.0),
+          child: Row(
+            children: [
+              new Container(
+                width: 38,
+                height: 38,
+                padding: new EdgeInsets.all(12),
+                decoration: new BoxDecoration(
+                    color: Color.fromRGBO(255, 255, 255, 0.1),
+                    shape: BoxShape.circle),
+                child: new Image.asset(
+                  AssetStrings.locations,
+                  width: 18,
+                  height: 18,
+                ),
+              ),
+              Container(
+                margin: new EdgeInsets.only(left: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        child: new Text(
+                      "Location",
+                      style: new TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: AssetStrings.circulerNormal),
+                    )),
+                    Row(
+                      children: [
+                        Container(
+                            constraints: new BoxConstraints(maxWidth: 280),
+                            child: new Text(
+                              location.isNotEmpty
+                                  ? location
+                                  : "Select Location",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: new TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 14,
+                                  fontFamily: AssetStrings.circulerNormal),
+                            )),
+                        Container(
+                            child: new Icon(Icons.arrow_drop_down,
+                                color: AppColors.redLight)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+  get _emptyFavours => Visibility(
+        visible: list.isEmpty && (!provider.getLoading()),
+        child: Container(
+          margin: new EdgeInsets.only(top: 170),
+          child: new Center(
+            child: new Text(
+              ResString().get("no_favours"),
+              textAlign: TextAlign.center,
+              style: new TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0),
+            ),
+          ),
+        ),
+      );
+
+  get _getSearchedField => Stack(
+        children: [
+          getTextField(),
+          new Positioned(
+            right: 0.0,
+            top: 0.0,
+            child: Offstage(
+              offstage: !_isFilterApplied,
+              child: new Container(
+                width: 13,
+                height: 13,
+                margin: new EdgeInsets.only(right: 14.0, top: 14),
+                decoration: new BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                    border: new Border.all(
+                        color: AppColors.bluePrimary, width: 2.5)),
+              ),
+            ),
+          )
+        ],
+      );
 
   Widget getTextField() {
     return Container(
@@ -560,36 +522,26 @@ class HomeState extends State<SearchCompany>
   }
 
   Future<ValueSetter> voidCallBackStaus(bool boolean) async {
-    showData = boolean;
+    _isFilterApplied = boolean;
 
     setState(() {});
   }
 
   Future<ValueSetter> voidCallBacks(FilterRequest filter) async {
     currentPage = 1;
-
-    // print(filter.minprice);
-    // print(filter.maxprice);
-    // print(filter.list);
-    // print(filter.location);
-    // print(filter.distance);
-    // print(filter.listCategory);
-
     filterRequest = filter;
-
-    var latlong = MemoryManagement.getGeo();
-    if (latlong != null && latlong?.isNotEmpty) {
-      filterRequest?.latlongData = latlong;
+    var latLong = MemoryManagement.getGeo();
+    if (latLong?.isNotEmpty == true) {
+      filterRequest?.latlongData = latLong;
     } else {
       filterRequest?.latlongData = "";
     }
-
-    print("filter $filter");
     isPullToRefresh = false;
+    list.clear();
     hitApi(filterRequest);
   }
 
-  _buildContestList() {
+  Widget _buildContestList() {
     return Expanded(
       child: NotificationListener<OverscrollIndicatorNotification>(
           onNotification: (overscroll) {
@@ -652,20 +604,6 @@ class HomeState extends State<SearchCompany>
     return InkWell(
       onTap: () {
         gotoPostDetails(pos, data);
-        /*   providerFirebase.changeScreen(new PostFavorDetails(
-          id: data.id.toString(),
-          voidcallback: callback,
-          distance: data?.distance,
-        ));
-*/
-
-        /*  widget.lauchCallBack(Material(
-            child: Material(
-                child: new PostFavorDetails(
-                  id: data.id.toString(),
-                  voidcallback: callback,
-                  distance: data?.distance,
-                ))));*/
       },
       child: Container(
         color: Colors.white,

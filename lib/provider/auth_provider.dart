@@ -730,7 +730,6 @@ class AuthProvider with ChangeNotifier {
     var uri = APIs.getFavorList + "?page=$page";
 
     var data = new StringBuffer();
-    print("calllledddd");
 
     if (filterRequest != null) {
       var isFilter = false;
@@ -823,7 +822,7 @@ class AuthProvider with ChangeNotifier {
     var response = await APIHandler.get(context: context, url: uri);
 
     print(uri);
-
+    hideLoader();
     if (response is APIError) {
       completer.complete(response);
       return completer.future;
