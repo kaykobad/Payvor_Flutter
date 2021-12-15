@@ -28,8 +28,10 @@ import 'package:provider/provider.dart';
 class SearchCompany extends StatefulWidget {
   final ValueChanged<int> callbackmyid;
   final String userid;
+  final ValueChanged<Widget> lauchCallBack;
 
-  SearchCompany({Key key, this.callbackmyid, this.userid}) : super(key: key);
+  SearchCompany({Key key, this.callbackmyid, this.userid, this.lauchCallBack})
+      : super(key: key);
 
   @override
   HomeState createState() => HomeState();
@@ -630,14 +632,40 @@ class HomeState extends State<SearchCompany>
   @override
   bool get wantKeepAlive => true;
 
+  gotoPostDetails(int pos, Datas data) async {
+    var sss = await Navigator.push(
+      context,
+      new CupertinoPageRoute(
+          builder: (BuildContext context) {
+            return new PostFavorDetails(
+              id: data.id.toString(),
+              voidcallback: callback,
+              distance: data?.distance,
+            );
+          },
+          maintainState: true),
+    );
+    print("callll");
+  }
+
   Widget buildItemMain(int pos, Datas data) {
     return InkWell(
       onTap: () {
-        providerFirebase.changeScreen(new PostFavorDetails(
+        gotoPostDetails(pos, data);
+        /*   providerFirebase.changeScreen(new PostFavorDetails(
           id: data.id.toString(),
           voidcallback: callback,
           distance: data?.distance,
         ));
+*/
+
+        /*  widget.lauchCallBack(Material(
+            child: Material(
+                child: new PostFavorDetails(
+                  id: data.id.toString(),
+                  voidcallback: callback,
+                  distance: data?.distance,
+                ))));*/
       },
       child: Container(
         color: Colors.white,

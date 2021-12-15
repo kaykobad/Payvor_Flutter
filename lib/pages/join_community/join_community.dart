@@ -14,6 +14,7 @@ import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/login/login.dart';
 import 'package:payvor/pages/otp/enter_otp.dart';
 import 'package:payvor/pages/phone_number_add/phone_number_add.dart';
+import 'package:payvor/pages/privacypolicy/webview_page.dart';
 import 'package:payvor/pages/social_login.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
@@ -437,7 +438,9 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                 ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    // code to open / launch terms of service link here
+                    _redirect(
+                        heading: ResString().get('term_of_uses'),
+                        url: Constants.TermOfUses);
                   }),
             TextSpan(
                 text: ' and confirm that you have read the ',
@@ -449,16 +452,28 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                           fontSize: 13.2, color: AppColors.colorDarkCyan),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          // code to open / launch privacy policy link here
+                          _redirect(
+                              heading: ResString().get('privacy_policy'),
+                              url: Constants.privacyPolicy);
                         })
                 ])
           ])),
     );
   }
 
+  _redirect({@required String heading, @required String url}) async {
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => new WebViewPages(
+                  heading: heading,
+                  url: url,
+                )));
+  }
+
   Future<ValueSetter> voidCallBackLike(Token token) async {
     {
-      email = token.id.toString() + "_"+"@instagram.com";
+      email = token.id.toString() + "_" + "@instagram.com";
       name = token.username ?? "";
       type = "3";
       snsId = token.id.toString();

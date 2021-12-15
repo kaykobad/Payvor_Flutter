@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -16,6 +17,7 @@ import 'package:payvor/pages/chat/private_chat.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/post_details/post_details.dart';
+import 'package:payvor/pages/privacypolicy/webview_page.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
@@ -24,6 +26,7 @@ import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
+import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
@@ -640,6 +643,16 @@ class _HomeState extends State<OriginalPostData>
     Share.share('check out this post https://google.com');
   }
 
+  _redirect({@required String heading, @required String url}) async {
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => new WebViewPages(
+                  heading: heading,
+                  url: url,
+                )));
+  }
+
   void showBottomSheetHire(String id, int posi) {
     hireUserid = id;
     pos = posi;
@@ -692,6 +705,13 @@ class _HomeState extends State<OriginalPostData>
                         children: <TextSpan>[
                           new TextSpan(
                               text: " Terms of Use.",
+                              recognizer: new TapGestureRecognizer()
+                                ..onTap = () {
+                                  print("called");
+                                  _redirect(
+                                      heading: ResString().get('term_of_uses'),
+                                      url: Constants.TermOfUses);
+                                },
                               style: new TextStyle(
                                   fontFamily: AssetStrings.circulerNormal,
                                   color: Color.fromRGBO(9, 165, 255, 1))),
