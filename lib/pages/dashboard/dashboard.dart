@@ -442,9 +442,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       if (type.toString() == "7") {
         _moveToChatScreen();
       } else {
+        String title = message['title'];
+        String description = message['body'];
         String favid = message['fav_id'];
         String userid = message['user_id'];
        // moveToScreen(int.tryParse(type), favid, userid);
+        showNotification(title, description, message, type, favid, userid);
       }
     }
   }
