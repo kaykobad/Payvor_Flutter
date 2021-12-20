@@ -91,18 +91,18 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
         androidPayMode: 'test'));
 
     listCardNumber.addAll([
-      WhitelistingTextInputFormatter.digitsOnly,
+      FilteringTextInputFormatter.digitsOnly,
       new LengthLimitingTextInputFormatter(16),
       new CardNumberInputFormatter()
     ]);
 
     listExpDate.addAll([
-      WhitelistingTextInputFormatter.digitsOnly,
+      FilteringTextInputFormatter.digitsOnly,
       new LengthLimitingTextInputFormatter(4),
       new CardMonthInputFormatter()
     ]);
     listcvv.addAll([
-      WhitelistingTextInputFormatter.digitsOnly,
+      FilteringTextInputFormatter.digitsOnly,
       new LengthLimitingTextInputFormatter(4)
     ]);
 
