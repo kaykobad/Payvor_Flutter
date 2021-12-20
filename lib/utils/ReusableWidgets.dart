@@ -14,12 +14,12 @@ import 'AppColors.dart';
 import 'AssetStrings.dart';
 import 'constants.dart';
 
-List<Predictions> list = new List();
+List<Predictions> list = List();
 
 Widget getItemDivider() {
   return Padding(
       padding: const EdgeInsets.only(left: 40, top: 3, bottom: 3),
-      child: new Container(
+      child: Container(
         height: 1.0,
         color: AppColors.kGrey,
       ));
@@ -27,9 +27,9 @@ Widget getItemDivider() {
 
 // Returns app bar
 Widget getAppbar(String title) {
-  return new AppBar(
+  return AppBar(
     centerTitle: true,
-    title: new Text(
+    title: Text(
       title,
       style: const TextStyle(
         color: Colors.white,
@@ -46,7 +46,7 @@ getChatWidget({@required int count, @required Function onClick}) {
         onTap: () {
           onClick();
         },
-        child: new Icon(Icons.chat, size: 25.0, color: Colors.black87),
+        child: Icon(Icons.chat, size: 25.0, color: Colors.black87),
       )),
       Align(
         alignment: Alignment.topRight,
@@ -75,7 +75,7 @@ getNotificationCount(int count) {
 }
 
 Widget appLogo() {
-  return new SvgPicture.asset(
+  return SvgPicture.asset(
     AssetStrings.logo,
     height: 100,
     width: 100,
@@ -83,14 +83,14 @@ Widget appLogo() {
 }
 
 Widget _loader(StreamController<bool> _streamControllerShowLoader) {
-  return new StreamBuilder<bool>(
+  return StreamBuilder<bool>(
       stream: _streamControllerShowLoader.stream,
       initialData: false,
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         bool status = snapshot.data;
         return status
             ? Center(child: CupertinoActivityIndicator(radius: 10))
-            : new Container();
+            : Container();
       });
 }
 
@@ -99,29 +99,29 @@ Widget getSetupButtonNewBorder(
     {Color newColor}) {
   return Container(
     height: 54.0,
-    margin: new EdgeInsets.only(left: margin, right: margin),
-    decoration: new BoxDecoration(
-      borderRadius: new BorderRadius.circular(6.0),
+    margin: EdgeInsets.only(left: margin, right: margin),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(6.0),
     ),
     child: Material(
-      borderRadius: new BorderRadius.circular(6.0),
+      borderRadius: BorderRadius.circular(6.0),
       child: Ink(
-        decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(6.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6.0),
             color: Colors.transparent,
-            border: new Border.all(color: AppColors.colorDarkCyan, width: 1.5)),
+            border: Border.all(color: AppColors.colorDarkCyan, width: 1.5)),
         child: InkWell(
-          borderRadius: new BorderRadius.circular(6.0),
+          borderRadius: BorderRadius.circular(6.0),
           splashColor:
               (newColor == null) ? Colors.transparent : Colors.transparent,
           onTap: () {
             callback();
           },
-          child: new Container(
+          child: Container(
             alignment: Alignment.center,
-            child: new Text(
+            child: Text(
               text,
-              style: new TextStyle(
+              style: TextStyle(
                 fontFamily: AssetStrings.circulerNormal,
                 fontSize: 16,
                 color: AppColors.colorDarkCyan,
@@ -147,8 +147,8 @@ Widget getLocationNew(
   return Container(
     alignment: Alignment.center,
     margin: !isBackground
-        ? new EdgeInsets.only(left: 20, right: 20)
-        : new EdgeInsets.only(left: 0, right: 0),
+        ? EdgeInsets.only(left: 20, right: 20)
+        : EdgeInsets.only(left: 0, right: 0),
     child: Stack(
       children: <Widget>[
         AutoCompleteTextView(
@@ -231,20 +231,20 @@ Widget getSetupButtonNew(VoidCallback callback, String text, double margin,
     {Color newColor, String imagePath}) {
   return Container(
     height: 54.0,
-    margin: new EdgeInsets.only(left: margin, right: margin),
-    decoration: new BoxDecoration(
-      borderRadius: new BorderRadius.circular(6.0),
+    margin: EdgeInsets.only(left: margin, right: margin),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(6.0),
     ),
     child: Material(
-      borderRadius: new BorderRadius.circular(6.0),
+      borderRadius: BorderRadius.circular(6.0),
       child: Ink(
-        decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(6.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6.0),
             color: (newColor == null)
                 ? AppColors.kPrimaryBlue
                 : AppColors.colorDarkCyan),
         child: InkWell(
-          borderRadius: new BorderRadius.circular(6.0),
+          borderRadius: BorderRadius.circular(6.0),
           splashColor: (newColor == null)
               ? AppColors.kPrimaryBlue
               : AppColors.colorDarkCyan,
@@ -257,9 +257,9 @@ Widget getSetupButtonNew(VoidCallback callback, String text, double margin,
             children: [
               (imagePath!=null)?Image.asset(imagePath,width: 18,height: 18,):Container(),
               (imagePath!=null)?SizedBox(width: 5,):Container(),
-              new Text(
+              Text(
                 text,
-                style: new TextStyle(
+                style: TextStyle(
                   fontFamily: AssetStrings.circulerNormal,
                   fontSize: 16,
                   color: Colors.white,
@@ -278,18 +278,18 @@ Widget getSetupButtonNewCustom(
     {Color newColor, String imagePath, Color textColor}) {
   return Container(
     height: 54.0,
-    margin: new EdgeInsets.only(left: margin, right: margin),
-    decoration: new BoxDecoration(
-      borderRadius: new BorderRadius.circular(6.0),
+    margin: EdgeInsets.only(left: margin, right: margin),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(6.0),
     ),
     child: Material(
-      borderRadius: new BorderRadius.circular(6.0),
+      borderRadius: BorderRadius.circular(6.0),
       child: Ink(
-        decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(6.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6.0),
             color: (newColor != null) ? newColor : AppColors.colorDarkCyan),
         child: InkWell(
-          borderRadius: new BorderRadius.circular(6.0),
+          borderRadius: BorderRadius.circular(6.0),
           splashColor: (newColor != null) ? newColor : AppColors.colorDarkCyan,
           onTap: () {
             callback();
@@ -310,9 +310,9 @@ Widget getSetupButtonNewCustom(
                 width: 10,
                     )
                   : Container(),
-              new Text(
+              Text(
                 text,
-                style: new TextStyle(
+                style: TextStyle(
                   fontFamily: AssetStrings.circulerNormal,
                   fontSize: 16,
                   color: textColor,
@@ -330,27 +330,27 @@ Widget getSetupButtonColor(VoidCallback callback, String text, double margin,
     {Color newColor}) {
   return Container(
     height: 54.0,
-    margin: new EdgeInsets.only(left: margin, right: margin),
-    decoration: new BoxDecoration(
-      borderRadius: new BorderRadius.circular(6.0),
+    margin: EdgeInsets.only(left: margin, right: margin),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(6.0),
     ),
     child: Material(
-      borderRadius: new BorderRadius.circular(6.0),
+      borderRadius: BorderRadius.circular(6.0),
       child: Ink(
-        decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(6.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6.0),
             color: (newColor == null) ? AppColors.kPrimaryBlue : newColor),
         child: InkWell(
-          borderRadius: new BorderRadius.circular(6.0),
+          borderRadius: BorderRadius.circular(6.0),
           splashColor: (newColor == null) ? AppColors.kPrimaryBlue : newColor,
           onTap: () {
             callback();
           },
-          child: new Container(
+          child: Container(
             alignment: Alignment.center,
-            child: new Text(
+            child: Text(
               text,
-              style: new TextStyle(
+              style: TextStyle(
                 fontFamily: AssetStrings.circulerNormal,
                 fontSize: 16,
                 color: Colors.white,
@@ -367,43 +367,43 @@ Widget getSetupButtonNewRow(VoidCallback callback, String text, double margin,
     {Color newColor}) {
   return Container(
     height: 48.0,
-    margin: new EdgeInsets.only(left: margin, right: margin),
-    decoration: new BoxDecoration(
-      borderRadius: new BorderRadius.circular(8.0),
+    margin: EdgeInsets.only(left: margin, right: margin),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8.0),
     ),
     child: Material(
-      borderRadius: new BorderRadius.circular(8.0),
+      borderRadius: BorderRadius.circular(8.0),
       child: Ink(
-        decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(8.0),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.0),
             color: (newColor == null)
                 ? AppColors.kPrimaryBlue
                 : AppColors.colorDarkCyan),
         child: InkWell(
-          borderRadius: new BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(8.0),
           splashColor: (newColor == null)
               ? AppColors.kPrimaryBlue
               : AppColors.colorDarkCyan,
           onTap: () {
             callback();
           },
-          child: new Container(
+          child: Container(
             alignment: Alignment.center,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                new Image.asset(
+                Image.asset(
                   AssetStrings.imageMessage,
                   width: 16,
                   height: 16,
                 ),
-                new SizedBox(
+                SizedBox(
                   width: 7,
                 ),
-                new Text(
+                Text(
                   text,
-                  style: new TextStyle(
+                  style: TextStyle(
                     fontFamily: AssetStrings.circulerMedium,
                     fontSize: 16,
                     color: Colors.white,
@@ -418,37 +418,35 @@ Widget getSetupButtonNewRow(VoidCallback callback, String text, double margin,
   );
 }
 
-Widget getSetupButtonBorderNew(VoidCallback callback, String text,
-    double margin,
-    {Color newColor, Color textColor, Color border}) {
+Widget getSetupButtonBorderNew(VoidCallback callback, String text, double margin, {Color newColor=AppColors.kPrimaryBlue, Color textColor=Colors.white, Color border=Colors.black}) {
   return Container(
     height: 54.0,
-    margin: new EdgeInsets.only(left: margin, right: margin),
-    decoration: new BoxDecoration(
-      borderRadius: new BorderRadius.circular(6.0),
+    margin: EdgeInsets.only(left: margin, right: margin),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(4.0),
     ),
     child: Material(
-      borderRadius: new BorderRadius.circular(6.0),
+      borderRadius: BorderRadius.circular(4.0),
       child: Ink(
-        decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(6.0),
-            border:
-                new Border.all(color: border != null ? border : Colors.black),
-            color: (newColor == null) ? AppColors.kPrimaryBlue : newColor),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4.0),
+          border: Border.all(color: border),
+          color: newColor,
+        ),
         child: InkWell(
-          borderRadius: new BorderRadius.circular(6.0),
-          splashColor: (newColor == null) ? AppColors.kPrimaryBlue : newColor,
+          borderRadius: BorderRadius.circular(4.0),
+          splashColor: newColor,
           onTap: () {
             callback();
           },
-          child: new Container(
+          child: Container(
             alignment: Alignment.center,
-            child: new Text(
+            child: Text(
               text,
-              style: new TextStyle(
+              style: TextStyle(
                 fontFamily: AssetStrings.circulerNormal,
                 fontSize: 16,
-                color: textColor != null ? textColor : Colors.white,
+                color: textColor,
               ),
             ),
           ),
@@ -465,14 +463,14 @@ Widget getAppBarNew(BuildContext context) {
         color: Colors.white,
         child: Container(
           alignment: Alignment.topLeft,
-          margin: new EdgeInsets.only(left: 17.0, top: 47),
+          margin: EdgeInsets.only(left: 17.0, top: 47),
           child: InkWell(
             onTap: () {
               Navigator.pop(context);
             },
-            child: new Padding(
+            child: Padding(
               padding: const EdgeInsets.all(3.0),
-              child: new SvgPicture.asset(
+              child: SvgPicture.asset(
                 AssetStrings.back,
                 width: 21.0,
                 height: 21.0,
@@ -489,27 +487,27 @@ Widget getSetupDecoratorButtonNew(
     {Color newColor, Color textColor}) {
   return Container(
     height: 54.0,
-    margin: new EdgeInsets.only(left: margin, right: margin),
-    decoration: new BoxDecoration(
-      borderRadius: new BorderRadius.circular(6.0),
+    margin: EdgeInsets.only(left: margin, right: margin),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(6.0),
     ),
     child: Material(
-      borderRadius: new BorderRadius.circular(6.0),
+      borderRadius: BorderRadius.circular(6.0),
       child: Ink(
-        decoration: new BoxDecoration(
-            borderRadius: new BorderRadius.circular(6.0),
-            border: new Border.all(width: 1, color: AppColors.kPrimaryBlue),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6.0),
+            border: Border.all(width: 1, color: AppColors.kPrimaryBlue),
             color: Colors.white),
         child: InkWell(
-          borderRadius: new BorderRadius.circular(6.0),
+          borderRadius: BorderRadius.circular(6.0),
           onTap: () {
             callback();
           },
-          child: new Container(
+          child: Container(
             alignment: Alignment.center,
-            child: new Text(
+            child: Text(
               text,
-              style: new TextStyle(
+              style: TextStyle(
                 fontFamily: AssetStrings.circulerNormal,
                 fontSize: 16,
                 color: textColor != null ? textColor : AppColors.kPrimaryBlue,
@@ -533,8 +531,8 @@ Widget getLocation(
     double iconPadding = 0}) {
   return Container(
     margin: !isBackground
-        ? new EdgeInsets.only(left: 20, right: 20)
-        : new EdgeInsets.only(left: 0, right: 0),
+        ? EdgeInsets.only(left: 20, right: 20)
+        : EdgeInsets.only(left: 0, right: 0),
     child: Stack(
       children: <Widget>[
         AutoCompleteTextView(
@@ -626,7 +624,7 @@ Future<List<String>> getLocationSuggestionsList(String locationText) async {
     //print("url  https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$locationText&key=${Constants.GOOGLE_PLACES_API}");
     if (_requestToken != null)
       _requestToken.cancel(); //cancel the previous on going request
-    _requestToken = CancelToken(); //generate new token for new request
+    _requestToken = CancelToken(); //generate token for request
     //call the apoi
     var response = await dio.get(
         "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$locationText&key=${Constants.GOOGLE_PLACES_API}",
