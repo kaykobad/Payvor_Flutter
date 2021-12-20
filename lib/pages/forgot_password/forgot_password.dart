@@ -25,23 +25,19 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<ForgotPassword> {
-  TextEditingController _EmailController = new TextEditingController();
+  TextEditingController _EmailController = TextEditingController();
 
-  final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
-  FocusNode _EmailField = new FocusNode();
+  final GlobalKey<ScaffoldState> _scaffoldKeys = GlobalKey<ScaffoldState>();
+  FocusNode _EmailField = FocusNode();
 
   AuthProvider provider;
 
   bool isVerified = false;
 
-  Widget space() {
-    return new SizedBox(
-      height: 30.0,
-    );
-  }
+  Widget space() => SizedBox(height: 30.0);
 
   Widget getView() {
-    return new Container(
+    return Container(
       height: 1.0,
       color: Colors.grey.withOpacity(0.7),
     );
@@ -64,8 +60,7 @@ class _LoginScreenState extends State<ForgotPassword> {
       return;
     }
 
-    ForgotPasswordRequest forgotrequest =
-        new ForgotPasswordRequest(email: _EmailController.text);
+    ForgotPasswordRequest forgotrequest = ForgotPasswordRequest(email: _EmailController.text);
     var response = await provider.forgotPassword(forgotrequest, context);
 
     if (response is ForgotPasswordResponse) {
@@ -74,8 +69,8 @@ class _LoginScreenState extends State<ForgotPassword> {
 
         Navigator.push(
           context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
-            return new OtoVerification(
+          CupertinoPageRoute(builder: (BuildContext context) {
+            return OtoVerification(
               phoneNumber: _EmailController.text,
               type: widget?.type ?? 1,
               countryCode: "",
@@ -101,11 +96,11 @@ class _LoginScreenState extends State<ForgotPassword> {
       FocusNode focusNodeNext,
       TextInputType textInputType,
       String svgPicture,
-      {bool obsectextType}) {
+      {bool obsectextType=false}) {
     return Container(
-      margin: new EdgeInsets.only(left: 20.0, right: 20.0),
+      margin: EdgeInsets.only(left: 20.0, right: 20.0),
       height: Constants.textFieldHeight,
-      child: new TextField(
+      child: TextField(
         controller: controller,
         keyboardType: textInputType,
         style: TextThemes.blackTextFieldNormal,
@@ -122,30 +117,25 @@ class _LoginScreenState extends State<ForgotPassword> {
 
           setState(() {});
         },
-        decoration: new InputDecoration(
-          enabledBorder: new OutlineInputBorder(
-              borderSide: new BorderSide(
-                color: Colors.grey.withOpacity(0.5),
-              ),
-              borderRadius: new BorderRadius.circular(8)),
-          focusedBorder: new OutlineInputBorder(
-              borderSide: new BorderSide(
-                color: AppColors.colorCyanPrimary,
-              ),
-              borderRadius: new BorderRadius.circular(8)
-
-
+        decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+            borderRadius: BorderRadius.circular(4),
           ),
-          contentPadding: new EdgeInsets.only(top: 10.0),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: AppColors.colorCyanPrimary),
+            borderRadius: BorderRadius.circular(4)
+          ),
+          contentPadding: EdgeInsets.only(top: 10.0),
           prefixIcon: Padding(
             padding: const EdgeInsets.all(14.0),
-            child: new Image.asset(
+            child: Image.asset(
               svgPicture,
               width: 20.0,
               height: 20.0,
             ),
           ),
-          suffixIcon: new Container(width: 1,),
+          suffixIcon: Container(width: 1),
           hintText: labelText,
           hintStyle: TextThemes.greyTextFieldHintNormal,
         ),
@@ -155,7 +145,7 @@ class _LoginScreenState extends State<ForgotPassword> {
 
   void showInSnackBar(String value) {
     _scaffoldKeys.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+        .showSnackBar(SnackBar(content: Text(value)));
   }
 
   @override
@@ -172,58 +162,54 @@ class _LoginScreenState extends State<ForgotPassword> {
               key: _scaffoldKeys,
               appBar: getAppBarNew(context),
               backgroundColor: Colors.white,
-              body: new SingleChildScrollView(
+              body: SingleChildScrollView(
                 child: Container(
                   color: Colors.white,
                   width: screensize.width,
-                  child: new Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      new SizedBox(
-                        height: Constants.backIconsSpace,
+                      SizedBox(height: Constants.backIconsSpace),
+                      Container(
+                        margin: EdgeInsets.only(left: 20.0),
+                        child: Text(
+                          ResString().get('forgot_password'),
+                          style: TextThemes.extraBold,
+                        ),
                       ),
                       Container(
-                          margin: new EdgeInsets.only(left: 20.0),
-                          child: new Text(
-                            ResString().get('forgot_password'),
-                            style: TextThemes.extraBold,
-                          )),
-                      Container(
                         margin:
-                        new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
-                        child: new Text(
-                           "Please enter your email to get a new password",
+                        EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                        child: Text(
+                          "Please enter your email to get a password",
                           style: TextThemes.grayNormal,
                         ),
                       ),
-                      new SizedBox(
-                        height: 26.0,
-                      ),
+                      SizedBox(height: 26.0),
                       getTextField(
-                          ResString().get('email_address'),
-                          _EmailController,
-                          _EmailField,
-                          _EmailField,
-                          TextInputType.emailAddress,
-                          AssetStrings.emailPng),
-                      new SizedBox(
-                        height: 30.0,
+                        ResString().get('email_address'),
+                        _EmailController,
+                        _EmailField,
+                        _EmailField,
+                        TextInputType.emailAddress,
+                        AssetStrings.emailPng,
                       ),
+                      SizedBox(height: 36.0),
                       Container(
-                          child: getSetupButtonColor(
-                              callback, "Send reset link", 20,
-                              newColor: isVerified
-                                  ? AppColors.kPrimaryBlue
-                                  : AppColors.grayDark)),
-                      new SizedBox(
-                        height: 20.0,
+                        child: getSetupButtonColor(
+                          callback, "Send reset link", 20,
+                          newColor: isVerified
+                              ? AppColors.kPrimaryBlue
+                              : AppColors.grayDark,
+                        ),
                       ),
+                      SizedBox(height: 20.0),
                     ],
                   ),
                 ),
               ),
             ),
-            new Center(
+            Center(
               child: getFullScreenProviderLoader(
                 status: provider.getLoading(),
                 context: context,

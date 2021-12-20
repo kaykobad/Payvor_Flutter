@@ -325,22 +325,21 @@ Widget getSetupButtonNewCustom(
 }
 
 Widget getSetupButtonColor(VoidCallback callback, String text, double margin,
-    {Color newColor}) {
+    {Color newColor=AppColors.kPrimaryBlue}) {
   return Container(
     height: 54.0,
     margin: EdgeInsets.only(left: margin, right: margin),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(6.0),
-    ),
+    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4.0)),
     child: Material(
-      borderRadius: BorderRadius.circular(6.0),
+      borderRadius: BorderRadius.circular(4.0),
       child: Ink(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6.0),
-            color: (newColor == null) ? AppColors.kPrimaryBlue : newColor),
+          borderRadius: BorderRadius.circular(4.0),
+          color: newColor,
+        ),
         child: InkWell(
-          borderRadius: BorderRadius.circular(6.0),
-          splashColor: (newColor == null) ? AppColors.kPrimaryBlue : newColor,
+          borderRadius: BorderRadius.circular(4.0),
+          splashColor: newColor,
           onTap: () {
             callback();
           },
