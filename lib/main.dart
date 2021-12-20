@@ -13,25 +13,19 @@ import 'package:provider/provider.dart';
 import 'enums/flavor.dart';
 
 void main() {
-  //for check life cycle
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp();
-//  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.landscapeLeft])
-  //    .then((_) async {
   runApp(
-    /*
-      * MultiProvider for top services that do not depends on any runtime values
-      * such as user uid/email.
-       */
-    MultiProvider(providers: [
-      Provider<Flavor>.value(value: Flavor.dev),
-      ChangeNotifierProvider<AuthViewModel>(
-        create: (context) => AuthViewModel(),
-      ),
-      ChangeNotifierProvider<HomeViewModel>(
-        create: (context) => HomeViewModel(),
-      ),
-      ChangeNotifierProvider<LanguageProvider>(
+    MultiProvider(
+      providers: [
+        Provider<Flavor>.value(value: Flavor.dev),
+        ChangeNotifierProvider<AuthViewModel>(
+          create: (context) => AuthViewModel(),
+        ),
+        ChangeNotifierProvider<HomeViewModel>(
+          create: (context) => HomeViewModel(),
+        ),
+        ChangeNotifierProvider<LanguageProvider>(
         create: (context) => LanguageProvider(),
         ),
         ChangeNotifierProvider<AuthProvider>(
@@ -50,7 +44,7 @@ void main() {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(),
-        home: new SplashScreen(),
+        home: SplashScreen(),
 //          home: ShowCaseWidget(
 //            builder: Builder(
 //                builder: (context) => MailPage()
@@ -59,19 +53,17 @@ void main() {
       ),
     ),
   );
-  //});
 }
 
-/*class Payvor extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            // Define the default brightness and colors
-            ),
-        // home: new ChatBubbleRight(message: "sample message",profilePic: "sahfhasifhiahsf",isGroup: false,isLiked: false,time: "15:20",chatId: "101",messageId: "555",userName: "user data",),
-        home: new SplashScreen());
-  }
-}*/
+// class Payvor extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//         theme: ThemeData(
+//             // Define the default brightness and colors
+//             ),
+//         // home: new ChatBubbleRight(message: "sample message",profilePic: "sahfhasifhiahsf",isGroup: false,isLiked: false,time: "15:20",chatId: "101",messageId: "555",userName: "user data",),
+//         home: new SplashScreen());
+//   }
+// }

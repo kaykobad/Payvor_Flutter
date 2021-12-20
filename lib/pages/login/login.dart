@@ -37,11 +37,11 @@ class LoginScreenNew extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreenNew> {
-  TextEditingController _EmailController = new TextEditingController();
-  TextEditingController _PasswordController = new TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
-  FocusNode _EmailField = new FocusNode();
-  FocusNode _PasswordField = new FocusNode();
+  TextEditingController _EmailController = TextEditingController();
+  TextEditingController _PasswordController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKeys = GlobalKey<ScaffoldState>();
+  FocusNode _EmailField = FocusNode();
+  FocusNode _PasswordField = FocusNode();
   IconData icon = Icons.visibility_off;
   bool obsecureText = true;
   bool boolCheckBox = false;
@@ -54,23 +54,13 @@ class _LoginScreenState extends State<LoginScreenNew> {
   String type = "";
   String profilePic = "";
 
-  Widget space() {
-    return new SizedBox(
-      height: 30.0,
-    );
-  }
+  Widget space() => SizedBox(height: 30.0);
+  Widget getView() => Container(height: 1.0, color: Colors.grey.withOpacity(0.7));
 
   @override
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-  }
-
-  Widget getView() {
-    return new Container(
-      height: 1.0,
-      color: Colors.grey.withOpacity(0.7),
-    );
   }
 
   Widget getTextField(
@@ -80,15 +70,15 @@ class _LoginScreenState extends State<LoginScreenNew> {
       FocusNode focusNodeNext,
       TextInputType textInputType,
       String svgPicture,
-      {bool obsectextType}) {
+      {bool obsectextType=false}) {
     return Container(
-      margin: new EdgeInsets.only(left: 20.0, right: 20.0),
+      margin: EdgeInsets.only(left: 20.0, right: 20.0),
       height: Constants.textFieldHeight,
-      child: new TextField(
+      child: TextField(
         controller: controller,
         keyboardType: textInputType,
         style: TextThemes.blackTextFieldNormal,
-        obscureText: obsectextType ? obsecureText : false,
+        obscureText: obsectextType,
         focusNode: focusNodeCurrent,
         onSubmitted: (String value) {
           if (focusNodeCurrent == _PasswordField) {
@@ -97,22 +87,19 @@ class _LoginScreenState extends State<LoginScreenNew> {
             FocusScope.of(context).autofocus(focusNodeNext);
           }
         },
-        decoration: new InputDecoration(
-          enabledBorder: new OutlineInputBorder(
-              borderSide: new BorderSide(
-                color: Colors.grey.withOpacity(0.5),
-              ),
-              borderRadius: new BorderRadius.circular(8)),
-          focusedBorder: new OutlineInputBorder(
-              borderSide: new BorderSide(
-                color: AppColors.colorCyanPrimary,
-              ),
-              borderRadius: new BorderRadius.circular(8)),
-          contentPadding: new EdgeInsets.only(top: 10.0),
+        decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: AppColors.colorCyanPrimary),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          contentPadding: EdgeInsets.only(top: 10.0),
           prefixIcon: Padding(
-            padding: const EdgeInsets.only(
-                left: 14.0, right: 14.0, bottom: 14, top: 14.0),
-            child: new Image.asset(
+            padding: const EdgeInsets.all(14.0),
+            child: Image.asset(
               svgPicture,
               width: 20.0,
               height: 20.0,
@@ -128,18 +115,16 @@ class _LoginScreenState extends State<LoginScreenNew> {
                     },
                     child: Container(
                       width: 30.0,
-                      margin: new EdgeInsets.only(right: 10.0, bottom: 4),
+                      margin: EdgeInsets.only(right: 10.0, bottom: 4),
                       alignment: Alignment.centerRight,
-                      child: new Text(
+                      child: Text(
                         obsecureText ? "show" : "hide",
                         style: TextThemes.blackTextSmallNormal,
                       ),
                     ),
                   ),
                 )
-              : Container(
-                  width: 1.0,
-                ),
+              : Container(width: 1.0),
           hintText: labelText,
           hintStyle: TextThemes.greyTextFieldHintNormal,
         ),
@@ -167,7 +152,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
     }
 
     if (typse == 0) {
-      LoginRequest loginRequest = new LoginRequest(
+      LoginRequest loginRequest = LoginRequest(
           password: _PasswordController.text, email: _EmailController.text);
       response = await provider.login(loginRequest, context);
       MemoryManagement.socialMediaStatus("0");
@@ -202,7 +187,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
             types = "ap";
           }
       }
-      SignUpSocialRequest loginRequest = new SignUpSocialRequest(
+      SignUpSocialRequest loginRequest = SignUpSocialRequest(
           name: name,
           profile_pic: profilePic,
           email: email,
@@ -271,16 +256,16 @@ class _LoginScreenState extends State<LoginScreenNew> {
       MemoryManagement.setGuestUser(type: false);
       Navigator.push(
         context,
-        new CupertinoPageRoute(builder: (BuildContext context) {
-          return new DashBoardScreen();
+        CupertinoPageRoute(builder: (BuildContext context) {
+          return DashBoardScreen();
         }),
       );
 
       /* if (response?.user != null && response?.user.is_password == 0) {
           Navigator.push(
             context,
-            new CupertinoPageRoute(builder: (BuildContext context) {
-              return new ResetPassword();
+            CupertinoPageRoute(builder: (BuildContext context) {
+              return ResetPassword();
             }),
           );
 
@@ -291,8 +276,8 @@ class _LoginScreenState extends State<LoginScreenNew> {
 
           Navigator.push(
             context,
-            new CupertinoPageRoute(builder: (BuildContext context) {
-              return new DashBoardScreen();
+            CupertinoPageRoute(builder: (BuildContext context) {
+              return DashBoardScreen();
             }),
           );
           return;
@@ -308,7 +293,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
 
   PayvorFirebaseUser getUser(
       LoginSignupResponse signupResponse, String firebaseId, String email) {
-    return new PayvorFirebaseUser(
+    return PayvorFirebaseUser(
         fullName: signupResponse.user.name,
         email: email,
         location: signupResponse.user.location,
@@ -322,7 +307,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
 
   void showInSnackBar(String value) {
     _scaffoldKeys.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+        .showSnackBar(SnackBar(content: Text(value)));
   }
 
   @override
@@ -339,58 +324,86 @@ class _LoginScreenState extends State<LoginScreenNew> {
         children: [
           Container(
             color: Colors.white,
-            child: new SingleChildScrollView(
+            child: SingleChildScrollView(
               child: Container(
                 color: Colors.white,
                 width: screensize.width,
-                child: new Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    new SizedBox(
-                      height: Constants.backIconsSpace,
+                    SizedBox(height: Constants.backIconsSpace),
+                    Container(
+                      margin: EdgeInsets.only(left: 20.0),
+                      child: Text("Welcome Back", style: TextThemes.extraBold),
                     ),
                     Container(
-                        margin: new EdgeInsets.only(left: 20.0),
-                        child: new Text(
-                           "Login Perimity",
-                          style: TextThemes.extraBold,
-                        )),
-                    Container(
-                      margin:
-                          new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
-                      child: new Text(
-                        ResString().get('to_continuew_plz'),
-                        style: TextThemes.grayNormal,
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                      alignment: Alignment.centerLeft,
+                      child: RichText(
+                        textAlign: TextAlign.left,
+                        text: TextSpan(
+                          text: ResString().get('dont_have_account'),
+                          style: TextStyle(
+                            fontFamily: AssetStrings.circulerMedium,
+                            fontSize: 16,
+                            color: AppColors.darkgrey,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: ResString().get('create_account_button'),
+                              style: TextStyle(
+                                fontFamily: AssetStrings.circulerMedium,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.redLight,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (BuildContext context) {
+                                        return JoinCommunityNew();
+                                      },
+                                    ),
+                                  );
+                                },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
+                    // Container(
+                    //   margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                    //   child: Text(
+                    //     ResString().get('to_continuew_plz'),
+                    //     style: TextThemes.grayNormal,
+                    //   ),
+                    // ),
                     space(),
-                    new SizedBox(
-                      height: 15.0,
-                    ),
+                    SizedBox(height: 15.0),
                     getTextField(
-                        ResString().get('email_address'),
-                        _EmailController,
-                        _EmailField,
-                        _PasswordField,
-                        TextInputType.emailAddress,
-                        AssetStrings.emailPng,
-                        obsectextType: false),
-                    new SizedBox(
-                      height: 18.0,
+                      ResString().get('email_address'),
+                      _EmailController,
+                      _EmailField,
+                      _PasswordField,
+                      TextInputType.emailAddress,
+                      AssetStrings.emailPng,
+                      obsectextType: false,
                     ),
+                    SizedBox(height: 18.0),
                     getTextField(
-                        ResString().get('password'),
-                        _PasswordController,
-                        _PasswordField,
-                        _PasswordField,
-                        TextInputType.text,
-                        AssetStrings.passPng,
-                        obsectextType: true),
-                    new SizedBox(
-                      height: 24.0,
+                      ResString().get('password'),
+                      _PasswordController,
+                      _PasswordField,
+                      _PasswordField,
+                      TextInputType.text,
+                      AssetStrings.passPng,
+                      obsectextType: true,
                     ),
-                    new Container(
-                      margin: new EdgeInsets.only(left: 20.0, right: 20.0),
+                    SizedBox(height: 24.0),
+                    Container(
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
                       child: Row(
                         children: <Widget>[
                           /* InkWell(
@@ -426,52 +439,49 @@ class _LoginScreenState extends State<LoginScreenNew> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(4.0),
                                   child: boolCheckBox
-                                      ? new SvgPicture.asset(
-                                          AssetStrings.tick,
-                                        )
-                                      : new Container(),
+                                      ? SvgPicture.asset(AssetStrings.tick)
+                                      : Container(),
                                 ),
                               ),
                             ),
                             decoration: boolCheckBox
-                                ? new BoxDecoration(
-                                    borderRadius:
-                                        new BorderRadius.circular(4.0),
+                                ? BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4.0),
                                     color: AppColors.colorCyanPrimary)
-                                : new BoxDecoration(
-                                    borderRadius:
-                                        new BorderRadius.circular(4.0),
-                                    border: new Border.all(
-                                        color: Colors.grey.withOpacity(0.6),
-                                        width: 1.6)),
+                                : BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4.0),
+                                    border: Border.all(
+                                      color: Colors.grey.withOpacity(0.6),
+                                      width: 1.6,
+                                    )),
                             width: 20,
                             height: 20,
                           ),
-                          new SizedBox(
-                            width: 8.0,
-                          ),
+                          SizedBox(width: 8.0),
                           Expanded(
-                              child: InkWell(
-                                  onTap: () {
-                                    boolCheckBox = !boolCheckBox;
-                                    setState(() {});
-                                  },
-                                  child: new Text(
-                                      ResString().get('remember_me'),
-                                      style: TextThemes.blackTextSmallMedium))),
+                            child: InkWell(
+                              onTap: () {
+                                boolCheckBox = !boolCheckBox;
+                                setState(() {});
+                              },
+                              child: Text(
+                                ResString().get('remember_me'),
+                                style: TextThemes.blackTextSmallMedium,
+                              ),
+                            ),
+                          ),
                           InkWell(
                             onTap: () {
                               Navigator.push(
                                 context,
-                                new CupertinoPageRoute(
-                                    builder: (BuildContext context) {
-                                  return new ForgotPassword(
-                                    type: 1,
-                                  );
-                                }),
+                                CupertinoPageRoute(
+                                  builder: (BuildContext context) {
+                                    return ForgotPassword(type: 1);
+                                  },
+                                ),
                               );
                             },
-                            child: new Text(
+                            child: Text(
                               ResString().get('forgot_pass'),
                               style: TextThemes.redTextSmallMedium,
                             ),
@@ -479,141 +489,113 @@ class _LoginScreenState extends State<LoginScreenNew> {
                         ],
                       ),
                     ),
-                    new SizedBox(
-                      height: 25.0,
-                    ),
+                    SizedBox(height: 60.0),
                     Container(
-                        child: getSetupButtonNew(
-                            callback, ResString().get('login'), 20)),
-                    new Container(
-                      margin:
-                          new EdgeInsets.only(left: 20.0, right: 20.0, top: 32),
-                      child: new Row(
-                        children: [
-                          Expanded(
-                            child: new Container(
-                              height: 1.0,
-                              color: AppColors.colorGray,
-                            ),
-                          ),
-                          new Container(
-                            margin: new EdgeInsets.only(left: 8, right: 8),
-                            child: new Text(
-                              "OR LOGIN WITH",
-                              style: new TextStyle(
-                                  color: AppColors.lightGrayNew, fontSize: 12),
-                            ),
-                          ),
-                          Expanded(
-                            child: new Container(
-                              height: 1.0,
-                              color: AppColors.colorGray,
-                            ),
-                          )
-                        ],
-                      ),
+                      child: getSetupButtonNew(callback, ResString().get('login'), 20),
                     ),
-                    space(),
-                    Container(
-                      alignment: Alignment.center,
-                      margin: new EdgeInsets.only(left: 20.0, right: 20.0),
-                      child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          (Platform.isIOS)
-                              ? InkWell(
-                                  onTap: () {
-                                    _doAppleLogin();
-                                  },
-                                  child: new SvgPicture.asset(
-                                    AssetStrings.appleLogin,
-                                    height: 48,
-                                    width: 48,
-                                  ),
-                                )
-                              : Container(),
-                          (Platform.isIOS)
-                              ? new SizedBox(
-                                  width: 16.0,
-                                )
-                              : Container(),
-                          InkWell(
-                            onTap: () {
-                              getFacebookUserInfo();
-                            },
-                            child: new SvgPicture.asset(
-                              AssetStrings.facebook,
-                              height: 48,
-                              width: 48,
-                            ),
-                          ),
-                          new SizedBox(
-                            width: 16.0,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              getTwitterInfo();
-                            },
-                            child: new SvgPicture.asset(
-                              AssetStrings.twitter,
-                              height: 48,
-                              width: 48,
-                            ),
-                          ),
-                          new SizedBox(
-                            width: 16.0,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              getInstaUserInfo();
-                            },
-                            child: new Image.asset(
-                              AssetStrings.insta,
-                              height: 48,
-                              width: 48,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    space(),
-                    new SizedBox(
-                      height: 40.0,
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      child: new RichText(
-                          textAlign: TextAlign.center,
-                          text: new TextSpan(
-                            text: ResString().get('dont_have_account'),
-                            style: TextThemes.greyDarkTextFieldMedium,
-                            children: <TextSpan>[
-                              new TextSpan(
-                                text: ResString().get('signup_cap_button'),
-                                style: TextThemes.redTextSmallMedium,
-                                recognizer: new TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.push(
-                                      context,
-                                      new CupertinoPageRoute(
-                                          builder: (BuildContext context) {
-                                        return new JoinCommunityNew();
-                                      }),
-                                    );
-                                  },
-                              ),
-                            ],
-                          )),
-                    ),
-                    new SizedBox(
-                      height: 17.0,
-                    ),
+
+                    // Social Login Starts here
+                    // Container(
+                    //   margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 32),
+                    //   child: Row(
+                    //     children: [
+                    //       Expanded(
+                    //         child: Container(
+                    //           height: 1.0,
+                    //           color: AppColors.colorGray,
+                    //         ),
+                    //       ),
+                    //       Container(
+                    //         margin: EdgeInsets.only(left: 8, right: 8),
+                    //         child: Text(
+                    //           "OR LOGIN WITH",
+                    //           style: TextStyle(
+                    //               color: AppColors.lightGrayNew, fontSize: 12),
+                    //         ),
+                    //       ),
+                    //       Expanded(
+                    //         child: Container(
+                    //           height: 1.0,
+                    //           color: AppColors.colorGray,
+                    //         ),
+                    //       )
+                    //     ],
+                    //   ),
+                    // ),
+                    // space(),
+                    // Container(
+                    //   alignment: Alignment.center,
+                    //   margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.center,
+                    //     children: <Widget>[
+                    //       (Platform.isIOS)
+                    //           ? InkWell(
+                    //               onTap: () {
+                    //                 _doAppleLogin();
+                    //               },
+                    //               child: SvgPicture.asset(
+                    //                 AssetStrings.appleLogin,
+                    //                 height: 48,
+                    //                 width: 48,
+                    //               ),
+                    //             )
+                    //           : Container(),
+                    //       (Platform.isIOS)
+                    //           ? SizedBox(
+                    //               width: 16.0,
+                    //             )
+                    //           : Container(),
+                    //       InkWell(
+                    //         onTap: () {
+                    //           getFacebookUserInfo();
+                    //         },
+                    //         child: SvgPicture.asset(
+                    //           AssetStrings.facebook,
+                    //           height: 48,
+                    //           width: 48,
+                    //         ),
+                    //       ),
+                    //       SizedBox(
+                    //         width: 16.0,
+                    //       ),
+                    //       InkWell(
+                    //         onTap: () {
+                    //           getTwitterInfo();
+                    //         },
+                    //         child: SvgPicture.asset(
+                    //           AssetStrings.twitter,
+                    //           height: 48,
+                    //           width: 48,
+                    //         ),
+                    //       ),
+                    //       SizedBox(
+                    //         width: 16.0,
+                    //       ),
+                    //       InkWell(
+                    //         onTap: () {
+                    //           getInstaUserInfo();
+                    //         },
+                    //         child: Image.asset(
+                    //           AssetStrings.insta,
+                    //           height: 48,
+                    //           width: 48,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // space(),
+                    // SizedBox(
+                    //   height: 40.0,
+                    // ),
+                    SizedBox(height: 17.0),
                   ],
                 ),
               ),
             ),
           ),
-          new Center(
+          Center(
             child: getFullScreenProviderLoader(
               status: provider.getLoading(),
               context: context,
@@ -655,9 +637,9 @@ class _LoginScreenState extends State<LoginScreenNew> {
   void getInstaUserInfo() async {
     await Navigator.push(
       context,
-      new CupertinoPageRoute(builder: (BuildContext context) {
+      CupertinoPageRoute(builder: (BuildContext context) {
         return Material(
-          child: new WebviewInsta(
+          child: WebviewInsta(
             callback: voidCallBackLike,
           ),
         );
@@ -666,7 +648,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
   }
 
   void getTwitterInfo() async {
-    var socialLogin = new SocialLogin();
+    var socialLogin = SocialLogin();
     var result = (Platform.isIOS)
         ? await socialLogin.twitterLogin()
         : await socialLogin.twitterLoginAndroid();
@@ -687,7 +669,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
   }
 
   void getFacebookUserInfo() async {
-    var facebookSignInAccount = await new SocialLogin().initiateFacebookLogin();
+    var facebookSignInAccount = await SocialLogin().initiateFacebookLogin();
 
     if (facebookSignInAccount != null && facebookSignInAccount is Map) {
       var nameUser = facebookSignInAccount["name"];

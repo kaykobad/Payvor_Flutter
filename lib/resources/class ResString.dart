@@ -66,6 +66,7 @@ class ResString {
     'login_button': 'LOGIN',
     'resend_code': 'RESEND CODE',
     'signup_cap_button': 'SIGN UP',
+    'create_account_button': 'CREATE',
     'or_signup_with': 'or signup with',
     'enter_full_name': 'Please enter full name.',
     'already_have_Account': 'Already have an account? ',
