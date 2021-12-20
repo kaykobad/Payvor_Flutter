@@ -232,19 +232,17 @@ Widget getSetupButtonNew(VoidCallback callback, String text, double margin,
   return Container(
     height: 54.0,
     margin: EdgeInsets.only(left: margin, right: margin),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(6.0),
-    ),
+    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4.0)),
     child: Material(
-      borderRadius: BorderRadius.circular(6.0),
+      borderRadius: BorderRadius.circular(4.0),
       child: Ink(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6.0),
+            borderRadius: BorderRadius.circular(4.0),
             color: (newColor == null)
                 ? AppColors.kPrimaryBlue
                 : AppColors.colorDarkCyan),
         child: InkWell(
-          borderRadius: BorderRadius.circular(6.0),
+          borderRadius: BorderRadius.circular(4.0),
           splashColor: (newColor == null)
               ? AppColors.kPrimaryBlue
               : AppColors.colorDarkCyan,
@@ -255,8 +253,8 @@ Widget getSetupButtonNew(VoidCallback callback, String text, double margin,
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              (imagePath!=null)?Image.asset(imagePath,width: 18,height: 18,):Container(),
-              (imagePath!=null)?SizedBox(width: 5,):Container(),
+              (imagePath!=null) ? Image.asset(imagePath,width: 18,height: 18) : Container(),
+              (imagePath!=null) ? SizedBox(width: 5) : Container(),
               Text(
                 text,
                 style: TextStyle(
