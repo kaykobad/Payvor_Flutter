@@ -481,20 +481,19 @@ Widget getAppBarNew(BuildContext context) {
 
 Widget getSetupDecoratorButtonNew(
     VoidCallback callback, String text, double margin,
-    {Color newColor, Color textColor}) {
+    {Color newColor, Color textColor=AppColors.kPrimaryBlue}) {
   return Container(
     height: 54.0,
     margin: EdgeInsets.only(left: margin, right: margin),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(6.0),
-    ),
+    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4.0)),
     child: Material(
-      borderRadius: BorderRadius.circular(6.0),
+      borderRadius: BorderRadius.circular(4.0),
       child: Ink(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6.0),
-            border: Border.all(width: 1, color: AppColors.kPrimaryBlue),
-            color: Colors.white),
+          borderRadius: BorderRadius.circular(4.0),
+          border: Border.all(width: 1, color: AppColors.kPrimaryBlue),
+          color: Colors.white,
+        ),
         child: InkWell(
           borderRadius: BorderRadius.circular(6.0),
           onTap: () {
@@ -507,7 +506,7 @@ Widget getSetupDecoratorButtonNew(
               style: TextStyle(
                 fontFamily: AssetStrings.circulerNormal,
                 fontSize: 16,
-                color: textColor != null ? textColor : AppColors.kPrimaryBlue,
+                color: textColor,
               ),
             ),
           ),
