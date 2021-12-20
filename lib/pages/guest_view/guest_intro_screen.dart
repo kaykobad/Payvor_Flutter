@@ -171,8 +171,7 @@ class FadeIn extends State<GuestIntroScreen> {
       return;
     }
 
-    LoginRequest loginRequest =
-        LoginRequest(password: "123456", email: "guest@gmail.com");
+    LoginRequest loginRequest = LoginRequest(password: "123456", email: "guest@gmail.com");
     response = await provider.login(loginRequest, context);
     MemoryManagement.socialMediaStatus("0");
 
@@ -189,21 +188,19 @@ class FadeIn extends State<GuestIntroScreen> {
       try {
         print("email $email");
         //firebase login
-        var firebaseId = await firebaseProvider.signIn(
-            email, Constants.FIREBASE_USER_PASSWORD);
+        var firebaseId = await firebaseProvider.signIn(email, Constants.FIREBASE_USER_PASSWORD);
         //update user info to fire store user collection
-        await firebaseProvider
-            .updateFirebaseUser(getUser(response, firebaseId, email));
+        await firebaseProvider.updateFirebaseUser(
+          getUser(response, firebaseId, email),
+        );
       } catch (ex) {
         print("error ${ex.toString()}");
         //for old filmshape users
         //firebase signup for later use in chat
-        var firebaseId = await firebaseProvider.signUp(
-            email, Constants.FIREBASE_USER_PASSWORD);
+        var firebaseId = await firebaseProvider.signUp(email, Constants.FIREBASE_USER_PASSWORD);
         //save user info to fire store user collection
         var user = getUser(response, firebaseId, email);
-        user.created = DateTime.now()
-            .toIso8601String(); //if user is not registered with firebase
+        user.created = DateTime.now().toIso8601String(); //if user is not registered with firebase
         await firebaseProvider.createFirebaseUser(user);
       }
 
@@ -251,18 +248,18 @@ class FadeIn extends State<GuestIntroScreen> {
         .showSnackBar(SnackBar(content: Text(value)));
   }
 
-  PayvorFirebaseUser getUser(
-      LoginSignupResponse signupResponse, String firebaseId, String email) {
+  PayvorFirebaseUser getUser(LoginSignupResponse signupResponse, String firebaseId, String email) {
     return PayvorFirebaseUser(
-        fullName: signupResponse.user.name,
-        email: email,
-        location: signupResponse.user.location,
-        updated: DateTime.now().toIso8601String(),
-        created: DateTime.now().toIso8601String(),
-        filmShapeId: signupResponse.user.id,
-        firebaseId: firebaseId,
-        isOnline: true,
-        thumbnailUrl: signupResponse.user.profilePic);
+      fullName: signupResponse.user.name,
+      email: email,
+      location: signupResponse.user.location,
+      updated: DateTime.now().toIso8601String(),
+      created: DateTime.now().toIso8601String(),
+      filmShapeId: signupResponse.user.id,
+      firebaseId: firebaseId,
+      isOnline: true,
+      thumbnailUrl: signupResponse.user.profilePic,
+    );
   }
 
   void callbackGuest() {
