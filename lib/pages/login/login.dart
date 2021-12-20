@@ -1,5 +1,8 @@
+// import 'dart:io';
+// import 'package:payvor/model/otp/sample_webview.dart';
+// import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -9,7 +12,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/login/loginrequest.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
-import 'package:payvor/model/otp/sample_webview.dart';
 import 'package:payvor/model/signup/signup_social_request.dart';
 import 'package:payvor/pages/chat/payvor_firebase_user.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
@@ -29,7 +31,6 @@ import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginScreenNew extends StatefulWidget {
   @override
@@ -188,11 +189,12 @@ class _LoginScreenState extends State<LoginScreenNew> {
           }
       }
       SignUpSocialRequest loginRequest = SignUpSocialRequest(
-          name: name,
-          profile_pic: profilePic,
-          email: email,
-          type: types,
-          snsId: snsId);
+        name: name,
+        profile_pic: profilePic,
+        email: email,
+        type: types,
+        snsId: snsId,
+      );
 
       response = await provider.socialSignup(loginRequest, context);
       MemoryManagement.socialMediaStatus("1");
@@ -291,18 +293,18 @@ class _LoginScreenState extends State<LoginScreenNew> {
     }
   }
 
-  PayvorFirebaseUser getUser(
-      LoginSignupResponse signupResponse, String firebaseId, String email) {
+  PayvorFirebaseUser getUser(LoginSignupResponse signupResponse, String firebaseId, String email) {
     return PayvorFirebaseUser(
-        fullName: signupResponse.user.name,
-        email: email,
-        location: signupResponse.user.location,
-        updated: DateTime.now().toIso8601String(),
-        created: DateTime.now().toIso8601String(),
-        filmShapeId: signupResponse.user.id,
-        firebaseId: firebaseId,
-        isOnline: true,
-        thumbnailUrl: signupResponse.user.profilePic);
+      fullName: signupResponse.user.name,
+      email: email,
+      location: signupResponse.user.location,
+      updated: DateTime.now().toIso8601String(),
+      created: DateTime.now().toIso8601String(),
+      filmShapeId: signupResponse.user.id,
+      firebaseId: firebaseId,
+      isOnline: true,
+      thumbnailUrl: signupResponse.user.profilePic,
+    );
   }
 
   void showInSnackBar(String value) {
@@ -634,82 +636,83 @@ class _LoginScreenState extends State<LoginScreenNew> {
     }
   }
 
-  void getInstaUserInfo() async {
-    await Navigator.push(
-      context,
-      CupertinoPageRoute(builder: (BuildContext context) {
-        return Material(
-          child: WebviewInsta(
-            callback: voidCallBackLike,
-          ),
-        );
-      }),
-    );
-  }
-
-  void getTwitterInfo() async {
-    var socialLogin = SocialLogin();
-    var result = (Platform.isIOS)
-        ? await socialLogin.twitterLogin()
-        : await socialLogin.twitterLoginAndroid();
-
-    if (result != null && result.login) {
-      email = (result.email != null)
-          ? (result.id + "_" + result.email)
-          : "${result.id}@twitter.com";
-
-      name = result.username;
-      type = "2";
-      snsId = result.id;
-      profilePic = result.image;
-      hitApi(1);
-    } else {
-      showInSnackBar(Messages.someAuthIssue);
-    }
-  }
-
-  void getFacebookUserInfo() async {
-    var facebookSignInAccount = await SocialLogin().initiateFacebookLogin();
-
-    if (facebookSignInAccount != null && facebookSignInAccount is Map) {
-      var nameUser = facebookSignInAccount["name"];
-      var id = facebookSignInAccount["id"];
-      var fbEmail = facebookSignInAccount["email"];
-      var photodata = facebookSignInAccount["picture"];
-      var photourl = photodata["data"];
-
-      var photo = photourl["url"];
-
-      email = (fbEmail != null) ? (id + "_" + fbEmail) : ("$id@facebook.com");
-      name = nameUser;
-      type = "1";
-      snsId = id;
-      profilePic = photo;
-      hitApi(1);
-    } else {
-      showInSnackBar(Messages.genericError);
-    }
-  }
-
-  void _doAppleLogin() async {
-    try {
-      final credential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-      );
-
-      snsId = credential?.userIdentifier ?? "";
-      var userEmail = credential?.email;
-      email =
-          (userEmail != null) ? (snsId + "_" + userEmail) : "$snsId@apple.com";
-      name = credential?.givenName ?? "";
-      type = "4";
-      profilePic = "";
-      hitApi(1);
-    } catch (ex) {
-      showInSnackBar(Messages.genericError + ex.toString());
-    }
-  }
+  // Social Login Functionality
+  // void getInstaUserInfo() async {
+  //   await Navigator.push(
+  //     context,
+  //     CupertinoPageRoute(builder: (BuildContext context) {
+  //       return Material(
+  //         child: WebviewInsta(
+  //           callback: voidCallBackLike,
+  //         ),
+  //       );
+  //     }),
+  //   );
+  // }
+  //
+  // void getTwitterInfo() async {
+  //   var socialLogin = SocialLogin();
+  //   var result = (Platform.isIOS)
+  //       ? await socialLogin.twitterLogin()
+  //       : await socialLogin.twitterLoginAndroid();
+  //
+  //   if (result != null && result.login) {
+  //     email = (result.email != null)
+  //         ? (result.id + "_" + result.email)
+  //         : "${result.id}@twitter.com";
+  //
+  //     name = result.username;
+  //     type = "2";
+  //     snsId = result.id;
+  //     profilePic = result.image;
+  //     hitApi(1);
+  //   } else {
+  //     showInSnackBar(Messages.someAuthIssue);
+  //   }
+  // }
+  //
+  // void getFacebookUserInfo() async {
+  //   var facebookSignInAccount = await SocialLogin().initiateFacebookLogin();
+  //
+  //   if (facebookSignInAccount != null && facebookSignInAccount is Map) {
+  //     var nameUser = facebookSignInAccount["name"];
+  //     var id = facebookSignInAccount["id"];
+  //     var fbEmail = facebookSignInAccount["email"];
+  //     var photodata = facebookSignInAccount["picture"];
+  //     var photourl = photodata["data"];
+  //
+  //     var photo = photourl["url"];
+  //
+  //     email = (fbEmail != null) ? (id + "_" + fbEmail) : ("$id@facebook.com");
+  //     name = nameUser;
+  //     type = "1";
+  //     snsId = id;
+  //     profilePic = photo;
+  //     hitApi(1);
+  //   } else {
+  //     showInSnackBar(Messages.genericError);
+  //   }
+  // }
+  //
+  // void _doAppleLogin() async {
+  //   try {
+  //     final credential = await SignInWithApple.getAppleIDCredential(
+  //       scopes: [
+  //         AppleIDAuthorizationScopes.email,
+  //         AppleIDAuthorizationScopes.fullName,
+  //       ],
+  //     );
+  //
+  //     snsId = credential?.userIdentifier ?? "";
+  //     var userEmail = credential?.email;
+  //     email =
+  //         (userEmail != null) ? (snsId + "_" + userEmail) : "$snsId@apple.com";
+  //     name = credential?.givenName ?? "";
+  //     type = "4";
+  //     profilePic = "";
+  //     hitApi(1);
+  //   } catch (ex) {
+  //     showInSnackBar(Messages.genericError + ex.toString());
+  //   }
+  // }
 }
