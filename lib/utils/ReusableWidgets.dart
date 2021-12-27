@@ -139,11 +139,12 @@ Widget getLocationNew(
     BuildContext context,
     StreamController<bool> _streamControllerShowLoader,
     bool isBackground,
-    TextEditingController controllers,
-    {String iconData,
+    TextEditingController controllers, {
+    String iconData,
     bool colorAlert,
     Function onTap,
-    double iconPadding = 0}) {
+    double iconPadding = 0,
+    }) {
   return Container(
     alignment: Alignment.center,
     margin: !isBackground
