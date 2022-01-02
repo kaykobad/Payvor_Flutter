@@ -319,8 +319,7 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
 
   get _topLocationWidget => InkWell(
         onTap: () {
-          Navigator.push(
-            context,
+          Navigator.of(context, rootNavigator: true).push(
             CupertinoPageRoute(builder: (BuildContext context) {
               return SearchLocation(provider: locationProvider);
             }),

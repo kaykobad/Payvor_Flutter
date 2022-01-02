@@ -172,108 +172,110 @@ class _HomeState extends State<SearchLocation> with AutomaticKeepAliveClientMixi
     screenSize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
 
-    return Scaffold(
-      key: _scaffoldKey,
-      resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.bluePrimary,
-      body: Stack(
-        children: <Widget>[
-          Container(
-            color: Colors.white,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(height: 50.0),
-                getTextField(),
-                Opacity(
-                  opacity: 0.7,
-                  child: Container(
-                    height: 0.5,
-                    margin: EdgeInsets.only(top: 16.0),
-                    color: AppColors.dividerColor,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    hitLocation();
-                  },
-                  child: Container(
-                    child: getTopItem("Use my current location", 1, AssetStrings.sendMsg, 21.0, 40),
-                  ),
-                ),
-                Opacity(
-                  opacity: 0.7,
-                  child: Container(
-                    height: 0.5,
-                    margin: EdgeInsets.only(left: 20, right: 20),
-                    color: AppColors.dividerColor,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(builder: (BuildContext context) {
-                        return SearchMapView(
-                          provider: widget?.provider,
-                        );
-                      }),
-                    );
-                  },
-                  child: Container(
-                    child: getTopItem("Set location on map", 2, AssetStrings.map, 25.0, 35),
-                  ),
-                ),
-                Opacity(
-                  opacity: 0.7,
-                  child: Container(
-                    height: 0.5,
-                    margin: EdgeInsets.only(left: 20, right: 20),
-                    color: AppColors.dividerColor,
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
-                  child: Text(
-                    "Suggestions",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: AssetStrings.circulerMedium,
-                      fontSize: 18.0,
+    return Center(
+      child: Scaffold(
+        key: _scaffoldKey,
+        resizeToAvoidBottomInset: false,
+        backgroundColor: AppColors.bluePrimary,
+        body: Stack(
+          children: <Widget>[
+            Container(
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(height: 50.0),
+                  getTextField(),
+                  Opacity(
+                    opacity: 0.7,
+                    child: Container(
+                      height: 0.5,
+                      margin: EdgeInsets.only(top: 16.0),
+                      color: AppColors.dividerColor,
                     ),
                   ),
-                ),
-                SizedBox(height: 10),
-                (listResult.length > 0) ? _buildContestList() : Container(),
-              ],
+                  InkWell(
+                    onTap: () {
+                      hitLocation();
+                    },
+                    child: Container(
+                      child: getTopItem("Use my current location", 1, AssetStrings.sendMsg, 21.0, 40),
+                    ),
+                  ),
+                  Opacity(
+                    opacity: 0.7,
+                    child: Container(
+                      height: 0.5,
+                      margin: EdgeInsets.only(left: 20, right: 20),
+                      color: AppColors.dividerColor,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(builder: (BuildContext context) {
+                          return SearchMapView(
+                            provider: widget?.provider,
+                          );
+                        }),
+                      );
+                    },
+                    child: Container(
+                      child: getTopItem("Set location on map", 2, AssetStrings.map, 25.0, 35),
+                    ),
+                  ),
+                  Opacity(
+                    opacity: 0.7,
+                    child: Container(
+                      height: 0.5,
+                      margin: EdgeInsets.only(left: 20, right: 20),
+                      color: AppColors.dividerColor,
+                    ),
+                  ),
+                  if (listResult.length > 0) Container(
+                    margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
+                    child: Text(
+                      "Suggestions",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: AssetStrings.circulerMedium,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  (listResult.length > 0) ? _buildContestList() : Container(),
+                ],
+              ),
             ),
-          ),
-          Offstage(
-            offstage: offstagenodata,
-            child: Container(
-              margin: EdgeInsets.only(top: 130),
-              child: Center(
-                child: Text(
-                  "No Location Found",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
+            Offstage(
+              offstage: offstagenodata,
+              child: Container(
+                margin: EdgeInsets.only(top: 130),
+                child: Center(
+                  child: Text(
+                    "No Location Found",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 130),
-            child: Center(
-              child: getHalfScreenLoader(status: loader, context: context),
+            Container(
+              margin: EdgeInsets.only(top: 130),
+              child: Center(
+                child: getHalfScreenLoader(status: loader, context: context),
+              ),
             ),
-          ),
-          /* Center(
-            child: _getLoader,
-          ),*/
-        ],
+            /* Center(
+              child: _getLoader,
+            ),*/
+          ],
+        ),
       ),
     );
   }
