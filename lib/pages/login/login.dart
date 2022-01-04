@@ -54,6 +54,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
   String snsId = "";
   String type = "";
   String profilePic = "";
+  bool _isButtonActive = false;
 
   Widget space() => SizedBox(height: 30.0);
   Widget getView() => Container(height: 1.0, color: Colors.grey.withOpacity(0.7));
@@ -62,6 +63,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    _EmailField.requestFocus();
   }
 
   Widget getTextField(
@@ -81,6 +83,14 @@ class _LoginScreenState extends State<LoginScreenNew> {
         style: TextThemes.blackTextFieldNormal,
         obscureText: obsectextType,
         focusNode: focusNodeCurrent,
+        onChanged: (value) {
+          if(_PasswordController.text.trim().length > 0 && _EmailController.text.trim().length > 0) {
+            _isButtonActive = true;
+          } else {
+            _isButtonActive = false;
+          }
+          setState(() {});
+        },
         onSubmitted: (String value) {
           if (focusNodeCurrent == _PasswordField) {
             _PasswordField.unfocus();
@@ -346,7 +356,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
                         text: TextSpan(
                           text: ResString().get('dont_have_account'),
                           style: TextStyle(
-                            fontFamily: AssetStrings.circulerMedium,
+                            fontFamily: AssetStrings.circulerNormal,
                             fontSize: 16,
                             color: AppColors.darkgrey,
                           ),
@@ -354,9 +364,8 @@ class _LoginScreenState extends State<LoginScreenNew> {
                             TextSpan(
                               text: ResString().get('create_account_button'),
                               style: TextStyle(
-                                fontFamily: AssetStrings.circulerMedium,
+                                fontFamily: AssetStrings.circulerBoldStyle,
                                 fontSize: 14,
-                                fontWeight: FontWeight.bold,
                                 color: AppColors.redLight,
                               ),
                               recognizer: TapGestureRecognizer()
@@ -493,7 +502,10 @@ class _LoginScreenState extends State<LoginScreenNew> {
                     ),
                     SizedBox(height: 60.0),
                     Container(
-                      child: getSetupButtonNew(callback, ResString().get('login'), 20),
+                      child: getSetupButtonColor(
+                        callback, ResString().get('login'), 20,
+                        newColor: _isButtonActive ? AppColors.kPrimaryBlue : AppColors.grayDark,
+                      ),
                     ),
 
                     // Social Login Starts here
@@ -609,21 +621,23 @@ class _LoginScreenState extends State<LoginScreenNew> {
   }
 
   void callback() {
-    var email = _EmailController.text;
-    var password = _PasswordController.text;
-    if (_EmailController.text.isEmpty ||
-        _EmailController.text.trim().length == 0) {
-      showInSnackBar(ResString().get('enter_email'));
-      return;
-    } else if (!isEmailFormatValid(email.trim())) {
-      showInSnackBar(ResString().get('enter_valid_email'));
-      return;
-    } else if (password.isEmpty || password.length == 0) {
-      showInSnackBar(ResString().get('enter_password'));
-      return;
-    }
+    if (_isButtonActive) {
+      var email = _EmailController.text;
+      var password = _PasswordController.text;
+      if (_EmailController.text.isEmpty ||
+          _EmailController.text.trim().length == 0) {
+        showInSnackBar(ResString().get('enter_email'));
+        return;
+      } else if (!isEmailFormatValid(email.trim())) {
+        showInSnackBar(ResString().get('enter_valid_email'));
+        return;
+      } else if (password.isEmpty || password.length == 0) {
+        showInSnackBar(ResString().get('enter_password'));
+        return;
+      }
 
-    hitApi(0);
+      hitApi(0);
+    }
   }
 
   Future<ValueSetter> voidCallBackLike(Token token) async {

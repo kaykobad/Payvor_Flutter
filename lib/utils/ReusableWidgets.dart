@@ -349,7 +349,7 @@ Widget getSetupButtonColor(VoidCallback callback, String text, double margin,
             child: Text(
               text,
               style: TextStyle(
-                fontFamily: AssetStrings.circulerNormal,
+                fontFamily: AssetStrings.circulerMedium,
                 fontSize: 16,
                 color: Colors.white,
               ),
@@ -456,12 +456,12 @@ Widget getSetupButtonBorderNew(VoidCallback callback, String text, double margin
 
 Widget getAppBarNew(BuildContext context) {
   return PreferredSize(
-      preferredSize: Size.fromHeight(80.0),
+      preferredSize: Size.fromHeight(48.0),
       child: Material(
-        color: Colors.white,
+        color: Colors.transparent,
         child: Container(
           alignment: Alignment.topLeft,
-          margin: EdgeInsets.only(left: 17.0, top: 47),
+          margin: EdgeInsets.only(left: 17.0, top: 42),
           child: InkWell(
             onTap: () {
               Navigator.pop(context);
