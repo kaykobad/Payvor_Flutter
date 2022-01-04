@@ -498,13 +498,17 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
                           style: TextStyle(
                             fontFamily: AssetStrings.circulerMedium,
                             color: Colors.black,
-                            fontSize: 16,
+                            fontSize: 18,
                           ),
                           textAlign: TextAlign.center,
                         ),
                         Text(
                           _currentSliderValue.toInt().toString() + " km",
-                          style: TextStyle(color: Colors.black, fontSize: 15),
+                          style: TextStyle(
+                            fontFamily: AssetStrings.circulerMedium,
+                            color: Colors.black,
+                            fontSize: 15,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -557,13 +561,17 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
                           style: TextStyle(
                             fontFamily: AssetStrings.circulerMedium,
                             color: Colors.black,
-                            fontSize: 16,
+                            fontSize: 18,
                           ),
                           textAlign: TextAlign.center,
                         ),
                         Text(
                           "€$_paymentMin" + "-" "€$_paymentMax",
-                          style: TextStyle(color: Colors.black, fontSize: 14),
+                          style: TextStyle(
+                            fontFamily: AssetStrings.circulerMedium,
+                            color: Colors.black,
+                            fontSize: 15,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -623,11 +631,11 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
                               alignment: Alignment.centerLeft,
                               color: Colors.white,
                               child: Text(
-                                "Sort By",
+                                "Sort Type",
                                 style: TextStyle(
                                   fontFamily: AssetStrings.circulerMedium,
                                   color: Colors.black,
-                                  fontSize: 16,
+                                  fontSize: 18,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -639,9 +647,9 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
                             child: Text(
                               text != null && text.isNotEmpty ? text : "None",
                               style: TextStyle(
-                                fontFamily: AssetStrings.circulerNormal,
+                                fontFamily: AssetStrings.circulerMedium,
                                 color: Colors.black,
-                                fontSize: 14,
+                                fontSize: 15,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -687,7 +695,7 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
                       style: TextStyle(
                         fontFamily: AssetStrings.circulerMedium,
                         color: Colors.black,
-                        fontSize: 16,
+                        fontSize: 18,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -728,7 +736,7 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
               elevation: 18.0,
               child: Container(
                 color: Colors.white,
-                padding: EdgeInsets.symmetric(vertical: 10.0),
+                padding: EdgeInsets.only(top: 10.0, bottom: 24.0),
                 child: getSetupButtonNew(
                   callback, ResString().get('apply_filters'), 16,
                   newColor: AppColors.colorDarkCyan,
