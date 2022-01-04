@@ -180,18 +180,21 @@ class _HomeState extends State<SearchLocation> with AutomaticKeepAliveClientMixi
         body: Stack(
           children: <Widget>[
             Container(
-              color: Colors.white,
+              color: AppColors.backgroundGray,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Container(height: 50.0),
+                  Container(height: 50.0, color: Colors.white,),
                   getTextField(),
-                  Opacity(
-                    opacity: 0.7,
-                    child: Container(
-                      height: 0.5,
-                      margin: EdgeInsets.only(top: 16.0),
-                      color: AppColors.dividerColor,
+                  Container(
+                    color: Colors.white,
+                    child: Opacity(
+                      opacity: 0.7,
+                      child: Container(
+                        height: 0.5,
+                        margin: EdgeInsets.only(top: 16.0),
+                        color: AppColors.dividerColor,
+                      ),
                     ),
                   ),
                   InkWell(
@@ -199,7 +202,7 @@ class _HomeState extends State<SearchLocation> with AutomaticKeepAliveClientMixi
                       hitLocation();
                     },
                     child: Container(
-                      child: getTopItem("Use my current location", 1, AssetStrings.sendMsg, 21.0, 40),
+                      child: getTopItem("Use my current location", 1, AssetStrings.sendMsg, 21.0, 20.0),
                     ),
                   ),
                   Opacity(
@@ -222,7 +225,7 @@ class _HomeState extends State<SearchLocation> with AutomaticKeepAliveClientMixi
                       );
                     },
                     child: Container(
-                      child: getTopItem("Set location on map", 2, AssetStrings.map, 25.0, 35),
+                      child: getTopItem("Set location on map", 2, AssetStrings.map, 25.0, 20.0),
                     ),
                   ),
                   Opacity(
@@ -327,7 +330,12 @@ class _HomeState extends State<SearchLocation> with AutomaticKeepAliveClientMixi
         children: [
           SizedBox(width: 15.0),
           Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+            ),
             margin: EdgeInsets.only(left: 10),
+            padding: EdgeInsets.all(10.0),
             child: Image.asset(
               image,
               width: size,
@@ -340,8 +348,8 @@ class _HomeState extends State<SearchLocation> with AutomaticKeepAliveClientMixi
               text,
               style: TextStyle(
                 color: AppColors.kBlack,
-                fontSize: 18,
-                fontFamily: AssetStrings.circulerNormal,
+                fontSize: 16,
+                fontFamily: AssetStrings.circulerMedium,
               ),
             ),
           ),
@@ -352,7 +360,8 @@ class _HomeState extends State<SearchLocation> with AutomaticKeepAliveClientMixi
 
   Widget getTextField() {
     return Container(
-      margin: EdgeInsets.only(left: 16.0, right: 16.0),
+      color: Colors.white,
+      padding: EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: [
           Container(
@@ -482,7 +491,16 @@ class _HomeState extends State<SearchLocation> with AutomaticKeepAliveClientMixi
                       listResult.clear();
                       setState(() {});
                     },
-                    child: Image.asset(AssetStrings.clean, width: 18.0, height: 18.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      child: Image.asset(
+                        AssetStrings.clean,
+                        width: 18.0,
+                        height: 18.0,
+                        color: Color(0xFF5A5959),
+                        colorBlendMode: BlendMode.dstATop,
+                      ),
+                    ),
                   ),
                   SizedBox(width: 10.0),
                 ],
