@@ -458,7 +458,7 @@ Widget getAppBarNew(BuildContext context) {
   return PreferredSize(
       preferredSize: Size.fromHeight(48.0),
       child: Material(
-        color: Colors.transparent,
+        color: Colors.white,
         child: Container(
           alignment: Alignment.topLeft,
           margin: EdgeInsets.only(left: 17.0, top: 42),
@@ -505,7 +505,7 @@ Widget getSetupDecoratorButtonNew(
             child: Text(
               text,
               style: TextStyle(
-                fontFamily: AssetStrings.circulerNormal,
+                fontFamily: AssetStrings.circulerMedium,
                 fontSize: 16,
                 color: textColor,
               ),

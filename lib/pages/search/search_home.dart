@@ -300,7 +300,7 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
             _verticalSpace(50.0),
             _topLocationWidget,
             _getSearchedField,
-            _verticalSpace(16.0),
+            _verticalSpace(8.0),
             Visibility(visible: list.isNotEmpty, child: _buildContestList()),
             (provider.getLoading())
                 ? Expanded(
@@ -318,122 +318,120 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
   }
 
   get _topLocationWidget => InkWell(
-        onTap: () {
-          Navigator.of(context, rootNavigator: true).push(
-            CupertinoPageRoute(builder: (BuildContext context) {
-              return SearchLocation(provider: locationProvider);
-            }),
-          );
-        },
-        child: Container(
-          padding: EdgeInsets.only(left: 16.0, right: 16.0),
-          child: Row(
-            children: [
-              Container(
-                width: 38,
-                height: 38,
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(255, 255, 255, 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Image.asset(AssetStrings.locations, width: 18, height: 18),
-              ),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(left: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+    onTap: () {
+      Navigator.of(context, rootNavigator: true).push(
+        CupertinoPageRoute(builder: (BuildContext context) {
+          return SearchLocation(provider: locationProvider);
+        }),
+      );
+    },
+    child: Container(
+      padding: EdgeInsets.only(left: 16.0, right: 16.0),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(255, 255, 255, 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Image.asset(AssetStrings.locations, width: 18, height: 18),
+          ),
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.only(left: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    child: Text(
+                      "Location",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontFamily: AssetStrings.circulerMedium,
+                      ),
+                    ),
+                  ),
+                  Row(
                     children: [
-                      Container(
-                        child: Text(
-                          "Location",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontFamily: AssetStrings.circulerNormal,
+                      Flexible(
+                        child: Container(
+                          child: Text(
+                            location.isNotEmpty ? location : "Select Location",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.8),
+                              fontSize: 15,
+                              fontFamily: AssetStrings.circulerNormal,
+                            ),
                           ),
                         ),
                       ),
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Container(
-                              child: Text(
-                                location.isNotEmpty
-                                    ? location
-                                    : "Select Location",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.8),
-                                  fontSize: 14,
-                                  fontFamily: AssetStrings.circulerNormal,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            child: Icon(
-                              Icons.arrow_drop_down,
-                              color: AppColors.redLight,
-                            ),
-                          ),
-                        ],
+                      Container(
+                        child: Icon(
+                          Icons.arrow_drop_down,
+                          color: AppColors.redLight,
+                        ),
                       ),
                     ],
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 
   get _emptyFavours => Visibility(
-        visible: list.isEmpty && (!provider.getLoading()),
-        child: Container(
-          margin: EdgeInsets.only(top: 150, left: 20.0, right: 20.0),
-          child: Center(
-            child: Text(
-              ResString().get("no_favours"),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey,
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
+    visible: list.isEmpty && (!provider.getLoading()),
+    child: Container(
+      margin: EdgeInsets.only(top: 150, left: 20.0, right: 20.0),
+      child: Center(
+        child: Text(
+          ResString().get("no_favours"),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.grey,
+            fontWeight: FontWeight.bold,
+            fontSize: 16.0,
+          ),
+        ),
+      ),
+    ),
+  );
+
+  get _getSearchedField => Stack(
+    children: [
+      getTextField(),
+      Positioned(
+        right: 0.0,
+        top: 0.0,
+        child: Offstage(
+          offstage: !_isFilterApplied,
+          child: Container(
+            width: 13,
+            height: 13,
+            margin: EdgeInsets.only(right: 14.0, top: 14),
+            decoration: BoxDecoration(
+              color: Colors.red,
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.bluePrimary, width: 2.5),
             ),
           ),
         ),
-      );
-
-  get _getSearchedField => Stack(
-        children: [
-          getTextField(),
-          Positioned(
-            right: 0.0,
-            top: 0.0,
-            child: Offstage(
-              offstage: !_isFilterApplied,
-              child: Container(
-                width: 13,
-                height: 13,
-                margin: EdgeInsets.only(right: 14.0, top: 14),
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.bluePrimary, width: 2.5),
-                ),
-              ),
-            ),
-          )
-        ],
-      );
+      )
+    ],
+  );
 
   Widget getTextField() {
     return Container(
-      margin: EdgeInsets.only(top: 16),
+      margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: [
