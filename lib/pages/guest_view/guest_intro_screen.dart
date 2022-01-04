@@ -113,6 +113,7 @@ class FadeIn extends State<GuestIntroScreen> {
                               style: TextStyle(
                                 color: AppColors.lightGrayNew,
                                 fontSize: 12,
+                                fontFamily: AssetStrings.circulerMedium,
                               ),
                             ),
                           ),
