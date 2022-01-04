@@ -139,7 +139,12 @@ class _HomeState extends State<SearchMapView> with AutomaticKeepAliveClientMixin
       List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
       print(placemarks);
       Placemark place = placemarks[0];
-      address = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
+      address = '';
+      if (place.street.isNotEmpty) address += place.street + ', ';
+      if (place.subLocality.isNotEmpty) address += place.subLocality + ', ';
+      if (place.locality.isNotEmpty) address += place.locality + ', ';
+      if (place.administrativeArea.isNotEmpty) address += place.administrativeArea + ', ';
+      if (place.country.isNotEmpty) address += place.country;
     } catch (ex) {
       print("error ${ex.toString()}");
     }
