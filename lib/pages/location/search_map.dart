@@ -373,10 +373,9 @@ class _HomeState extends State<SearchMapView> with AutomaticKeepAliveClientMixin
                 children: [
                   SizedBox(width: 10.0),
                   Image.asset(AssetStrings.searches, width: 18.0, height: 18.0),
-                  SizedBox(width: 10.0),
                   Expanded(
                     child: Container(
-                      padding: EdgeInsets.only(left: 16, right: 5.0),
+                      padding: EdgeInsets.only(left: 10, right: 5.0),
                       child: getLocationNew(
                         _LocationController,
                         context,
@@ -388,9 +387,7 @@ class _HomeState extends State<SearchMapView> with AutomaticKeepAliveClientMixin
                           if (_LatLongController?.text != null &&
                               _LatLongController.text.contains(",")) {
                             var datas = (_LatLongController?.text ?? '')
-                                .trim()
-                                .toString()
-                                .split(",");
+                                .trim().toString().split(",");
 
                             try {
                               var lat = datas[0].toString();
@@ -433,10 +430,15 @@ class _HomeState extends State<SearchMapView> with AutomaticKeepAliveClientMixin
                       _LocationController?.text = "";
                       _LatLongController?.text = "";
                     },
-                    child: Image.asset(
-                      AssetStrings.clean,
-                      width: 18.0,
-                      height: 18.0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      child: Image.asset(
+                        AssetStrings.clean,
+                        width: 18.0,
+                        height: 18.0,
+                        color: Color(0xFF5A5959),
+                        colorBlendMode: BlendMode.dstATop,
+                      ),
                     ),
                   ),
                   SizedBox(width: 10.0),
