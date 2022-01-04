@@ -234,7 +234,7 @@ class _HomeState extends State<SearchMapView> with AutomaticKeepAliveClientMixin
                         print(cameraPosition.target.toString());
                         _LatLongController?.text = cameraPosition.target.latitude.toString() + "," + cameraPosition.target.longitude.toString();
                         _add(cameraPosition.target.latitude, cameraPosition.target.longitude, "", shouldMoveCamera: false);
-                        Future.delayed(Duration(milliseconds: 150), () => _isCameraMoving=false);
+                        Future.delayed(Duration(milliseconds: 100), () => _isCameraMoving=false);
                       }
                     },
                     onTap: (data) {
