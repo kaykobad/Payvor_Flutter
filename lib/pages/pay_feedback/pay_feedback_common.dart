@@ -59,8 +59,8 @@ class _HomeState extends State<PayFeebackDetailsCommon>
   var screenSize;
 
   final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
-  ScrollController scrollController = new ScrollController();
+      StreamController<bool>();
+  ScrollController scrollController = ScrollController();
 
   AuthProvider provider;
 
@@ -71,19 +71,19 @@ class _HomeState extends State<PayFeebackDetailsCommon>
   bool offstageLoader = false;
   int type = 0;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
-  FocusNode _DescriptionField = new FocusNode();
+  final GlobalKey<ScaffoldState> _scaffoldKeys = GlobalKey<ScaffoldState>();
+  FocusNode _DescriptionField = FocusNode();
 
   HiredUserDetailsResponse hiredUserDetailsResponse;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+        .showSnackBar(SnackBar(content: Text(value)));
   }
 
   @override
@@ -170,7 +170,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
     if (!gotInternetConnection) {
       return;
     }
-    var reportrequest = new ReportPostRequest(
+    var reportrequest = ReportPostRequest(
         favour_id: hiredUserDetailsResponse?.data?.id?.toString());
 
     var response = await provider.reportUser(reportrequest, context);
@@ -213,7 +213,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
     if (!gotInternetConnection) {
       return;
     }
-    var reportrequest = new UpdateStatusRequest(
+    var reportrequest = UpdateStatusRequest(
         favour_id: hiredUserDetailsResponse?.data?.id?.toString(),
         status: "2",
         payment_type: type?.toString());
@@ -228,7 +228,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
       if (response != null && response.status.code == 200) {
         widget.lauchCallBack(Material(
             child: Material(
-                child: new RatingBarNewBar(
+                child: RatingBarNewBar(
           id: widget?.postId?.toString(),
           type: 1,
                   image: widget.userType == Constants.HELPER
@@ -282,7 +282,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
     if (!gotInternetConnection) {
       return;
     }
-    //  var reportrequest=new ReportPostRequest(favour_id: favoriteResponse?.data?.id?.toString());
+    //  var reportrequest=ReportPostRequest(favour_id: favoriteResponse?.data?.id?.toString());
 
     var response = await provider.deletePost(
         hiredUserDetailsResponse?.data?.id?.toString(), context);
@@ -313,7 +313,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
   void callback() async {
     widget.lauchCallBack(Material(
         child: Material(
-            child: new RatingBarNewBar(
+            child: RatingBarNewBar(
       id: widget?.postId?.toString(),
       type: 1,
               image: widget.userType == 0
@@ -334,9 +334,9 @@ class _HomeState extends State<PayFeebackDetailsCommon>
   redirect() async {
     /*  Navigator.push(
       context,
-      new CupertinoPageRoute(builder: (BuildContext context) {
+      CupertinoPageRoute(builder: (BuildContext context) {
         return Material(
-            child: new PostFavour(
+            child: PostFavour(
           favourDetailsResponse: favoriteResponse,
           isEdit: true,
         ));
@@ -360,12 +360,12 @@ class _HomeState extends State<PayFeebackDetailsCommon>
       onTap: () {},
       child: Container(
         padding:
-            new EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
+            EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
         color: Colors.white,
-        margin: new EdgeInsets.only(top: 4),
+        margin: EdgeInsets.only(top: 4),
         child: Row(
           children: <Widget>[
-            new Container(
+            Container(
               width: 50.0,
               height: 50.0,
               decoration: BoxDecoration(
@@ -374,28 +374,28 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                       : Color.fromRGBO(255, 107, 102, 0.17),
                   shape: BoxShape.circle),
               alignment: Alignment.center,
-              child: new Image.asset(
+              child: Image.asset(
                 AssetStrings.combine_shape,
                 height: 18,
                 width: 18,
               ),
             ),
             Expanded(
-              child: new Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: new Text(
+                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Text(
                       first,
                       style: TextThemes.blackCirculerMedium,
                     ),
                   ),
                   Container(
                     margin:
-                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                        EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
                     child: Container(
-                        child: new Text(
+                        child: Text(
                       type == 1 ? "Owner has ended the favor" : "Hiring Date",
                       style: TextThemes.greyTextFieldNormalNw,
                     )),
@@ -410,23 +410,23 @@ class _HomeState extends State<PayFeebackDetailsCommon>
   }
 
   Widget getRowsPayment(String firstText, String amount, double tops) {
-    return new Container(
+    return Container(
       color: Colors.white,
-      padding: new EdgeInsets.only(left: 16, right: 16, top: tops),
-      child: new Row(
+      padding: EdgeInsets.only(left: 16, right: 16, top: tops),
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          new Text(
+          Text(
             firstText,
-            style: new TextStyle(
+            style: TextStyle(
                 fontFamily: AssetStrings.circulerNormal,
                 color: AppColors.moreText,
                 fontSize: 14),
             textAlign: TextAlign.center,
           ),
-          new Text(
+          Text(
             amount,
-            style: new TextStyle(
+            style: TextStyle(
                 fontFamily: AssetStrings.circulerNormal,
                 color: Colors.black,
                 fontSize: 14),
@@ -469,7 +469,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
 
     Navigator.push(
       context,
-      new CupertinoPageRoute(builder: (BuildContext context) {
+      CupertinoPageRoute(builder: (BuildContext context) {
         return Material(child: screen);
       }),
     );
@@ -480,9 +480,9 @@ class _HomeState extends State<PayFeebackDetailsCommon>
       onTap: () {
         Navigator.push(
           context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
+          CupertinoPageRoute(builder: (BuildContext context) {
             return Material(
-                child: new ChatMessageDetails(
+                child: ChatMessageDetails(
                   hireduserId: widget.userType == 0
                   ? hiredUserDetailsResponse?.data?.hiredUser?.id?.toString()
                   : hiredUserDetailsResponse?.data?.postedbyuser?.id
@@ -495,16 +495,16 @@ class _HomeState extends State<PayFeebackDetailsCommon>
       child: Container(
         color: Colors.white,
         padding:
-            new EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
-        margin: new EdgeInsets.only(top: 4),
+            EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
+        margin: EdgeInsets.only(top: 4),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            new Container(
+            Container(
               width: 50.0,
               height: 50.0,
               alignment: Alignment.center,
-              child: new ClipOval(
+              child: ClipOval(
                 child: getCachedNetworkImageWithurl(
                     url: widget.userType == 0
                         ? hiredUserDetailsResponse
@@ -518,12 +518,12 @@ class _HomeState extends State<PayFeebackDetailsCommon>
               ),
             ),
             Expanded(
-              child: new Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: new Text(
+                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Text(
                       widget.userType == 0
                           ? hiredUserDetailsResponse?.data?.hiredUser?.name ??
                           ""
@@ -534,11 +534,11 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                   ),
                   Container(
                     margin:
-                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 5),
+                        EdgeInsets.only(left: 10.0, right: 10.0, top: 5),
                     child: Row(
                       children: [
                         Container(
-                            child: new Text(
+                            child: Text(
                               widget?.userType == Constants.HELPER
                               ? "You have hired the person"
                               : "Favor Post Owner",
@@ -547,14 +547,14 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                         /*   Container(
                           width: 3,
                           height: 3,
-                          margin: new EdgeInsets.only(left: 4, right: 4),
+                          margin: EdgeInsets.only(left: 4, right: 4),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: AppColors.darkgrey,
                           ),
                         ) ,
                       Container(
-                            child: new Text(
+                            child: Text(
                               "VERIFIED",
                               style: TextThemes.blueMediumSmallNew,
                             )),*/
@@ -589,51 +589,51 @@ class _HomeState extends State<PayFeebackDetailsCommon>
       child: Container(
         color: Colors.white,
         padding:
-            new EdgeInsets.only(left: 16.0, right: 16.0, top: 16, bottom: 16),
+            EdgeInsets.only(left: 16.0, right: 16.0, top: 16, bottom: 16),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             type == mainType
-                ? new Container(
+                ? Container(
                     width: 17.0,
                     height: 17.0,
-                    padding: new EdgeInsets.all(5),
-                    margin: new EdgeInsets.only(top: 2),
+                    padding: EdgeInsets.all(5),
+                    margin: EdgeInsets.only(top: 2),
                     alignment: Alignment.center,
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                         color: Color.fromRGBO(9, 165, 255, 1),
                         shape: BoxShape.circle),
-                    child: new Container(
-                      decoration: new BoxDecoration(
+                    child: Container(
+                      decoration: BoxDecoration(
                           color: Colors.white, shape: BoxShape.circle),
                     ))
-                : new Container(
+                : Container(
                     width: 17.0,
                     height: 17.0,
-                    padding: new EdgeInsets.all(5),
-                    margin: new EdgeInsets.only(top: 2),
+                    padding: EdgeInsets.all(5),
+                    margin: EdgeInsets.only(top: 2),
                     alignment: Alignment.center,
-                    decoration: new BoxDecoration(
-                        border: new Border.all(
+                    decoration: BoxDecoration(
+                        border: Border.all(
                             color: Color.fromRGBO(171, 171, 171, 1.0),
                             width: 1.0),
                         shape: BoxShape.circle)),
             Expanded(
-              child: new Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: new Text(
+                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Text(
                       title,
                       style: TextThemes.blackCirculerMedium,
                     ),
                   ),
                   Container(
                     margin:
-                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 5),
+                        EdgeInsets.only(left: 10.0, right: 10.0, top: 5),
                     child: Container(
-                        child: new Text(
+                        child: Text(
                       desc,
                       style: TextThemes.greyTextFieldNormalNw,
                     )),
@@ -650,20 +650,20 @@ class _HomeState extends State<PayFeebackDetailsCommon>
   Widget buildItemNew() {
     return Container(
       color: Colors.white,
-      child: new Column(
+      child: Column(
         children: [
           Container(
-            padding: new EdgeInsets.only(
+            padding: EdgeInsets.only(
                 left: 16.0, right: 16.0, top: 10, bottom: 10),
-            margin: new EdgeInsets.only(top: 4),
+            margin: EdgeInsets.only(top: 4),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                new Container(
+                Container(
                   width: 56.0,
                   height: 56.0,
                   alignment: Alignment.center,
-                  child: new ClipOval(
+                  child: ClipOval(
                     child: getCachedNetworkImageWithurl(
                         url: widget.userType == 0
                             ? hiredUserDetailsResponse
@@ -677,15 +677,15 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                   ),
                 ),
                 Expanded(
-                  child: new Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        margin: new EdgeInsets.only(
+                        margin: EdgeInsets.only(
                           left: 10.0,
                           right: 10.0,
                         ),
-                        child: new Text(
+                        child: Text(
                           widget.userType == 0
                               ? hiredUserDetailsResponse?.data?.hiredUser?.name
                               : hiredUserDetailsResponse?.data?.postedbyuser?.name,
@@ -696,10 +696,10 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                         onTap: () {
                           Navigator.push(
                             context,
-                            new CupertinoPageRoute(
+                            CupertinoPageRoute(
                                 builder: (BuildContext context) {
                               return Material(
-                                  child: new ChatMessageDetails(
+                                  child: ChatMessageDetails(
                                     hireduserId: widget.userType == 0
                                     ? hiredUserDetailsResponse
                                         ?.data?.hiredUser?.id
@@ -712,12 +712,12 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                             }),
                           );
                         },
-                        child: new Container(
+                        child: Container(
                           width: double.infinity,
-                          margin: new EdgeInsets.only(
+                          margin: EdgeInsets.only(
                               left: 10.0, right: 10.0, top: 5),
                           color: Colors.white,
-                          child: new Text(
+                          child: Text(
                             "View Profile",
                             style: TextThemes.blueTextFieldMediumm,
                           ),
@@ -733,12 +733,12 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                       goToChat();
                     },
                     child: Container(
-                      decoration: new BoxDecoration(
-                          border: new Border.all(
+                      decoration: BoxDecoration(
+                          border: Border.all(
                               color: AppColors.lightGrey.withOpacity(0.5),
                               width: 1),
                           shape: BoxShape.circle),
-                      padding: new EdgeInsets.all(5),
+                      padding: EdgeInsets.all(5),
                       child: Icon(
                         Icons.chat_outlined,
                         color: AppColors.kTinderSwipeLikeDislikeTextColor,
@@ -752,28 +752,27 @@ class _HomeState extends State<PayFeebackDetailsCommon>
           ),
           Opacity(
             opacity: 0.12,
-            child: new Container(
+            child: Container(
               height: 1.0,
-              margin: new EdgeInsets.only(left: 17.0, right: 17.0),
+              margin: EdgeInsets.only(left: 17.0, right: 17.0),
               color: AppColors.dividerColor,
             ),
           ),
           Container(
             color: Colors.white,
             alignment: Alignment.centerLeft,
-            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
-            child: new Text(
+            margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
+            child: Text(
               hiredUserDetailsResponse?.data?.title ?? "",
               style: TextThemes.blackCirculerMedium,
             ),
           ),
           InkWell(
             onTap: () {
-              Navigator.push(
-                context,
-                new CupertinoPageRoute(builder: (BuildContext context) {
+              Navigator.of(context, rootNavigator: true).push(
+                CupertinoPageRoute(builder: (BuildContext context) {
                   return Material(
-                      child: new PostFavorDetails(
+                    child: PostFavorDetails(
                     id: widget?.postId,
                     isButtonDesabled: true,
                   ));
@@ -783,9 +782,9 @@ class _HomeState extends State<PayFeebackDetailsCommon>
             child: Container(
               color: Colors.white,
               alignment: Alignment.centerLeft,
-              margin: new EdgeInsets.only(
+              margin: EdgeInsets.only(
                   left: 16.0, right: 16.0, top: 7, bottom: 16),
-              child: new Text(
+              child: Text(
                 "View Original Post",
                 style: TextThemes.blueTextFieldMediumm,
               ),
@@ -793,27 +792,27 @@ class _HomeState extends State<PayFeebackDetailsCommon>
           ),
           Opacity(
             opacity: 0.12,
-            child: new Container(
+            child: Container(
               height: 1.0,
-              margin: new EdgeInsets.only(left: 17.0, right: 17.0),
+              margin: EdgeInsets.only(left: 17.0, right: 17.0),
               color: AppColors.dividerColor,
             ),
           ),
           Container(
-            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
-            child: new Row(
+            margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   child: Container(
-                      child: new Text(
+                      child: Text(
                     "Posted Date",
                     style: TextThemes.greyTextFieldNormalNw,
                   )),
                 ),
                 Container(
                   child: Container(
-                      child: new Text(
+                      child: Text(
                     "Hiring Date",
                     style: TextThemes.greyTextFieldNormalNw,
                   )),
@@ -822,13 +821,13 @@ class _HomeState extends State<PayFeebackDetailsCommon>
             ),
           ),
           Container(
-            margin: new EdgeInsets.only(
+            margin: EdgeInsets.only(
                 left: 16.0, right: 16.0, top: 7, bottom: 16),
-            child: new Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  child: new Text(
+                  child: Text(
                     formatDateString(
                         hiredUserDetailsResponse?.data?.createdAt?.toString() ??
                             ""),
@@ -836,7 +835,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                   ),
                 ),
                 Container(
-                  child: new Text(
+                  child: Text(
                     formatDateString(
                         hiredUserDetailsResponse?.data?.hireDate?.toString() ??
                             ""),
@@ -848,27 +847,27 @@ class _HomeState extends State<PayFeebackDetailsCommon>
           ),
           Opacity(
             opacity: 0.12,
-            child: new Container(
+            child: Container(
               height: 1.0,
-              margin: new EdgeInsets.only(left: 17.0, right: 17.0),
+              margin: EdgeInsets.only(left: 17.0, right: 17.0),
               color: AppColors.dividerColor,
             ),
           ),
           Container(
-            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
-            child: new Row(
+            margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   child: Container(
-                      child: new Text(
+                      child: Text(
                     "Amount",
                     style: TextThemes.greyTextFieldNormalNw,
                   )),
                 ),
                 Container(
                   child: Container(
-                      child: new Text(
+                      child: Text(
                     "Favor Status",
                     style: TextThemes.greyTextFieldNormalNw,
                   )),
@@ -877,13 +876,13 @@ class _HomeState extends State<PayFeebackDetailsCommon>
             ),
           ),
           Container(
-            margin: new EdgeInsets.only(
+            margin: EdgeInsets.only(
                 left: 16.0, right: 16.0, top: 7, bottom: 16),
-            child: new Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  child: new Text(
+                  child: Text(
                     "€ " + hiredUserDetailsResponse?.data?.price?.toString() ??
                         "",
                     style: TextThemes.blackCirculerMedium,
@@ -891,11 +890,11 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                 ),
                 widget?.paidUnpaid != null && widget?.paidUnpaid == 1
                     ? Container(
-                        child: new Text(
+                        child: Text(
                         hiredUserDetailsResponse?.data?.status == 1
                             ? "Not Paid"
                             : "Paid",
-                        style: new TextStyle(
+                        style: TextStyle(
                             fontFamily: AssetStrings.circulerNormal,
                             fontSize: 16,
                             color: hiredUserDetailsResponse?.data?.status == 1
@@ -903,7 +902,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                                 : AppColors.statusGreen),
                       ))
                     : Container(
-                        child: new Text(
+                        child: Text(
                           hiredUserDetailsResponse?.data?.status == 1
                               ? "Active"
                               : "Inactive",
@@ -915,9 +914,9 @@ class _HomeState extends State<PayFeebackDetailsCommon>
           ),
           Opacity(
             opacity: 0.12,
-            child: new Container(
+            child: Container(
               height: 1.0,
-              margin: new EdgeInsets.only(left: 17.0, right: 17.0),
+              margin: EdgeInsets.only(left: 17.0, right: 17.0),
               color: AppColors.dividerColor,
             ),
           ),
@@ -933,26 +932,26 @@ class _HomeState extends State<PayFeebackDetailsCommon>
           color: Colors.white,
           child: Column(
             children: [
-              new SizedBox(
+              SizedBox(
                 height: 20,
               ),
               Material(
                 color: Colors.white,
                 child: Container(
-                  margin: new EdgeInsets.only(top: 15),
+                  margin: EdgeInsets.only(top: 15),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         alignment: Alignment.topLeft,
-                        margin: new EdgeInsets.only(left: 17.0, top: 10),
+                        margin: EdgeInsets.only(left: 17.0, top: 10),
                         child: InkWell(
                           onTap: () {
                             Navigator.pop(context);
                           },
-                          child: new Padding(
+                          child: Padding(
                             padding: const EdgeInsets.all(3.0),
-                            child: new SvgPicture.asset(
+                            child: SvgPicture.asset(
                               AssetStrings.back,
                               width: 16.0,
                               height: 16.0,
@@ -963,13 +962,13 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                       Expanded(
                         child: Container(
                           alignment: Alignment.center,
-                          margin: new EdgeInsets.only(right: 25.0, top: 10),
+                          margin: EdgeInsets.only(right: 25.0, top: 10),
                           width: getScreenSize(context: context).width,
-                          child: new Text(
+                          child: Text(
                             widget?.userType == 0
                                 ? "Hired Favors"
                                 : "Next Jobs",
-                            style: new TextStyle(
+                            style: TextStyle(
                                 fontFamily: AssetStrings.circulerMedium,
                                 fontSize: 19,
                                 color: Colors.black),
@@ -995,15 +994,15 @@ class _HomeState extends State<PayFeebackDetailsCommon>
       backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
-          new Container(
+          Container(
             color: AppColors.whiteGray,
             height: screenSize.height,
             child: hiredUserDetailsResponse != null
                 ? SingleChildScrollView(
-                    child: new Column(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        new Container(
+                        Container(
                           height: 0,
                           width: double.infinity,
                           color: Colors.white,
@@ -1013,10 +1012,10 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                           alignment: Alignment.center,
                           child: Stack(
                             children: [
-                              new Row(
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  new Container(
+                                  Container(
                                     height: 96.0,
                                     width: 96.0,
                                     child: ClipOval(
@@ -1029,7 +1028,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                                       ),
                                     ),
                                   ),
-                                  new Container(
+                                  Container(
                                     height: 96.0,
                                     width: 96.0,
                                     child: ClipOval(
@@ -1046,17 +1045,17 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                               ),
                               Align(
                                 alignment: Alignment.center,
-                                child: new Container(
-                                    margin: new EdgeInsets.only(top: 31),
+                                child: Container(
+                                    margin: EdgeInsets.only(top: 31),
                                     child: Stack(
                                       children: [
                                         Container(
                                           child: InkWell(
                                             onTap: () {},
-                                            child: new Padding(
+                                            child: Padding(
                                               padding:
                                                   const EdgeInsets.all(1.5),
-                                              child: new Image.asset(
+                                              child: Image.asset(
                                                 AssetStrings.chatSend,
                                                 width: 32,
                                                 height: 32,
@@ -1069,10 +1068,10 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                                           right: 0.0,
                                           child: InkWell(
                                             onTap: () {},
-                                            child: new Container(
+                                            child: Container(
                                               margin:
-                                              new EdgeInsets.only(top: 7.3),
-                                              child: new Image.asset(
+                                              EdgeInsets.only(top: 7.3),
+                                              child: Image.asset(
                                                 AssetStrings.combineUser,
                                                 width: 16,
                                                 height: 16,
@@ -1083,7 +1082,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                                         ),
                                       ],
                                     ),
-                                    decoration: new BoxDecoration(
+                                    decoration: BoxDecoration(
                                         color: Colors.white,
                                         shape: BoxShape.circle),
                                     width: 32,
@@ -1092,26 +1091,26 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                             ],
                           ),
                         ),
-                        new Container(
+                        Container(
                           width: double.infinity,
                           alignment: Alignment.center,
-                          padding: new EdgeInsets.only(top: 16.0),
+                          padding: EdgeInsets.only(top: 16.0),
                           color: Colors.white,
-                          child: new Text(
+                          child: Text(
                             hiredUserDetailsResponse?.data?.title ?? "",
                             style: TextThemes.blackCirculerLarge,
                           ),
                         ),
-                        new Container(
+                        Container(
                           height: 22,
                           color: Colors.white,
                         ),
                         Opacity(
                           opacity: 0.12,
-                          child: new Container(
+                          child: Container(
                             height: 1.0,
                             margin:
-                                new EdgeInsets.only(left: 17.0, right: 17.0),
+                                EdgeInsets.only(left: 17.0, right: 17.0),
                             color: AppColors.dividerColor,
                           ),
                         ),
@@ -1119,22 +1118,22 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                           onTap: () {
                             Navigator.push(
                               context,
-                              new CupertinoPageRoute(
+                              CupertinoPageRoute(
                                   builder: (BuildContext context) {
                                 return Material(
-                                    child: new PostFavorDetails(
+                                    child: PostFavorDetails(
                                   id: widget?.postId,
                                   isButtonDesabled: true,
                                 ));
                               }),
                             );
                           },
-                          child: new Container(
+                          child: Container(
                             width: double.infinity,
                             alignment: Alignment.center,
-                            padding: new EdgeInsets.only(top: 14.0, bottom: 14),
+                            padding: EdgeInsets.only(top: 14.0, bottom: 14),
                             color: Colors.white,
-                            child: new Text(
+                            child: Text(
                               "View Original Post",
                               style: TextThemes.blueTextFieldMedium,
                             ),
@@ -1150,11 +1149,11 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                                 "")),*/
                         Container(
                             color: Colors.white,
-                            padding: new EdgeInsets.only(
+                            padding: EdgeInsets.only(
                                 left: 16.0, right: 16.0, top: 16),
-                            margin: new EdgeInsets.only(top: 4),
+                            margin: EdgeInsets.only(top: 4),
                             alignment: Alignment.centerLeft,
-                            child: new Text(
+                            child: Text(
                               ResString().get('payment_brkdown'),
                               style: TextThemes.blackCirculerMediumHeight,
                             )),
@@ -1180,39 +1179,39 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                                 : "-€${hiredUserDetailsResponse?.data
                                 ?.serviceFee}",
                             9.0) : Container(),
-                        new Container(
+                        Container(
                           height: 13,
                           color: Colors.white,
                         ),
                         Opacity(
                           opacity: 0.12,
-                          child: new Container(
+                          child: Container(
                             height: 1.0,
                             margin:
-                            new EdgeInsets.only(left: 17.0, right: 17.0),
+                            EdgeInsets.only(left: 17.0, right: 17.0),
                             color: AppColors.dividerColor,
                           ),
                         ),
-                        new Container(
+                        Container(
                           color: Colors.white,
-                          padding: new EdgeInsets.only(
+                          padding: EdgeInsets.only(
                               left: 16, right: 16, top: 9, bottom: 21),
-                          child: new Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              new Text(
+                              Text(
                                 widget?.userType == Constants.HELPER
                                     ? "You’ll Pay"
                                     : ResString().get('you_all_receive'),
-                                style: new TextStyle(
+                                style: TextStyle(
                                     fontFamily: AssetStrings.circulerBoldStyle,
                                     color: AppColors.bluePrimary,
                                     fontSize: 15),
                                 textAlign: TextAlign.center,
                               ),
-                              /*  new Text(
+                              /*  Text(
                                 "€${hiredUserDetailsResponse?.data?.receiving?.toString() ?? ""}",
-                                style: new TextStyle(
+                                style: TextStyle(
                                     fontFamily: AssetStrings.circulerBoldStyle,
                                     color: AppColors.bluePrimary,
                                     fontSize: 15),
@@ -1220,11 +1219,11 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                               ),
 */
 
-                              new Text(
+                              Text(
                                 isCurrentUser || widget?.userType == 0
                                     ? "€${hiredUserDetailsResponse?.data?.price}"
                                     : "€${hiredUserDetailsResponse?.data?.receiving}",
-                                style: new TextStyle(
+                                style: TextStyle(
                                     fontFamily: AssetStrings.circulerBoldStyle,
                                     color: AppColors.bluePrimary,
                                     fontSize: 15),
@@ -1233,7 +1232,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                             ],
                           ),
                         ),
-                        new SizedBox(
+                        SizedBox(
                           height: 150.0,
                         ),
                       ],
@@ -1243,10 +1242,10 @@ class _HomeState extends State<PayFeebackDetailsCommon>
           ),
           Offstage(
             offstage: true,
-            child: new Center(
-              child: new Text(
+            child: Center(
+              child: Text(
                 "No Favors Found",
-                style: new TextStyle(
+                style: TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0),
@@ -1258,12 +1257,12 @@ class _HomeState extends State<PayFeebackDetailsCommon>
               left: 0.0,
               right: 0.0,
               child: Container(
-                margin: new EdgeInsets.only(
+                margin: EdgeInsets.only(
                   top: 30,
                   left: 16,
                   right: 5,
                 ),
-                child: new Padding(
+                child: Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1272,7 +1271,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                         child: Container(
                           width: 30.0,
                           height: 30.0,
-                          padding: new EdgeInsets.all(4),
+                          padding: EdgeInsets.all(4),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                           ),
@@ -1280,7 +1279,7 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            child: new SvgPicture.asset(
+                            child: SvgPicture.asset(
                               AssetStrings.back,
                               width: 19.0,
                               height: 19.0,
@@ -1303,19 +1302,19 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                     elevation: 18.0,
                     child: Container(
                         color: Colors.white,
-                        padding: new EdgeInsets.only(top: 9, bottom: 28),
+                        padding: EdgeInsets.only(top: 9, bottom: 28),
                         child: getSetupButtonNew(callback, "Give Feedback", 16,
                             newColor: AppColors.colorDarkCyan)),
                   ),
                 )
               : Container(),
-          new Center(
+          Center(
             child: getHalfScreenLoader(
               status: provider.getLoading(),
               context: context,
             ),
           ),
-          /* new Center(
+          /* Center(
             child: _getLoader,
           ),*/
         ],

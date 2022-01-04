@@ -47,21 +47,21 @@ class _HomeState extends State<MyJobs> {
   List<Object> listResult = List();
 
   final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
-  TextEditingController _controller = new TextEditingController();
-  ScrollController scrollController = new ScrollController();
+      StreamController<bool>();
+  TextEditingController _controller = TextEditingController();
+  ScrollController scrollController = ScrollController();
   bool _loadMore = false;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   Widget widgets;
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+        .showSnackBar(SnackBar(content: Text(value)));
   }
 
   @override
@@ -237,7 +237,7 @@ class _HomeState extends State<MyJobs> {
   void _setScrollListener() {
     //scrollController.position.isScrollingNotifier.addListener(() { print("called");});
 
-    scrollController = new ScrollController();
+    scrollController = ScrollController();
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -255,15 +255,15 @@ class _HomeState extends State<MyJobs> {
       onTap: () {
         widget.lauchCallBack(Material(
             child: Material(
-                child: new RecentAppliedFavor(
+                child: RecentAppliedFavor(
           lauchCallBack: widget?.lauchCallBack,
         ))));
       },
       child: Container(
-        padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
-        margin: new EdgeInsets.only(top: 18.0, left: 18, right: 18),
-        decoration: new BoxDecoration(
-          borderRadius: new BorderRadius.circular(5.0),
+        padding: EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
+        margin: EdgeInsets.only(top: 18.0, left: 18, right: 18),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
           color: Colors.white,
         ),
         child: Row(
@@ -272,16 +272,16 @@ class _HomeState extends State<MyJobs> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  new Container(
-                    child: new Text(
+                  Container(
+                    child: Text(
                       "Recent Applied Favors ($favourapplied)",
                       style: TextThemes.blackCirculerMedium,
                     ),
                   ),
                   Container(
-                    margin: new EdgeInsets.only(top: 7.0),
+                    margin: EdgeInsets.only(top: 7.0),
                     child: Container(
-                      child: new Text(
+                      child: Text(
                         "The favors you’ve applied recently but hired",
                         style: TextThemes.grayNormalSmall,
                       ),
@@ -291,8 +291,8 @@ class _HomeState extends State<MyJobs> {
               ),
             ),
             Container(
-              margin: new EdgeInsets.only(left: 7.0),
-              child: new Icon(
+              margin: EdgeInsets.only(left: 7.0),
+              child: Icon(
                 Icons.arrow_forward_ios,
                 size: 13,
                 color: Color.fromRGBO(183, 183, 183, 1),
@@ -315,9 +315,9 @@ class _HomeState extends State<MyJobs> {
       backgroundColor: AppColors.whiteGray,
       body: Stack(
         children: <Widget>[
-          new Container(
+          Container(
             color: AppColors.whiteGray,
-            child: new Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 favourapplied != null && favourapplied > 0
@@ -331,35 +331,35 @@ class _HomeState extends State<MyJobs> {
             offstage: offstagenodata,
             child: Container(
               height: screenSize.height,
-              padding: new EdgeInsets.only(bottom: 40),
-              child: new Center(
+              padding: EdgeInsets.only(bottom: 40),
+              child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     InkWell(
                       onTap: () {},
-                      child: new Image.asset(
+                      child: Image.asset(
                         AssetStrings.noPosts,
                         width: 150,
                         height: 150,
                       ),
                     ),
                     Container(
-                      margin: new EdgeInsets.only(top: 10),
-                      child: new Text(
+                      margin: EdgeInsets.only(top: 10),
+                      child: Text(
                         "No Jobs",
-                        style: new TextStyle(
+                        style: TextStyle(
                             color: Colors.black,
                             fontFamily: AssetStrings.circulerMedium,
                             fontSize: 17.0),
                       ),
                     ),
                     Container(
-                      margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
-                      child: new Text(
+                      margin: EdgeInsets.only(top: 9, left: 20, right: 20),
+                      child: Text(
                         "You don’t have any job yet.\nOnce you’re hired it will show up here.",
                         textAlign: TextAlign.center,
-                        style: new TextStyle(
+                        style: TextStyle(
                             height: 1.5,
                             color: Color.fromRGBO(103, 99, 99, 1.0),
                             fontFamily: AssetStrings.circulerNormal,
@@ -372,14 +372,14 @@ class _HomeState extends State<MyJobs> {
             ),
           ),
           Container(
-            child: new Center(
+            child: Center(
               child: getHalfScreenLoader(
                 status: provider.getLoading(),
                 context: context,
               ),
             ),
           ),
-          /* new Center(
+          /* Center(
             child: _getLoader,
           ),*/
         ],
@@ -399,9 +399,9 @@ class _HomeState extends State<MyJobs> {
         await hitJobsPost();
       },
       child: Container(
-        margin: new EdgeInsets.only(left: 18, right: 18),
-        child: new ListView.builder(
-          padding: new EdgeInsets.all(0.0),
+        margin: EdgeInsets.only(left: 18, right: 18),
+        child: ListView.builder(
+          padding: EdgeInsets.all(0.0),
           physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             if (listResult[index] is String) {
@@ -436,43 +436,43 @@ class _HomeState extends State<MyJobs> {
   Widget buildItem(int index, Datas data) {
     return InkWell(
       onTap: () {
-        providerFirebase?.changeScreen(new PostFavorDetails(
+        providerFirebase?.changeScreen(PostFavorDetails(
           id: data?.favourId?.toString(),
           isButtonDesabled: true,
-        ));
+        ), rootNavigator: true);
       },
       child: Container(
-        padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
-        margin: new EdgeInsets.only(top: 8.0),
-        decoration: new BoxDecoration(
-          borderRadius: new BorderRadius.circular(5.0),
+        padding: EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
+        margin: EdgeInsets.only(top: 8.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
           color: Colors.white,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            /*  new Container(
-              margin: new EdgeInsets.only(top: 10.0),
-              child: new Text(
+            /*  Container(
+              margin: EdgeInsets.only(top: 10.0),
+              child: Text(
                 data?.favour?.title ?? "",
                 style: TextThemes.blackCirculerMedium,
               ),
             ),
             Opacity(
               opacity: 0.12,
-              child: new Container(
-                margin: new EdgeInsets.only(top: 30.0),
+              child: Container(
+                margin: EdgeInsets.only(top: 30.0),
                 height: 1.0,
                 color: AppColors.dividerColor,
               ),
             ),*/
             Container(
-              child: new Row(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: Container(
-                      child: new Text(
+                      child: Text(
                         data?.favour?.title ?? "",
                         style: TextThemes.blackCirculerMedium,
                         maxLines: 3,
@@ -481,8 +481,8 @@ class _HomeState extends State<MyJobs> {
                     ),
                   ),
                   Container(
-                    margin: new EdgeInsets.only(left: 7.0),
-                    child: new Icon(
+                    margin: EdgeInsets.only(left: 7.0),
+                    child: Icon(
                       Icons.arrow_forward_ios,
                       size: 13,
                       color: Color.fromRGBO(183, 183, 183, 1),
@@ -499,7 +499,7 @@ class _HomeState extends State<MyJobs> {
 
   Widget buildItemHeader(String text) {
     return Container(
-      padding: new EdgeInsets.only(top: 16, bottom: 2),
+      padding: EdgeInsets.only(top: 16, bottom: 2),
       child: Text(text, style: TextThemes.darkBlackMedium),
     );
   }
@@ -528,7 +528,7 @@ class _HomeState extends State<MyJobs> {
         if (data?.status != 3) {
           widget.lauchCallBack(Material(
               child: Material(
-                  child: new PayFeebackDetailsCommon(
+                  child: PayFeebackDetailsCommon(
             lauchCallBack: widget?.lauchCallBack,
             userId: data?.hiredUserId?.toString(),
             postId: data?.id?.toString(),
@@ -538,7 +538,7 @@ class _HomeState extends State<MyJobs> {
             paidUnpaid: 1,
           ))));
         } else {
-          widget.lauchCallBack(new PayFeebackDetails(
+          widget.lauchCallBack(PayFeebackDetails(
             userId: data?.hiredUserId?.toString(),
             postId: data?.id?.toString(),
             type: 1,
@@ -550,7 +550,7 @@ class _HomeState extends State<MyJobs> {
           /*
           widget.lauchCallBack(Material(
               child: Material(
-                  child: new ChatMessageDetails(
+                  child: ChatMessageDetails(
                     id: data.userId.toString(),
                     name: data.title,
                     hireduserId: data?.hiredUserId?.toString(),
@@ -560,10 +560,10 @@ class _HomeState extends State<MyJobs> {
         }
       },
       child: Container(
-        padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
-        margin: new EdgeInsets.only(top: 18.0),
-        decoration: new BoxDecoration(
-          borderRadius: new BorderRadius.circular(5.0),
+        padding: EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
+        margin: EdgeInsets.only(top: 18.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
           color: Colors.white,
         ),
         child: Column(
@@ -571,12 +571,12 @@ class _HomeState extends State<MyJobs> {
           children: <Widget>[
             Row(
               children: [
-                new Container(
+                Container(
                     width: 49.0,
                     height: 49.0,
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       color: Colors.grey,
-                      border: new Border.all(color: Colors.white, width: 0.3),
+                      border: Border.all(color: Colors.white, width: 0.3),
                       shape: BoxShape.circle,
                     ),
                     child: ClipOval(
@@ -585,26 +585,26 @@ class _HomeState extends State<MyJobs> {
                     )),
                 Expanded(
                   child: Container(
-                    margin: new EdgeInsets.only(left: 10),
+                    margin: EdgeInsets.only(left: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        new Container(
-                          child: new Text(
+                        Container(
+                          child: Text(
                             data?.title ?? "",
                             style: TextThemes.blackCirculerMedium,
                           ),
                         ),
                         Container(
-                          margin: new EdgeInsets.only(top: 10.0),
-                          child: new Row(
+                          margin: EdgeInsets.only(top: 10.0),
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               InkWell(
                                 onTap: () {
                                   widget.lauchCallBack(Material(
                                       child: Material(
-                                          child: new ChatMessageDetails(
+                                          child: ChatMessageDetails(
                                     id: data.userId.toString(),
                                     name: data.hiredBy.name,
                                     hireduserId: data?.userId?.toString(),
@@ -613,7 +613,7 @@ class _HomeState extends State<MyJobs> {
                                   ))));
                                 },
                                 child: Container(
-                                  child: new Text(
+                                  child: Text(
                                     data?.hiredBy?.name ?? "someone",
                                     style: TextThemes.cyanTextSmallMedium,
                                   ),
@@ -621,12 +621,12 @@ class _HomeState extends State<MyJobs> {
                               ),
                               Expanded(
                                 child: Container(
-                                  margin: new EdgeInsets.only(left: 1.0),
+                                  margin: EdgeInsets.only(left: 1.0),
                                   child: InkWell(
                                     onTap: () {},
                                     child: Container(
-                                      margin: new EdgeInsets.only(left: 1.0),
-                                      child: new Text(
+                                      margin: EdgeInsets.only(left: 1.0),
+                                      child: Text(
                                         getStatus(data?.status),
                                         style: TextThemes.grayNormalSmall,
                                       ),
@@ -635,8 +635,8 @@ class _HomeState extends State<MyJobs> {
                                 ),
                               ),
                               /*   Container(
-                                margin: new EdgeInsets.only(left: 7.0),
-                                child: new Icon(
+                                margin: EdgeInsets.only(left: 7.0),
+                                child: Icon(
                                   Icons.arrow_forward_ios,
                                   size: 13,
                                   color: Color.fromRGBO(183, 183, 183, 1),
@@ -653,42 +653,42 @@ class _HomeState extends State<MyJobs> {
             ),
             Opacity(
               opacity: 0.12,
-              child: new Container(
-                margin: new EdgeInsets.only(top: 16.0),
+              child: Container(
+                margin: EdgeInsets.only(top: 16.0),
                 height: 1.0,
                 color: AppColors.dividerColor,
               ),
             ),
             Container(
-              margin: new EdgeInsets.only(top: 10),
+              margin: EdgeInsets.only(top: 10),
               child: InkWell(
                 onTap: () {},
                 child: Row(
                   children: [
-                    new Text(
+                    Text(
                       "€ ${data?.price ?? ""}",
-                      style: new TextStyle(
+                      style: TextStyle(
                           color: AppColors.kBlack.withOpacity(0.7),
                           fontSize: 16,
                           fontFamily: AssetStrings.circulerNormal),
                     ),
                     Expanded(
-                      child: new Container(),
+                      child: Container(),
                     ),
-                    new Container(
+                    Container(
                       width: 8,
                       height: 8,
-                      decoration: new BoxDecoration(
+                      decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: data?.status == 1
                               ? AppColors.statusYellow
                               : AppColors.statusGreen),
                     ),
                     Container(
-                      margin: new EdgeInsets.only(left: 5),
-                      child: new Text(
+                      margin: EdgeInsets.only(left: 5),
+                      child: Text(
                         data?.status == 1 ? "Not Paid" : "Paid",
-                        style: new TextStyle(
+                        style: TextStyle(
                             color: AppColors.kBlack.withOpacity(0.7),
                             fontSize: 16,
                             fontFamily: AssetStrings.circulerNormal),

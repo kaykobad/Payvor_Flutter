@@ -53,40 +53,32 @@ class _HomeState extends State<PostFavorDetails>
     with AutomaticKeepAliveClientMixin<PostFavorDetails> {
   var screenSize;
 
-  final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
-  ScrollController scrollController = new ScrollController();
+  // final StreamController<bool> _loaderStreamController = StreamController<bool>();
+  ScrollController scrollController = ScrollController();
   bool guestViewMain = false;
 
   List<String> listOption = ["Report", "Share", "Hide Post"];
 
-  PropmoteDataResponse propmoteDataResponse = new PropmoteDataResponse();
+  PropmoteDataResponse propmoteDataResponse = PropmoteDataResponse();
 
   AuthProvider provider;
-
   var ids = "";
-
   var isCurrentUser = false;
-
   bool offstageLoader = false;
-
   String distance = "";
-
   FirebaseProvider providerFirebase;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
-  FocusNode _DescriptionField = new FocusNode();
+  // final GlobalKey<ScaffoldState> _scaffoldKeys = GlobalKey<ScaffoldState>();
+  // FocusNode _DescriptionField = FocusNode();
 
   FavourDetailsResponse favoriteResponse;
 
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+  // final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(
-        new SnackBar(content: new Text(value ?? "Something went wrong")));
+        SnackBar(content: Text(value ?? "Something went wrong")));
   }
 
   @override
@@ -213,7 +205,7 @@ class _HomeState extends State<PostFavorDetails>
     if (!gotInternetConnection) {
       return;
     }
-    var reportrequest = new ReportPostRequest(
+    var reportrequest = ReportPostRequest(
         favour_id: favoriteResponse?.data?.id?.toString());
 
     var response = await provider.reportUser(reportrequest, context);
@@ -256,7 +248,7 @@ class _HomeState extends State<PostFavorDetails>
     if (!gotInternetConnection) {
       return;
     }
-    //  var reportrequest=new ReportPostRequest(favour_id: favoriteResponse?.data?.id?.toString());
+    //  var reportrequest=ReportPostRequest(favour_id: favoriteResponse?.data?.id?.toString());
 
     var response = await provider.deletePost(
         favoriteResponse?.data?.id?.toString(), context);
@@ -343,7 +335,7 @@ class _HomeState extends State<PostFavorDetails>
     if (!gotInternetConnection) {
       return;
     }
-    var reportrequest = new ReportPostRequest(
+    var reportrequest = ReportPostRequest(
         favour_id: favoriteResponse?.data?.id?.toString());
 
     var response = await provider.applyFav(reportrequest, context);
@@ -352,7 +344,7 @@ class _HomeState extends State<PostFavorDetails>
 
     if (response is ReportResponse) {
       showBottomSuccessPayment("Apply Successful!",
-          "You have applied to the favor Successfully", "Done", 0);
+          "You have applied to the favor Successfully", "Keep Applying", 0);
     } else {
       APIError apiError = response;
       print(apiError.error);
@@ -405,8 +397,8 @@ class _HomeState extends State<PostFavorDetails>
   void callbackPaymentAddMethod() async {
     Navigator.pop(context); //back to previous screen
     /* providerFirebase
-        ?.changeScreen(Material(child: new AddPaymentMethodFirst()));*/
-    providerFirebase?.changeScreen(Material(child: new StripeCardAddedList(payingAmount: "0",)));
+        ?.changeScreen(Material(child: AddPaymentMethodFirst()));*/
+    providerFirebase?.changeScreen(Material(child: StripeCardAddedList(payingAmount: "0",)));
   }
 
   void callbackPaymentSuccessBack() async {
@@ -418,35 +410,35 @@ class _HomeState extends State<PostFavorDetails>
     return Container(
       color: Colors.white,
       padding:
-          new EdgeInsets.only(left: 16.0, right: 16.0, top: 16, bottom: 16),
+          EdgeInsets.only(left: 16.0, right: 16.0, top: 16, bottom: 16),
       child: Row(
         children: <Widget>[
           Expanded(
-            child: new Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  child: new Text(
+                  child: Text(
                     favoriteResponse?.data.title ?? "",
                     style: TextThemes.blackCirculerMedium,
                   ),
                 ),
                 Container(
-                  margin: new EdgeInsets.only(top: 4),
+                  margin: EdgeInsets.only(top: 4),
                   child: Row(
                     children: [
-                      new Image.asset(
+                      Image.asset(
                         AssetStrings.locationHome,
                         width: 11,
                         height: 14,
                       ),
-                      new SizedBox(
+                      SizedBox(
                         width: 6,
                       ),
                       Expanded(
                         child: Container(
                           child: Container(
-                            child: new Text(
+                            child: Text(
                               favoriteResponse?.data.location +
                                       " - " +
                                       distance ??
@@ -466,7 +458,7 @@ class _HomeState extends State<PostFavorDetails>
           ),
           Align(
               alignment: Alignment.center,
-              child: new Text(
+              child: Text(
                 "€${favoriteResponse?.data.price ?? ""}",
                 style: TextThemes.blackDarkHeaderSub,
               )),
@@ -478,9 +470,9 @@ class _HomeState extends State<PostFavorDetails>
   redirect() async {
     Navigator.push(
       context,
-      new CupertinoPageRoute(builder: (BuildContext context) {
+      CupertinoPageRoute(builder: (BuildContext context) {
         return Material(
-            child: new PostFavour(
+            child: PostFavour(
           favourDetailsResponse: favoriteResponse,
           isEdit: true,
           voidcallback: voidCallBackUpdateSearch,
@@ -519,18 +511,18 @@ class _HomeState extends State<PostFavorDetails>
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: new SvgPicture.asset(
+                child: SvgPicture.asset(
                   icon,
                   width: size,
                   height: size,
                 ),
               ),
             ),
-            new SizedBox(
+            SizedBox(
               width: 20.0,
             ),
             Container(
-              child: new Text(
+              child: Text(
                 text,
                 style: text == "Delete Post"
                     ? TextThemes.darkRedMedium
@@ -556,53 +548,53 @@ class _HomeState extends State<PostFavorDetails>
           return Padding(
               padding: MediaQuery.of(context).viewInsets,
               child: Container(
-                  child: new Column(
+                  child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                      margin: new EdgeInsets.only(top: 43, left: 27),
+                      margin: EdgeInsets.only(top: 43, left: 27),
                       child:
                           getBottomText(AssetStrings.share, "Share Post", 22)),
                   !isCurrentUser
                       ? Container(
-                          margin: new EdgeInsets.only(top: 35, left: 27),
+                          margin: EdgeInsets.only(top: 35, left: 27),
                           child: getBottomText(
                               AssetStrings.slash, "Report Post", 22))
                       : Container(),
                   !isCurrentUser
                       ? Container(
-                          margin: new EdgeInsets.only(top: 35, left: 27),
+                          margin: EdgeInsets.only(top: 35, left: 27),
                           child: getBottomText(
                               AssetStrings.slash, "Block User", 22))
                       : Container(),
                   !isCurrentUser
                       ? Container(
-                          margin: new EdgeInsets.only(top: 35, left: 27),
+                          margin: EdgeInsets.only(top: 35, left: 27),
                           child: getBottomText(
                               AssetStrings.slash, "Hide Post", 22))
                       : Container(),
                   isCurrentUser
                       ? Container(
-                          margin: new EdgeInsets.only(top: 35, left: 27),
+                          margin: EdgeInsets.only(top: 35, left: 27),
                           child:
                               getBottomText(AssetStrings.edit, "Edit Post", 22))
                       : Container(),
                   isCurrentUser
                       ? Container(
-                          margin: new EdgeInsets.only(top: 35, left: 27),
+                          margin: EdgeInsets.only(top: 35, left: 27),
                           child: getBottomText(
                               AssetStrings.delete, "Delete Post", 22))
                       : Container(),
                   Opacity(
                     opacity: 0.12,
-                    child: new Container(
+                    child: Container(
                       height: 1.0,
-                      margin: new EdgeInsets.only(top: 35, left: 27, right: 27),
+                      margin: EdgeInsets.only(top: 35, left: 27, right: 27),
                       color: AppColors.dividerColor,
                     ),
                   ),
                   Container(
-                      margin: new EdgeInsets.only(top: 35, left: 24),
+                      margin: EdgeInsets.only(top: 35, left: 24),
                       child: getBottomText(AssetStrings.cross, " Cancel", 18)),
                   Container(
                     height: 56,
@@ -622,14 +614,14 @@ class _HomeState extends State<PostFavorDetails>
         ),
         builder: (BuildContext bc) {
           return ClipRRect(
-            borderRadius: new BorderRadius.only(
+            borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(25.0),
                 topRight: const Radius.circular(25.0)),
             child: Container(
               height: MediaQuery.of(context).size.height / 1.4,
-              decoration: new BoxDecoration(
+              decoration: BoxDecoration(
                   color: Colors.black,
-                  borderRadius: new BorderRadius.only(
+                  borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(10.0),
                       topRight: const Radius.circular(10.0))),
               child: Padding(
@@ -648,8 +640,8 @@ class _HomeState extends State<PostFavorDetails>
       context: context,
       position: RelativeRect.fromLTRB(left, 80, 30, 0),
       items: listOption.map((String popupRoute) {
-        return new PopupMenuItem<String>(
-          child: new Text(popupRoute),
+        return PopupMenuItem<String>(
+          child: Text(popupRoute),
           value: popupRoute,
         );
       }).toList(),
@@ -672,9 +664,9 @@ class _HomeState extends State<PostFavorDetails>
           print("review_post from my post details creen");
           Navigator.push(
             context,
-            new CupertinoPageRoute(builder: (BuildContext context) {
+            CupertinoPageRoute(builder: (BuildContext context) {
               return Material(
-                  child: new ReviewPost(
+                  child: ReviewPost(
                 id: favoriteResponse?.data?.userId?.toString() ?? "",
               ));
             }),
@@ -682,9 +674,9 @@ class _HomeState extends State<PostFavorDetails>
         } else {
           Navigator.push(
             context,
-            new CupertinoPageRoute(builder: (BuildContext context) {
+            CupertinoPageRoute(builder: (BuildContext context) {
               return Material(
-                  child: new SearchHomeByName(
+                  child: SearchHomeByName(
                 lat: favoriteResponse?.data?.lat,
                 long: favoriteResponse?.data?.long,
                 description: favoriteResponse?.data?.description,
@@ -696,51 +688,51 @@ class _HomeState extends State<PostFavorDetails>
       },
       child: Container(
         padding:
-            new EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
+            EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
         color: Colors.white,
-        margin: new EdgeInsets.only(top: 4),
+        margin: EdgeInsets.only(top: 4),
         child: Row(
           children: <Widget>[
-            new Container(
+            Container(
               width: 50.0,
               height: 50.0,
               decoration: BoxDecoration(
                   color: Color.fromRGBO(255, 107, 102, 0.17),
                   shape: BoxShape.circle),
               alignment: Alignment.center,
-              child: new SvgPicture.asset(
+              child: SvgPicture.asset(
                 type == 1 ? AssetStrings.shape : AssetStrings.referIcon,
                 height: 18,
                 width: 18,
               ),
             ),
             Expanded(
-              child: new Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: new Text(
+                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Text(
                       first,
                       style: TextThemes.blackCirculerMedium,
                     ),
                   ),
                   Container(
                     margin:
-                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                        EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
                     child: type == 1
                         ? Row(
                             children: [
-                              new Image.asset(
+                              Image.asset(
                                 AssetStrings.rating,
                                 width: 13,
                                 height: 13,
                               ),
-                              new SizedBox(
+                              SizedBox(
                                 width: 3,
                               ),
                               Container(
-                                  child: new Text(
+                                  child: Text(
                                 favoriteResponse?.data?.ratingAvg.toString() ??
                                     "",
                                 style: TextThemes.greyTextFieldNormalNw,
@@ -748,21 +740,21 @@ class _HomeState extends State<PostFavorDetails>
                               Container(
                                 width: 3,
                                 height: 3,
-                                margin: new EdgeInsets.only(left: 5, right: 5),
+                                margin: EdgeInsets.only(left: 5, right: 5),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.darkgrey,
                                 ),
                               ),
                               Container(
-                                  child: new Text(
+                                  child: Text(
                                 "${favoriteResponse?.data?.ratingCount.toString() ?? "0"} Reviews",
                                 style: TextThemes.greyTextFieldNormalNw,
                               )),
                             ],
                           )
                         : Container(
-                            child: new Text(
+                            child: Text(
                             "Refer someone who is good fit for the job",
                             style: TextThemes.greyTextFieldNormalNw,
                           )),
@@ -787,23 +779,23 @@ class _HomeState extends State<PostFavorDetails>
   }
 
   Widget getRowsPayment(String firstText, String amount, double tops) {
-    return new Container(
+    return Container(
       color: Colors.white,
-      padding: new EdgeInsets.only(left: 16, right: 16, top: tops),
-      child: new Row(
+      padding: EdgeInsets.only(left: 16, right: 16, top: tops),
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          new Text(
+          Text(
             firstText,
-            style: new TextStyle(
+            style: TextStyle(
                 fontFamily: AssetStrings.circulerNormal,
                 color: AppColors.moreText,
                 fontSize: 14),
             textAlign: TextAlign.center,
           ),
-          new Text(
+          Text(
             amount,
-            style: new TextStyle(
+            style: TextStyle(
                 fontFamily: AssetStrings.circulerNormal,
                 color: Colors.black,
                 fontSize: 14),
@@ -820,9 +812,9 @@ class _HomeState extends State<PostFavorDetails>
         if (!isCurrentUser) {
           Navigator.push(
             context,
-            new CupertinoPageRoute(builder: (BuildContext context) {
+            CupertinoPageRoute(builder: (BuildContext context) {
               return Material(
-                  child: new ChatMessageDetails(
+                  child: ChatMessageDetails(
                 id: "",
                 name: favoriteResponse.data.user.name ?? "",
                 image: favoriteResponse.data.user.profilePic ?? "",
@@ -835,16 +827,16 @@ class _HomeState extends State<PostFavorDetails>
       child: Container(
         color: Colors.white,
         padding:
-            new EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
-        margin: new EdgeInsets.only(top: 4),
+            EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
+        margin: EdgeInsets.only(top: 4),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            new Container(
+            Container(
               width: 50.0,
               height: 50.0,
               alignment: Alignment.center,
-              child: new ClipOval(
+              child: ClipOval(
                 child: getCachedNetworkImageWithurl(
                     url: favoriteResponse.data.user.profilePic ?? "",
                     fit: BoxFit.fill,
@@ -852,23 +844,23 @@ class _HomeState extends State<PostFavorDetails>
               ),
             ),
             Expanded(
-              child: new Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: new Text(
+                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: Text(
                       favoriteResponse?.data?.user?.name ?? "",
                       style: TextThemes.blackCirculerMedium,
                     ),
                   ),
                   Container(
                     margin:
-                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 3),
+                        EdgeInsets.only(left: 10.0, right: 10.0, top: 3),
                     child: Row(
                       children: [
                         Container(
-                            child: new Text(
+                            child: Text(
                           "Favor Post Owner",
                           style: TextThemes.greyTextFieldNormalNw,
                         )),
@@ -876,7 +868,7 @@ class _HomeState extends State<PostFavorDetails>
                             ? Container(
                                 width: 3,
                                 height: 3,
-                                margin: new EdgeInsets.only(left: 4, right: 4),
+                                margin: EdgeInsets.only(left: 4, right: 4),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.darkgrey,
@@ -885,7 +877,7 @@ class _HomeState extends State<PostFavorDetails>
                             : Container(),
                         favoriteResponse?.data?.user?.perc == 100
                             ? Container(
-                                child: new Text(
+                                child: Text(
                                 "VERIFIED",
                                 style: TextThemes.blueMediumSmallNew,
                               ))
@@ -938,14 +930,14 @@ class _HomeState extends State<PostFavorDetails>
         ),
         builder: (BuildContext bc) {
           return ClipRRect(
-            borderRadius: new BorderRadius.only(
+            borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(25.0),
                 topRight: const Radius.circular(25.0)),
             child: Container(
               height: MediaQuery.of(context).size.height,
-              decoration: new BoxDecoration(
+              decoration: BoxDecoration(
                   color: Colors.black,
-                  borderRadius: new BorderRadius.only(
+                  borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(10.0),
                       topRight: const Radius.circular(10.0))),
               child: Padding(
@@ -969,31 +961,31 @@ class _HomeState extends State<PostFavorDetails>
           return Padding(
               padding: MediaQuery.of(context).viewInsets,
               child: Container(
-                  child: new Column(
+                  child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    margin: new EdgeInsets.only(top: 22),
-                    child: new Image.asset(AssetStrings.artworkPayment,
+                    margin: EdgeInsets.only(top: 22),
+                    child: Image.asset(AssetStrings.artworkPayment,
                         width: 120.0, height: 105.0),
                   ),
-                  new Container(
-                    margin: new EdgeInsets.only(top: 40),
-                    child: new Text(
+                  Container(
+                    margin: EdgeInsets.only(top: 40),
+                    child: Text(
                       "Add Payment Method",
-                      style: new TextStyle(
+                      style: TextStyle(
                           fontFamily: AssetStrings.circulerMedium,
                           fontSize: 20,
                           color: Colors.black),
                     ),
                   ),
-                  new Container(
-                    margin: new EdgeInsets.only(top: 10, left: 35, right: 35),
+                  Container(
+                    margin: EdgeInsets.only(top: 10, left: 35, right: 35),
                     alignment: Alignment.center,
-                    child: new Text(
+                    child: Text(
                       "You’ve to add a account to apply for the favors. You’ll be paid to the account you are going to add ",
                       textAlign: TextAlign.center,
-                      style: new TextStyle(
+                      style: TextStyle(
                         fontFamily: AssetStrings.circulerNormal,
                         fontSize: 16,
                         height: 1.5,
@@ -1002,7 +994,7 @@ class _HomeState extends State<PostFavorDetails>
                     ),
                   ),
                   Container(
-                    margin: new EdgeInsets.only(top: 40, left: 16, right: 16),
+                    margin: EdgeInsets.only(top: 40, left: 16, right: 16),
                     child: getSetupButtonNew(
                         callbackPaymentAddMethod, "Add Now", 0,
                         newColor: AppColors.colorDarkCyan),
@@ -1015,82 +1007,82 @@ class _HomeState extends State<PostFavorDetails>
         });
   }
 
-  void showBottomSuccessPayment(
-      String title, String description, String buttonText, int type) {
+  void showBottomSuccessPayment(String title, String description, String buttonText, int type) {
     showModalBottomSheet<void>(
         isScrollControlled: true,
         context: context,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
+            topLeft: Radius.circular(26.0),
+            topRight: Radius.circular(26.0),
+          ),
         ),
         builder: (BuildContext bc) {
-          return Padding(
-              padding: MediaQuery.of(context).viewInsets,
-              child: Container(
-                  child: new Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 86.0,
-                    height: 86.0,
-                    margin: new EdgeInsets.only(top: 38),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: AppColors.greenDark,
-                      shape: BoxShape.circle,
-                    ),
-                    child: GestureDetector(
-                        onTapDown: (TapDownDetails details) {
-                          /* //_showPopupMenu(details.globalPosition);
-                               showBottomSheet();*/
-                        },
-                        child: new SvgPicture.asset(
-                          AssetStrings.check,
-                          width: 42.0,
-                          height: 42.0,
-                          color: Colors.white,
-                        )),
+          return Container(
+            padding: EdgeInsets.only(top: 32.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 86.0,
+                  height: 86.0,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: AppColors.greenDark,
+                    shape: BoxShape.circle,
                   ),
-                  new Container(
-                    margin: new EdgeInsets.only(top: 40),
-                    child: new Text(
-                      title,
-                      style: new TextStyle(
-                          fontFamily: AssetStrings.circulerMedium,
-                          fontSize: 20,
-                          color: Colors.black),
+                  child: GestureDetector(
+                    onTapDown: (TapDownDetails details) {
+                      /* //_showPopupMenu(details.globalPosition);
+                           showBottomSheet();*/
+                    },
+                    child: SvgPicture.asset(
+                      AssetStrings.check,
+                      width: 42.0,
+                      height: 42.0,
+                      color: Colors.white,
                     ),
                   ),
-                  new Container(
-                    margin: new EdgeInsets.only(top: 10, left: 35, right: 35),
-                    alignment: Alignment.center,
-                    child: new Text(
-                      description,
-                      textAlign: TextAlign.center,
-                      style: new TextStyle(
-                        fontFamily: AssetStrings.circulerNormal,
-                        fontSize: 16,
-                        height: 1.5,
-                        color: Color.fromRGBO(114, 117, 112, 1),
-                      ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 24),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontFamily: AssetStrings.circulerMedium,
+                      fontSize: 20,
+                      color: Colors.black,
                     ),
                   ),
-                  Container(
-                    margin: new EdgeInsets.only(top: 60, left: 16, right: 16),
-                    child: getSetupButtonNew(
-                        type == 1
-                            ? callbackPaymentSuccess
-                            : callbackPaymentSuccessBack,
-                        buttonText,
-                        0,
-                        newColor: AppColors.colorDarkCyan),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 8, left: 18, right: 18),
+                  alignment: Alignment.center,
+                  child: Text(
+                    description,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: AssetStrings.circulerNormal,
+                      fontSize: 16,
+                      color: Color.fromRGBO(114, 117, 112, 1),
+                    ),
                   ),
-                  Container(
-                    height: 56,
-                  )
-                ],
-              )));
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 44, left: 16, right: 16),
+                  child: getSetupButtonNew(
+                      type == 1
+                          ? callbackPaymentSuccess
+                          : callbackPaymentSuccessBack,
+                      buttonText,
+                      0,
+                      newColor: AppColors.colorDarkCyan,
+                  ),
+                ),
+                Container(height: 26)
+              ],
+            ),
+          );
         });
   }
 
@@ -1152,20 +1144,20 @@ class _HomeState extends State<PostFavorDetails>
       key: _scaffoldKey,
       body: Stack(
         children: <Widget>[
-          new Container(
+          Container(
             color: AppColors.whiteGray,
             height: screenSize.height,
             child: favoriteResponse != null && favoriteResponse.data != null
                 ? SingleChildScrollView(
-                    child: new Column(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        new Container(
+                        Container(
                           height: 214,
                           width: double.infinity,
                           child: ClipRRect(
-                            // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                            borderRadius: new BorderRadius.circular(0.0),
+                            // margin: EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                            borderRadius: BorderRadius.circular(0.0),
 
                             child: getCachedNetworkImageRect(
                               url: favoriteResponse.data.image,
@@ -1177,24 +1169,24 @@ class _HomeState extends State<PostFavorDetails>
                         buildItem(),
                         Opacity(
                           opacity: 0.12,
-                          child: new Container(
+                          child: Container(
                             height: 1.0,
                             margin:
-                                new EdgeInsets.only(left: 17.0, right: 17.0),
+                                EdgeInsets.only(left: 17.0, right: 17.0),
                             color: AppColors.dividerColor,
                           ),
                         ),
                         Container(
                             color: Colors.white,
-                            padding: new EdgeInsets.only(
+                            padding: EdgeInsets.only(
                                 left: 16.0, right: 16.0, top: 16.0),
                             alignment: Alignment.centerLeft,
-                            child: new Text(
+                            child: Text(
                               ResString().get('description'),
                               style: TextThemes.blackCirculerMediumHeight,
                             )),
                         Container(
-                          padding: new EdgeInsets.only(
+                          padding: EdgeInsets.only(
                               left: 16.0, right: 16.0, top: 10.0, bottom: 18),
                           color: Colors.white,
                           width: double.infinity,
@@ -1203,7 +1195,7 @@ class _HomeState extends State<PostFavorDetails>
                             trimLines: 4,
                             colorClickableText: AppColors.colorDarkCyan,
                             trimMode: TrimMode.Line,
-                            style: new TextStyle(
+                            style: TextStyle(
                               color: AppColors.moreText,
                               fontFamily: AssetStrings.circulerNormal,
                               fontSize: 14.0,
@@ -1216,16 +1208,16 @@ class _HomeState extends State<PostFavorDetails>
                         !isCurrentUser
                             ? buildItemRating(1, "User Ratings")
                             : Container(),
-                        !isCurrentUser
-                            ? buildItemRating(2, "Refer Others")
-                            : Container(),
+                        // !isCurrentUser
+                        //     ? buildItemRating(2, "Refer Others")
+                        //     : Container(),
                         Container(
                             color: Colors.white,
-                            padding: new EdgeInsets.only(
+                            padding: EdgeInsets.only(
                                 left: 16.0, right: 16.0, top: 16),
-                            margin: new EdgeInsets.only(top: 4),
+                            margin: EdgeInsets.only(top: 4),
                             alignment: Alignment.centerLeft,
-                            child: new Text(
+                            child: Text(
                               ResString().get('payment_brkdown'),
                               style: TextThemes.blackCirculerMediumHeight,
                             )),
@@ -1241,41 +1233,41 @@ class _HomeState extends State<PostFavorDetails>
                                 ? "-€0"
                                 : "-€${favoriteResponse?.data?.service_fee}",
                             9.0),
-                        new Container(
+                        Container(
                           height: 13,
                           color: Colors.white,
                         ),
                         Opacity(
                           opacity: 0.12,
-                          child: new Container(
+                          child: Container(
                             height: 1.0,
                             margin:
-                                new EdgeInsets.only(left: 17.0, right: 17.0),
+                                EdgeInsets.only(left: 17.0, right: 17.0),
                             color: AppColors.dividerColor,
                           ),
                         ),
-                        new Container(
+                        Container(
                           color: Colors.white,
-                          padding: new EdgeInsets.only(
+                          padding: EdgeInsets.only(
                               left: 16, right: 16, top: 9, bottom: 21),
-                          child: new Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              new Text(
+                              Text(
                                 !isCurrentUser
                                     ? ResString().get('you_all_receive')
                                     : "You’ll Pay",
-                                style: new TextStyle(
+                                style: TextStyle(
                                     fontFamily: AssetStrings.circulerBoldStyle,
                                     color: AppColors.bluePrimary,
                                     fontSize: 15),
                                 textAlign: TextAlign.center,
                               ),
-                              new Text(
+                              Text(
                                 isCurrentUser
                                     ? "€${favoriteResponse?.data?.price}"
                                     : "€${favoriteResponse?.data?.receiving}",
-                                style: new TextStyle(
+                                style: TextStyle(
                                     fontFamily: AssetStrings.circulerBoldStyle,
                                     color: AppColors.bluePrimary,
                                     fontSize: 15),
@@ -1284,7 +1276,7 @@ class _HomeState extends State<PostFavorDetails>
                             ],
                           ),
                         ),
-                        new SizedBox(
+                        SizedBox(
                           height: 150.0,
                         ),
                       ],
@@ -1294,10 +1286,10 @@ class _HomeState extends State<PostFavorDetails>
           ),
           Offstage(
             offstage: true,
-            child: new Center(
-              child: new Text(
+            child: Center(
+              child: Text(
                 "No Favors Found",
-                style: new TextStyle(
+                style: TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0),
@@ -1309,12 +1301,12 @@ class _HomeState extends State<PostFavorDetails>
               left: 0.0,
               right: 0.0,
               child: Container(
-                margin: new EdgeInsets.only(
-                  top: 30,
+                margin: EdgeInsets.only(
+                  top: 36,
                   left: 16,
-                  right: 5,
+                  right: 8,
                 ),
-                child: new Padding(
+                child: Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1323,21 +1315,22 @@ class _HomeState extends State<PostFavorDetails>
                         child: Container(
                           width: 30.0,
                           height: 30.0,
-                          padding: new EdgeInsets.all(8),
+                          padding: EdgeInsets.all(7),
                           decoration: BoxDecoration(
-                              color: AppColors.greyProfile.withOpacity(0.4),
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.45),
-                                  blurRadius: .4,
-                                ),
-                              ]),
+                            color: AppColors.greyProfile.withOpacity(0.4),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.45),
+                                blurRadius: .4,
+                              ),
+                            ],
+                          ),
                           child: InkWell(
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            child: new SvgPicture.asset(
+                            child: SvgPicture.asset(
                               AssetStrings.back,
                               width: 21.0,
                               height: 18.0,
@@ -1358,7 +1351,8 @@ class _HomeState extends State<PostFavorDetails>
                                 color: Colors.black.withOpacity(0.45),
                                 blurRadius: .4,
                               ),
-                            ]),
+                            ],
+                        ),
                         child: GestureDetector(
                             onTapDown: (TapDownDetails details) {
                               //_showPopupMenu(details.globalPosition);
@@ -1367,10 +1361,8 @@ class _HomeState extends State<PostFavorDetails>
                               //    showBottomSheetSuccesss();
                               //  showBottomSheet();
                             },
-                            child: new Icon(
-                              Icons.more_vert,
-                              color: Colors.white,
-                            )),
+                            child: Icon(Icons.more_vert, color: Colors.white),
+                        ),
                       )
                     ],
                   ),
@@ -1387,16 +1379,12 @@ class _HomeState extends State<PostFavorDetails>
                               elevation: 18.0,
                               child: Container(
                                   color: Colors.white,
-                                  padding:
-                                      new EdgeInsets.only(top: 9, bottom: 28),
+                                  padding: EdgeInsets.only(top: 9, bottom: 28),
                                   child: getSetupButtonColor(callback,
                                       ResString().get('apply_for_fav'), 16,
-                                      newColor: (widget.isButtonDesabled !=
-                                                      null &&
+                                      newColor: (widget.isButtonDesabled != null &&
                                                   widget.isButtonDesabled) ||
-                                              favoriteResponse
-                                                      ?.data?.is_user_applied ==
-                                                  1
+                                              favoriteResponse?.data?.is_user_applied == 1
                                           ? AppColors.desabledGray
                                           : AppColors.colorDarkCyan)),
                             )
@@ -1413,7 +1401,7 @@ class _HomeState extends State<PostFavorDetails>
                               child: Container(
                                   /*  color: Colors.white,
                                   padding:
-                                      new EdgeInsets.only(top: 9, bottom: 28),
+                                      EdgeInsets.only(top: 9, bottom: 28),
                                   child: getSetupButtonNew(callbackPromote,
                                       "Promote your Favor", 16)*/
                                   ),
@@ -1421,14 +1409,14 @@ class _HomeState extends State<PostFavorDetails>
                           : Container(),
                     )
               : Container(),
-          new Center(
+          Center(
             child: getHalfScreenLoader(
               status: offstageLoader,
               context: context,
             ),
           ),
           Visibility(visible: provider.getLoading(), child: ShimmerDetails())
-          /* new Center(
+          /* Center(
             child: _getLoader,
           ),*/
         ],

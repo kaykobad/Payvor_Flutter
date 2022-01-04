@@ -43,8 +43,8 @@ class _HomeState extends State<ChatMessageDetails>
   var screenSize;
 
   final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
-  ScrollController scrollController = new ScrollController();
+      StreamController<bool>();
+  ScrollController scrollController = ScrollController();
 
   List<String> listOption = ["Report", "Share"];
 
@@ -54,15 +54,15 @@ class _HomeState extends State<ChatMessageDetails>
   int currentPage = 1;
   bool _loadMore = false;
 
-  ScrollController _scrollController = new ScrollController();
+  ScrollController _scrollController = ScrollController();
   var isCurrentUser = false;
 
   bool offstageLoader = false;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
-  FocusNode _DescriptionField = new FocusNode();
+  final GlobalKey<ScaffoldState> _scaffoldKeys = GlobalKey<ScaffoldState>();
+  FocusNode _DescriptionField = FocusNode();
 
   //FavourDetailsResponse favoriteResponse;
   bool isPullToRefresh = false;
@@ -72,11 +72,11 @@ class _HomeState extends State<ChatMessageDetails>
   List<Data> list = List();
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+        .showSnackBar(SnackBar(content: Text(value)));
   }
 
   @override
@@ -162,7 +162,7 @@ class _HomeState extends State<ChatMessageDetails>
   void _setScrollListener() {
     //crollController.position.isScrollingNotifier.addListener(() { print("called");});
 
-    _scrollController = new ScrollController();
+    _scrollController = ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {
@@ -198,7 +198,7 @@ class _HomeState extends State<ChatMessageDetails>
     if (!gotInternetConnection) {
       return;
     }
-    var reportrequest = new ReportPostRequest(
+    var reportrequest = ReportPostRequest(
         favour_id: favoriteResponse?.data?.id?.toString());
 
     var response = await provider.reportUser(reportrequest, context);
@@ -242,7 +242,7 @@ class _HomeState extends State<ChatMessageDetails>
     if (!gotInternetConnection) {
       return;
     }
-    //  var reportrequest=new ReportPostRequest(favour_id: favoriteResponse?.data?.id?.toString());
+    //  var reportrequest=ReportPostRequest(favour_id: favoriteResponse?.data?.id?.toString());
 
     var response = await provider.deletePost(
         favoriteResponse?.data?.id?.toString(), context);
@@ -298,7 +298,7 @@ class _HomeState extends State<ChatMessageDetails>
 
       Navigator.push(
         context,
-        new CupertinoPageRoute(builder: (BuildContext context) {
+        CupertinoPageRoute(builder: (BuildContext context) {
           return Material(child: screen);
         }),
       );
@@ -310,9 +310,9 @@ class _HomeState extends State<ChatMessageDetails>
   /*redirect() async {
     Navigator.push(
       context,
-      new CupertinoPageRoute(builder: (BuildContext context) {
+      CupertinoPageRoute(builder: (BuildContext context) {
         return Material(
-            child: new PostFavour(
+            child: PostFavour(
           favourDetailsResponse: favoriteResponse,
           isEdit: true,
         ));
@@ -332,8 +332,8 @@ class _HomeState extends State<ChatMessageDetails>
 
       Container(
         color: Colors.white,
-      child: new ListView.builder(
-        padding: new EdgeInsets.all(0.0),
+      child: ListView.builder(
+        padding: EdgeInsets.all(0.0),
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
@@ -347,16 +347,16 @@ class _HomeState extends State<ChatMessageDetails>
 
   Widget buildItemSecondNew(Data datas) {
     return Container(
-      margin: new EdgeInsets.only(left: 16.0, right: 16.0),
+      margin: EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: <Widget>[
-          new Container(
+          Container(
             width: 40.0,
             height: 40.0,
             decoration: BoxDecoration(shape: BoxShape.circle),
             alignment: Alignment.center,
             child: ClipOval(
-              // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+              // margin: EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
               child: getCachedNetworkImageWithurl(
                   url: userResponse?.user?.profilePic ?? "",
@@ -365,22 +365,22 @@ class _HomeState extends State<ChatMessageDetails>
             ),
           ),
           Expanded(
-            child: new Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
                     child: Row(
                       children: [
-                        new Text(
+                        Text(
                           userResponse?.user?.name ?? "",
                           style: TextThemes.blackCirculerMedium,
                         ),
-                        new SizedBox(
+                        SizedBox(
                           width: 8,
                         ),
                         userResponse?.user?.perc == 100
-                            ? new Image.asset(
+                            ? Image.asset(
                                 AssetStrings.verify,
                                 width: 16,
                                 height: 16,
@@ -389,19 +389,19 @@ class _HomeState extends State<ChatMessageDetails>
                       ],
                     )),
                 Container(
-                  margin: new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                  margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
                   child: Row(
                     children: [
-                      new Image.asset(
+                      Image.asset(
                         AssetStrings.locationHome,
                         width: 11,
                         height: 14,
                       ),
-                      new SizedBox(
+                      SizedBox(
                         width: 6,
                       ),
                       Expanded(
-                          child: new Text(
+                          child: Text(
                             userResponse?.user?.location ?? "",
                             style: TextThemes.greyDarkTextHomeLocation,
                       )),
@@ -413,7 +413,7 @@ class _HomeState extends State<ChatMessageDetails>
           ),
           Align(
               alignment: Alignment.center,
-              child: new Text(
+              child: Text(
                 "€${datas?.price ?? "0"}",
                 style: TextThemes.blackDarkHeaderSub,
               )),
@@ -425,11 +425,10 @@ class _HomeState extends State<ChatMessageDetails>
   Widget buildItemNew(Data datas) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
+        Navigator.of(context, rootNavigator: true).push(
+          CupertinoPageRoute(builder: (BuildContext context) {
             return Material(
-                child: new PostFavorDetails(
+                child: PostFavorDetails(
               id: datas?.id?.toString(),
               isButtonDesabled: true,
             ));
@@ -440,29 +439,24 @@ class _HomeState extends State<ChatMessageDetails>
         color: Colors.white,
         child: Column(
           children: <Widget>[
-            new Container(
-              height: 8.0,
-              color: AppColors.whiteGray,
-            ),
-            new SizedBox(
-              height: 16.0,
-            ),
+            Container(height: 8.0, color: AppColors.whiteGray),
+            SizedBox(height: 16.0),
             buildItemSecondNew(datas),
             Opacity(
               opacity: 0.12,
-              child: new Container(
+              child: Container(
                 height: 1.0,
-                margin: new EdgeInsets.only(left: 17.0, right: 17.0, top: 16.0),
+                margin: EdgeInsets.only(left: 17.0, right: 17.0, top: 16.0),
                 color: AppColors.dividerColor,
               ),
             ),
-            datas?.image != null ? new Container(
+            datas?.image != null ? Container(
               height: 147,
               width: double.infinity,
-              margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
+              margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
               child: ClipRRect(
-                // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                borderRadius: new BorderRadius.circular(10.0),
+                // margin: EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                borderRadius: BorderRadius.circular(10.0),
 
                 child: getCachedNetworkImageRect(
                   url: datas?.image ?? "",
@@ -473,14 +467,14 @@ class _HomeState extends State<ChatMessageDetails>
             Container(
                 width: double.infinity,
                 color: Colors.white,
-                margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+                margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
                 alignment: Alignment.centerLeft,
-                child: new Text(
+                child: Text(
                   datas?.title ?? "",
                   style: TextThemes.blackCirculerMediumHeight,
                 )),
             Container(
-              margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+              margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
               width: double.infinity,
               color: Colors.white,
               child: ReadMoreText(
@@ -488,7 +482,7 @@ class _HomeState extends State<ChatMessageDetails>
                 trimLines: 4,
                 colorClickableText: AppColors.colorDarkCyan,
                 trimMode: TrimMode.Line,
-                style: new TextStyle(
+                style: TextStyle(
                   color: AppColors.moreText,
                   fontFamily: AssetStrings.circulerNormal,
                   fontSize: 14.0,
@@ -498,7 +492,7 @@ class _HomeState extends State<ChatMessageDetails>
                 trimExpandedText: ' less',
               ),
             ),
-            new SizedBox(
+            SizedBox(
               height: 15.0,
             )
           ],
@@ -515,22 +509,22 @@ class _HomeState extends State<ChatMessageDetails>
       key: _scaffoldKey,
       body: Stack(
         children: <Widget>[
-          new Container(
+          Container(
             color: AppColors.whiteGray,
             height: screenSize.height,
             child: userResponse != null
                 ? SingleChildScrollView(
               controller: _scrollController,
-              child: new Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Stack(
                     children: [
-                      new Container(
+                      Container(
                         height: 165,
                         color: Colors.white,
                       ),
-                      new Container(
+                      Container(
                         height: 120,
                         color: AppColors.kPrimaryBlue,
                       ),
@@ -539,12 +533,12 @@ class _HomeState extends State<ChatMessageDetails>
                               width: getScreenSize(context: context).width,
                               child: Container(
                                 alignment: Alignment.center,
-                                decoration: new BoxDecoration(
+                                decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    border: new Border.all(
+                                    border: Border.all(
                                         width: 2, color: Colors.white)),
                                 child: ClipOval(
-                                  // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                                  // margin: EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
                                   child: getCachedNetworkImageWithurl(
                                     url: userResponse?.user?.profilePic ?? "",
@@ -557,18 +551,18 @@ class _HomeState extends State<ChatMessageDetails>
                     ],
                   ),
                   Container(
-                    padding: new EdgeInsets.only(top: 6),
-                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+                    padding: EdgeInsets.only(top: 6),
+                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
                     color: Colors.white,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                            child: new Text(
+                            child: Text(
                               userResponse?.user?.name ?? "",
                               style: TextThemes.darkBlackMedium,
                             )),
-                        new SizedBox(
+                        SizedBox(
                           width: 2,
                         ),
                         userResponse?.user?.perc == 100
@@ -583,27 +577,27 @@ class _HomeState extends State<ChatMessageDetails>
                   ),
                   Container(
                     color: Colors.white,
-                    padding: new EdgeInsets.only(top: 4),
+                    padding: EdgeInsets.only(top: 4),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                              new Image.asset(
+                              Image.asset(
                                 AssetStrings.rating,
                                 width: 13,
                                 height: 13,
                               ),
-                              new SizedBox(
+                              SizedBox(
                                 width: 4,
                               ),
                               Container(
-                                  child: new Text(
+                                  child: Text(
                                 userResponse?.user?.ratingAvg?.toString() ?? "",
                                 style: TextThemes.blackTextSmallMedium,
                               )),
                               Container(
                                 width: 3,
                                 height: 3,
-                                margin: new EdgeInsets.only(left: 5, right: 5),
+                                margin: EdgeInsets.only(left: 5, right: 5),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.darkgrey,
@@ -614,10 +608,10 @@ class _HomeState extends State<ChatMessageDetails>
                                   print("review_post from chat screen");
                                   Navigator.push(
                                     context,
-                                    new CupertinoPageRoute(
+                                    CupertinoPageRoute(
                                         builder: (BuildContext context) {
                                       return Material(
-                                          child: new ReviewPost(
+                                          child: ReviewPost(
                                         id: widget?.hireduserId?.toString() ??
                                             "",
                                       ));
@@ -625,7 +619,7 @@ class _HomeState extends State<ChatMessageDetails>
                                   );
                                 },
                                 child: Container(
-                                    child: new Text(
+                                    child: Text(
                                   "${userResponse?.user?.ratingCount?.toString() ?? "0"} Reviews",
                                   style: TextThemes.blueMediumSmall,
                                 )),
@@ -637,27 +631,27 @@ class _HomeState extends State<ChatMessageDetails>
                           elevation: 0.0,
                           child: Container(
                               color: Colors.white,
-                              padding: new EdgeInsets.only(top: 20, bottom: 10),
+                              padding: EdgeInsets.only(top: 20, bottom: 10),
                               child: getSetupButtonNewRow(
                                   callback, "Message", 16,
                                   newColor: AppColors.colorDarkCyan)),
                         ),
                         list.length > 0
                             ? Container(
-                                margin: new EdgeInsets.only(
+                                margin: EdgeInsets.only(
                                     left: 16, right: 16, top: 22, bottom: 10),
                                 alignment: Alignment.centerLeft,
-                                child: new Text(
+                                child: Text(
                                   "All Posts",
                                   style: TextThemes.blackCirculerMediumHeight,
                                 ))
                             : Container(
-                                margin: new EdgeInsets.only(top: 100),
-                                child: new Center(
+                                margin: EdgeInsets.only(top: 100),
+                                child: Center(
 
-                      child: new Text(
+                      child: Text(
                         "No Favors Found",
-                        style: new TextStyle(
+                        style: TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.bold,
                             fontSize: 16.0),
@@ -666,7 +660,7 @@ class _HomeState extends State<ChatMessageDetails>
 
                   ),
                   _buildContestList(),
-                  new SizedBox(
+                  SizedBox(
                     height: 10,
                   )
                 ],
@@ -676,10 +670,10 @@ class _HomeState extends State<ChatMessageDetails>
           ),
           Offstage(
             offstage: true,
-            child: new Center(
-              child: new Text(
+            child: Center(
+              child: Text(
                 "No Favors Found",
-                style: new TextStyle(
+                style: TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0),
@@ -691,12 +685,12 @@ class _HomeState extends State<ChatMessageDetails>
               left: 0.0,
               right: 0.0,
               child: Container(
-                margin: new EdgeInsets.only(
+                margin: EdgeInsets.only(
                   top: 30,
                   left: 16,
                   right: 5,
                 ),
-                child: new Padding(
+                child: Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -705,7 +699,7 @@ class _HomeState extends State<ChatMessageDetails>
                         child: Container(
                           width: 30.0,
                           height: 30.0,
-                          padding: new EdgeInsets.all(8),
+                          padding: EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                           ),
@@ -713,7 +707,7 @@ class _HomeState extends State<ChatMessageDetails>
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            child: new SvgPicture.asset(
+                            child: SvgPicture.asset(
                               AssetStrings.back,
                               width: 21.0,
                               height: 18.0,
@@ -727,7 +721,7 @@ class _HomeState extends State<ChatMessageDetails>
                         child: Container(
                           width: 30.0,
                           height: 30.0,
-                          padding: new EdgeInsets.all(8),
+                          padding: EdgeInsets.all(8),
                           decoration: BoxDecoration(
                               color: AppColors.greyProfile.withOpacity(0.4),
                               shape: BoxShape.circle,
@@ -741,7 +735,7 @@ class _HomeState extends State<ChatMessageDetails>
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            child: new SvgPicture.asset(
+                            child: SvgPicture.asset(
                               AssetStrings.back,
                               width: 21.0,
                               height: 18.0,
@@ -761,7 +755,7 @@ class _HomeState extends State<ChatMessageDetails>
                           ),
                           child: GestureDetector(
                               onTapDown: (TapDownDetails details) {},
-                              child: new Icon(
+                              child: Icon(
                                 Icons.more_vert,
                                 color: Colors.white,
                               )),
@@ -780,7 +774,7 @@ class _HomeState extends State<ChatMessageDetails>
               elevation: 18.0,
               child: Container(
                   color: Colors.white,
-                  padding: new EdgeInsets.only(top: 9, bottom: 28),
+                  padding: EdgeInsets.only(top: 9, bottom: 28),
                   child: getSetupButtonNew(
                       callback, ResString().get('apply_for_fav'), 16,
                       newColor: AppColors.colorDarkCyan)),
@@ -788,13 +782,13 @@ class _HomeState extends State<ChatMessageDetails>
           )
               : Container(),*/
 
-          new Center(
+          Center(
             child: getHalfScreenLoader(
               status: provider.getLoading(),
               context: context,
             ),
           ),
-          /* new Center(
+          /* Center(
             child: _getLoader,
           ),*/
         ],
