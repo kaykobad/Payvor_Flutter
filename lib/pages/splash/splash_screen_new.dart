@@ -18,12 +18,12 @@ class SplashScreen extends StatefulWidget {
 enum UniLinksType { string, uri }
 
 class FadeIn extends State<SplashScreen> {
-  String _initialLink;
-  Uri _initialUri;
-  String _latestLink = 'Unknown';
-  Uri _latestUri;
-  StreamSubscription _sub;
-  UniLinksType _type = UniLinksType.string;
+  // String _initialLink;
+  // Uri _initialUri;
+  // String _latestLink = 'Unknown';
+  // Uri _latestUri;
+  // StreamSubscription _sub;
+  // UniLinksType _type = UniLinksType.string;
 
   @override
   void initState() {
@@ -202,7 +202,8 @@ class FadeIn extends State<SplashScreen> {
 
     var screenType = MemoryManagement.getScreenType();
     print("screen type $screenType");
-    Timer _timer = Timer(const Duration(seconds: 3), () {
+    // Timer _timer = Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 3), () {
       if (screenType == "1") {
         Navigator.pushAndRemoveUntil(
           context,

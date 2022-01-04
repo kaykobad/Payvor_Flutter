@@ -259,7 +259,7 @@ Widget getSetupButtonNew(VoidCallback callback, String text, double margin,
               Text(
                 text,
                 style: TextStyle(
-                  fontFamily: AssetStrings.circulerNormal,
+                  fontFamily: AssetStrings.circulerMedium,
                   fontSize: 16,
                   color: Colors.white,
                 ),
@@ -442,7 +442,7 @@ Widget getSetupButtonBorderNew(VoidCallback callback, String text, double margin
             child: Text(
               text,
               style: TextStyle(
-                fontFamily: AssetStrings.circulerNormal,
+                fontFamily: AssetStrings.circulerMedium,
                 fontSize: 16,
                 color: textColor,
               ),
