@@ -536,18 +536,20 @@ class _HomeState extends State<SearchHomeByName>
 
 
             listResult.length == 0 && list.length == 0 ? Container(
+              color: AppColors.whiteGray,
               margin: EdgeInsets.only(top: 120),
               child: Center(
                 child: Text(
                   "No Favors Found",
                   style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0),
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
                 ),
               ),
             )
-                : Container(),
+                : Container(color: AppColors.whiteGray),
 
 
             Center(
@@ -584,30 +586,21 @@ class _HomeState extends State<SearchHomeByName>
               ),
             ),
           ),
-          SizedBox(
-            width: 10.0,
-          ),
+          SizedBox(width: 10.0),
           Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3.0),
-                color: AppColors.lightWhite),
+              borderRadius: BorderRadius.circular(3.0),
+              color: AppColors.lightWhite,
+            ),
             child: Container(
               width: getScreenSize(context: context).width - 65,
               height: 46.0,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  Image.asset(
-                    AssetStrings.searches,
-                    width: 18.0,
-                    height: 18.0,
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
+                  SizedBox(width: 10.0),
+                  Image.asset(AssetStrings.searches, width: 18.0, height: 18.0),
+                  SizedBox(width: 10.0),
                   Flexible(
                     child: TextField(
                       controller: _controller,
@@ -615,17 +608,13 @@ class _HomeState extends State<SearchHomeByName>
                       keyboardType: TextInputType.text,
                       keyboardAppearance: Brightness.light,
                       onSubmitted: (String value) {
-                        if (value
-                            .trim()
-                            .length > 0) {
+                        if (value.trim().length > 0) {
                           isPullToRefresh = false;
                           _loadMore = false;
                           currentPage = 1;
                           text = value;
                           title = value;
-
                           hitSearchApi(title);
-
                         }
                       },
                       onChanged: (String value) {
@@ -634,17 +623,13 @@ class _HomeState extends State<SearchHomeByName>
                         _loadMoreSuggest = false;
 
                         text = value;
-                        if (value
-                            .trim()
-                            .isEmpty) {
+                        if (value.trim().isEmpty) {
                           listResult.clear();
                           list.clear();
                           if (listRecent != null && listRecent.length > 0) {
                             list.addAll(listRecent);
                           }
-                          setState(() {
-
-                          });
+                          setState(() {});
                         }
                         else {
                           hitSearchSuggestApi(value.trim());
@@ -659,13 +644,10 @@ class _HomeState extends State<SearchHomeByName>
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 4.0,
-                  ),
+                  SizedBox(width: 4.0),
                   InkWell(
                     onTap: () {
                       _controller.text = "";
-                      ;
                       text = "";
                       currentPageSuggest = 1;
                       _loadMore = false;
@@ -676,14 +658,17 @@ class _HomeState extends State<SearchHomeByName>
                       if (listRecent != null && listRecent.length > 0) {
                         list.addAll(listRecent);
                       }
-                      setState(() {
-
-                      });
+                      setState(() {});
                     },
-                    child: Image.asset(
-                      AssetStrings.clean,
-                      width: 18.0,
-                      height: 18.0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      child: Image.asset(
+                        AssetStrings.clean,
+                        width: 18.0,
+                        height: 18.0,
+                        color: Color(0xFF5A5959),
+                        colorBlendMode: BlendMode.dstATop,
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -709,7 +694,7 @@ class _HomeState extends State<SearchHomeByName>
             await hitSearchSuggestApi(text);
           },
           child: Container(
-            color: Colors.white,
+            color: AppColors.whiteGray,
             child: ListView.builder(
               padding: EdgeInsets.all(0.0),
               controller: _scrollControllerSuggest,
