@@ -37,10 +37,10 @@ class _HomeState extends State<SearchHomeByName>
   Widget widgets;
 
   final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
-  TextEditingController _controller = new TextEditingController();
-  ScrollController _scrollController = new ScrollController();
-  ScrollController _scrollControllerSuggest = new ScrollController();
+      StreamController<bool>();
+  TextEditingController _controller = TextEditingController();
+  ScrollController _scrollController = ScrollController();
+  ScrollController _scrollControllerSuggest = ScrollController();
   int count = 0;
 
   bool _loadMore = false;
@@ -59,14 +59,14 @@ class _HomeState extends State<SearchHomeByName>
 
   bool isSearchCalled = true;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+        .showSnackBar(SnackBar(content: Text(value)));
   }
 
   @override
@@ -136,8 +136,8 @@ class _HomeState extends State<SearchHomeByName>
       if (response != null && response.data != null) {
         if (currentPage == 1) {
           try {
-            var now = new DateTime.now();
-            var date = new DateFormat("yyyy-MM-dd HH:mm:ss");
+            var now = DateTime.now();
+            var date = DateFormat("yyyy-MM-dd HH:mm:ss");
 
             var createAt = date.format(now);
             RecentSearch recentSearch = RecentSearch(
@@ -197,8 +197,8 @@ class _HomeState extends State<SearchHomeByName>
         },
         child: Container(
           color: AppColors.whiteGray,
-          child: new ListView.builder(
-            padding: new EdgeInsets.all(0.0),
+          child: ListView.builder(
+            padding: EdgeInsets.all(0.0),
             controller: _scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
@@ -215,11 +215,10 @@ class _HomeState extends State<SearchHomeByName>
     print("image_url ${data.user.profilePic}");
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
+        Navigator.of(context, rootNavigator: true).push(
+          CupertinoPageRoute(builder: (BuildContext context) {
             return Material(
-                child: new PostFavorDetails(
+              child: PostFavorDetails(
               id: data.id.toString(),
               distance: data?.distance ?? "",
             ));
@@ -230,30 +229,30 @@ class _HomeState extends State<SearchHomeByName>
         color: Colors.white,
         child: Column(
           children: <Widget>[
-            new Container(
+            Container(
               height: 8.0,
               color: AppColors.whiteGray,
             ),
-            new SizedBox(
+            SizedBox(
               height: 16.0,
             ),
             buildItemSearchNew(data),
             Opacity(
               opacity: 0.12,
-              child: new Container(
+              child: Container(
                 height: 1.0,
-                margin: new EdgeInsets.only(left: 17.0, right: 17.0, top: 16.0),
+                margin: EdgeInsets.only(left: 17.0, right: 17.0, top: 16.0),
                 color: AppColors.dividerColor,
               ),
             ),
-            data?.image != null && data.image.isNotEmpty ? new Container(
+            data?.image != null && data.image.isNotEmpty ? Container(
               height: 147,
               width: double.infinity,
               margin:
-              new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
+              EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
               child: ClipRRect(
-                // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                borderRadius: new BorderRadius.circular(10.0),
+                // margin: EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                borderRadius: BorderRadius.circular(10.0),
 
                 child: getCachedNetworkImageRect(
                   url: data?.image,
@@ -265,14 +264,14 @@ class _HomeState extends State<SearchHomeByName>
             Container(
                 width: double.infinity,
                 color: Colors.white,
-                margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+                margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
                 alignment: Alignment.centerLeft,
-                child: new Text(
+                child: Text(
                   data?.title ?? "",
                   style: TextThemes.blackCirculerMediumHeight,
                 )),
             Container(
-              margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+              margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
               width: double.infinity,
               color: Colors.white,
               child: ReadMoreText(
@@ -280,7 +279,7 @@ class _HomeState extends State<SearchHomeByName>
                 trimLines: 4,
                 colorClickableText: AppColors.colorDarkCyan,
                 trimMode: TrimMode.Line,
-                style: new TextStyle(
+                style: TextStyle(
                   color: AppColors.moreText,
                   fontFamily: AssetStrings.circulerNormal,
                   fontSize: 14.0,
@@ -290,7 +289,7 @@ class _HomeState extends State<SearchHomeByName>
                 trimExpandedText: ' less',
               ),
             ),
-            new SizedBox(
+            SizedBox(
               height: 15.0,
             )
           ],
@@ -306,38 +305,38 @@ class _HomeState extends State<SearchHomeByName>
     }
 
     return Container(
-      margin: new EdgeInsets.only(left: 16.0, right: 16.0),
+      margin: EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: <Widget>[
-          new Container(
+          Container(
             width: 40.0,
             height: 40.0,
             decoration: BoxDecoration(shape: BoxShape.circle),
             alignment: Alignment.center,
             child: ClipOval(
-              // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+              // margin: EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
               child: getCachedNetworkImageWithurl(
                   url: data.user?.profilePic ?? "", fit: BoxFit.fill, size: 40),
             ),
           ),
           Expanded(
-            child: new Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
                     child: Row(
                       children: [
-                        new Text(
+                        Text(
                           data?.user?.name ?? "",
                           style: TextThemes.blackCirculerMedium,
                         ),
-                        new SizedBox(
+                        SizedBox(
                           width: 8,
                         ),
                         data?.user?.perc == 100
-                            ? new Image.asset(
+                            ? Image.asset(
                           AssetStrings.verify,
                           width: 16,
                           height: 16,
@@ -346,21 +345,21 @@ class _HomeState extends State<SearchHomeByName>
                       ],
                     )),
                 Container(
-                  margin: new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                  margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
                   child: Row(
                     children: [
-                      new Image.asset(
+                      Image.asset(
                         AssetStrings.locationHome,
                         width: 11,
                         height: 14,
                       ),
-                      new SizedBox(
+                      SizedBox(
                         width: 6,
                       ),
                       Expanded(
                         child: Container(
                           child: Container(
-                            child: new Text(
+                            child: Text(
                               data?.location + " - " + distance,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
@@ -377,7 +376,7 @@ class _HomeState extends State<SearchHomeByName>
           ),
           Align(
               alignment: Alignment.center,
-              child: new Text(
+              child: Text(
                 "€${data.price ?? "0"}",
                 style: TextThemes.blackDarkHeaderSub,
               )),
@@ -465,7 +464,7 @@ class _HomeState extends State<SearchHomeByName>
   void _setScrollListener() {
     //crollController.position.isScrollingNotifier.addListener(() { print("called");});
 
-    _scrollController = new ScrollController();
+    _scrollController = ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {
@@ -511,20 +510,20 @@ class _HomeState extends State<SearchHomeByName>
        // backgroundColor: AppColors.bluePrimary,
         body: Stack(
           children: <Widget>[
-            new Container(
+            Container(
               color: Colors.white,
-              child: new Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  new Container(
+                  Container(
                     height: 50.0,
                   ),
                   getTextField(),
                   Opacity(
                     opacity: 0.7,
-                    child: new Container(
+                    child: Container(
                       height: 0.5,
-                      margin: new EdgeInsets.only(top: 16.0),
+                      margin: EdgeInsets.only(top: 16.0),
                       color: AppColors.dividerColor,
                     ),
                   ),
@@ -537,11 +536,11 @@ class _HomeState extends State<SearchHomeByName>
 
 
             listResult.length == 0 && list.length == 0 ? Container(
-              margin: new EdgeInsets.only(top: 120),
-              child: new Center(
-                child: new Text(
+              margin: EdgeInsets.only(top: 120),
+              child: Center(
+                child: Text(
                   "No Favors Found",
-                  style: new TextStyle(
+                  style: TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0),
@@ -551,9 +550,9 @@ class _HomeState extends State<SearchHomeByName>
                 : Container(),
 
 
-            new Center(
+            Center(
               child: Container(
-                margin: new EdgeInsets.only(top: 50),
+                margin: EdgeInsets.only(top: 50),
                 child: getHalfScreenLoader(
                   status: provider.getLoading(),
                   context: context,
@@ -568,7 +567,7 @@ class _HomeState extends State<SearchHomeByName>
 
   Widget getTextField() {
     return Container(
-      margin: new EdgeInsets.only(left: 16.0, right: 16.0),
+      margin: EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: [
           Container(
@@ -577,20 +576,20 @@ class _HomeState extends State<SearchHomeByName>
               onTap: () {
                 Navigator.pop(context);
               },
-              child: new Padding(
+              child: Padding(
                 padding: const EdgeInsets.all(1.0),
-                child: new SvgPicture.asset(
+                child: SvgPicture.asset(
                   AssetStrings.back,
                 ),
               ),
             ),
           ),
-          new SizedBox(
+          SizedBox(
             width: 10.0,
           ),
           Container(
-            decoration: new BoxDecoration(
-                borderRadius: new BorderRadius.circular(3.0),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3.0),
                 color: AppColors.lightWhite),
             child: Container(
               width: getScreenSize(context: context).width - 65,
@@ -598,19 +597,19 @@ class _HomeState extends State<SearchHomeByName>
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  new SizedBox(
+                  SizedBox(
                     width: 10.0,
                   ),
-                  new Image.asset(
+                  Image.asset(
                     AssetStrings.searches,
                     width: 18.0,
                     height: 18.0,
                   ),
-                  new SizedBox(
+                  SizedBox(
                     width: 10.0,
                   ),
                   Flexible(
-                    child: new TextField(
+                    child: TextField(
                       controller: _controller,
                       style: TextThemes.blackTextFieldNormal,
                       keyboardType: TextInputType.text,
@@ -651,16 +650,16 @@ class _HomeState extends State<SearchHomeByName>
                           hitSearchSuggestApi(value.trim());
                         }
                       },
-                      decoration: new InputDecoration(
+                      decoration: InputDecoration(
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
-                        contentPadding: new EdgeInsets.only(bottom: 3.0),
+                        contentPadding: EdgeInsets.only(bottom: 3.0),
                         hintText: "Search here by name",
                         hintStyle: TextThemes.greyTextNormal,
                       ),
                     ),
                   ),
-                  new SizedBox(
+                  SizedBox(
                     width: 4.0,
                   ),
                   InkWell(
@@ -681,13 +680,13 @@ class _HomeState extends State<SearchHomeByName>
 
                       });
                     },
-                    child: new Image.asset(
+                    child: Image.asset(
                       AssetStrings.clean,
                       width: 18.0,
                       height: 18.0,
                     ),
                   ),
-                  new SizedBox(
+                  SizedBox(
                     width: 10.0,
                   ),
                 ],
@@ -711,8 +710,8 @@ class _HomeState extends State<SearchHomeByName>
           },
           child: Container(
             color: Colors.white,
-            child: new ListView.builder(
-              padding: new EdgeInsets.all(0.0),
+            child: ListView.builder(
+              padding: EdgeInsets.all(0.0),
               controller: _scrollControllerSuggest,
               physics: const AlwaysScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
@@ -741,11 +740,11 @@ class _HomeState extends State<SearchHomeByName>
       child: Column(
         children: [
           keyword == "Recent Searches" ? Container(
-            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 30),
+            margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 30),
             alignment: Alignment.centerLeft,
-            child: new Text(
+            child: Text(
               "Recent Searches",
-              style: new TextStyle(
+              style: TextStyle(
                   color: Colors.black,
                   fontFamily: AssetStrings.circulerMedium,
                   fontSize: 18.0),
@@ -768,11 +767,11 @@ class _HomeState extends State<SearchHomeByName>
       child: Column(
         children: [
           pos == 0 ? Container(
-            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
+            margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
             alignment: Alignment.centerLeft,
-            child: new Text(
+            child: Text(
               "Suggested Searches",
-              style: new TextStyle(
+              style: TextStyle(
                   color: Colors.black,
                   fontFamily: AssetStrings.circulerMedium,
                   fontSize: 18.0),
@@ -794,22 +793,22 @@ class _HomeState extends State<SearchHomeByName>
 
       },
       child: Container(
-        padding: new EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
+        padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            new SvgPicture.asset(
+            SvgPicture.asset(
               AssetStrings.searchSuggest,
             ),
-            new SizedBox(
+            SizedBox(
               width: 14,
             ),
             Expanded(
               child: Container(
 
-                child: new Text(
+                child: Text(
                   datas?.title,
-                  style: new TextStyle(
+                  style: TextStyle(
                     color: Colors.black,
                     fontFamily: AssetStrings.circulerNormal,
                     fontSize: 15,
@@ -823,11 +822,11 @@ class _HomeState extends State<SearchHomeByName>
               ),
             ),
 
-            new SizedBox(
+            SizedBox(
               width: 8,
             ),
 
-            new SvgPicture.asset(
+            SvgPicture.asset(
               AssetStrings.pathSuggest,
             ),
           ],
@@ -847,26 +846,26 @@ class _HomeState extends State<SearchHomeByName>
 
       },
       child: Container(
-        padding: new EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
+        padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
         child: Container(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
 
 
-              new SvgPicture.asset(
+              SvgPicture.asset(
                 AssetStrings.recentSuggest,
               ),
 
-              new SizedBox(
+              SizedBox(
                 width: 14,
               ),
               Expanded(
                 child: Container(
 
-                  child: new Text(
+                  child: Text(
                     keyword ?? "",
-                    style: new TextStyle(
+                    style: TextStyle(
                       color: Colors.black,
                       fontFamily: AssetStrings.circulerNormal,
                       fontSize: 15,
@@ -880,7 +879,7 @@ class _HomeState extends State<SearchHomeByName>
                 ),
               ),
 
-              new SizedBox(
+              SizedBox(
                 width: 8,
               ),
 
@@ -894,7 +893,7 @@ class _HomeState extends State<SearchHomeByName>
                    });
                 },
                 child: Center(
-                  child: new SvgPicture.asset(
+                  child: SvgPicture.asset(
                     AssetStrings.cancelSuggest,
                   ),
                 ),

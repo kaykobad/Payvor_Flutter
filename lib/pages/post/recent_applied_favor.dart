@@ -40,21 +40,21 @@ class _HomeState extends State<RecentAppliedFavor>
   List<Object> listResult = List();
 
   final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
-  TextEditingController _controller = new TextEditingController();
-  ScrollController scrollController = new ScrollController();
+      StreamController<bool>();
+  TextEditingController _controller = TextEditingController();
+  ScrollController scrollController = ScrollController();
   bool _loadMore = false;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   Widget widgets;
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+        .showSnackBar(SnackBar(content: Text(value)));
   }
 
   @override
@@ -196,7 +196,7 @@ class _HomeState extends State<RecentAppliedFavor>
   void _setScrollListener() {
     //scrollController.position.isScrollingNotifier.addListener(() { print("called");});
 
-    scrollController = new ScrollController();
+    scrollController = ScrollController();
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -212,43 +212,43 @@ class _HomeState extends State<RecentAppliedFavor>
   Widget buildItem(int index, Datas data) {
     return InkWell(
       onTap: () {
-        providerFirebase?.changeScreen(new PostFavorDetails(
+        providerFirebase?.changeScreen(PostFavorDetails(
           id: data?.favourId?.toString(),
           isButtonDesabled: true,
-        ));
+        ), rootNavigator: true);
       },
       child: Container(
-        padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
-        margin: new EdgeInsets.only(top: 8.0),
-        decoration: new BoxDecoration(
-          borderRadius: new BorderRadius.circular(5.0),
+        padding: EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
+        margin: EdgeInsets.only(top: 8.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
           color: Colors.white,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            /*  new Container(
-              margin: new EdgeInsets.only(top: 10.0),
-              child: new Text(
+            /*  Container(
+              margin: EdgeInsets.only(top: 10.0),
+              child: Text(
                 data?.favour?.title ?? "",
                 style: TextThemes.blackCirculerMedium,
               ),
             ),
             Opacity(
               opacity: 0.12,
-              child: new Container(
-                margin: new EdgeInsets.only(top: 30.0),
+              child: Container(
+                margin: EdgeInsets.only(top: 30.0),
                 height: 1.0,
                 color: AppColors.dividerColor,
               ),
             ),*/
             Container(
-              child: new Row(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: Container(
-                      child: new Text(
+                      child: Text(
                         data?.favour?.title ?? "",
                         style: TextThemes.blackCirculerMedium,
                         maxLines: 3,
@@ -257,8 +257,8 @@ class _HomeState extends State<RecentAppliedFavor>
                     ),
                   ),
                   Container(
-                    margin: new EdgeInsets.only(left: 7.0),
-                    child: new Icon(
+                    margin: EdgeInsets.only(left: 7.0),
+                    child: Icon(
                       Icons.arrow_forward_ios,
                       size: 13,
                       color: Color.fromRGBO(183, 183, 183, 1),
@@ -281,11 +281,11 @@ class _HomeState extends State<RecentAppliedFavor>
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: new AppBar(
+      appBar: AppBar(
         elevation: 1,
-        title: new Text(
+        title: Text(
           "Recent Applied Favors",
-          style: new TextStyle(color: Colors.black, fontSize: 18),
+          style: TextStyle(color: Colors.black, fontSize: 18),
         ),
         iconTheme: IconThemeData(
           color: Colors.black, //change your color here
@@ -296,10 +296,10 @@ class _HomeState extends State<RecentAppliedFavor>
       backgroundColor: AppColors.whiteGray,
       body: Stack(
         children: <Widget>[
-          new Container(
+          Container(
             color: AppColors.whiteGray,
             height: getScreenSize(context: context).height,
-            child: new Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 _buildContestList(),
@@ -310,35 +310,35 @@ class _HomeState extends State<RecentAppliedFavor>
             offstage: offstagenodata,
             child: Container(
               height: screenSize.height,
-              padding: new EdgeInsets.only(bottom: 40),
-              child: new Center(
+              padding: EdgeInsets.only(bottom: 40),
+              child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     InkWell(
                       onTap: () {},
-                      child: new Image.asset(
+                      child: Image.asset(
                         AssetStrings.noPosts,
                         width: 150,
                         height: 150,
                       ),
                     ),
                     Container(
-                      margin: new EdgeInsets.only(top: 10),
-                      child: new Text(
+                      margin: EdgeInsets.only(top: 10),
+                      child: Text(
                         "No Jobs",
-                        style: new TextStyle(
+                        style: TextStyle(
                             color: Colors.black,
                             fontFamily: AssetStrings.circulerMedium,
                             fontSize: 17.0),
                       ),
                     ),
                     Container(
-                      margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
-                      child: new Text(
+                      margin: EdgeInsets.only(top: 9, left: 20, right: 20),
+                      child: Text(
                         "You don’t have any job yet.\nOnce you’re hired it will show up here.",
                         textAlign: TextAlign.center,
-                        style: new TextStyle(
+                        style: TextStyle(
                             height: 1.5,
                             color: Color.fromRGBO(103, 99, 99, 1.0),
                             fontFamily: AssetStrings.circulerNormal,
@@ -351,14 +351,14 @@ class _HomeState extends State<RecentAppliedFavor>
             ),
           ),
           Container(
-            child: new Center(
+            child: Center(
               child: getHalfScreenLoader(
                 status: provider.getLoading(),
                 context: context,
               ),
             ),
           ),
-          /* new Center(
+          /* Center(
             child: _getLoader,
           ),*/
         ],
@@ -378,9 +378,9 @@ class _HomeState extends State<RecentAppliedFavor>
         await hitPostedApi();
       },
       child: Container(
-        margin: new EdgeInsets.only(left: 16, right: 16),
-        child: new ListView.builder(
-          padding: new EdgeInsets.all(0.0),
+        margin: EdgeInsets.only(left: 16, right: 16),
+        child: ListView.builder(
+          padding: EdgeInsets.all(0.0),
           physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             if (listResult[index] is Datas) {

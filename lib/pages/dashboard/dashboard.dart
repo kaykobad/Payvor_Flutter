@@ -483,9 +483,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       )));
     } else {
       // for apploed and refered favor( type 3,4 etc)
-      _firebaseProvider?.changeScreen(PostFavorDetails(
-        id: favid.toString(),
-      ));
+      _firebaseProvider?.changeScreen(PostFavorDetails(id: favid.toString()), rootNavigator: true);
     }
   }
 

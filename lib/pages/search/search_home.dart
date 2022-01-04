@@ -562,8 +562,7 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
   bool get wantKeepAlive => true;
 
   gotoPostDetails(int pos, Datas data) async {
-    var sss = await Navigator.push(
-      context,
+    var sss = await Navigator.of(context, rootNavigator: true).push(
       CupertinoPageRoute(
         builder: (BuildContext context) {
           return PostFavorDetails(

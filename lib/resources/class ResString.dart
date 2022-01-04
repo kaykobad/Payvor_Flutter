@@ -106,7 +106,7 @@ class ResString {
     'job_payment': 'Job payment',
     'payvor_service_fee': 'Payvor service fee ',
     'you_all_receive': 'You’ll receive',
-    'apply_for_fav': 'Apply for the favor',
+    'apply_for_fav': 'Apply Favor',
     'payment_brkdown': 'Payment Breakdown',
     'card_number': 'Card Number',
     'card_name': 'Card Name',
