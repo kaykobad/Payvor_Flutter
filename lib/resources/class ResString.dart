@@ -94,7 +94,7 @@ class ResString {
     'post_favour': 'Post a Favor',
     'upload_photo': '+Upload Photo',
     'photo_not_mandetry': '(Photo is not mendatory)',
-    'title': 'Title',
+    'title': 'Title*',
     'price': 'Price',
     'description': 'Description',
     'location': 'Location',
