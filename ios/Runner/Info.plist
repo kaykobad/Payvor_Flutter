@@ -53,10 +53,12 @@
 	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 	<dict>
 		<key>TemporaryPreciseAccuracy</key>
-		<string>The example App requires temporary access to the devices precise location.</string>
+		<string>The App requires temporary access to the devices precise location.</string>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>The example App requires access to the devices location.</string>
+	<string>The App requires access to the devices location to provide better search results and favors around you.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+  <string>The App requires access to the devices location to provide better search results and favors around you.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) picking photos from gallery while creating post.</string>
 	<key>Perimity</key>
