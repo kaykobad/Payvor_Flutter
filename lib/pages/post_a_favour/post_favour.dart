@@ -40,21 +40,21 @@ class _HomeState extends State<PostFavour>
     with AutomaticKeepAliveClientMixin<PostFavour> {
   var screenSize;
 
-   ScrollController scrollController = new ScrollController();
+   ScrollController scrollController = ScrollController();
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  TextEditingController _TitleController = new TextEditingController();
-  TextEditingController _PriceController = new TextEditingController();
-  TextEditingController _DescriptionController = new TextEditingController();
-  TextEditingController _LocationController = new TextEditingController();
-  TextEditingController _LatLongController = new TextEditingController();
+  TextEditingController _TitleController = TextEditingController();
+  TextEditingController _PriceController = TextEditingController();
+  TextEditingController _DescriptionController = TextEditingController();
+  TextEditingController _LocationController = TextEditingController();
+  TextEditingController _LatLongController = TextEditingController();
 
-  final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
-  FocusNode _TitleField = new FocusNode();
-  FocusNode _PriceField = new FocusNode();
-  FocusNode _DescriptionField = new FocusNode();
-  FocusNode _LocationField = new FocusNode();
+  final GlobalKey<ScaffoldState> _scaffoldKeys = GlobalKey<ScaffoldState>();
+  FocusNode _TitleField = FocusNode();
+  FocusNode _PriceField = FocusNode();
+  FocusNode _DescriptionField = FocusNode();
+  FocusNode _LocationField = FocusNode();
 
   List<DataCategory> categoryList = [];
 
@@ -70,11 +70,11 @@ class _HomeState extends State<PostFavour>
 
   AuthProvider provider;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+        .showSnackBar(SnackBar(content: Text(value)));
   }
 
   @override
@@ -104,7 +104,7 @@ class _HomeState extends State<PostFavour>
 
     _setScrollListener();
 
-    Future.delayed(new Duration(microseconds: 2000), () {
+    Future.delayed(Duration(microseconds: 2000), () {
       getCategory();
       print("call fun");
     });
@@ -225,13 +225,13 @@ class _HomeState extends State<PostFavour>
 
 
     if (widget.isEdit != null && widget.isEdit) {
-      request = new http.MultipartRequest("POST", Uri.parse(APIs.editFavour));
+      request = http.MultipartRequest("POST", Uri.parse(APIs.editFavour));
 
       request.fields['id'] = widget.favourDetailsResponse?.data?.id?.toString();
       print("edit true");
     }
     else {
-      request = new http.MultipartRequest("POST", Uri.parse(APIs.createPayvor));
+      request = http.MultipartRequest("POST", Uri.parse(APIs.createPayvor));
       print("edit false");
     }
 
@@ -251,7 +251,7 @@ class _HomeState extends State<PostFavour>
 
       var bytes = await _image.readAsBytes();
 
-      request.files.add(new http.MultipartFile.fromBytes(
+      request.files.add(http.MultipartFile.fromBytes(
         "image",
         bytes,
         filename: fileName,
@@ -259,7 +259,7 @@ class _HomeState extends State<PostFavour>
     }
 
 /*
-    PayvorCreateRequest loginRequest = new PayvorCreateRequest(
+    PayvorCreateRequest loginRequest = PayvorCreateRequest(
         title: _TitleController.text,
         location: _LocationController.text,
         description: _DescriptionController.text,
@@ -440,11 +440,11 @@ class _HomeState extends State<PostFavour>
       TextInputType textInputType,
       int lines) {
     return Container(
-      padding: new EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
+      padding: EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
       color: Colors.white,
       child: Stack(
         children: [
-          new TextField(
+          TextField(
             controller: controller,
             keyboardType: textInputType,
             style: TextThemes.blackTextFieldNormal,
@@ -459,16 +459,16 @@ class _HomeState extends State<PostFavour>
                 FocusScope.of(context).autofocus(focusNodeNext);
               }
             },
-            decoration: new InputDecoration(
+            decoration: InputDecoration(
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
               hintText: labelText,
-              contentPadding: new EdgeInsets.only(right: 50.0),
-              prefix: new Text(
+              contentPadding: EdgeInsets.only(right: 50.0),
+              prefix: Text(
                 focusNodeCurrent == _PriceField && _PriceField.hasFocus
                     ? "€ "
                     : "",
-                style: new TextStyle(color: AppColors.colorDarkCyan),
+                style: TextStyle(color: AppColors.colorDarkCyan),
               ),
               hintStyle: controller.text.length == 0 && isValid
                   ? TextThemes.readAlert
@@ -476,13 +476,13 @@ class _HomeState extends State<PostFavour>
             ),
           ),
           controller.text.length == 0 && isValid
-              ? new Positioned(
+              ? Positioned(
                   right: 0.0,
-                  child: new Padding(
+                  child: Padding(
                     padding: lines > 1
-                        ? new EdgeInsets.only(bottom: 4)
-                        : new EdgeInsets.only(top: 13),
-                    child: new SvgPicture.asset(
+                        ? EdgeInsets.only(bottom: 4)
+                        : EdgeInsets.only(top: 13),
+                    child: SvgPicture.asset(
                       AssetStrings.notFilled,
                     ),
                   ),
@@ -560,7 +560,7 @@ class _HomeState extends State<PostFavour>
       }
 
 
-      PayvorCreateRequest loginRequest = new PayvorCreateRequest(
+      PayvorCreateRequest loginRequest = PayvorCreateRequest(
           title: _TitleController.text,
           location: _LocationController.text,
           description: _DescriptionController.text,
@@ -570,8 +570,8 @@ class _HomeState extends State<PostFavour>
 
       Navigator.push(
         context,
-        new CupertinoPageRoute(builder: (BuildContext context) {
-          return Material(child: new PreviewPost(
+        CupertinoPageRoute(builder: (BuildContext context) {
+          return Material(child: PreviewPost(
             request: loginRequest,
             type: 1,
             file: _image,
@@ -600,7 +600,7 @@ class _HomeState extends State<PostFavour>
           return Padding(
               padding: MediaQuery.of(context).viewInsets,
               child: Container(
-                  child: new Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
 
@@ -608,13 +608,13 @@ class _HomeState extends State<PostFavour>
                       Container(
                         width: 86.0,
                         height: 86.0,
-                        margin: new EdgeInsets.only(top: 38),
+                        margin: EdgeInsets.only(top: 38),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: AppColors.greenDark,
                       shape: BoxShape.circle,
                     ),
-                        child: new SvgPicture.asset(
+                        child: SvgPicture.asset(
                           AssetStrings.check,
                           width: 42.0,
                           height: 42.0,
@@ -622,21 +622,21 @@ class _HomeState extends State<PostFavour>
                         ),
                       ),
 
-                      new Container(
-                        margin: new EdgeInsets.only(top: 40),
-                        child: new Text("Successful!", style: new TextStyle(
+                      Container(
+                        margin: EdgeInsets.only(top: 40),
+                        child: Text("Successful!", style: TextStyle(
                             fontFamily: AssetStrings.circulerMedium,
                             fontSize: 20,
                             color: Colors.black),),
                       ),
 
-                      new Container(
-                        margin: new EdgeInsets.only(top: 10),
-                        child: new Text(
+                      Container(
+                        margin: EdgeInsets.only(top: 10),
+                        child: Text(
                           widget?.isEdit ?? false
                           ? "You have updated favor successfully."
                           : "You have created a favor successfully.",
-                      style: new TextStyle(
+                      style: TextStyle(
                         fontFamily: AssetStrings.circulerNormal,
                         fontSize: 16,
                         color: Color.fromRGBO(114, 117, 112, 1),
@@ -647,7 +647,7 @@ class _HomeState extends State<PostFavour>
                       ),
 
                       Container(
-                        margin: new EdgeInsets.only(
+                        margin: EdgeInsets.only(
                             top: 60, left: 16, right: 16),
                         child: getSetupButtonNew(
                             callbackFavourPage,
@@ -667,8 +667,8 @@ class _HomeState extends State<PostFavour>
 
   buildContestListSearch(StateSetter setState) {
     return Container(
-      child: new ListView.builder(
-        padding: new EdgeInsets.only(top: 10),
+      child: ListView.builder(
+        padding: EdgeInsets.only(top: 10),
         itemBuilder: (BuildContext context, int index) {
           return buildItemRecentSearch(index, categoryList[index], setState);
         },
@@ -694,31 +694,31 @@ class _HomeState extends State<PostFavour>
 
         Navigator.pop(context);
       },
-      child: new Container(
-        padding: new EdgeInsets.only(top: 15, left: 20, right: 20),
+      child: Container(
+        padding: EdgeInsets.only(top: 15, left: 20, right: 20),
         child: Column(
           children: [
-            new Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  margin: new EdgeInsets.only(left: 5),
+                  margin: EdgeInsets.only(left: 5),
                   child: Text(
                     data.name,
                     textAlign: TextAlign.center,
-                    style: new TextStyle(
+                    style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
                         fontFamily: AssetStrings.circulerNormal),
                   ),
                 ),
-                new Container(
+                Container(
                   child: data?.isSelect != null && data?.isSelect
-                      ? new Icon(
+                      ? Icon(
                           Icons.radio_button_checked,
                           color: AppColors.colorDarkCyan,
                         )
-                      : new Icon(
+                      : Icon(
                           Icons.radio_button_unchecked,
                           color: AppColors.kBlack.withOpacity(0.2),
                         ),
@@ -727,9 +727,9 @@ class _HomeState extends State<PostFavour>
             ),
             Opacity(
               opacity: 0.12,
-              child: new Container(
+              child: Container(
                 height: 1.0,
-                margin: new EdgeInsets.only(top: 15),
+                margin: EdgeInsets.only(top: 15),
                 color: AppColors.dividerColor,
               ),
             ),
@@ -774,29 +774,23 @@ class _HomeState extends State<PostFavour>
 
   @override
   Widget build(BuildContext context) {
-    screenSize = MediaQuery
-        .of(context)
-        .size;
+    screenSize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
     return Scaffold(
       key: _scaffoldKey,
       body: Stack(
         children: <Widget>[
-          new Container(
+          Container(
             color: AppColors.whiteGray,
             height: screenSize.height,
             child: SingleChildScrollView(
-              child: new Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  new Container(
-                    color: Colors.white,
-                    height: 36.0,
-                  ),
+                  Container(color: Colors.white, height: 36.0),
                   Container(
                     color: Colors.white,
-                    padding:
-                        new EdgeInsets.only(top: 14.0, left: 17, right: 17),
+                    padding: EdgeInsets.only(top: 18.0, left: 17, right: 17),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -807,16 +801,16 @@ class _HomeState extends State<PostFavour>
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            child: new Padding(
+                            child: Padding(
                               padding: const EdgeInsets.all(1.0),
-                              child: new SvgPicture.asset(
+                              child: SvgPicture.asset(
                                 AssetStrings.cross,
                               ),
                             ),
                           ),
                         ),
                         Container(
-                          child: new Text(
+                          child: Text(
                             widget.isEdit != null && widget.isEdit
                                 ? "Edit Favor"
                                 : ResString().get('post_favour'),
@@ -825,9 +819,9 @@ class _HomeState extends State<PostFavour>
                           ),
                         ),
                         Container(
-                          child: new Text(
+                          child: Text(
                             "",
-                            style: new TextStyle(
+                            style: TextStyle(
                                 fontFamily: AssetStrings.circulerMedium,
                                 color: AppColors.redLight,
                                 fontSize: 14),
@@ -837,22 +831,22 @@ class _HomeState extends State<PostFavour>
                       ],
                     ),
                   ),
-                  new Container(
+                  Container(
                     color: Colors.white,
                     height: 16.0,
                   ),
                   Opacity(
                     opacity: 0.12,
-                    child: new Container(
+                    child: Container(
                       height: 1.0,
                       color: AppColors.dividerColor,
                     ),
                   ),
                   profile != null && profile.isNotEmpty ? Stack(
                     children: [
-                      new Container(
+                      Container(
                           width: double.infinity,
-                          padding: new EdgeInsets.only(left: 16, right: 16),
+                          padding: EdgeInsets.only(left: 16, right: 16),
                           height: 147.0,
                           child: ClipRect(
                             child: getCachedNetworkImageWithurl(
@@ -872,35 +866,33 @@ class _HomeState extends State<PostFavour>
 
                                 });
                               },
-                              child: new Container(
+                              child: Container(
                                   width: 46,
                                   height: 46,
 
-                                  decoration: new BoxDecoration(
+                                  decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Colors.white
                                   ),
-                                  child: new Icon(
-                                      Icons.delete, color: Colors.red)
+                                  child: Icon(Icons.delete, color: Colors.red)
                               )
                           ),
                         ),
                       ),
                     ],
-                  ) : _image == null ? new Container(
+                  ) : _image == null ? Container(
                     color: Colors.white,
                     width: double.infinity,
-                    margin: new EdgeInsets.only(top: 9.0),
-                    padding: new EdgeInsets.only(
-                        left: 16, right: 16, top: 36, bottom: 33),
-                    child: new Column(
+                    margin: EdgeInsets.only(top: 9.0),
+                    padding: EdgeInsets.only(left: 16, right: 16, top: 36, bottom: 33),
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InkWell(
                           onTap: () {
                             _crupitinoActionSheet();
                           },
-                          child: new Image.asset(
+                          child: Image.asset(
                             AssetStrings.camera,
                             width: 34.0,
                             height: 30.0,
@@ -911,91 +903,82 @@ class _HomeState extends State<PostFavour>
                             _crupitinoActionSheet();
                           },
                           child: Container(
-                            padding: new EdgeInsets.only(top: 10),
-                            child: new Text(
+                            padding: EdgeInsets.only(top: 10),
+                            child: Text(
                               ResString().get('upload_photo'),
-                              style: new TextStyle(
-                                  fontFamily: AssetStrings.circulerMedium,
-                                  color: AppColors.bluePrimary,
-                                  fontSize: 16),
+                              style: TextStyle(
+                                fontFamily: AssetStrings.circulerMedium,
+                                color: AppColors.bluePrimary,
+                                fontSize: 16,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           ),
                         ),
-                        new Text(
+                        Text(
                           ResString().get('photo_not_mandetry'),
-                          style: new TextStyle(
-                              fontFamily: AssetStrings.circulerNormal,
-                              color: AppColors.lightGrey,
-                              fontSize: 16),
+                          style: TextStyle(
+                            fontFamily: AssetStrings.circulerNormal,
+                            color: AppColors.lightGrey,
+                            fontSize: 14,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ],
                     ),
                   ) : Stack(
                     children: [
-                      new Container(
-                          width: double.infinity,
-                          padding: new EdgeInsets.only(left: 16, right: 16),
-                          height: 147.0,
-                          child: ClipRect(
-                            child: new Image.file(
-                              _image,
-                              fit: BoxFit.cover,
-                            ),
-                          )),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.only(left: 16, right: 16),
+                        height: 147.0,
+                        child: ClipRect(
+                          child: Image.file(
+                            _image,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
 
                       Positioned.fill(
                         child: Align(
                           alignment: Alignment.center,
                           child: InkWell(
-                              onTap: () {
-                                _image = null;
-                                setState(() {
+                            onTap: () {
+                              _image = null;
+                              setState(() {
 
-                                });
-                              },
-                              child: new Container(
-                                  width: 46,
-                                  height: 46,
-
-                                  decoration: new BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.white
-                                  ),
-                                  child: new Icon(
-                                      Icons.delete, color: Colors.red)
-                              )
+                              });
+                            },
+                            child: Container(
+                              width: 46,
+                              height: 46,
+                              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                              child: Icon(Icons.delete, color: Colors.red)
+                            ),
                           ),
                         ),
                       ),
                     ],
                   ),
-                  new SizedBox(
-                    height: 8.0,
-                  ),
+                  SizedBox(height: 8.0),
                   getTextField(ResString().get('title'), _TitleController,
                       _TitleField, _PriceField, TextInputType.emailAddress, 1),
                   Opacity(
                     opacity: 0.12,
-                    child: new Container(
-                      height: 1.0,
-                      color: AppColors.dividerColor,
-                    ),
+                    child: Container(height: 1.0, color: AppColors.dividerColor),
                   ),
                   getTextField(
-                      ResString().get('price'),
-                      _PriceController,
-                      _PriceField,
-                      _DescriptionField,
-                      TextInputType.number,
-                      1),
+                    'Payment in € (Euro)',
+                    _PriceController,
+                    _PriceField,
+                    _DescriptionField,
+                    TextInputType.number,
+                    1,
+                  ),
                   Opacity(
                     opacity: 0.12,
-                    child: new Container(
-                      height: 1.0,
-                      color: AppColors.dividerColor,
-                    ),
+                    child: Container(height: 1.0, color: AppColors.dividerColor),
                   ),
                   getTextField(
                       ResString().get('description'),
@@ -1004,19 +987,19 @@ class _HomeState extends State<PostFavour>
                       _DescriptionField,
                       TextInputType.text,
                       8),
-                  new SizedBox(
+                  SizedBox(
                     height: 1.0,
                   ),
-                  new Container(
+                  Container(
                     color: Colors.white,
                     height: 64.0,
-                    margin: new EdgeInsets.only(top: 0.0),
-                    padding: new EdgeInsets.only(right: 16),
-                    child: new Row(
+                    margin: EdgeInsets.only(top: 0.0),
+                    padding: EdgeInsets.only(right: 16),
+                    child: Row(
                       children: [
-                        /*   new Text(
+                        /*   Text(
                           ResString().get('location'),
-                          style: new TextStyle(
+                          style: TextStyle(
                               fontFamily: AssetStrings.circulerNormal,
                               color: AppColors.lightGrey,
                               fontSize: 16),
@@ -1025,29 +1008,23 @@ class _HomeState extends State<PostFavour>
 */
                         Expanded(
                           child: Container(
-                            padding: new EdgeInsets.only(left: 16, right: 5.0),
+                            padding: EdgeInsets.only(left: 16, right: 5.0),
                             alignment: Alignment.centerLeft,
                             child: getLocation(_LocationController, context,
-                                _streamControllerShowLoader,
-                                true,
-                                _LatLongController,
-                                iconData: AssetStrings.location,
-                                colorAlert: isValid
+                              _streamControllerShowLoader,
+                              true,
+                              _LatLongController,
+                              iconData: AssetStrings.location,
+                              colorAlert: isValid
                             ),
                           ),
                         ),
-                        new SizedBox(
-                          width: 15,
-                        ),
-                        isValid ? new SvgPicture.asset(
-                          AssetStrings.notFilled,
-                        ) : Container(),
-                        isValid ? new SizedBox(
-                          width: 5,
-                        ) : Container(),
-                        /* new Text(
+                        SizedBox(width: 15),
+                        isValid ? SvgPicture.asset(AssetStrings.notFilled) : Container(),
+                        isValid ? SizedBox(width: 5) : Container(),
+                        /* Text(
                           ">",
-                          style: new TextStyle(
+                          style: TextStyle(
                               fontFamily: AssetStrings.circulerNormal,
                               color: AppColors.lightGrey,
                               fontSize: 16),
@@ -1056,12 +1033,9 @@ class _HomeState extends State<PostFavour>
                       ],
                     ),
                   ),
-                  new SizedBox(
-                    height: 1.0,
-                  ),
+                  SizedBox(height: 1.0),
                   Container(
-                    padding: new EdgeInsets.only(
-                        left: 16, top: 25, right: 16, bottom: 25),
+                    padding: EdgeInsets.only(left: 16, top: 25, right: 16, bottom: 25),
                     width: getScreenSize(context: context).width,
                     color: Colors.white,
                     child: Row(
@@ -1070,12 +1044,13 @@ class _HomeState extends State<PostFavour>
                           child: Container(
                             alignment: Alignment.centerLeft,
                             color: Colors.white,
-                            child: new Text(
+                            child: Text(
                               "Category",
-                              style: new TextStyle(
-                                  fontFamily: AssetStrings.circulerMedium,
-                                  color: Colors.black,
-                                  fontSize: 16),
+                              style: TextStyle(
+                                fontFamily: AssetStrings.circulerMedium,
+                                color: Colors.black,
+                                fontSize: 16,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -1086,21 +1061,22 @@ class _HomeState extends State<PostFavour>
                           },
                           child: Container(
                             alignment: Alignment.centerRight,
-                            constraints: new BoxConstraints(maxWidth: 180),
+                            constraints: BoxConstraints(maxWidth: 180),
                             color: Colors.white,
-                            child: new Text(
+                            child: Text(
                               text != null && text?.isNotEmpty ? text : "None",
-                              style: new TextStyle(
-                                  fontFamily: AssetStrings.circulerNormal,
-                                  color: AppColors.colorDarkCyan,
-                                  fontSize: 14),
+                              style: TextStyle(
+                                fontFamily: AssetStrings.circulerNormal,
+                                color: AppColors.colorDarkCyan,
+                                fontSize: 16,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           ),
                         ),
                         Container(
-                          margin: new EdgeInsets.only(left: 2),
-                          child: new Icon(
+                          margin: EdgeInsets.only(left: 2),
+                          child: Icon(
                             Icons.arrow_forward_ios,
                             size: 15,
                             color: AppColors.colorDarkCyan,
@@ -1109,22 +1085,21 @@ class _HomeState extends State<PostFavour>
                       ],
                     ),
                   ),
-                  new SizedBox(
-                    height: 150.0,
-                  ),
+                  SizedBox(height: 150.0),
                 ],
               ),
             ),
           ),
           Offstage(
             offstage: true,
-            child: new Center(
-              child: new Text(
+            child: Center(
+              child: Text(
                 "No Favors Found",
-                style: new TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0),
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                ),
               ),
             ),
           ),
@@ -1135,46 +1110,46 @@ class _HomeState extends State<PostFavour>
             child: Material(
               elevation: 18.0,
               child: Container(
-                  color: Colors.white,
-                  padding: new EdgeInsets.only(
-                      top: 9, bottom: 28, left: 16, right: 16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: getSetupButtonBorderNew(
-                            _callbackPreviewFavouurPost,
-                            ResString().get('preview_favor'),
-                            0,
-                            border: Color.fromRGBO(103, 99, 99, 0.19),
-                            newColor: Color.fromRGBO(248, 248, 250, 1.0),
-                            textColor: Colors.black),
+                color: Colors.white,
+                padding: EdgeInsets.only(top: 9, bottom: 28, left: 16, right: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: getSetupButtonBorderNew(
+                        _callbackPreviewFavouurPost,
+                        ResString().get('preview_favor'),
+                        0,
+                        border: Color.fromRGBO(103, 99, 99, 0.19),
+                        newColor: Color.fromRGBO(248, 248, 250, 1.0),
+                        textColor: Colors.black,
                       ),
-                      new SizedBox(
-                        width: 10.0,
+                    ),
+                    SizedBox(width: 10.0),
+                    Expanded(
+                      child: getSetupButtonNew(
+                        widget.isEdit != null && widget.isEdit
+                            ? callBackUpdateFavour
+                            : callBackCreateFavour,
+                        widget.isEdit != null && widget.isEdit
+                            ? "Update Favor"
+                            : ResString().get('post_favor'),
+                        0,
+                        newColor: AppColors.colorDarkCyan,
                       ),
-                      Expanded(
-                        child: getSetupButtonNew(
-                            widget.isEdit != null && widget.isEdit
-                                ? callBackUpdateFavour
-                                : callBackCreateFavour,
-                            widget.isEdit != null && widget.isEdit
-                                ? "Update Favor"
-                                : ResString().get('post_favor'),
-                            0,
-                            newColor: AppColors.colorDarkCyan),
-                      ),
-                    ],
-                  )),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
 
-          new Center(
+          Center(
             child: getFullScreenProviderLoader(
               status: provider.getLoading(),
               context: context,
             ),
           ),
-          /* new Center(
+          /* Center(
             child: _getLoader,
           ),*/
         ],
