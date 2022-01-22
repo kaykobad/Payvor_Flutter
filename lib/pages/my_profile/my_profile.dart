@@ -31,20 +31,25 @@ class MyProfile extends StatefulWidget {
   final bool userButtonMsg;
 
   MyProfile(
-      {this.id, this.name, this.hireduserId, this.image, this.userButtonMsg});
+      {Key key,
+      this.id,
+      this.name,
+      this.hireduserId,
+      this.image,
+      this.userButtonMsg})
+      : super(key: key);
 
   @override
-  _HomeState createState() => _HomeState();
+  MyProfileScreenState createState() => MyProfileScreenState();
 }
 
-class _HomeState extends State<MyProfile>
+class MyProfileScreenState extends State<MyProfile>
     with AutomaticKeepAliveClientMixin<MyProfile>, TickerProviderStateMixin {
   var screenSize;
   TabController tabBarController;
   int _tabIndex = 0;
   final StreamController<bool> _loaderStreamController =
       new StreamController<bool>();
-  ScrollController scrollController = new ScrollController();
 
   List<String> listOption = ["Report", "Share"];
 
@@ -93,6 +98,13 @@ class _HomeState extends State<MyProfile>
     super.initState();
   }
 
+  tapCallApi()
+  {
+    _loadMore=false;
+    currentPage=1;
+    hitUserApi();
+  }
+
   hitUserApi() async {
     if (!isPullToRefresh) {
       provider.setLoading();
@@ -127,6 +139,7 @@ class _HomeState extends State<MyProfile>
           list.clear();
           userResponse = response;
           print("user_data ${userResponse.user.toJson()}");
+          print("length ${userResponse.data.data.length}");
           widget.image = response.user.profilePic;
           widget.name = response.user.name;
           if (response?.user != null) {
@@ -163,13 +176,10 @@ class _HomeState extends State<MyProfile>
         } else {
           offstagenodata = false;
         }
-        setState(() {});
+
       }
     } else {
       APIError apiError = response;
-      print(apiError.error);
-      print("profilee");
-      print(MemoryManagement.getUserInfo() + "hhh");
       var infoData = jsonDecode(MemoryManagement.getUserInfo());
       var userinfo = LoginSignupResponse.fromJson(infoData);
       MemoryManagement.setPushStatus(
@@ -177,7 +187,7 @@ class _HomeState extends State<MyProfile>
 
       showInSnackBar(apiError.error);
     }
-    provider.hideLoader();
+
   }
 
 
@@ -185,30 +195,14 @@ class _HomeState extends State<MyProfile>
   @override
   bool get wantKeepAlive => true;
 
-  void callback() async {
-
-  }
-
-  redirect() async {
-    /* Navigator.push(
-      context,
-      new CupertinoPageRoute(builder: (BuildContext context) {
-        return Material(
-            child: new PostFavour(
-          favourDetailsResponse: favoriteResponse,
-          isEdit: true,
-        ));
-      }),
-    );*/
-  }
 
   void _setScrollListener() {
-    //scrollController.position.isScrollingNotifier.addListener(() { print("called");});
-
-    scrollController = new ScrollController();
-    scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent ==
-          scrollController.offset) {
+    _scrollController = new ScrollController();
+    _scrollController.addListener(() {
+      if (_scrollController.position.maxScrollExtent ==
+          _scrollController.offset) {
+        print("list ${list.length}");
+        print("listPage ${Constants.PAGINATION_SIZE * currentPage}");
         if (list.length >= (Constants.PAGINATION_SIZE * currentPage)) {
           isPullToRefresh = true;
           hitUserApi();
@@ -231,6 +225,7 @@ class _HomeState extends State<MyProfile>
       child: Container(
         child: new ListView.builder(
           padding: new EdgeInsets.all(0.0),
+          controller: _scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             return buildItemNew(list[index]);
@@ -437,7 +432,6 @@ class _HomeState extends State<MyProfile>
               height: screenSize.height,
               child: userResponse != null
                   ? SingleChildScrollView(
-                      controller: _scrollController,
                       child: new Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.max,
@@ -462,8 +456,6 @@ class _HomeState extends State<MyProfile>
                                       border: new Border.all(
                                           width: 2, color: Colors.white)),
                                   child: ClipOval(
-                                    // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-
                                     child: getCachedNetworkImageWithurl(
                                       url: userResponse?.user?.profilePic ?? "",
                                       size: 89,
@@ -500,54 +492,7 @@ class _HomeState extends State<MyProfile>
                               ],
                             ),
                           ),
-                          Container(
-                            color: Colors.white,
-                            padding: new EdgeInsets.only(top: 4),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                new Image.asset(
-                                  AssetStrings.rating,
-                                  width: 13,
-                                  height: 13,
-                                ),
-                                new SizedBox(
-                                  width: 4,
-                                ),
-                                Container(
-                                    child: new Text(
-                                  userResponse?.user?.ratingAvg?.toString() ??
-                                      "",
-                                  style: TextThemes.blackTextSmallMedium,
-                                )),
-                                Container(
-                                  width: 3,
-                                  height: 3,
-                                  margin:
-                                      new EdgeInsets.only(left: 5, right: 5),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.darkgrey,
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    print("review_post from myprofile screen");
-                                    providerFirebase?.changeScreen(Material(
-                                        child: new ReviewPost(
-                                      id: widget?.hireduserId?.toString() ?? "",
-                                    )));
-                                  },
-                                  child: Container(
-                                      child: new Text(
-                                    "${userResponse?.user?.ratingCount?.toString() ?? "0"} Reviews",
-                                    style: TextThemes.blueMediumSmall,
-                                  )),
-                                ),
-                              ],
-                            ),
-                          ),
-
+                          reviewPost,
                           new Container(
                             height: 16,
                             color: Colors.white,
@@ -608,10 +553,6 @@ class _HomeState extends State<MyProfile>
                                     ],
                                   ),
                                 ),
-
-                          //  buildItem(1, "Verify Profile and Get badge"),
-                          //  buildItem(2, "Payment Methods"),
-                          //  buildItem(3, "Verify Profile and Get badge"),
                           new Container(
                             height: 16,
                             color: Colors.white,
@@ -628,146 +569,109 @@ class _HomeState extends State<MyProfile>
                                   fontFamily: AssetStrings.circulerNormal),
                             ),
                           ),
-
                           Container(
                             height: screenSize.height / 2.1,
                             child: _buildContestList(),
                           ),
-
-                          /* Material(
-                            child: Container(
-                              decoration:
-                                  new BoxDecoration(color: Colors.white),
-                              padding: new EdgeInsets.only(top: 6.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Container(
-                                      width: screenSize.width,
-                                      padding: new EdgeInsets.only(right: 16),
-                                      height: 40.0,
-                                      child: DecoratedTabBar(
-                                        decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                  width: 0.0,
-                                                  color: Color.fromRGBO(
-                                                      151, 151, 151, 0.2)),
-                                            ),
-                                            color: Colors.transparent),
-                                        tabBar: new TabBar(
-                                            indicatorColor:
-                                                Color.fromRGBO(37, 26, 101, 1),
-                                            labelStyle: new TextStyle(
-                                                fontSize: 18,
-                                                fontFamily: AssetStrings
-                                                    .circulerMedium),
-                                            indicatorWeight: 3,
-                                            indicatorSize:
-                                                TabBarIndicatorSize.tab,
-                                            isScrollable: false,
-                                            unselectedLabelStyle: new TextStyle(
-                                                fontSize: 18,
-                                                fontFamily: AssetStrings
-                                                    .circulerMedium),
-                                            unselectedLabelColor:
-                                                Color.fromRGBO(103, 99, 99, 1),
-                                            labelColor:
-                                                Color.fromRGBO(37, 26, 101, 1),
-                                            labelPadding:
-                                                new EdgeInsets.only(left: 15.0),
-                                            indicatorPadding:
-                                                new EdgeInsets.only(left: 15.0),
-                                            controller: tabBarController,
-                                            tabs: <Widget>[
-                                              new Tab(text: "Ended Favors"),
-                                              new Tab(
-                                                text: "Ended Jobs",
-                                              ),
-                                            ]),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),*/
-                          /* Container(
-                            height: screenSize.height / 2.1,
-                            child: new TabBarView(
-                              controller: tabBarController,
-                              physics: NeverScrollableScrollPhysics(),
-                              children: <Widget>[
-                                new MyEndedFavor(
-                                  hireduserId: widget.hireduserId,
-                                  name: widget.name,
-                                ),
-                                new MyEndedJobs(
-                                  hireduserId: widget.hireduserId,
-                                  name: widget.name,
-                                )
-                              ],
-                            ),
-                          ),*/
                         ],
                       ),
                     )
                   : Container(),
             ),
-            Positioned(
-                top: 0.0,
-                left: 0.0,
-                right: 0.0,
-                child: Container(
-                  margin: new EdgeInsets.only(
-                    top: 35,
-                    left: 16,
-                    right: 16,
-                  ),
-                  child: new Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          child: Container(
-                            child: InkWell(
-                                onTap: () {
-                                  //  Navigator.pop(context);
-                                },
-                                child: new Text(
-                                  /*    "${userResponse?.user?.perc?.toString() ?? "0"}% Verified"*/
-                                  "Profile",
-                                  style: new TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                      fontFamily: AssetStrings.circulerMedium),
-                                )),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            providerFirebase?.changeScreen(Material(
-                                child: new Settings(
-                              id: widget?.hireduserId,
-                            )));
-                          },
-                          child: Container(
-                              child: new Image.asset(AssetStrings.appSettings,
-                                  width: 26, height: 26)),
-                        )
-                      ],
-                    ),
-                  ),
-                )),
-
-            /* new Center(
-              child: _getLoader,
-            ),*/
+            profileView,
           ],
         ),
       ),
     );
   }
+
+  get reviewPost => Container(
+        color: Colors.white,
+        padding: new EdgeInsets.only(top: 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            new Image.asset(
+              AssetStrings.rating,
+              width: 13,
+              height: 13,
+            ),
+            new SizedBox(
+              width: 4,
+            ),
+            Container(
+                child: new Text(
+              userResponse?.user?.ratingAvg?.toString() ?? "",
+              style: TextThemes.blackTextSmallMedium,
+            )),
+            Container(
+              width: 3,
+              height: 3,
+              margin: new EdgeInsets.only(left: 5, right: 5),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.darkgrey,
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                print("review_post from myprofile screen");
+                providerFirebase?.changeScreen(Material(
+                    child: new ReviewPost(
+                  id: widget?.hireduserId?.toString() ?? "",
+                )));
+              },
+              child: Container(
+                  child: new Text(
+                "${userResponse?.user?.ratingCount?.toString() ?? "0"} Reviews",
+                style: TextThemes.blueMediumSmall,
+              )),
+            ),
+          ],
+        ),
+      );
+
+  get profileView => Positioned(
+      top: 0.0,
+      left: 0.0,
+      right: 0.0,
+      child: Container(
+        margin: new EdgeInsets.only(
+          top: 35,
+          left: 16,
+          right: 16,
+        ),
+        child: new Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                child: Container(
+                  child: InkWell(
+                      child: new Text(
+                    "Profile",
+                    style: new TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontFamily: AssetStrings.circulerMedium),
+                  )),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  providerFirebase?.changeScreen(Material(
+                      child: new Settings(
+                    id: widget?.hireduserId,
+                  )));
+                },
+                child: Container(
+                    child: new Image.asset(AssetStrings.appSettings,
+                        width: 26, height: 26)),
+              )
+            ],
+          ),
+        ),
+      ));
 }

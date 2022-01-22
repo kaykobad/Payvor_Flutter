@@ -12,13 +12,13 @@ import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/post_details/report_request.dart';
 import 'package:payvor/model/promotion/promotion_response.dart';
+import 'package:payvor/pages/add_payment_method_first/add_payment.dart';
 import 'package:payvor/pages/chat_message_details.dart';
 import 'package:payvor/pages/payment/payment_dialog.dart';
 import 'package:payvor/pages/payment/post_payment.dart';
 import 'package:payvor/pages/post_a_favour/post_favour.dart';
 import 'package:payvor/pages/search/read_more_text.dart';
 import 'package:payvor/pages/search/search_name.dart';
-import 'package:payvor/pages/stripe_card_added/stripe_card_added.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
@@ -46,40 +46,25 @@ class PostFavorDetails extends StatefulWidget {
       this.distance});
 
   @override
-  _HomeState createState() => _HomeState();
+  _HomeStateNew createState() => _HomeStateNew();
 }
 
-class _HomeState extends State<PostFavorDetails>
+class _HomeStateNew extends State<PostFavorDetails>
     with AutomaticKeepAliveClientMixin<PostFavorDetails> {
   var screenSize;
-
-  // final StreamController<bool> _loaderStreamController = StreamController<bool>();
-  ScrollController scrollController = ScrollController();
+  ScrollController scrollController = new ScrollController();
   bool guestViewMain = false;
-
   List<String> listOption = ["Report", "Share", "Hide Post"];
-
-  PropmoteDataResponse propmoteDataResponse = PropmoteDataResponse();
-
+  PropmoteDataResponse propmoteDataResponse = new PropmoteDataResponse();
   AuthProvider provider;
   var ids = "";
   var isCurrentUser = false;
   bool offstageLoader = false;
   String distance = "";
   FirebaseProvider providerFirebase;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  // final GlobalKey<ScaffoldState> _scaffoldKeys = GlobalKey<ScaffoldState>();
-  // FocusNode _DescriptionField = FocusNode();
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   FavourDetailsResponse favoriteResponse;
-
-  // final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
-
-  void showInSnackBar(String value) {
-    _scaffoldKey.currentState.showSnackBar(
-        SnackBar(content: Text(value ?? "Something went wrong")));
-  }
+  bool addPayment = false;
 
   @override
   void initState() {
@@ -94,7 +79,6 @@ class _HomeState extends State<PostFavorDetails>
 
     Future.delayed(const Duration(milliseconds: 300), () {
       hitApi();
-      hitApiPromotion(0);
     });
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
@@ -105,10 +89,42 @@ class _HomeState extends State<PostFavorDetails>
     super.initState();
   }
 
-  hitApi() async {
-    provider.setLoading();
+  @override
+  Widget build(BuildContext context) {
+    provider = Provider.of<AuthProvider>(context);
+    providerFirebase = Provider.of<FirebaseProvider>(context);
+    screenSize = MediaQuery.of(context).size;
+    return Scaffold(
+      key: _scaffoldKey,
+      body: Stack(
+        children: <Widget>[
+          favourData,
+          noFavour,
+          _topOptionWidget,
+          favoriteResponse != null && favoriteResponse.data != null
+              ? !isCurrentUser
+                  ? Positioned(
+                      bottom: 0.0,
+                      left: 0.0,
+                      right: 0.0,
+                      child: !guestViewMain ? buttonApply : Container(),
+                    )
+                  : buttonDesabled
+              : Container(),
+          new Center(
+            child: getHalfScreenLoader(
+              status: offstageLoader,
+              context: context,
+            ),
+          ),
+          Visibility(visible: provider.getLoading(), child: ShimmerDetails())
+        ],
+      ),
+    );
+  }
 
-    bool gotInternetConnection = await hasInternetConnection(
+  Future<bool> getInternetConnection() async {
+    return await hasInternetConnection(
       context: context,
       mounted: mounted,
       canShowAlert: true,
@@ -117,31 +133,24 @@ class _HomeState extends State<PostFavorDetails>
       },
       onSuccess: () {},
     );
+  }
 
+  hitApi() async {
+    provider.setLoading();
+    bool gotInternetConnection = await getInternetConnection();
     if (!gotInternetConnection) {
       return;
     }
-
     var response = await provider.getFavorPostDetails(context, widget.id);
-
     if (response is FavourDetailsResponse) {
       provider.hideLoader();
-
       if (response != null && response.data != null) {
         favoriteResponse = response;
-
         var userid = favoriteResponse?.data?.userId.toString();
-
         if (userid == ids) {
           isCurrentUser = true;
         }
-
-//        print(" is applied already"
-//            " ${favoriteResponse?.data?.is_user_applied}");
       }
-
-      print(response);
-      try {} catch (ex) {}
     } else {
       provider.hideLoader();
       APIError apiError = response;
@@ -151,61 +160,14 @@ class _HomeState extends State<PostFavorDetails>
     }
   }
 
-  hitApiPromotion(int type) async {
-    bool gotInternetConnection = await hasInternetConnection(
-      context: context,
-      mounted: mounted,
-      canShowAlert: true,
-      onFail: () {
-        provider.hideLoader();
-      },
-      onSuccess: () {},
-    );
-
-    if (!gotInternetConnection) {
-      return;
-    }
-
-    var response = await provider.getPromotionData(context);
-
-    if (response is PropmoteDataResponse) {
-      if (response != null && response.data != null) {
-        propmoteDataResponse = response;
-        if (type == 1) {
-          showBottomSheet();
-        }
-      }
-    } else {
-      provider.hideLoader();
-      APIError apiError = response;
-      print(apiError.error);
-      if (type == 1) {
-        showInSnackBar(apiError.error);
-      }
-    }
-
-    setState(() {});
-  }
-
   hitReportApi() async {
     offstageLoader = true;
     setState(() {});
-
-    bool gotInternetConnection = await hasInternetConnection(
-      context: context,
-      mounted: mounted,
-      canShowAlert: true,
-      onFail: () {
-        offstageLoader = false;
-        setState(() {});
-      },
-      onSuccess: () {},
-    );
-
+    bool gotInternetConnection = await getInternetConnection();
     if (!gotInternetConnection) {
       return;
     }
-    var reportrequest = ReportPostRequest(
+    var reportrequest = new ReportPostRequest(
         favour_id: favoriteResponse?.data?.id?.toString());
 
     var response = await provider.reportUser(reportrequest, context);
@@ -233,22 +195,11 @@ class _HomeState extends State<PostFavorDetails>
   hitDeletePostApi() async {
     offstageLoader = true;
     setState(() {});
-
-    bool gotInternetConnection = await hasInternetConnection(
-      context: context,
-      mounted: mounted,
-      canShowAlert: true,
-      onFail: () {
-        offstageLoader = false;
-        setState(() {});
-      },
-      onSuccess: () {},
-    );
+    bool gotInternetConnection = await getInternetConnection();
 
     if (!gotInternetConnection) {
       return;
     }
-    //  var reportrequest=ReportPostRequest(favour_id: favoriteResponse?.data?.id?.toString());
 
     var response = await provider.deletePost(
         favoriteResponse?.data?.id?.toString(), context);
@@ -281,17 +232,7 @@ class _HomeState extends State<PostFavorDetails>
     setState(() {
       offstageLoader = true;
     });
-
-    bool gotInternetConnection = await hasInternetConnection(
-      context: context,
-      mounted: mounted,
-      canShowAlert: true,
-      onFail: () {
-        offstageLoader = false;
-        setState(() {});
-      },
-      onSuccess: () {},
-    );
+    bool gotInternetConnection = await getInternetConnection();
 
     if (!gotInternetConnection) {
       return;
@@ -320,38 +261,43 @@ class _HomeState extends State<PostFavorDetails>
   hitApplyFavApi() async {
     offstageLoader = true;
     setState(() {});
-
-    bool gotInternetConnection = await hasInternetConnection(
-      context: context,
-      mounted: mounted,
-      canShowAlert: true,
-      onFail: () {
-        offstageLoader = false;
-        setState(() {});
-      },
-      onSuccess: () {},
-    );
+    bool gotInternetConnection = await getInternetConnection();
 
     if (!gotInternetConnection) {
       return;
     }
-    var reportrequest = ReportPostRequest(
+    var reportrequest = new ReportPostRequest(
         favour_id: favoriteResponse?.data?.id?.toString());
 
     var response = await provider.applyFav(reportrequest, context);
-
     offstageLoader = false;
-
     if (response is ReportResponse) {
       showBottomSuccessPayment("Apply Successful!",
-          "You have applied to the favor Successfully", "Keep Applying", 0);
+          "You have applied to the favor Successfully", "Done", 0);
     } else {
       APIError apiError = response;
       print(apiError.error);
-      showInSnackBar(apiError.error);
+      addPayment = false;
+      if (apiError.status == 400) {
+        addPayment = true;
+      }
+
+      awesomeErrorDialog("Please add a receiver payment account", context,
+          callback: callbackError);
     }
 
     setState(() {});
+  }
+
+  void callbackError() async {
+    if (addPayment) {
+      Navigator.push(
+        context,
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return Material(child: new AddPaymentMethodFirst());
+        }),
+      );
+    }
   }
 
   @override
@@ -360,35 +306,17 @@ class _HomeState extends State<PostFavorDetails>
   void callback() async {
     if ((favoriteResponse?.data?.is_user_applied != 1) &&
         (widget.isButtonDesabled != null && !widget.isButtonDesabled)) {
-      //  var status= MemoryManagement.getPaymentStatus()??"";
       var firstTimePayment = MemoryManagement.getFirstPaymentStatus() ?? false;
       var paymentStatus = MemoryManagement.getPaymentStatus() ?? false;
-
       if (!paymentStatus && !firstTimePayment) {
         showBottomPaymentMethod();
         MemoryManagement.setFirstPaymentStatus(status: true);
       } else {
-        // showBottomPaymentMethod();
         hitApplyFavApi();
-        //  showInSnackBar(response.status.message);
-
-        // showBottomPaymentMethod();
       }
     }
-
-    /* await Future.delayed(Duration(milliseconds: 200));
-    showInSnackBar("Favour applied successfully");
-    await Future.delayed(Duration(milliseconds: 1500));
-    Navigator.pop(context); //back to previous screen*/
   }
 
-  void callbackPromote() async {
-    if (propmoteDataResponse != null && propmoteDataResponse.data != null) {
-      showBottomSheet();
-    } else {
-      hitApiPromotion(1);
-    }
-  }
 
   void callbackPaymentSuccess() async {
     Navigator.pop(context); //back to previous screen
@@ -396,9 +324,12 @@ class _HomeState extends State<PostFavorDetails>
 
   void callbackPaymentAddMethod() async {
     Navigator.pop(context); //back to previous screen
-    /* providerFirebase
-        ?.changeScreen(Material(child: AddPaymentMethodFirst()));*/
-    providerFirebase?.changeScreen(Material(child: StripeCardAddedList(payingAmount: "0",)));
+    Navigator.push(
+      context,
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return Material(child: new AddPaymentMethodFirst());
+      }),
+    );
   }
 
   void callbackPaymentSuccessBack() async {
@@ -410,35 +341,35 @@ class _HomeState extends State<PostFavorDetails>
     return Container(
       color: Colors.white,
       padding:
-          EdgeInsets.only(left: 16.0, right: 16.0, top: 16, bottom: 16),
+          new EdgeInsets.only(left: 16.0, right: 16.0, top: 16, bottom: 16),
       child: Row(
         children: <Widget>[
           Expanded(
-            child: Column(
+            child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  child: Text(
+                  child: new Text(
                     favoriteResponse?.data.title ?? "",
                     style: TextThemes.blackCirculerMedium,
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 4),
+                  margin: new EdgeInsets.only(top: 4),
                   child: Row(
                     children: [
-                      Image.asset(
+                      new Image.asset(
                         AssetStrings.locationHome,
                         width: 11,
                         height: 14,
                       ),
-                      SizedBox(
+                      new SizedBox(
                         width: 6,
                       ),
                       Expanded(
                         child: Container(
                           child: Container(
-                            child: Text(
+                            child: new Text(
                               favoriteResponse?.data.location +
                                       " - " +
                                       distance ??
@@ -458,7 +389,7 @@ class _HomeState extends State<PostFavorDetails>
           ),
           Align(
               alignment: Alignment.center,
-              child: Text(
+              child: new Text(
                 "€${favoriteResponse?.data.price ?? ""}",
                 style: TextThemes.blackDarkHeaderSub,
               )),
@@ -470,9 +401,9 @@ class _HomeState extends State<PostFavorDetails>
   redirect() async {
     Navigator.push(
       context,
-      CupertinoPageRoute(builder: (BuildContext context) {
+      new CupertinoPageRoute(builder: (BuildContext context) {
         return Material(
-            child: PostFavour(
+            child: new PostFavour(
           favourDetailsResponse: favoriteResponse,
           isEdit: true,
           voidcallback: voidCallBackUpdateSearch,
@@ -511,18 +442,18 @@ class _HomeState extends State<PostFavorDetails>
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: SvgPicture.asset(
+                child: new SvgPicture.asset(
                   icon,
                   width: size,
                   height: size,
                 ),
               ),
             ),
-            SizedBox(
+            new SizedBox(
               width: 20.0,
             ),
             Container(
-              child: Text(
+              child: new Text(
                 text,
                 style: text == "Delete Post"
                     ? TextThemes.darkRedMedium
@@ -534,6 +465,11 @@ class _HomeState extends State<PostFavorDetails>
         ),
       ),
     );
+  }
+
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(
+        new SnackBar(content: new Text(value ?? "Something went wrong")));
   }
 
   void showBottomSheets() {
@@ -548,53 +484,53 @@ class _HomeState extends State<PostFavorDetails>
           return Padding(
               padding: MediaQuery.of(context).viewInsets,
               child: Container(
-                  child: Column(
+                  child: new Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                      margin: EdgeInsets.only(top: 43, left: 27),
+                      margin: new EdgeInsets.only(top: 43, left: 27),
                       child:
                           getBottomText(AssetStrings.share, "Share Post", 22)),
                   !isCurrentUser
                       ? Container(
-                          margin: EdgeInsets.only(top: 35, left: 27),
+                          margin: new EdgeInsets.only(top: 35, left: 27),
                           child: getBottomText(
                               AssetStrings.slash, "Report Post", 22))
                       : Container(),
                   !isCurrentUser
                       ? Container(
-                          margin: EdgeInsets.only(top: 35, left: 27),
+                          margin: new EdgeInsets.only(top: 35, left: 27),
                           child: getBottomText(
                               AssetStrings.slash, "Block User", 22))
                       : Container(),
                   !isCurrentUser
                       ? Container(
-                          margin: EdgeInsets.only(top: 35, left: 27),
+                          margin: new EdgeInsets.only(top: 35, left: 27),
                           child: getBottomText(
                               AssetStrings.slash, "Hide Post", 22))
                       : Container(),
                   isCurrentUser
                       ? Container(
-                          margin: EdgeInsets.only(top: 35, left: 27),
+                          margin: new EdgeInsets.only(top: 35, left: 27),
                           child:
                               getBottomText(AssetStrings.edit, "Edit Post", 22))
                       : Container(),
                   isCurrentUser
                       ? Container(
-                          margin: EdgeInsets.only(top: 35, left: 27),
+                          margin: new EdgeInsets.only(top: 35, left: 27),
                           child: getBottomText(
                               AssetStrings.delete, "Delete Post", 22))
                       : Container(),
                   Opacity(
                     opacity: 0.12,
-                    child: Container(
+                    child: new Container(
                       height: 1.0,
-                      margin: EdgeInsets.only(top: 35, left: 27, right: 27),
+                      margin: new EdgeInsets.only(top: 35, left: 27, right: 27),
                       color: AppColors.dividerColor,
                     ),
                   ),
                   Container(
-                      margin: EdgeInsets.only(top: 35, left: 24),
+                      margin: new EdgeInsets.only(top: 35, left: 24),
                       child: getBottomText(AssetStrings.cross, " Cancel", 18)),
                   Container(
                     height: 56,
@@ -614,14 +550,14 @@ class _HomeState extends State<PostFavorDetails>
         ),
         builder: (BuildContext bc) {
           return ClipRRect(
-            borderRadius: BorderRadius.only(
+            borderRadius: new BorderRadius.only(
                 topLeft: const Radius.circular(25.0),
                 topRight: const Radius.circular(25.0)),
             child: Container(
               height: MediaQuery.of(context).size.height / 1.4,
-              decoration: BoxDecoration(
+              decoration: new BoxDecoration(
                   color: Colors.black,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: new BorderRadius.only(
                       topLeft: const Radius.circular(10.0),
                       topRight: const Radius.circular(10.0))),
               child: Padding(
@@ -633,30 +569,6 @@ class _HomeState extends State<PostFavorDetails>
         });
   }
 
-  void _showPopupMenu(Offset offset) async {
-    double left = offset.dx;
-    double top = offset.dy;
-    String selected = await showMenu(
-      context: context,
-      position: RelativeRect.fromLTRB(left, 80, 30, 0),
-      items: listOption.map((String popupRoute) {
-        return PopupMenuItem<String>(
-          child: Text(popupRoute),
-          value: popupRoute,
-        );
-      }).toList(),
-      elevation: 3.0,
-    );
-
-    if (selected == "Report") {
-      print("Report");
-      //   _showConfirmDialog();
-    } else {
-      print("Share");
-      _share();
-    }
-  }
-
   Widget buildItemRating(int type, String first) {
     return InkWell(
       onTap: () {
@@ -664,9 +576,9 @@ class _HomeState extends State<PostFavorDetails>
           print("review_post from my post details creen");
           Navigator.push(
             context,
-            CupertinoPageRoute(builder: (BuildContext context) {
+            new CupertinoPageRoute(builder: (BuildContext context) {
               return Material(
-                  child: ReviewPost(
+                  child: new ReviewPost(
                 id: favoriteResponse?.data?.userId?.toString() ?? "",
               ));
             }),
@@ -674,9 +586,9 @@ class _HomeState extends State<PostFavorDetails>
         } else {
           Navigator.push(
             context,
-            CupertinoPageRoute(builder: (BuildContext context) {
+            new CupertinoPageRoute(builder: (BuildContext context) {
               return Material(
-                  child: SearchHomeByName(
+                  child: new SearchHomeByName(
                 lat: favoriteResponse?.data?.lat,
                 long: favoriteResponse?.data?.long,
                 description: favoriteResponse?.data?.description,
@@ -688,51 +600,51 @@ class _HomeState extends State<PostFavorDetails>
       },
       child: Container(
         padding:
-            EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
+            new EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
         color: Colors.white,
-        margin: EdgeInsets.only(top: 4),
+        margin: new EdgeInsets.only(top: 4),
         child: Row(
           children: <Widget>[
-            Container(
+            new Container(
               width: 50.0,
               height: 50.0,
               decoration: BoxDecoration(
                   color: Color.fromRGBO(255, 107, 102, 0.17),
                   shape: BoxShape.circle),
               alignment: Alignment.center,
-              child: SvgPicture.asset(
+              child: new SvgPicture.asset(
                 type == 1 ? AssetStrings.shape : AssetStrings.referIcon,
                 height: 18,
                 width: 18,
               ),
             ),
             Expanded(
-              child: Column(
+              child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: Text(
+                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: new Text(
                       first,
                       style: TextThemes.blackCirculerMedium,
                     ),
                   ),
                   Container(
                     margin:
-                        EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
                     child: type == 1
                         ? Row(
                             children: [
-                              Image.asset(
+                              new Image.asset(
                                 AssetStrings.rating,
                                 width: 13,
                                 height: 13,
                               ),
-                              SizedBox(
+                              new SizedBox(
                                 width: 3,
                               ),
                               Container(
-                                  child: Text(
+                                  child: new Text(
                                 favoriteResponse?.data?.ratingAvg.toString() ??
                                     "",
                                 style: TextThemes.greyTextFieldNormalNw,
@@ -740,21 +652,21 @@ class _HomeState extends State<PostFavorDetails>
                               Container(
                                 width: 3,
                                 height: 3,
-                                margin: EdgeInsets.only(left: 5, right: 5),
+                                margin: new EdgeInsets.only(left: 5, right: 5),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.darkgrey,
                                 ),
                               ),
                               Container(
-                                  child: Text(
+                                  child: new Text(
                                 "${favoriteResponse?.data?.ratingCount.toString() ?? "0"} Reviews",
                                 style: TextThemes.greyTextFieldNormalNw,
                               )),
                             ],
                           )
                         : Container(
-                            child: Text(
+                            child: new Text(
                             "Refer someone who is good fit for the job",
                             style: TextThemes.greyTextFieldNormalNw,
                           )),
@@ -779,23 +691,23 @@ class _HomeState extends State<PostFavorDetails>
   }
 
   Widget getRowsPayment(String firstText, String amount, double tops) {
-    return Container(
+    return new Container(
       color: Colors.white,
-      padding: EdgeInsets.only(left: 16, right: 16, top: tops),
-      child: Row(
+      padding: new EdgeInsets.only(left: 16, right: 16, top: tops),
+      child: new Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
+          new Text(
             firstText,
-            style: TextStyle(
+            style: new TextStyle(
                 fontFamily: AssetStrings.circulerNormal,
                 color: AppColors.moreText,
                 fontSize: 14),
             textAlign: TextAlign.center,
           ),
-          Text(
+          new Text(
             amount,
-            style: TextStyle(
+            style: new TextStyle(
                 fontFamily: AssetStrings.circulerNormal,
                 color: Colors.black,
                 fontSize: 14),
@@ -812,9 +724,9 @@ class _HomeState extends State<PostFavorDetails>
         if (!isCurrentUser) {
           Navigator.push(
             context,
-            CupertinoPageRoute(builder: (BuildContext context) {
+            new CupertinoPageRoute(builder: (BuildContext context) {
               return Material(
-                  child: ChatMessageDetails(
+                  child: new ChatMessageDetails(
                 id: "",
                 name: favoriteResponse.data.user.name ?? "",
                 image: favoriteResponse.data.user.profilePic ?? "",
@@ -827,16 +739,16 @@ class _HomeState extends State<PostFavorDetails>
       child: Container(
         color: Colors.white,
         padding:
-            EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
-        margin: EdgeInsets.only(top: 4),
+            new EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
+        margin: new EdgeInsets.only(top: 4),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Container(
+            new Container(
               width: 50.0,
               height: 50.0,
               alignment: Alignment.center,
-              child: ClipOval(
+              child: new ClipOval(
                 child: getCachedNetworkImageWithurl(
                     url: favoriteResponse.data.user.profilePic ?? "",
                     fit: BoxFit.fill,
@@ -844,23 +756,23 @@ class _HomeState extends State<PostFavorDetails>
               ),
             ),
             Expanded(
-              child: Column(
+              child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: Text(
+                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: new Text(
                       favoriteResponse?.data?.user?.name ?? "",
                       style: TextThemes.blackCirculerMedium,
                     ),
                   ),
                   Container(
                     margin:
-                        EdgeInsets.only(left: 10.0, right: 10.0, top: 3),
+                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 3),
                     child: Row(
                       children: [
                         Container(
-                            child: Text(
+                            child: new Text(
                           "Favor Post Owner",
                           style: TextThemes.greyTextFieldNormalNw,
                         )),
@@ -868,7 +780,7 @@ class _HomeState extends State<PostFavorDetails>
                             ? Container(
                                 width: 3,
                                 height: 3,
-                                margin: EdgeInsets.only(left: 4, right: 4),
+                                margin: new EdgeInsets.only(left: 4, right: 4),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.darkgrey,
@@ -877,7 +789,7 @@ class _HomeState extends State<PostFavorDetails>
                             : Container(),
                         favoriteResponse?.data?.user?.perc == 100
                             ? Container(
-                                child: Text(
+                                child: new Text(
                                 "VERIFIED",
                                 style: TextThemes.blueMediumSmallNew,
                               ))
@@ -910,7 +822,6 @@ class _HomeState extends State<PostFavorDetails>
 
   Future<ValueSetter> voidCallBacks(int type) async {
     if (type == 1) {
-      //  showPaymentDialog();
     } else {
       showBottomSuccessPayment(
           "Successful!",
@@ -930,14 +841,14 @@ class _HomeState extends State<PostFavorDetails>
         ),
         builder: (BuildContext bc) {
           return ClipRRect(
-            borderRadius: BorderRadius.only(
+            borderRadius: new BorderRadius.only(
                 topLeft: const Radius.circular(25.0),
                 topRight: const Radius.circular(25.0)),
             child: Container(
               height: MediaQuery.of(context).size.height,
-              decoration: BoxDecoration(
+              decoration: new BoxDecoration(
                   color: Colors.black,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: new BorderRadius.only(
                       topLeft: const Radius.circular(10.0),
                       topRight: const Radius.circular(10.0))),
               child: Padding(
@@ -961,31 +872,31 @@ class _HomeState extends State<PostFavorDetails>
           return Padding(
               padding: MediaQuery.of(context).viewInsets,
               child: Container(
-                  child: Column(
+                  child: new Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(top: 22),
-                    child: Image.asset(AssetStrings.artworkPayment,
+                    margin: new EdgeInsets.only(top: 22),
+                    child: new Image.asset(AssetStrings.artworkPayment,
                         width: 120.0, height: 105.0),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 40),
-                    child: Text(
+                  new Container(
+                    margin: new EdgeInsets.only(top: 40),
+                    child: new Text(
                       "Add Payment Method",
-                      style: TextStyle(
+                      style: new TextStyle(
                           fontFamily: AssetStrings.circulerMedium,
                           fontSize: 20,
                           color: Colors.black),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 10, left: 35, right: 35),
+                  new Container(
+                    margin: new EdgeInsets.only(top: 10, left: 35, right: 35),
                     alignment: Alignment.center,
-                    child: Text(
+                    child: new Text(
                       "You’ve to add a account to apply for the favors. You’ll be paid to the account you are going to add ",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: new TextStyle(
                         fontFamily: AssetStrings.circulerNormal,
                         fontSize: 16,
                         height: 1.5,
@@ -994,7 +905,7 @@ class _HomeState extends State<PostFavorDetails>
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 40, left: 16, right: 16),
+                    margin: new EdgeInsets.only(top: 40, left: 16, right: 16),
                     child: getSetupButtonNew(
                         callbackPaymentAddMethod, "Add Now", 0,
                         newColor: AppColors.colorDarkCyan),
@@ -1007,82 +918,82 @@ class _HomeState extends State<PostFavorDetails>
         });
   }
 
-  void showBottomSuccessPayment(String title, String description, String buttonText, int type) {
+  void showBottomSuccessPayment(
+      String title, String description, String buttonText, int type) {
     showModalBottomSheet<void>(
         isScrollControlled: true,
         context: context,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(26.0),
-            topRight: Radius.circular(26.0),
-          ),
+              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
         ),
         builder: (BuildContext bc) {
-          return Container(
-            padding: EdgeInsets.only(top: 32.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 86.0,
-                  height: 86.0,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: AppColors.greenDark,
-                    shape: BoxShape.circle,
+          return Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Container(
+                  child: new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 86.0,
+                    height: 86.0,
+                    margin: new EdgeInsets.only(top: 38),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: AppColors.greenDark,
+                      shape: BoxShape.circle,
+                    ),
+                    child: GestureDetector(
+                        onTapDown: (TapDownDetails details) {
+                          /* //_showPopupMenu(details.globalPosition);
+                               showBottomSheet();*/
+                        },
+                        child: new SvgPicture.asset(
+                          AssetStrings.check,
+                          width: 42.0,
+                          height: 42.0,
+                          color: Colors.white,
+                        )),
                   ),
-                  child: GestureDetector(
-                    onTapDown: (TapDownDetails details) {
-                      /* //_showPopupMenu(details.globalPosition);
-                           showBottomSheet();*/
-                    },
-                    child: SvgPicture.asset(
-                      AssetStrings.check,
-                      width: 42.0,
-                      height: 42.0,
-                      color: Colors.white,
+                  new Container(
+                    margin: new EdgeInsets.only(top: 40),
+                    child: new Text(
+                      title,
+                      style: new TextStyle(
+                          fontFamily: AssetStrings.circulerMedium,
+                          fontSize: 20,
+                          color: Colors.black),
                     ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 24),
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      fontFamily: AssetStrings.circulerMedium,
-                      fontSize: 20,
-                      color: Colors.black,
+                  new Container(
+                    margin: new EdgeInsets.only(top: 10, left: 35, right: 35),
+                    alignment: Alignment.center,
+                    child: new Text(
+                      description,
+                      textAlign: TextAlign.center,
+                      style: new TextStyle(
+                        fontFamily: AssetStrings.circulerNormal,
+                        fontSize: 16,
+                        height: 1.5,
+                        color: Color.fromRGBO(114, 117, 112, 1),
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 8, left: 18, right: 18),
-                  alignment: Alignment.center,
-                  child: Text(
-                    description,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: AssetStrings.circulerNormal,
-                      fontSize: 16,
-                      color: Color.fromRGBO(114, 117, 112, 1),
-                    ),
+                  Container(
+                    margin: new EdgeInsets.only(top: 60, left: 16, right: 16),
+                    child: getSetupButtonNew(
+                        type == 1
+                            ? callbackPaymentSuccess
+                            : callbackPaymentSuccessBack,
+                        buttonText,
+                        0,
+                        newColor: AppColors.colorDarkCyan),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 44, left: 16, right: 16),
-                  child: getSetupButtonNew(
-                      type == 1
-                          ? callbackPaymentSuccess
-                          : callbackPaymentSuccessBack,
-                      buttonText,
-                      0,
-                      newColor: AppColors.colorDarkCyan,
-                  ),
-                ),
-                Container(height: 26)
-              ],
-            ),
-          );
+                  Container(
+                    height: 56,
+                  )
+                ],
+              )));
         });
   }
 
@@ -1096,7 +1007,6 @@ class _HomeState extends State<PostFavorDetails>
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                //Text('This is a demo alert dialog.'),
                 Text(text),
               ],
             ),
@@ -1114,8 +1024,6 @@ class _HomeState extends State<PostFavorDetails>
                 } else {
                   _hidePostBlockUserApi(1); //Block user
                 }
-
-                //showInSnackBar("Post reported successfully");
                 Navigator.of(context).pop();
               },
             ),
@@ -1135,292 +1043,248 @@ class _HomeState extends State<PostFavorDetails>
     Share.share('check out this post https://google.com');
   }
 
-  @override
-  Widget build(BuildContext context) {
-    provider = Provider.of<AuthProvider>(context);
-    providerFirebase = Provider.of<FirebaseProvider>(context);
-    screenSize = MediaQuery.of(context).size;
-    return Scaffold(
-      key: _scaffoldKey,
-      body: Stack(
-        children: <Widget>[
-          Container(
-            color: AppColors.whiteGray,
-            height: screenSize.height,
-            child: favoriteResponse != null && favoriteResponse.data != null
-                ? SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          height: 214,
-                          width: double.infinity,
-                          child: ClipRRect(
-                            // margin: EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                            borderRadius: BorderRadius.circular(0.0),
+  get buttonDesabled => Positioned(
+        bottom: 0.0,
+        left: 0.0,
+        right: 0.0,
+        child: widget.isButtonDesabled != null && !widget.isButtonDesabled
+            ? Material(
+                child: Container(),
+              )
+            : Container(),
+      );
 
-                            child: getCachedNetworkImageRect(
-                              url: favoriteResponse.data.image,
-                              size: 214,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        buildItem(),
-                        Opacity(
-                          opacity: 0.12,
-                          child: Container(
-                            height: 1.0,
-                            margin:
-                                EdgeInsets.only(left: 17.0, right: 17.0),
-                            color: AppColors.dividerColor,
-                          ),
-                        ),
-                        Container(
-                            color: Colors.white,
-                            padding: EdgeInsets.only(
-                                left: 16.0, right: 16.0, top: 16.0),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              ResString().get('description'),
-                              style: TextThemes.blackCirculerMediumHeight,
-                            )),
-                        Container(
-                          padding: EdgeInsets.only(
-                              left: 16.0, right: 16.0, top: 10.0, bottom: 18),
-                          color: Colors.white,
-                          width: double.infinity,
-                          child: ReadMoreText(
-                            favoriteResponse?.data?.description ?? "",
-                            trimLines: 4,
-                            colorClickableText: AppColors.colorDarkCyan,
-                            trimMode: TrimMode.Line,
-                            style: TextStyle(
-                              color: AppColors.moreText,
-                              fontFamily: AssetStrings.circulerNormal,
-                              fontSize: 14.0,
-                            ),
-                            trimCollapsedText: '...more',
-                            trimExpandedText: ' less',
-                          ),
-                        ),
-                        buildItemUser(),
-                        !isCurrentUser
-                            ? buildItemRating(1, "User Ratings")
-                            : Container(),
-                        // !isCurrentUser
-                        //     ? buildItemRating(2, "Refer Others")
-                        //     : Container(),
-                        Container(
-                            color: Colors.white,
-                            padding: EdgeInsets.only(
-                                left: 16.0, right: 16.0, top: 16),
-                            margin: EdgeInsets.only(top: 4),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              ResString().get('payment_brkdown'),
-                              style: TextThemes.blackCirculerMediumHeight,
-                            )),
-                        getRowsPayment(ResString().get('job_payment'),
-                            "€${favoriteResponse?.data?.price}", 23.0),
-                        getRowsPayment(
-                            !isCurrentUser
-                                ? ResString().get('payvor_service_fee') +
-                                    "(${favoriteResponse?.data?.service_perc?.toString()}%)"
-                                : ResString().get('payvor_service_fee') +
-                                    "(0%)",
-                            isCurrentUser
-                                ? "-€0"
-                                : "-€${favoriteResponse?.data?.service_fee}",
-                            9.0),
-                        Container(
-                          height: 13,
-                          color: Colors.white,
-                        ),
-                        Opacity(
-                          opacity: 0.12,
-                          child: Container(
-                            height: 1.0,
-                            margin:
-                                EdgeInsets.only(left: 17.0, right: 17.0),
-                            color: AppColors.dividerColor,
-                          ),
-                        ),
-                        Container(
-                          color: Colors.white,
-                          padding: EdgeInsets.only(
-                              left: 16, right: 16, top: 9, bottom: 21),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                !isCurrentUser
-                                    ? ResString().get('you_all_receive')
-                                    : "You’ll Pay",
-                                style: TextStyle(
-                                    fontFamily: AssetStrings.circulerBoldStyle,
-                                    color: AppColors.bluePrimary,
-                                    fontSize: 15),
-                                textAlign: TextAlign.center,
-                              ),
-                              Text(
-                                isCurrentUser
-                                    ? "€${favoriteResponse?.data?.price}"
-                                    : "€${favoriteResponse?.data?.receiving}",
-                                style: TextStyle(
-                                    fontFamily: AssetStrings.circulerBoldStyle,
-                                    color: AppColors.bluePrimary,
-                                    fontSize: 15),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 150.0,
-                        ),
-                      ],
-                    ),
-                  )
-                : Container(),
-          ),
-          Offstage(
-            offstage: true,
-            child: Center(
-              child: Text(
-                "No Favors Found",
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0),
-              ),
-            ),
-          ),
-          Positioned(
-              top: 0.0,
-              left: 0.0,
-              right: 0.0,
-              child: Container(
-                margin: EdgeInsets.only(
-                  top: 36,
-                  left: 16,
-                  right: 8,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        child: Container(
-                          width: 30.0,
-                          height: 30.0,
-                          padding: EdgeInsets.all(7),
-                          decoration: BoxDecoration(
-                            color: AppColors.greyProfile.withOpacity(0.4),
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.45),
-                                blurRadius: .4,
-                              ),
-                            ],
-                          ),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: SvgPicture.asset(
-                              AssetStrings.back,
-                              width: 21.0,
-                              height: 18.0,
-                              color: Colors.white,
-                            ),
-                          ),
+  get buttonApply => Material(
+        elevation: 18.0,
+        child: Container(
+            color: Colors.white,
+            padding: new EdgeInsets.only(top: 9, bottom: 28),
+            child: getSetupButtonColor(
+                callback, ResString().get('apply_for_fav'), 16,
+                newColor: (widget.isButtonDesabled != null &&
+                            widget.isButtonDesabled) ||
+                        favoriteResponse?.data?.is_user_applied == 1
+                    ? AppColors.desabledGray
+                    : AppColors.colorDarkCyan)),
+      );
+
+  get favourData => new Container(
+        color: AppColors.whiteGray,
+        height: screenSize.height,
+        child: favoriteResponse != null && favoriteResponse.data != null
+            ? SingleChildScrollView(
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new Container(
+                      height: 214,
+                      width: double.infinity,
+                      child: ClipRRect(
+                        // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                        borderRadius: new BorderRadius.circular(0.0),
+
+                        child: getCachedNetworkImageRect(
+                          url: favoriteResponse.data.image,
+                          size: 214,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      Container(
-                        width: 30.0,
-                        height: 30.0,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: AppColors.greyProfile.withOpacity(0.4),
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.45),
-                                blurRadius: .4,
-                              ),
-                            ],
+                    ),
+                    buildItem(),
+                    Opacity(
+                      opacity: 0.12,
+                      child: new Container(
+                        height: 1.0,
+                        margin: new EdgeInsets.only(left: 17.0, right: 17.0),
+                        color: AppColors.dividerColor,
+                      ),
+                    ),
+                    Container(
+                        color: Colors.white,
+                        padding: new EdgeInsets.only(
+                            left: 16.0, right: 16.0, top: 16.0),
+                        alignment: Alignment.centerLeft,
+                        child: new Text(
+                          ResString().get('description'),
+                          style: TextThemes.blackCirculerMediumHeight,
+                        )),
+                    Container(
+                      padding: new EdgeInsets.only(
+                          left: 16.0, right: 16.0, top: 10.0, bottom: 18),
+                      color: Colors.white,
+                      width: double.infinity,
+                      child: ReadMoreText(
+                        favoriteResponse?.data?.description ?? "",
+                        trimLines: 4,
+                        colorClickableText: AppColors.colorDarkCyan,
+                        trimMode: TrimMode.Line,
+                        style: new TextStyle(
+                          color: AppColors.moreText,
+                          fontFamily: AssetStrings.circulerNormal,
+                          fontSize: 14.0,
                         ),
-                        child: GestureDetector(
-                            onTapDown: (TapDownDetails details) {
-                              //_showPopupMenu(details.globalPosition);
-                              showBottomSheets();
+                        trimCollapsedText: '...more',
+                        trimExpandedText: ' less',
+                      ),
+                    ),
+                    buildItemUser(),
+                    !isCurrentUser
+                        ? buildItemRating(1, "User Ratings")
+                        : Container(),
+                    !isCurrentUser
+                        ? buildItemRating(2, "Refer Others")
+                        : Container(),
+                    Container(
+                        color: Colors.white,
+                        padding: new EdgeInsets.only(
+                            left: 16.0, right: 16.0, top: 16),
+                        margin: new EdgeInsets.only(top: 4),
+                        alignment: Alignment.centerLeft,
+                        child: new Text(
+                          ResString().get('payment_brkdown'),
+                          style: TextThemes.blackCirculerMediumHeight,
+                        )),
+                    getRowsPayment(ResString().get('job_payment'),
+                        "€${favoriteResponse?.data?.price}", 23.0),
+                    getRowsPayment(
+                        !isCurrentUser
+                            ? ResString().get('payvor_service_fee') +
+                                "(${favoriteResponse?.data?.service_perc?.toString()}%)"
+                            : ResString().get('payvor_service_fee') + "(0%)",
+                        isCurrentUser
+                            ? "-€0"
+                            : "-€${favoriteResponse?.data?.service_fee}",
+                        9.0),
+                    new Container(
+                      height: 13,
+                      color: Colors.white,
+                    ),
+                    Opacity(
+                      opacity: 0.12,
+                      child: new Container(
+                        height: 1.0,
+                        margin: new EdgeInsets.only(left: 17.0, right: 17.0),
+                        color: AppColors.dividerColor,
+                      ),
+                    ),
+                    new Container(
+                      color: Colors.white,
+                      padding: new EdgeInsets.only(
+                          left: 16, right: 16, top: 9, bottom: 21),
+                      child: new Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          new Text(
+                            !isCurrentUser
+                                ? ResString().get('you_all_receive')
+                                : "You’ll Pay",
+                            style: new TextStyle(
+                                fontFamily: AssetStrings.circulerBoldStyle,
+                                color: AppColors.bluePrimary,
+                                fontSize: 15),
+                            textAlign: TextAlign.center,
+                          ),
+                          new Text(
+                            isCurrentUser
+                                ? "€${favoriteResponse?.data?.price}"
+                                : "€${favoriteResponse?.data?.receiving}",
+                            style: new TextStyle(
+                                fontFamily: AssetStrings.circulerBoldStyle,
+                                color: AppColors.bluePrimary,
+                                fontSize: 15),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                    new SizedBox(
+                      height: 150.0,
+                    ),
+                  ],
+                ),
+              )
+            : Container(),
+      );
 
-                              //    showBottomSheetSuccesss();
-                              //  showBottomSheet();
-                            },
-                            child: Icon(Icons.more_vert, color: Colors.white),
+  get noFavour => Offstage(
+        offstage: true,
+        child: new Center(
+          child: new Text(
+            "No Favors Found",
+            style: new TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0),
+          ),
+        ),
+      );
+
+  get _topOptionWidget => Positioned(
+      top: 0.0,
+      left: 0.0,
+      right: 0.0,
+      child: Container(
+        margin: new EdgeInsets.only(
+          top: 30,
+          left: 16,
+          right: 5,
+        ),
+        child: new Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                child: Container(
+                  width: 30.0,
+                  height: 30.0,
+                  padding: new EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      color: AppColors.greyProfile.withOpacity(0.4),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.45),
+                          blurRadius: .4,
                         ),
-                      )
-                    ],
+                      ]),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: new SvgPicture.asset(
+                      AssetStrings.back,
+                      width: 21.0,
+                      height: 18.0,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              )),
-          favoriteResponse != null && favoriteResponse.data != null
-              ? !isCurrentUser
-                  ? Positioned(
-                      bottom: 0.0,
-                      left: 0.0,
-                      right: 0.0,
-            child: !guestViewMain
-                          ? Material(
-                              elevation: 18.0,
-                              child: Container(
-                                  color: Colors.white,
-                                  padding: EdgeInsets.only(top: 9, bottom: 28),
-                                  child: getSetupButtonColor(callback,
-                                      ResString().get('apply_for_fav'), 16,
-                                      newColor: (widget.isButtonDesabled != null &&
-                                                  widget.isButtonDesabled) ||
-                                              favoriteResponse?.data?.is_user_applied == 1
-                                          ? AppColors.desabledGray
-                                          : AppColors.colorDarkCyan)),
-                            )
-                          : Container(),
-                    )
-                  : Positioned(
-                      bottom: 0.0,
-                      left: 0.0,
-                      right: 0.0,
-                      child: widget.isButtonDesabled != null &&
-                              !widget.isButtonDesabled
-                          ? Material(
-                        // elevation: 18.0,
-                              child: Container(
-                                  /*  color: Colors.white,
-                                  padding:
-                                      EdgeInsets.only(top: 9, bottom: 28),
-                                  child: getSetupButtonNew(callbackPromote,
-                                      "Promote your Favor", 16)*/
-                                  ),
-                            )
-                          : Container(),
-                    )
-              : Container(),
-          Center(
-            child: getHalfScreenLoader(
-              status: offstageLoader,
-              context: context,
-            ),
+              ),
+              Container(
+                width: 30.0,
+                height: 30.0,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: AppColors.greyProfile.withOpacity(0.4),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.45),
+                        blurRadius: .4,
+                      ),
+                    ]),
+                child: GestureDetector(
+                    onTapDown: (TapDownDetails details) {
+                      showBottomSheets();
+                    },
+                    child: new Icon(
+                      Icons.more_vert,
+                      color: Colors.white,
+                    )),
+              )
+            ],
           ),
-          Visibility(visible: provider.getLoading(), child: ShimmerDetails())
-          /* Center(
-            child: _getLoader,
-          ),*/
-        ],
-      ),
-    );
-  }
+        ),
+      ));
 }

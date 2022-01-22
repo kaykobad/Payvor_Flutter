@@ -12,6 +12,7 @@ import 'package:payvor/filter/refer_user.dart';
 import 'package:payvor/filter/refer_user_response.dart';
 import 'package:payvor/model/add_paypal/add_paypal_request.dart';
 import 'package:payvor/model/add_paypal/get_paypal_data.dart';
+import 'package:payvor/model/add_receiver/add_receiver_response.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/applied_user/favour_applied_user.dart';
 import 'package:payvor/model/category/category_response.dart';
@@ -23,12 +24,14 @@ import 'package:payvor/model/favour_details_response/favour_details_response.dar
 import 'package:payvor/model/favour_posted_by_user.dart';
 import 'package:payvor/model/forgot_password/forgot_password_request.dart';
 import 'package:payvor/model/forgot_password/forgot_password_response.dart';
+import 'package:payvor/model/get_account/get_acccount_response.dart';
 import 'package:payvor/model/hide_post_request.dart';
 import 'package:payvor/model/hiew/hire_list.dart';
 import 'package:payvor/model/hired_user_response_details/hired_user_response-details.dart';
 import 'package:payvor/model/logged_in_user/logged_in_user_response.dart';
 import 'package:payvor/model/login/loginrequest.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
+import 'package:payvor/model/make_payment_request.dart';
 import 'package:payvor/model/my_profile_job_hire/my_profile_job_hire_response.dart';
 import 'package:payvor/model/my_profile_job_hire/my_profile_response.dart';
 import 'package:payvor/model/otp/otp_forgot_request.dart';
@@ -239,7 +242,7 @@ class AuthProvider with ChangeNotifier {
         requestBody: request.toJson());
 
     print(APIs.forgotPassword);
-
+    hideLoader();
     if (response is APIError) {
       completer.complete(response);
       return completer.future;
@@ -789,7 +792,7 @@ class AuthProvider with ChangeNotifier {
       if (filterRequest?.listCategory != null &&
           filterRequest?.listCategory.length > 0) {
         isFilter = true;
-        data.write("&category_id=${filterRequest?.listCategory?.toString()}");
+        data.write("&category_id=${filterRequest?.listCategory?.join(', ')}");
       }
 
       if (isFilter) {
@@ -937,6 +940,42 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<dynamic> getAccountInfo(BuildContext context) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.get(context: context, url: APIs.getBank);
+    print("category ${APIs.getBank}");
+    hideLoader();
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      GetAccountResponse resendOtpResponse =
+          new GetAccountResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> addReceiver(
+      BuildContext context, BankAccountRequest request) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.post(
+        context: context, url: APIs.addReceiver, requestBody: request.toJson());
+    print("addReceiver ${APIs.addReceiver}");
+    hideLoader();
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      AddReceiverResponse resendOtpResponse =
+          new AddReceiverResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
   Future<dynamic> giveUserRating(
       GiveRatingRequest requests, BuildContext context) async {
     Completer<dynamic> completer = new Completer<dynamic>();
@@ -958,6 +997,26 @@ class AuthProvider with ChangeNotifier {
     Completer<dynamic> completer = new Completer<dynamic>();
     var response =
         await APIHandler.get(context: context, url: APIs.getStripeUsers);
+    hideLoader();
+    if (response is APIError) {
+      completer.complete(response);
+      return completer.future;
+    } else {
+      GetStripeResponse resendOtpResponse =
+          new GetStripeResponse.fromJson(response);
+      completer.complete(resendOtpResponse);
+      notifyListeners();
+      return completer.future;
+    }
+  }
+
+  Future<dynamic> hitStripePayments(
+      BuildContext context, MakePaymentRequest request) async {
+    Completer<dynamic> completer = new Completer<dynamic>();
+    var response = await APIHandler.post(
+        context: context,
+        url: APIs.hitPaymentApi,
+        requestBody: request.toJson());
     hideLoader();
     if (response is APIError) {
       completer.complete(response);
@@ -1112,8 +1171,8 @@ class AuthProvider with ChangeNotifier {
     var infoData = jsonDecode(MemoryManagement.getUserInfo());
     var userinfo = LoginSignupResponse.fromJson(infoData);
     Completer<dynamic> completer = new Completer<dynamic>();
-    var response =
-        await APIHandler.get(context: context, url: APIs.favorHiredByUser);
+    var response = await APIHandler.get(
+        context: context, url: APIs.favorHiredByUser + "?page=$page");
 
     print(APIs.favorHiredByUser);
     print(APIs.favorHiredByUser);
@@ -1160,8 +1219,10 @@ class AuthProvider with ChangeNotifier {
     print(APIs.userProfileDetails);
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.get(
-        context: context, url: APIs.userProfileDetails + userID);
+        context: context,
+        url: APIs.userProfileDetails + userID + "?page=$page");
 
+    hideLoader();
     if (response is APIError) {
       completer.complete(response);
       return completer.future;
@@ -1236,7 +1297,7 @@ class AuthProvider with ChangeNotifier {
 
     Completer<dynamic> completer = new Completer<dynamic>();
     var response = await APIHandler.get(
-        context: context, url: APIs.currentuserhirebyfavor);
+        context: context, url: APIs.currentuserhirebyfavor + "?page=$page");
 
     print(APIs.currentuserhirebyfavor);
 

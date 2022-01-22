@@ -79,24 +79,19 @@ class _PaymentDialogState extends State<AddCardDetails> {
   void initState() {
     // TODO: implement initState
 
-    /*  StripePayment.setOptions(StripeOptions(
-        publishableKey: "pk_test_aSaULNS8cJU6Tvo20VAXy6rp",
-        merchantId: "Test",
-        androidPayMode: 'test'));*/
-
     listCardNumber.addAll([
-      FilteringTextInputFormatter.digitsOnly,
+      WhitelistingTextInputFormatter.digitsOnly,
       new LengthLimitingTextInputFormatter(16),
       new CardNumberInputFormatter()
     ]);
 
     listExpDate.addAll([
-      FilteringTextInputFormatter.digitsOnly,
+      WhitelistingTextInputFormatter.digitsOnly,
       new LengthLimitingTextInputFormatter(4),
       new CardMonthInputFormatter()
     ]);
     listcvv.addAll([
-      FilteringTextInputFormatter.digitsOnly,
+      WhitelistingTextInputFormatter.digitsOnly,
       new LengthLimitingTextInputFormatter(4)
     ]);
 
@@ -190,58 +185,10 @@ class _PaymentDialogState extends State<AddCardDetails> {
                   key: _fieldKey,
                   child: new ListView(
                     children: [
-                      /*Container(
-                        margin: new EdgeInsets.only(top: 20, left: 16, right: 16),
-                        color: Colors.white,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              alignment: Alignment.topLeft,
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: new Padding(
-                                  padding: const EdgeInsets.all(1.0),
-                                  child: new SvgPicture.asset(
-                                    AssetStrings.back,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: new Container(
-                                alignment: Alignment.center,
-                                child: new Text(
-                                  "Card Details",
-                                  style: new TextStyle(
-                                      fontFamily: AssetStrings.circulerBoldStyle,
-                                      fontSize: 20,
-                                      color: Colors.black),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),*/
                       new Container(
                         height: 8.0,
                         color: AppColors.kAppScreenBackGround,
                       ),
-
-                      /*    new Container(
-                        margin: new EdgeInsets.only(top: 5),
-                        alignment: Alignment.center,
-                        child: new Text(
-                          "Add a Card details here or Pay with Paypal",
-                          style: new TextStyle(
-                            fontFamily: AssetStrings.circulerNormal,
-                            fontSize: 16,
-                            color: Color.fromRGBO(103, 99, 99, 1),
-                          ),
-                        ),
-                      ),*/
 
                       new Container(
                         margin: new EdgeInsets.only(left: 16, top: 15),
@@ -308,110 +255,6 @@ class _PaymentDialogState extends State<AddCardDetails> {
                       new SizedBox(
                         height: 16.0,
                       ),
-                      /*     getTextField(
-                          validatorCvv,
-                          ResString().get('card_name'),
-                          _NameController,
-                          _NameField,
-                          _MonthField,
-                          0,
-                          mNameEmpty,
-                          listNormalText,
-                          TextInputType.text),
-                      mNameEmpty
-                          ? new Container(
-                        margin: new EdgeInsets.only(top: 6, left: 24),
-                        alignment: Alignment.centerLeft,
-                        child: new Text(
-                          textName,
-                          style: new TextStyle(
-                            fontFamily: AssetStrings.circulerNormal,
-                            fontSize: 13,
-                            color: Color.fromRGBO(205, 107, 102, 1),
-                          ),
-                        ),
-                      )
-                          : Container(),*/
-                      /*  new Container(
-                        height: 58,
-                        margin: new EdgeInsets.only(right: 24, left: 24, top: 16),
-                        child: new Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: getTextField(
-                                  validatorCvv,
-                                  ResString().get('mm/yy'),
-                                  _MonthController,
-                                  _MonthField,
-                                  _CvvField,
-                                  1,
-                                  mMonthEmpty,
-                                  listExpDate,
-                                  TextInputType.number),
-                            ),
-                            new SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: getTextField(
-                                  validatorCvv,
-                                  ResString().get('cvv'),
-                                  _CvvController,
-                                  _CvvField,
-                                  _CvvField,
-                                  1,
-                                  mCvvEmpty,
-                                  listcvv,
-                                  TextInputType.number),
-                            ),
-                          ],
-                        ),
-                      ),
-                      new Container(
-                        child: new Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: mMonthEmpty
-                                  ? new Container(
-                                margin:
-                                new EdgeInsets.only(top: 16, left: 24),
-                                alignment: Alignment.centerLeft,
-                                child: new Text(
-                                  textMonth,
-                                  style: new TextStyle(
-                                    fontFamily: AssetStrings.circulerNormal,
-                                    fontSize: 13,
-                                    color: Color.fromRGBO(205, 107, 102, 1),
-                                  ),
-                                ),
-                              )
-                                  : Container(),
-                            ),
-                            new SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: mCvvEmpty
-                                  ? new Container(
-                                margin:
-                                new EdgeInsets.only(top: 16, right: 24),
-                                alignment: Alignment.centerLeft,
-                                child: new Text(
-                                  textCvv,
-                                  style: new TextStyle(
-                                    fontFamily: AssetStrings.circulerNormal,
-                                    fontSize: 13,
-                                    color: Color.fromRGBO(205, 107, 102, 1),
-                                  ),
-                                ),
-                              )
-                                  : Container(),
-                            ),
-                          ],
-                        ),
-                      ),*/
                       Container(
                         margin:
                             new EdgeInsets.only(top: 120, left: 16, right: 16),

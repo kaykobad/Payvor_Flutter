@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -81,15 +82,17 @@ Widget getSpacer({double height, double width}) {
 void onLogoutSuccess({
   @required BuildContext context,
 }) async {
-  await MemoryManagement?.clearMemory();
-  Navigator.pushAndRemoveUntil(
-    context,
-    new CupertinoPageRoute(builder: (BuildContext context) {
-      return new LoginScreenNew();
-    }),
-    (route) => false,
-  );
-}
+
+    await MemoryManagement?.clearMemory();
+    Navigator.pushAndRemoveUntil(
+      context,
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return new LoginScreenNew();
+      }),
+          (route) => false,
+    );
+  }
+
 
 // Checks target platform
 bool isAndroid() {
@@ -771,4 +774,46 @@ Widget getCachedNetworkImage(
       ));
     },
   );
+}
+
+awesomeSuccessDialog(String message, BuildContext context,
+    {VoidCallback callback}) {
+  AwesomeDialog(
+      context: context,
+      animType: AnimType.LEFTSLIDE,
+      headerAnimationLoop: false,
+      dialogType: DialogType.SUCCES,
+      showCloseIcon: true,
+      title: 'Success',
+      desc: message,
+      btnOkOnPress: () {
+        debugPrint('OnClcik');
+        if (callback != null) {
+          callback();
+        }
+      },
+      btnOkIcon: Icons.check_circle,
+      onDissmissCallback: (type) {
+        debugPrint('Dialog Dissmiss from callback $type');
+      })
+    ..show();
+}
+
+awesomeErrorDialog(String message, BuildContext context,
+    {VoidCallback callback}) {
+  AwesomeDialog(
+      context: context,
+      dialogType: DialogType.ERROR,
+      animType: AnimType.RIGHSLIDE,
+      headerAnimationLoop: true,
+      title: 'Error',
+      desc: message,
+      btnOkOnPress: () {
+        if (callback != null) {
+          callback();
+        }
+      },
+      btnOkIcon: Icons.cancel,
+      btnOkColor: Colors.red)
+    ..show();
 }

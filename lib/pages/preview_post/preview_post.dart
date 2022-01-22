@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -34,22 +33,14 @@ class _HomeState extends State<PreviewPost>
   var screenSize;
 
   String searchkey = null;
-
-  final StreamController<bool> _loaderStreamController =
-  new StreamController<bool>();
   ScrollController scrollController = new ScrollController();
-  bool _loadMore = false;
   bool isPullToRefresh = false;
-
   var userName = "";
   var active = 0;
   var profile = "";
   var location = "";
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-  new GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
@@ -58,7 +49,6 @@ class _HomeState extends State<PreviewPost>
 
   @override
   void initState() {
-    _setScrollListener();
     var infoData = jsonDecode(MemoryManagement.getUserInfo());
     var userinfo = LoginSignupResponse.fromJson(infoData);
     userName = userinfo.user.name ?? "";
@@ -67,22 +57,6 @@ class _HomeState extends State<PreviewPost>
     location = userinfo.user.location ?? "";
 
     super.initState();
-  }
-
-  void _setScrollListener() {
-    //scrollController.position.isScrollingNotifier.addListener(() { print("called");});
-/*
-    scrollController = new ScrollController();
-    scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent ==
-          scrollController.offset) {
-        if (_listGame.length >= (PAGINATION_SIZE * _currentPageNumber)) {
-          isPullToRefresh=true;
-          _loadHomeData();
-          showInSnackBar("Loading data...");
-        }
-      }
-    });*/
   }
 
   @override
@@ -163,9 +137,6 @@ class _HomeState extends State<PreviewPost>
               ),
             ),
           ),
-          /* new Center(
-            child: _getLoader,
-          ),*/
 
           Positioned(
             bottom: 0.0,

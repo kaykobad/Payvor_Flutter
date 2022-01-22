@@ -3,10 +3,11 @@ class APIs {
 
   // Base url
   static const String baseUrl = "http://167.172.40.120/api/v1";
+  static const String baseUrlPayment = "http://167.172.40.120/make-payment/";
 
   //load image url
   static const String imageBaseUrl = "http://35.226.88.58";
-
+  static const String apiBaseUrl="http://167.172.40.120/";
   //new App Url
   static const String signUpUrl = "$baseUrl/auth/register";
   static const String authSocialUrl = "$baseUrl/auth/socialLogin";
@@ -35,8 +36,11 @@ class APIs {
   static const String giveRating = "$baseUrl/give-rating";
   static const String updatetoken = "$baseUrl/update-token";
   static const String getStripeUsers = "$baseUrl/get-stripe-user";
+  static const String hitPaymentApi = "$baseUrl/makepayment";
   static const String addStripeUsers = "$baseUrl/add-card";
   static const String category = "$baseUrl/get-category";
+  static const String getBank = "$baseUrl/get-bank";
+  static const String addReceiver = "$baseUrl/addReceiver";
   static const String updateFavStatus = "$baseUrl/update-fav-status";
   static const String updatePushStatus = "$baseUrl/disable-push/";
   static const String deleteAccount = "$baseUrl/delete_ac/";

@@ -20,24 +20,7 @@ import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class AddPaymentMethodFirst extends StatefulWidget {
-/*  final String id;
-  final int type;
-  final String image;
-  final String name;
-  final String userId;
-  final String paymentType;
-  final String paymentAmount;
-  final ValueSetter<int> voidcallback;
 
-  RatingBarNew(
-      {@required this.id,
-        this.type,
-        this.image,
-        this.name,
-        this.userId,
-        this.paymentType,
-        this.paymentAmount,
-        this.voidcallback});*/
 
   @override
   _HomeState createState() => _HomeState();
@@ -46,19 +29,10 @@ class AddPaymentMethodFirst extends StatefulWidget {
 class _HomeState extends State<AddPaymentMethodFirst>
     with AutomaticKeepAliveClientMixin<AddPaymentMethodFirst> {
   var screenSize;
-
-  final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
-
   AuthProvider provider;
   FirebaseProvider firebaseProvider;
-
   List<Data> dataList = List<Data>();
-
-  bool _switchValue = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  double _rating;
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(

@@ -55,14 +55,6 @@ class _LoginScreenState extends State<CreateCredential> {
   @override
   void initState() {
     listPassword.addAll([new LengthLimitingTextInputFormatter(20)]);
-
-    // var emails = MemoryManagement.getUserEmail()??"";
-    //   var names = MemoryManagement.getuserName()??"";
-
-    /* var infoData = jsonDecode(MemoryManagement.getUserInfo());
-    var userinfo = LoginSignupResponse.fromJson(infoData);
-    name = userinfo?.user?.name ?? "";
-    email = userinfo?.user?.email ?? "";*/
     super.initState();
   }
 
@@ -103,18 +95,29 @@ class _LoginScreenState extends State<CreateCredential> {
 
     provider.hideLoader();
     if (response is CommonSuccessResponse) {
-      var infoData = jsonDecode(MemoryManagement.getUserInfo());
-      var userinfo = LoginSignupResponse.fromJson(infoData);
+      // var infoData = jsonDecode(MemoryManagement.getUserInfo());
+      // var userinfo = LoginSignupResponse.fromJson(infoData);
 
-      MemoryManagement.setScreenType(type: "3");
-      MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
-      Navigator.pushAndRemoveUntil(
-        context,
-        new CupertinoPageRoute(builder: (BuildContext context) {
-          return DashBoardScreen();
-        }),
-        (route) => false,
-      );
+     // MemoryManagement.setScreenType(type: "3");
+     //  MemoryManagement.setUserInfo(userInfo: json.encode(response));
+     //  MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
+     //  Navigator.pushAndRemoveUntil(
+     //    context,
+     //    new CupertinoPageRoute(builder: (BuildContext context) {
+     //      return DashBoardScreen();
+     //    }),
+     //    (route) => false,
+     //  );
+      showInSnackBar("Password updated successfully!");
+      MemoryManagement.setAccessToken(accessToken: "");
+      Future.delayed(Duration(milliseconds: 1000), () {
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.pop(context);
+      });
+
+
+
     } else {
       APIError apiError = response;
       print(apiError.error);
@@ -122,79 +125,6 @@ class _LoginScreenState extends State<CreateCredential> {
       showInSnackBar(apiError.error);
     }
   }
-
-/*  Widget getTextField(
-      String labelText,
-      TextEditingController controller,
-      FocusNode focusNodeCurrent,
-      FocusNode focusNodeNext,
-      TextInputType textInputType,
-      String svgPicture,
-      int type,
-      bool obsecure) {
-    return Container(
-      margin: new EdgeInsets.only(left: 20.0, right: 20.0),
-      padding: new EdgeInsets.only(top: 2.0, bottom: 2.0, right: 10.0),
-      decoration: new BoxDecoration(
-          color: Colors.transparent,
-          border: new Border.all(color: Colors.grey.withOpacity(0.5)),
-          borderRadius: new BorderRadius.circular(8.0)),
-      child: new TextField(
-        controller: controller,
-        keyboardType: textInputType,
-        style: TextThemes.blackTextFieldNormal,
-        obscureText: obsecure,
-        focusNode: focusNodeCurrent,
-        onSubmitted: (String value) {
-          if (focusNodeCurrent == _ConfirmPasswordField) {
-            _ConfirmPasswordField.unfocus();
-          } else {
-            FocusScope.of(context).autofocus(focusNodeNext);
-          }
-        },
-        inputFormatters: listPassword,
-        decoration: new InputDecoration(
-          border: InputBorder.none,
-          contentPadding: new EdgeInsets.only(top: 15.0),
-          prefixIcon: Padding(
-            padding: const EdgeInsets.all(14.0),
-            child: new Image.asset(
-              svgPicture,
-              width: 20.0,
-              height: 20.0,
-            ),
-          ),
-          suffixIcon: InkWell(
-            onTap: () {
-              if (type == 1) {
-                obsecureText = !obsecureText;
-              } else {
-                obsecureTextConfirm = !obsecureTextConfirm;
-              }
-
-              setState(() {});
-            },
-            child: Container(
-              width: 30.0,
-              alignment: Alignment.centerRight,
-              child: new Text(
-                type == 1
-                    ? obsecureText
-                        ? "show"
-                        : "hide"
-                    : obsecureTextConfirm
-                        ? "show"
-                        : "hide",
-                style: TextThemes.blackTextSmallNormal,
-              ),
-            ),
-          ),
-          hintText: labelText,
-          hintStyle: TextThemes.greyTextFieldHintNormal,
-        ),
-      ),
-    );
-  }*/
 
   Widget getTextField(
       String labelText,
@@ -409,7 +339,6 @@ class _LoginScreenState extends State<CreateCredential> {
                         2,
                         obsecureTextConfirm),
 
-                    //  termAndConditionWidget,
                     Container(
                         margin: new EdgeInsets.only(top: 30),
                         child: getSetupButtonNew(

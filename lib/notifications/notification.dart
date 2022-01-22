@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/notifications/notification_response.dart';
@@ -16,7 +18,6 @@ import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:provider/provider.dart';
-
 class Notifications extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -26,7 +27,7 @@ class _HomeState extends State<Notifications>
     with AutomaticKeepAliveClientMixin<Notifications> {
   var screenSize;
 
-  String searchkey;
+  String searchkey = null;
   AuthProvider provider;
   FirebaseProvider providerFirebase;
   int currentPage = 1;
@@ -35,20 +36,20 @@ class _HomeState extends State<Notifications>
   bool loader = false;
   String title = "";
 
-  List<Data> listResult = [];
+  List<Data> listResult = List();
 
-  // TextEditingController _controller = TextEditingController();
-  ScrollController scrollController = ScrollController();
+  TextEditingController _controller = new TextEditingController();
+  ScrollController scrollController = new ScrollController();
   bool _loadMore = false;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
+      new GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(SnackBar(content: Text(value)));
+        .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
   @override
@@ -131,7 +132,7 @@ class _HomeState extends State<Notifications>
   void _setScrollListener() {
     //scrollController.position.isScrollingNotifier.addListener(() { print("called");});
 
-    scrollController = ScrollController();
+    scrollController = new ScrollController();
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -156,9 +157,9 @@ class _HomeState extends State<Notifications>
       key: _scaffoldKey,
       body: Stack(
         children: <Widget>[
-          Container(
+          new Container(
             color: Colors.white,
-            child: Column(
+            child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 _buildContestList(),
@@ -169,34 +170,34 @@ class _HomeState extends State<Notifications>
             offstage: offstagenodata,
             child: Container(
               height: screenSize.height,
-              padding: EdgeInsets.only(bottom: 40),
-              child: Center(
+              padding: new EdgeInsets.only(bottom: 40),
+              child: new Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     InkWell(
                       onTap: () {},
-                      child: Image.asset(
+                      child: new Image.asset(
                         AssetStrings.empty_notification_new,
                         width: 150,
                         height: 150,
                       ),
                     ),
                     Container(
-                      child: Text(
+                      child: new Text(
                         "No Notifications",
-                        style: TextStyle(
+                        style: new TextStyle(
                             color: Colors.black,
                             fontFamily: AssetStrings.circulerMedium,
                             fontSize: 17.0),
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 9, left: 20, right: 20),
-                      child: Text(
+                      margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
+                      child: new Text(
                         "You didn’t recieve any notifications yet",
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: new TextStyle(
                             color: Color.fromRGBO(103, 99, 99, 1.0),
                             fontFamily: AssetStrings.circulerNormal,
                             fontSize: 15.0),
@@ -208,14 +209,14 @@ class _HomeState extends State<Notifications>
             ),
           ),
           Container(
-            child: Center(
+            child: new Center(
               child: getHalfScreenLoader(
                 status: provider.getLoading(),
                 context: context,
               ),
             ),
           ),
-          /* Center(
+          /* new Center(
             child: _getLoader,
           ),*/
         ],
@@ -236,8 +237,8 @@ class _HomeState extends State<Notifications>
       },
       child: Container(
         color: AppColors.whiteGray,
-        child: ListView.builder(
-          padding: EdgeInsets.all(0.0),
+        child: new ListView.builder(
+          padding: new EdgeInsets.all(0.0),
           controller: scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
@@ -267,16 +268,16 @@ class _HomeState extends State<Notifications>
     }
 
     return Container(
-      margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 14),
+      margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 14),
       child: Row(
         children: <Widget>[
-          /* Container(
+          /* new Container(
             width: 49.0,
             height: 49.0,
             alignment: Alignment.center,
             decoration: BoxDecoration(shape: BoxShape.circle),
             child: ClipOval(
-              // margin: EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+              // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
               child: getCachedNetworkImageWithurl(
                   url: data?.user?.profilePic ?? "",
@@ -285,14 +286,14 @@ class _HomeState extends State<Notifications>
             ),
           ),*/
 
-          Container(
+          new Container(
             width: 49.0,
             height: 49.0,
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 shape: BoxShape.circle, color: AppColors.notiBackground),
             child: Container(
-              // margin: EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+              // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
               child: Image.asset(
                 image,
@@ -308,18 +309,18 @@ class _HomeState extends State<Notifications>
               children: [
                 data?.type != 4
                     ? Container(
-                        margin: EdgeInsets.only(left: 14.0),
-                        child: RichText(
-                          text: TextSpan(
+                        margin: new EdgeInsets.only(left: 14.0),
+                        child: new RichText(
+                          text: new TextSpan(
                       text: data?.user?.name ?? "",
-                      style: TextStyle(
+                      style: new TextStyle(
                           fontSize: 16.0,
                           fontFamily: AssetStrings.circulerBoldStyle,
                           color: Color.fromRGBO(23, 23, 23, 1)),
                       children: <TextSpan>[
-                        TextSpan(
+                        new TextSpan(
                             text: " ${data?.description ?? ""}",
-                            style: TextStyle(
+                            style: new TextStyle(
                                 fontFamily: AssetStrings.circulerNormal,
                                 color: Color.fromRGBO(103, 99, 99, 1))),
                       ],
@@ -332,9 +333,9 @@ class _HomeState extends State<Notifications>
                     child: Html(
                         shrinkToFit: true, data: "${data?.description}")),
                 Container(
-                  margin: EdgeInsets.only(left: 14.0),
-                  child: Text("\"${data?.favour?.title ?? ""}\" ",
-                      style: TextStyle(
+                  margin: new EdgeInsets.only(left: 14.0),
+                  child: new Text("\"${data?.favour?.title ?? ""}\" ",
+                      style: new TextStyle(
                           fontFamily: AssetStrings.circulerNormal,
                           color: Color.fromRGBO(255, 107, 102, 1))),
                 ),
@@ -360,7 +361,7 @@ class _HomeState extends State<Notifications>
 
                 if (data?.type == 1) {
                   //"hire to u
-                  providerFirebase?.changeScreen(PayFeebackDetailsCommon(
+                  providerFirebase?.changeScreen(new PayFeebackDetailsCommon(
                     postId: data?.favourId.toString(),
                     userId: data?.userId.toString(),
                     giveFeedback: false,
@@ -370,7 +371,7 @@ class _HomeState extends State<Notifications>
                 } else if (data?.type == 2) {
                   // hire and paid favor
 
-                  providerFirebase?.changeScreen(PayFeebackDetails(
+                  providerFirebase?.changeScreen(new PayFeebackDetails(
                     postId: data?.favourId.toString(),
                     userId: data?.userId.toString(),
                     type: 1,
@@ -380,14 +381,14 @@ class _HomeState extends State<Notifications>
                   print("review_post from notification screen");
                   // for rated user
                   providerFirebase?.changeScreen(Material(
-                      child: ReviewPost(
+                      child: new ReviewPost(
                     id: data.favourId.toString() ?? "",
                   )));
                 } else if (data?.type == 4) {
                   // for applied user
 
                   providerFirebase?.changeScreen(Material(
-                      child: OriginalPostData(
+                      child: new OriginalPostData(
                     id: data.favourId.toString(),
                   )));
                 } else {
@@ -397,9 +398,9 @@ class _HomeState extends State<Notifications>
               child: buildItem(data)),
           Opacity(
             opacity: 1,
-            child: Container(
+            child: new Container(
               height: 1,
-              margin: EdgeInsets.only(left: 17.0, right: 17.0, top: 14.0),
+              margin: new EdgeInsets.only(left: 17.0, right: 17.0, top: 14.0),
               color: Color.fromRGBO(151, 151, 151, 0.2),
             ),
           ),
@@ -410,6 +411,8 @@ class _HomeState extends State<Notifications>
 
   void _redirectToFavourDetailScreen(int favourId) {
 
-    providerFirebase?.changeScreen(PostFavorDetails(id: favourId.toString()), rootNavigator: true);
+    providerFirebase?.changeScreen(new PostFavorDetails(
+      id: favourId.toString(),
+    ));
   }
 }

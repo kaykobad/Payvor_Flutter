@@ -40,21 +40,21 @@ class _HomeState extends State<PostFavour>
     with AutomaticKeepAliveClientMixin<PostFavour> {
   var screenSize;
 
-   ScrollController scrollController = ScrollController();
+   ScrollController scrollController = new ScrollController();
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  TextEditingController _TitleController = TextEditingController();
-  TextEditingController _PriceController = TextEditingController();
-  TextEditingController _DescriptionController = TextEditingController();
-  TextEditingController _LocationController = TextEditingController();
-  TextEditingController _LatLongController = TextEditingController();
+  TextEditingController _TitleController = new TextEditingController();
+  TextEditingController _PriceController = new TextEditingController();
+  TextEditingController _DescriptionController = new TextEditingController();
+  TextEditingController _LocationController = new TextEditingController();
+  TextEditingController _LatLongController = new TextEditingController();
 
-  final GlobalKey<ScaffoldState> _scaffoldKeys = GlobalKey<ScaffoldState>();
-  FocusNode _TitleField = FocusNode();
-  FocusNode _PriceField = FocusNode();
-  FocusNode _DescriptionField = FocusNode();
-  FocusNode _LocationField = FocusNode();
+  final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
+  FocusNode _TitleField = new FocusNode();
+  FocusNode _PriceField = new FocusNode();
+  FocusNode _DescriptionField = new FocusNode();
+  FocusNode _LocationField = new FocusNode();
 
   List<DataCategory> categoryList = [];
 
@@ -70,11 +70,11 @@ class _HomeState extends State<PostFavour>
 
   AuthProvider provider;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
+      new GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(SnackBar(content: Text(value)));
+        .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
   @override
@@ -96,15 +96,11 @@ class _HomeState extends State<PostFavour>
         id = widget?.favourDetailsResponse?.data?.category_id ?? "";
         text = widget?.favourDetailsResponse?.data?.catName?.name ?? "";
       }
-
-      /*  print("lat ${widget?.favourDetailsResponse?.data?.lat}");
-      print("long ${widget?.favourDetailsResponse?.data?.long}");
-      print("latlong ${ _LatLongController.text}");*/
     }
 
     _setScrollListener();
 
-    Future.delayed(Duration(microseconds: 2000), () {
+    Future.delayed(new Duration(microseconds: 2000), () {
       getCategory();
       print("call fun");
     });
@@ -225,13 +221,13 @@ class _HomeState extends State<PostFavour>
 
 
     if (widget.isEdit != null && widget.isEdit) {
-      request = http.MultipartRequest("POST", Uri.parse(APIs.editFavour));
+      request = new http.MultipartRequest("POST", Uri.parse(APIs.editFavour));
 
       request.fields['id'] = widget.favourDetailsResponse?.data?.id?.toString();
       print("edit true");
     }
     else {
-      request = http.MultipartRequest("POST", Uri.parse(APIs.createPayvor));
+      request = new http.MultipartRequest("POST", Uri.parse(APIs.createPayvor));
       print("edit false");
     }
 
@@ -251,22 +247,12 @@ class _HomeState extends State<PostFavour>
 
       var bytes = await _image.readAsBytes();
 
-      request.files.add(http.MultipartFile.fromBytes(
+      request.files.add(new http.MultipartFile.fromBytes(
         "image",
         bytes,
         filename: fileName,
       ));
     }
-
-/*
-    PayvorCreateRequest loginRequest = PayvorCreateRequest(
-        title: _TitleController.text,
-        location: _LocationController.text,
-        description: _DescriptionController.text,
-        price: _PriceController.text,
-        lat: lat,
-        long: long);
-    var response = await provider.createPayvor(loginRequest, context);*/
 
     print(request.fields);
 
@@ -294,24 +280,6 @@ class _HomeState extends State<PostFavour>
     else {
       showInSnackBar("Something went wrong!!Please try again");
     }
-
-/*
-    if (response is FavourCreateResponse) {
-      provider.hideLoader();
-
-      print(response);
-      try {
-        showInSnackBar(response.success);
-        */ /*   Navigator.pop(context);
-        Navigator.pop(context);*/ /*
-      } catch (ex) {}
-    } else {
-      provider.hideLoader();
-      APIError apiError = response;
-      print(apiError.error);
-
-      showInSnackBar(apiError.error);
-    }*/
   }
 
   void containerForSheet<T>({BuildContext context, Widget child}) {
@@ -440,11 +408,11 @@ class _HomeState extends State<PostFavour>
       TextInputType textInputType,
       int lines) {
     return Container(
-      padding: EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
+      padding: new EdgeInsets.only(top: 10, bottom: 10, left: 16, right: 16),
       color: Colors.white,
       child: Stack(
         children: [
-          TextField(
+          new TextField(
             controller: controller,
             keyboardType: textInputType,
             style: TextThemes.blackTextFieldNormal,
@@ -459,16 +427,16 @@ class _HomeState extends State<PostFavour>
                 FocusScope.of(context).autofocus(focusNodeNext);
               }
             },
-            decoration: InputDecoration(
+            decoration: new InputDecoration(
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
               hintText: labelText,
-              contentPadding: EdgeInsets.only(right: 50.0),
-              prefix: Text(
+              contentPadding: new EdgeInsets.only(right: 50.0),
+              prefix: new Text(
                 focusNodeCurrent == _PriceField && _PriceField.hasFocus
                     ? "€ "
                     : "",
-                style: TextStyle(color: AppColors.colorDarkCyan),
+                style: new TextStyle(color: AppColors.colorDarkCyan),
               ),
               hintStyle: controller.text.length == 0 && isValid
                   ? TextThemes.readAlert
@@ -476,13 +444,13 @@ class _HomeState extends State<PostFavour>
             ),
           ),
           controller.text.length == 0 && isValid
-              ? Positioned(
+              ? new Positioned(
                   right: 0.0,
-                  child: Padding(
+                  child: new Padding(
                     padding: lines > 1
-                        ? EdgeInsets.only(bottom: 4)
-                        : EdgeInsets.only(top: 13),
-                    child: SvgPicture.asset(
+                        ? new EdgeInsets.only(bottom: 4)
+                        : new EdgeInsets.only(top: 13),
+                    child: new SvgPicture.asset(
                       AssetStrings.notFilled,
                     ),
                   ),
@@ -560,7 +528,7 @@ class _HomeState extends State<PostFavour>
       }
 
 
-      PayvorCreateRequest loginRequest = PayvorCreateRequest(
+      PayvorCreateRequest loginRequest = new PayvorCreateRequest(
           title: _TitleController.text,
           location: _LocationController.text,
           description: _DescriptionController.text,
@@ -570,8 +538,8 @@ class _HomeState extends State<PostFavour>
 
       Navigator.push(
         context,
-        CupertinoPageRoute(builder: (BuildContext context) {
-          return Material(child: PreviewPost(
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return Material(child: new PreviewPost(
             request: loginRequest,
             type: 1,
             file: _image,
@@ -600,7 +568,7 @@ class _HomeState extends State<PostFavour>
           return Padding(
               padding: MediaQuery.of(context).viewInsets,
               child: Container(
-                  child: Column(
+                  child: new Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
 
@@ -608,13 +576,13 @@ class _HomeState extends State<PostFavour>
                       Container(
                         width: 86.0,
                         height: 86.0,
-                        margin: EdgeInsets.only(top: 38),
+                        margin: new EdgeInsets.only(top: 38),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: AppColors.greenDark,
                       shape: BoxShape.circle,
                     ),
-                        child: SvgPicture.asset(
+                        child: new SvgPicture.asset(
                           AssetStrings.check,
                           width: 42.0,
                           height: 42.0,
@@ -622,21 +590,21 @@ class _HomeState extends State<PostFavour>
                         ),
                       ),
 
-                      Container(
-                        margin: EdgeInsets.only(top: 40),
-                        child: Text("Successful!", style: TextStyle(
+                      new Container(
+                        margin: new EdgeInsets.only(top: 40),
+                        child: new Text("Successful!", style: new TextStyle(
                             fontFamily: AssetStrings.circulerMedium,
                             fontSize: 20,
                             color: Colors.black),),
                       ),
 
-                      Container(
-                        margin: EdgeInsets.only(top: 10),
-                        child: Text(
+                      new Container(
+                        margin: new EdgeInsets.only(top: 10),
+                        child: new Text(
                           widget?.isEdit ?? false
                           ? "You have updated favor successfully."
                           : "You have created a favor successfully.",
-                      style: TextStyle(
+                      style: new TextStyle(
                         fontFamily: AssetStrings.circulerNormal,
                         fontSize: 16,
                         color: Color.fromRGBO(114, 117, 112, 1),
@@ -647,7 +615,7 @@ class _HomeState extends State<PostFavour>
                       ),
 
                       Container(
-                        margin: EdgeInsets.only(
+                        margin: new EdgeInsets.only(
                             top: 60, left: 16, right: 16),
                         child: getSetupButtonNew(
                             callbackFavourPage,
@@ -667,8 +635,8 @@ class _HomeState extends State<PostFavour>
 
   buildContestListSearch(StateSetter setState) {
     return Container(
-      child: ListView.builder(
-        padding: EdgeInsets.only(top: 10),
+      child: new ListView.builder(
+        padding: new EdgeInsets.only(top: 10),
         itemBuilder: (BuildContext context, int index) {
           return buildItemRecentSearch(index, categoryList[index], setState);
         },
@@ -694,31 +662,31 @@ class _HomeState extends State<PostFavour>
 
         Navigator.pop(context);
       },
-      child: Container(
-        padding: EdgeInsets.only(top: 15, left: 20, right: 20),
+      child: new Container(
+        padding: new EdgeInsets.only(top: 15, left: 20, right: 20),
         child: Column(
           children: [
-            Row(
+            new Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  margin: EdgeInsets.only(left: 5),
+                  margin: new EdgeInsets.only(left: 5),
                   child: Text(
                     data.name,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: new TextStyle(
                         color: Colors.black,
                         fontSize: 16,
                         fontFamily: AssetStrings.circulerNormal),
                   ),
                 ),
-                Container(
+                new Container(
                   child: data?.isSelect != null && data?.isSelect
-                      ? Icon(
+                      ? new Icon(
                           Icons.radio_button_checked,
                           color: AppColors.colorDarkCyan,
                         )
-                      : Icon(
+                      : new Icon(
                           Icons.radio_button_unchecked,
                           color: AppColors.kBlack.withOpacity(0.2),
                         ),
@@ -727,9 +695,9 @@ class _HomeState extends State<PostFavour>
             ),
             Opacity(
               opacity: 0.12,
-              child: Container(
+              child: new Container(
                 height: 1.0,
-                margin: EdgeInsets.only(top: 15),
+                margin: new EdgeInsets.only(top: 15),
                 color: AppColors.dividerColor,
               ),
             ),
@@ -774,23 +742,29 @@ class _HomeState extends State<PostFavour>
 
   @override
   Widget build(BuildContext context) {
-    screenSize = MediaQuery.of(context).size;
+    screenSize = MediaQuery
+        .of(context)
+        .size;
     provider = Provider.of<AuthProvider>(context);
     return Scaffold(
       key: _scaffoldKey,
       body: Stack(
         children: <Widget>[
-          Container(
+          new Container(
             color: AppColors.whiteGray,
             height: screenSize.height,
             child: SingleChildScrollView(
-              child: Column(
+              child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Container(color: Colors.white, height: 36.0),
+                  new Container(
+                    color: Colors.white,
+                    height: 36.0,
+                  ),
                   Container(
                     color: Colors.white,
-                    padding: EdgeInsets.only(top: 18.0, left: 17, right: 17),
+                    padding:
+                        new EdgeInsets.only(top: 14.0, left: 17, right: 17),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -801,16 +775,16 @@ class _HomeState extends State<PostFavour>
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            child: Padding(
+                            child: new Padding(
                               padding: const EdgeInsets.all(1.0),
-                              child: SvgPicture.asset(
+                              child: new SvgPicture.asset(
                                 AssetStrings.cross,
                               ),
                             ),
                           ),
                         ),
                         Container(
-                          child: Text(
+                          child: new Text(
                             widget.isEdit != null && widget.isEdit
                                 ? "Edit Favor"
                                 : ResString().get('post_favour'),
@@ -819,9 +793,9 @@ class _HomeState extends State<PostFavour>
                           ),
                         ),
                         Container(
-                          child: Text(
+                          child: new Text(
                             "",
-                            style: TextStyle(
+                            style: new TextStyle(
                                 fontFamily: AssetStrings.circulerMedium,
                                 color: AppColors.redLight,
                                 fontSize: 14),
@@ -831,22 +805,22 @@ class _HomeState extends State<PostFavour>
                       ],
                     ),
                   ),
-                  Container(
+                  new Container(
                     color: Colors.white,
                     height: 16.0,
                   ),
                   Opacity(
                     opacity: 0.12,
-                    child: Container(
+                    child: new Container(
                       height: 1.0,
                       color: AppColors.dividerColor,
                     ),
                   ),
                   profile != null && profile.isNotEmpty ? Stack(
                     children: [
-                      Container(
+                      new Container(
                           width: double.infinity,
-                          padding: EdgeInsets.only(left: 16, right: 16),
+                          padding: new EdgeInsets.only(left: 16, right: 16),
                           height: 147.0,
                           child: ClipRect(
                             child: getCachedNetworkImageWithurl(
@@ -866,33 +840,35 @@ class _HomeState extends State<PostFavour>
 
                                 });
                               },
-                              child: Container(
+                              child: new Container(
                                   width: 46,
                                   height: 46,
 
-                                  decoration: BoxDecoration(
+                                  decoration: new BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Colors.white
                                   ),
-                                  child: Icon(Icons.delete, color: Colors.red)
+                                  child: new Icon(
+                                      Icons.delete, color: Colors.red)
                               )
                           ),
                         ),
                       ),
                     ],
-                  ) : _image == null ? Container(
+                  ) : _image == null ? new Container(
                     color: Colors.white,
                     width: double.infinity,
-                    margin: EdgeInsets.only(top: 9.0),
-                    padding: EdgeInsets.only(left: 16, right: 16, top: 36, bottom: 33),
-                    child: Column(
+                    margin: new EdgeInsets.only(top: 9.0),
+                    padding: new EdgeInsets.only(
+                        left: 16, right: 16, top: 36, bottom: 33),
+                    child: new Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InkWell(
                           onTap: () {
                             _crupitinoActionSheet();
                           },
-                          child: Image.asset(
+                          child: new Image.asset(
                             AssetStrings.camera,
                             width: 34.0,
                             height: 30.0,
@@ -903,82 +879,91 @@ class _HomeState extends State<PostFavour>
                             _crupitinoActionSheet();
                           },
                           child: Container(
-                            padding: EdgeInsets.only(top: 10),
-                            child: Text(
+                            padding: new EdgeInsets.only(top: 10),
+                            child: new Text(
                               ResString().get('upload_photo'),
-                              style: TextStyle(
-                                fontFamily: AssetStrings.circulerMedium,
-                                color: AppColors.bluePrimary,
-                                fontSize: 16,
-                              ),
+                              style: new TextStyle(
+                                  fontFamily: AssetStrings.circulerMedium,
+                                  color: AppColors.bluePrimary,
+                                  fontSize: 16),
                               textAlign: TextAlign.center,
                             ),
                           ),
                         ),
-                        Text(
+                        new Text(
                           ResString().get('photo_not_mandetry'),
-                          style: TextStyle(
-                            fontFamily: AssetStrings.circulerNormal,
-                            color: AppColors.lightGrey,
-                            fontSize: 14,
-                          ),
+                          style: new TextStyle(
+                              fontFamily: AssetStrings.circulerNormal,
+                              color: AppColors.lightGrey,
+                              fontSize: 16),
                           textAlign: TextAlign.center,
                         ),
                       ],
                     ),
                   ) : Stack(
                     children: [
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.only(left: 16, right: 16),
-                        height: 147.0,
-                        child: ClipRect(
-                          child: Image.file(
-                            _image,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
+                      new Container(
+                          width: double.infinity,
+                          padding: new EdgeInsets.only(left: 16, right: 16),
+                          height: 147.0,
+                          child: ClipRect(
+                            child: new Image.file(
+                              _image,
+                              fit: BoxFit.cover,
+                            ),
+                          )),
 
                       Positioned.fill(
                         child: Align(
                           alignment: Alignment.center,
                           child: InkWell(
-                            onTap: () {
-                              _image = null;
-                              setState(() {
+                              onTap: () {
+                                _image = null;
+                                setState(() {
 
-                              });
-                            },
-                            child: Container(
-                              width: 46,
-                              height: 46,
-                              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-                              child: Icon(Icons.delete, color: Colors.red)
-                            ),
+                                });
+                              },
+                              child: new Container(
+                                  width: 46,
+                                  height: 46,
+
+                                  decoration: new BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white
+                                  ),
+                                  child: new Icon(
+                                      Icons.delete, color: Colors.red)
+                              )
                           ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 8.0),
+                  new SizedBox(
+                    height: 8.0,
+                  ),
                   getTextField(ResString().get('title'), _TitleController,
                       _TitleField, _PriceField, TextInputType.emailAddress, 1),
                   Opacity(
                     opacity: 0.12,
-                    child: Container(height: 1.0, color: AppColors.dividerColor),
+                    child: new Container(
+                      height: 1.0,
+                      color: AppColors.dividerColor,
+                    ),
                   ),
                   getTextField(
-                    'Payment in € (Euro)',
-                    _PriceController,
-                    _PriceField,
-                    _DescriptionField,
-                    TextInputType.number,
-                    1,
-                  ),
+                      ResString().get('price'),
+                      _PriceController,
+                      _PriceField,
+                      _DescriptionField,
+                      TextInputType.number,
+                      1),
                   Opacity(
                     opacity: 0.12,
-                    child: Container(height: 1.0, color: AppColors.dividerColor),
+                    child: new Container(
+                      height: 1.0,
+                      color: AppColors.dividerColor,
+                    ),
                   ),
                   getTextField(
                       ResString().get('description'),
@@ -987,146 +972,153 @@ class _HomeState extends State<PostFavour>
                       _DescriptionField,
                       TextInputType.text,
                       8),
-                  SizedBox(
+                  new SizedBox(
                     height: 1.0,
                   ),
-                  Container(
+                  new Container(
                     color: Colors.white,
                     height: 64.0,
-                    margin: EdgeInsets.only(top: 0.0),
-                    padding: EdgeInsets.only(right: 16),
-                    child: Row(
+                    margin: new EdgeInsets.only(top: 0.0),
+                    padding: new EdgeInsets.only(right: 16),
+                    child: new Row(
                       children: [
-                        /*   Text(
-                          ResString().get('location'),
-                          style: TextStyle(
-                              fontFamily: AssetStrings.circulerNormal,
-                              color: AppColors.lightGrey,
-                              fontSize: 16),
-                          textAlign: TextAlign.center,
-                        ),
-*/
                         Expanded(
                           child: Container(
-                            padding: EdgeInsets.only(left: 16, right: 5.0),
+                            padding: new EdgeInsets.only(left: 16, right: 5.0),
                             alignment: Alignment.centerLeft,
                             child: getLocation(_LocationController, context,
-                              _streamControllerShowLoader,
-                              true,
-                              _LatLongController,
-                              iconData: AssetStrings.location,
-                              colorAlert: isValid
+                                _streamControllerShowLoader,
+                                true,
+                                _LatLongController,
+                                iconData: AssetStrings.location,
+                                colorAlert: isValid
                             ),
                           ),
                         ),
-                        SizedBox(width: 15),
-                        isValid ? SvgPicture.asset(AssetStrings.notFilled) : Container(),
-                        isValid ? SizedBox(width: 5) : Container(),
-                        /* Text(
-                          ">",
-                          style: TextStyle(
-                              fontFamily: AssetStrings.circulerNormal,
-                              color: AppColors.lightGrey,
-                              fontSize: 16),
-                          textAlign: TextAlign.center,
-                        ),*/
+                        new SizedBox(
+                          width: 15,
+                        ),
+                        isValid ? new SvgPicture.asset(
+                          AssetStrings.notFilled,
+                              )
+                            : Container(),
+                        isValid
+                            ? new SizedBox(
+                                width: 5,
+                              )
+                            : Container(),
                       ],
                     ),
                   ),
-                  SizedBox(height: 1.0),
-                  Container(
-                    padding: EdgeInsets.only(left: 16, top: 25, right: 16, bottom: 25),
-                    width: getScreenSize(context: context).width,
-                    color: Colors.white,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            color: Colors.white,
-                            child: Text(
-                              "Category",
-                              style: TextStyle(
-                                fontFamily: AssetStrings.circulerMedium,
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            showBottomSheets();
-                          },
-                          child: Container(
-                            alignment: Alignment.centerRight,
-                            constraints: BoxConstraints(maxWidth: 180),
-                            color: Colors.white,
-                            child: Text(
-                              text != null && text?.isNotEmpty ? text : "None",
-                              style: TextStyle(
-                                fontFamily: AssetStrings.circulerNormal,
-                                color: AppColors.colorDarkCyan,
-                                fontSize: 16,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 2),
-                          child: Icon(
-                            Icons.arrow_forward_ios,
-                            size: 15,
-                            color: AppColors.colorDarkCyan,
-                          ),
-                        )
-                      ],
-                    ),
+                  new SizedBox(
+                    height: 1.0,
                   ),
-                  SizedBox(height: 150.0),
+                  category,
+                  new SizedBox(
+                    height: 150.0,
+                  ),
                 ],
               ),
             ),
           ),
           Offstage(
             offstage: true,
-            child: Center(
-              child: Text(
+            child: new Center(
+              child: new Text(
                 "No Favors Found",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                ),
+                style: new TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0),
               ),
             ),
           ),
-          Positioned(
-            bottom: 0.0,
-            left: 0.0,
-            right: 0.0,
-            child: Material(
-              elevation: 18.0,
+          bottomButton,
+          new Center(
+            child: getFullScreenProviderLoader(
+              status: provider.getLoading(),
+              context: context,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  get category => Container(
+        padding: new EdgeInsets.only(left: 16, top: 25, right: 16, bottom: 25),
+        width: getScreenSize(context: context).width,
+        color: Colors.white,
+        child: Row(
+          children: [
+            Expanded(
               child: Container(
+                alignment: Alignment.centerLeft,
                 color: Colors.white,
-                padding: EdgeInsets.only(top: 9, bottom: 28, left: 16, right: 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: getSetupButtonBorderNew(
-                        _callbackPreviewFavouurPost,
-                        ResString().get('preview_favor'),
-                        0,
+                child: new Text(
+                  "Category",
+                  style: new TextStyle(
+                      fontFamily: AssetStrings.circulerMedium,
+                      color: Colors.black,
+                      fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                showBottomSheets();
+              },
+              child: Container(
+                alignment: Alignment.centerRight,
+                constraints: new BoxConstraints(maxWidth: 180),
+                color: Colors.white,
+                child: new Text(
+                  text != null && text?.isNotEmpty ? text : "None",
+                  style: new TextStyle(
+                      fontFamily: AssetStrings.circulerNormal,
+                      color: AppColors.colorDarkCyan,
+                      fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            Container(
+              margin: new EdgeInsets.only(left: 2),
+              child: new Icon(
+                Icons.arrow_forward_ios,
+                size: 15,
+                color: AppColors.colorDarkCyan,
+              ),
+            )
+          ],
+        ),
+      );
+
+  get bottomButton => Positioned(
+        bottom: 0.0,
+        left: 0.0,
+        right: 0.0,
+        child: Material(
+          elevation: 18.0,
+          child: Container(
+              color: Colors.white,
+              padding:
+                  new EdgeInsets.only(top: 9, bottom: 28, left: 16, right: 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: getSetupButtonBorderNew(_callbackPreviewFavouurPost,
+                        ResString().get('preview_favor'), 0,
                         border: Color.fromRGBO(103, 99, 99, 0.19),
                         newColor: Color.fromRGBO(248, 248, 250, 1.0),
-                        textColor: Colors.black,
-                      ),
-                    ),
-                    SizedBox(width: 10.0),
-                    Expanded(
-                      child: getSetupButtonNew(
+                        textColor: Colors.black),
+                  ),
+                  new SizedBox(
+                    width: 10.0,
+                  ),
+                  Expanded(
+                    child: getSetupButtonNew(
                         widget.isEdit != null && widget.isEdit
                             ? callBackUpdateFavour
                             : callBackCreateFavour,
@@ -1134,26 +1126,10 @@ class _HomeState extends State<PostFavour>
                             ? "Update Favor"
                             : ResString().get('post_favor'),
                         0,
-                        newColor: AppColors.colorDarkCyan,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          Center(
-            child: getFullScreenProviderLoader(
-              status: provider.getLoading(),
-              context: context,
-            ),
-          ),
-          /* Center(
-            child: _getLoader,
-          ),*/
-        ],
-      ),
-    );
-  }
+                        newColor: AppColors.colorDarkCyan),
+                  ),
+                ],
+              )),
+        ),
+      );
 }

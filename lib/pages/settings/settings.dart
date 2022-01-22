@@ -9,9 +9,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
+import 'package:payvor/pages/add_bank_details/add_bank_details.dart';
+import 'package:payvor/pages/add_payment_method_first/add_payment.dart';
 import 'package:payvor/pages/edit_profile/edit_user_profile.dart';
 import 'package:payvor/pages/guest_view/guest_intro_screen.dart';
-import 'package:payvor/pages/settings/add_recive_payment_card.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
@@ -260,7 +261,7 @@ class _HomeState extends State<Settings>
       onTap: () {
         if (type == 0) {
           firebaseProvider
-              .changeScreen(Material(child: new AddReceivePaymentCard()));
+              .changeScreen(Material(child: new AddPaymentMethodFirst()));
         } else if (type == 1) {
           firebaseProvider.changeScreen(Material(child: new EditProfile()));
         } else if (type == 3) {

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:payvor/filter/filter.dart';
 import 'package:payvor/filter/filter_request.dart';
 import 'package:payvor/model/apierror.dart';
@@ -29,20 +30,25 @@ class SearchCompany extends StatefulWidget {
   final String userid;
   final ValueChanged<Widget> lauchCallBack;
 
-  SearchCompany({Key key, this.callbackmyid, this.userid, this.lauchCallBack}) : super(key: key);
+  SearchCompany({Key key, this.callbackmyid, this.userid, this.lauchCallBack})
+      : super(key: key);
 
   @override
   HomeState createState() => HomeState();
 }
 
-class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<SearchCompany> {
+class HomeState extends State<SearchCompany>
+    with AutomaticKeepAliveClientMixin<SearchCompany> {
   var screenSize;
-  String searchkey;
-  List<Datas> list = [];
+
+  String searchkey = null;
+
+  List<Datas> list = List<Datas>();
+
   GlobalKey<HomeState> myKey = GlobalKey();
 
-  TextEditingController _controller = TextEditingController();
-  ScrollController _scrollController = ScrollController();
+  TextEditingController _controller = new TextEditingController();
+  ScrollController _scrollController = new ScrollController();
   AuthProvider provider;
   LocationProvider locationProvider;
   FirebaseProvider providerFirebase;
@@ -53,12 +59,14 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
   bool _isFilterApplied = false;
   String location = "";
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(SnackBar(content: Text(value)));
+        .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
   @override
@@ -72,7 +80,7 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
       filterRequest?.latlongData = latlong;
     } else {
       locationStreamGet();
-      Future.delayed(Duration(microseconds: 5000), () {
+      Future.delayed(new Duration(microseconds: 5000), () {
         currentPosition(0, context, locationProvider);
       });
     }
@@ -87,17 +95,18 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
 
   Widget buildItem(Datas data) {
     return Container(
-      margin: EdgeInsets.only(left: 16.0, right: 16.0),
+      margin: new EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: <Widget>[
           InkWell(
             onTap: () {
               if (widget.userid == data?.userId?.toString()) {
                 print("true");
+
                 widget.callbackmyid(4);
               } else {
-                print("false");
-                providerFirebase.changeScreen(ChatMessageDetails(
+                print("flase");
+                providerFirebase.changeScreen(new ChatMessageDetails(
                   id: data?.id?.toString(),
                   name: data?.user?.name,
                   image: data?.user?.profilePic,
@@ -105,32 +114,34 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
                 ));
               }
             },
-            child: Container(
+            child: new Container(
               width: 40.0,
               height: 40.0,
               decoration: BoxDecoration(shape: BoxShape.circle),
               alignment: Alignment.center,
               child: ClipOval(
+                // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+
                 child: getCachedNetworkImageWithurl(
-                  url: data.user?.profilePic ?? "",
-                  fit: BoxFit.fill,
-                  size: 40,
-                ),
+                    url: data.user?.profilePic ?? "",
+                    fit: BoxFit.fill,
+                    size: 40),
               ),
             ),
           ),
           Expanded(
-            child: Column(
+            child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 InkWell(
                   onTap: () {
                     if (widget.userid == data?.userId?.toString()) {
                       print("true");
+
                       widget.callbackmyid(4);
                     } else {
-                      print("false");
-                      providerFirebase.changeScreen(ChatMessageDetails(
+                      print("flase");
+                      providerFirebase.changeScreen(new ChatMessageDetails(
                         id: data?.id?.toString(),
                         name: data?.user?.name,
                         image: data?.user?.profilePic,
@@ -139,32 +150,43 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
                     }
                   },
                   child: Container(
-                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          data?.user?.name ?? "",
-                          style: TextThemes.blackCirculerMedium,
-                        ),
-                        SizedBox(width: 8),
-                        data?.user?.perc == 100
-                            ? Image.asset(AssetStrings.verify, width: 16, height: 16)
-                            : Container(),
-                      ],
-                    ),
-                  ),
+                      margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+                      child: Row(
+                        children: [
+                          new Text(
+                            data?.user?.name ?? "",
+                            style: TextThemes.blackCirculerMedium,
+                          ),
+                          new SizedBox(
+                            width: 8,
+                          ),
+                          data?.user?.perc == 100
+                              ? new Image.asset(
+                                  AssetStrings.verify,
+                                  width: 16,
+                                  height: 16,
+                                )
+                              : Container(),
+                        ],
+                      )),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                  margin: new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
                   child: Row(
                     children: [
-                      Image.asset(AssetStrings.locationHome, width: 11, height: 14),
-                      SizedBox(width: 6),
+                      new Image.asset(
+                        AssetStrings.locationHome,
+                        width: 11,
+                        height: 14,
+                      ),
+                      new SizedBox(
+                        width: 6,
+                      ),
                       Expanded(
                         child: Container(
                           child: Container(
-                            child: Text(
-                              data?.location ?? '' + " - " + data?.distance ?? "",
+                            child: new Text(
+                              data?.location + " - " + data?.distance ?? "",
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: TextThemes.greyDarkTextHomeLocation,
@@ -179,12 +201,11 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
             ),
           ),
           Align(
-            alignment: Alignment.center,
-            child: Text(
-              "€${data.price ?? "0"}",
-              style: TextThemes.blackDarkHeaderSub,
-            ),
-          ),
+              alignment: Alignment.center,
+              child: new Text(
+                "€${data.price ?? "0"}",
+                style: TextThemes.blackDarkHeaderSub,
+              )),
         ],
       ),
     );
@@ -248,7 +269,7 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
   void _setScrollListener() {
     //crollController.position.isScrollingNotifier.addListener(() { print("called");});
 
-    _scrollController = ScrollController();
+    _scrollController = new ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {
@@ -279,7 +300,9 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
   }
 
   Widget _verticalSpace(double value) {
-    return SizedBox(height: value);
+    return new SizedBox(
+      height: value,
+    );
   }
 
   @override
@@ -292,15 +315,15 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: AppColors.bluePrimary,
-      body: Container(
+      body: new Container(
         color: AppColors.bluePrimary,
-        child: Column(
+        child: new Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             _verticalSpace(50.0),
             _topLocationWidget,
             _getSearchedField,
-            _verticalSpace(8.0),
+            _verticalSpace(16.0),
             Visibility(visible: list.isNotEmpty, child: _buildContestList()),
             (provider.getLoading())
                 ? Expanded(
@@ -318,127 +341,119 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
   }
 
   get _topLocationWidget => InkWell(
-    onTap: () {
-      Navigator.of(context, rootNavigator: true).push(
-        CupertinoPageRoute(builder: (BuildContext context) {
-          return SearchLocation(provider: locationProvider);
-        }),
-      );
-    },
-    child: Container(
-      padding: EdgeInsets.only(left: 16.0, right: 16.0),
-      child: Row(
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(255, 255, 255, 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Image.asset(AssetStrings.locations, width: 18, height: 18),
-          ),
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.only(left: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    child: Text(
-                      "Location",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontFamily: AssetStrings.circulerMedium,
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Container(
-                          child: Text(
-                            location.isNotEmpty ? location : "Select Location",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.8),
-                              fontSize: 15,
-                              fontFamily: AssetStrings.circulerNormal,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: Icon(
-                          Icons.arrow_drop_down,
-                          color: AppColors.redLight,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+        onTap: () {
+          providerFirebase.changeScreen(new SearchLocation(
+            provider: locationProvider,
+          ));
+        },
+        child: Container(
+          padding: new EdgeInsets.only(left: 16.0, right: 16.0),
+          child: Row(
+            children: [
+              new Container(
+                width: 38,
+                height: 38,
+                padding: new EdgeInsets.all(12),
+                decoration: new BoxDecoration(
+                    color: Color.fromRGBO(255, 255, 255, 0.1),
+                    shape: BoxShape.circle),
+                child: new Image.asset(
+                  AssetStrings.locations,
+                  width: 18,
+                  height: 18,
+                ),
               ),
-            ),
+              Container(
+                margin: new EdgeInsets.only(left: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        child: new Text(
+                      "Location",
+                      style: new TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: AssetStrings.circulerNormal),
+                    )),
+                    Row(
+                      children: [
+                        Container(
+                            constraints: new BoxConstraints(maxWidth: 280),
+                            child: new Text(
+                              location.isNotEmpty
+                                  ? location
+                                  : "Select Location",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: new TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 14,
+                                  fontFamily: AssetStrings.circulerNormal),
+                            )),
+                        Container(
+                            child: new Icon(Icons.arrow_drop_down,
+                                color: AppColors.redLight)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   get _emptyFavours => Visibility(
-    visible: list.isEmpty && (!provider.getLoading()),
-    child: Container(
-      margin: EdgeInsets.only(top: 150, left: 20.0, right: 20.0),
-      child: Center(
-        child: Text(
-          ResString().get("no_favours"),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.grey,
-            fontWeight: FontWeight.bold,
-            fontSize: 16.0,
-          ),
-        ),
-      ),
-    ),
-  );
-
-  get _getSearchedField => Stack(
-    children: [
-      getTextField(),
-      Positioned(
-        right: 0.0,
-        top: 0.0,
-        child: Offstage(
-          offstage: !_isFilterApplied,
-          child: Container(
-            width: 13,
-            height: 13,
-            margin: EdgeInsets.only(right: 14.0, top: 14),
-            decoration: BoxDecoration(
-              color: Colors.red,
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.bluePrimary, width: 2.5),
+        visible: list.isEmpty && (!provider.getLoading()),
+        child: Container(
+          margin: new EdgeInsets.only(top: 170),
+          child: new Center(
+            child: new Text(
+              ResString().get("no_favours"),
+              textAlign: TextAlign.center,
+              style: new TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0),
             ),
           ),
         ),
-      )
-    ],
-  );
+      );
+
+  get _getSearchedField => Stack(
+        children: [
+          getTextField(),
+          new Positioned(
+            right: 0.0,
+            top: 0.0,
+            child: Offstage(
+              offstage: !_isFilterApplied,
+              child: new Container(
+                width: 13,
+                height: 13,
+                margin: new EdgeInsets.only(right: 14.0, top: 14),
+                decoration: new BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                    border: new Border.all(
+                        color: AppColors.bluePrimary, width: 2.5)),
+              ),
+            ),
+          )
+        ],
+      );
 
   Widget getTextField() {
     return Container(
-      margin: EdgeInsets.only(top: 10),
-      padding: EdgeInsets.only(left: 16.0, right: 16.0),
+      margin: new EdgeInsets.only(top: 16),
+      padding: new EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: [
           Expanded(
             child: Container(
               height: 46,
-              child: TextField(
+              child: new TextField(
                 controller: _controller,
                 style: TextThemes.blackTextFieldNormal,
                 keyboardType: TextInputType.text,
@@ -446,17 +461,19 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
                 autofocus: false,
                 readOnly: true,
                 onTap: () {
-                  providerFirebase.changeScreen(SearchHomeByName());
+                  providerFirebase.changeScreen(new SearchHomeByName());
                 },
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(3)),
+                decoration: new InputDecoration(
+                  enabledBorder: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(3)),
                   fillColor: AppColors.whiteGray,
                   filled: true,
-                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(3)),
-                  contentPadding: EdgeInsets.only(top: 10.0, left: 0),
+                  focusedBorder: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(3)),
+                  contentPadding: new EdgeInsets.only(top: 10.0, left: 0),
                   prefixIcon: Padding(
                     padding: const EdgeInsets.all(14),
-                    child: Image.asset(
+                    child: new Image.asset(
                       AssetStrings.searches,
                       width: 18.0,
                       height: 15.0,
@@ -468,23 +485,25 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
               ),
             ),
           ),
-          SizedBox(width: 8.0),
+          SizedBox(
+            width: 8.0,
+          ),
           InkWell(
             onTap: () {
-              providerFirebase.changeScreen(Filter(
+              providerFirebase.changeScreen(new Filter(
                   voidcallback: voidCallBacks, filterRequest: filterRequest));
             },
-            child: Container(
+            child: new Container(
               width: 55,
-              padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3.0),
+              padding: new EdgeInsets.only(top: 12.0, bottom: 12.0),
+              decoration: new BoxDecoration(
+                borderRadius: new BorderRadius.circular(3.0),
                 color: AppColors.colorDarkCyan,
               ),
-              child: Container(
+              child: new Container(
                 width: 20,
                 height: 20,
-                child: Image.asset(
+                child: new Image.asset(
                   AssetStrings.filters,
                   width: 20,
                   height: 20,
@@ -513,6 +532,7 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
       filterRequest?.latlongData = "";
     }
     isPullToRefresh = false;
+    _loadMore=false;
     list.clear();
     hitApi(filterRequest);
   }
@@ -520,32 +540,31 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
   Widget _buildContestList() {
     return Expanded(
       child: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: (overscroll) {
-          overscroll.disallowGlow();
-        },
-        child: RefreshIndicator(
-          key: _refreshIndicatorKey,
-          onRefresh: () async {
-            isPullToRefresh = true;
-            _loadMore = false;
-            currentPage = 1;
-
-            await hitApi(filterRequest);
+          onNotification: (overscroll) {
+            overscroll.disallowGlow();
           },
-          child: Container(
-            color: AppColors.kAppScreenBackGround,
-            child: ListView.builder(
-              padding: EdgeInsets.all(0.0),
-              controller: _scrollController,
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return buildItemMain(index, list[index]);
-              },
-              itemCount: list.length,
+          child: RefreshIndicator(
+            key: _refreshIndicatorKey,
+            onRefresh: () async {
+              isPullToRefresh = true;
+              _loadMore = false;
+              currentPage = 1;
+
+              await hitApi(filterRequest);
+            },
+            child: Container(
+              color: AppColors.kAppScreenBackGround,
+              child: new ListView.builder(
+                padding: new EdgeInsets.all(0.0),
+                controller: _scrollController,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  return buildItemMain(index, list[index]);
+                },
+                itemCount: list.length,
+              ),
             ),
-          ),
-        ),
-      ),
+          )),
     );
   }
 
@@ -562,18 +581,11 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
   bool get wantKeepAlive => true;
 
   gotoPostDetails(int pos, Datas data) async {
-    var sss = await Navigator.of(context, rootNavigator: true).push(
-      CupertinoPageRoute(
-        builder: (BuildContext context) {
-          return PostFavorDetails(
-            id: data.id.toString(),
-            voidcallback: callback,
-            distance: data?.distance,
-          );
-        },
-        maintainState: true,
-      ),
-    );
+    providerFirebase.changeScreen(new PostFavorDetails(
+      id: data.id.toString(),
+      voidcallback: callback,
+      distance: data?.distance,
+    ));
     print("callll");
   }
 
@@ -586,25 +598,32 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
         color: Colors.white,
         child: Column(
           children: <Widget>[
-            Container(height: 8.0, color: AppColors.whiteGray),
-            SizedBox(height: 16.0),
+            new Container(
+              height: 8.0,
+              color: AppColors.whiteGray,
+            ),
+            new SizedBox(
+              height: 16.0,
+            ),
             buildItem(data),
             Opacity(
               opacity: 0.12,
-              child: Container(
+              child: new Container(
                 height: 1.0,
-                margin: EdgeInsets.only(left: 17.0, right: 17.0, top: 16.0),
+                margin: new EdgeInsets.only(left: 17.0, right: 17.0, top: 16.0),
                 color: AppColors.dividerColor,
               ),
             ),
             data?.image != null && data.image.isNotEmpty
-                ? Container(
+                ? new Container(
                     height: 147,
                     width: double.infinity,
-                    margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
+                    margin:
+                        new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
                     child: ClipRRect(
-                      // margin: EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                      borderRadius: BorderRadius.circular(10.0),
+                      // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                      borderRadius: new BorderRadius.circular(10.0),
+
                       child: getCachedNetworkImageRect(
                         url: data?.image,
                         fit: BoxFit.cover,
@@ -613,17 +632,16 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
                   )
                 : Container(),
             Container(
-              width: double.infinity,
-              color: Colors.white,
-              margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                data?.title ?? "",
-                style: TextThemes.blackCirculerMediumHeight,
-              ),
-            ),
+                width: double.infinity,
+                color: Colors.white,
+                margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+                alignment: Alignment.centerLeft,
+                child: new Text(
+                  data?.title ?? "",
+                  style: TextThemes.blackCirculerMediumHeight,
+                )),
             Container(
-              margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+              margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
               width: double.infinity,
               color: Colors.white,
               child: ReadMoreText(
@@ -631,7 +649,7 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
                 trimLines: 4,
                 colorClickableText: AppColors.colorDarkCyan,
                 trimMode: TrimMode.Line,
-                style: TextStyle(
+                style: new TextStyle(
                   color: AppColors.moreText,
                   fontFamily: AssetStrings.circulerNormal,
                   fontSize: 14.0,
@@ -641,7 +659,9 @@ class HomeState extends State<SearchCompany> with AutomaticKeepAliveClientMixin<
                 trimExpandedText: ' less',
               ),
             ),
-            SizedBox(height: 15.0),
+            new SizedBox(
+              height: 15.0,
+            )
           ],
         ),
       ),

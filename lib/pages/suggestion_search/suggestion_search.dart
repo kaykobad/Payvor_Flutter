@@ -37,10 +37,10 @@ class _HomeState extends State<SearchHomeByName>
   Widget widgets;
 
   final StreamController<bool> _loaderStreamController =
-      StreamController<bool>();
-  TextEditingController _controller = TextEditingController();
-  ScrollController _scrollController = ScrollController();
-  ScrollController _scrollControllerSuggest = ScrollController();
+      new StreamController<bool>();
+  TextEditingController _controller = new TextEditingController();
+  ScrollController _scrollController = new ScrollController();
+  ScrollController _scrollControllerSuggest = new ScrollController();
   int count = 0;
 
   bool _loadMore = false;
@@ -59,14 +59,14 @@ class _HomeState extends State<SearchHomeByName>
 
   bool isSearchCalled = true;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
+      new GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(SnackBar(content: Text(value)));
+        .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
   @override
@@ -136,8 +136,8 @@ class _HomeState extends State<SearchHomeByName>
       if (response != null && response.data != null) {
         if (currentPage == 1) {
           try {
-            var now = DateTime.now();
-            var date = DateFormat("yyyy-MM-dd HH:mm:ss");
+            var now = new DateTime.now();
+            var date = new DateFormat("yyyy-MM-dd HH:mm:ss");
 
             var createAt = date.format(now);
             RecentSearch recentSearch = RecentSearch(
@@ -197,8 +197,8 @@ class _HomeState extends State<SearchHomeByName>
         },
         child: Container(
           color: AppColors.whiteGray,
-          child: ListView.builder(
-            padding: EdgeInsets.all(0.0),
+          child: new ListView.builder(
+            padding: new EdgeInsets.all(0.0),
             controller: _scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
@@ -215,10 +215,11 @@ class _HomeState extends State<SearchHomeByName>
     print("image_url ${data.user.profilePic}");
     return InkWell(
       onTap: () {
-        Navigator.of(context, rootNavigator: true).push(
-          CupertinoPageRoute(builder: (BuildContext context) {
+        Navigator.push(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
             return Material(
-              child: PostFavorDetails(
+                child: new PostFavorDetails(
               id: data.id.toString(),
               distance: data?.distance ?? "",
             ));
@@ -229,30 +230,30 @@ class _HomeState extends State<SearchHomeByName>
         color: Colors.white,
         child: Column(
           children: <Widget>[
-            Container(
+            new Container(
               height: 8.0,
               color: AppColors.whiteGray,
             ),
-            SizedBox(
+            new SizedBox(
               height: 16.0,
             ),
             buildItemSearchNew(data),
             Opacity(
               opacity: 0.12,
-              child: Container(
+              child: new Container(
                 height: 1.0,
-                margin: EdgeInsets.only(left: 17.0, right: 17.0, top: 16.0),
+                margin: new EdgeInsets.only(left: 17.0, right: 17.0, top: 16.0),
                 color: AppColors.dividerColor,
               ),
             ),
-            data?.image != null && data.image.isNotEmpty ? Container(
+            data?.image != null && data.image.isNotEmpty ? new Container(
               height: 147,
               width: double.infinity,
               margin:
-              EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
+              new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
               child: ClipRRect(
-                // margin: EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                borderRadius: BorderRadius.circular(10.0),
+                // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                borderRadius: new BorderRadius.circular(10.0),
 
                 child: getCachedNetworkImageRect(
                   url: data?.image,
@@ -264,14 +265,14 @@ class _HomeState extends State<SearchHomeByName>
             Container(
                 width: double.infinity,
                 color: Colors.white,
-                margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+                margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
                 alignment: Alignment.centerLeft,
-                child: Text(
+                child: new Text(
                   data?.title ?? "",
                   style: TextThemes.blackCirculerMediumHeight,
                 )),
             Container(
-              margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+              margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
               width: double.infinity,
               color: Colors.white,
               child: ReadMoreText(
@@ -279,7 +280,7 @@ class _HomeState extends State<SearchHomeByName>
                 trimLines: 4,
                 colorClickableText: AppColors.colorDarkCyan,
                 trimMode: TrimMode.Line,
-                style: TextStyle(
+                style: new TextStyle(
                   color: AppColors.moreText,
                   fontFamily: AssetStrings.circulerNormal,
                   fontSize: 14.0,
@@ -289,7 +290,7 @@ class _HomeState extends State<SearchHomeByName>
                 trimExpandedText: ' less',
               ),
             ),
-            SizedBox(
+            new SizedBox(
               height: 15.0,
             )
           ],
@@ -305,38 +306,38 @@ class _HomeState extends State<SearchHomeByName>
     }
 
     return Container(
-      margin: EdgeInsets.only(left: 16.0, right: 16.0),
+      margin: new EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: <Widget>[
-          Container(
+          new Container(
             width: 40.0,
             height: 40.0,
             decoration: BoxDecoration(shape: BoxShape.circle),
             alignment: Alignment.center,
             child: ClipOval(
-              // margin: EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+              // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
               child: getCachedNetworkImageWithurl(
                   url: data.user?.profilePic ?? "", fit: BoxFit.fill, size: 40),
             ),
           ),
           Expanded(
-            child: Column(
+            child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
                     child: Row(
                       children: [
-                        Text(
+                        new Text(
                           data?.user?.name ?? "",
                           style: TextThemes.blackCirculerMedium,
                         ),
-                        SizedBox(
+                        new SizedBox(
                           width: 8,
                         ),
                         data?.user?.perc == 100
-                            ? Image.asset(
+                            ? new Image.asset(
                           AssetStrings.verify,
                           width: 16,
                           height: 16,
@@ -345,21 +346,21 @@ class _HomeState extends State<SearchHomeByName>
                       ],
                     )),
                 Container(
-                  margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                  margin: new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
                   child: Row(
                     children: [
-                      Image.asset(
+                      new Image.asset(
                         AssetStrings.locationHome,
                         width: 11,
                         height: 14,
                       ),
-                      SizedBox(
+                      new SizedBox(
                         width: 6,
                       ),
                       Expanded(
                         child: Container(
                           child: Container(
-                            child: Text(
+                            child: new Text(
                               data?.location + " - " + distance,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
@@ -376,7 +377,7 @@ class _HomeState extends State<SearchHomeByName>
           ),
           Align(
               alignment: Alignment.center,
-              child: Text(
+              child: new Text(
                 "€${data.price ?? "0"}",
                 style: TextThemes.blackDarkHeaderSub,
               )),
@@ -464,7 +465,7 @@ class _HomeState extends State<SearchHomeByName>
   void _setScrollListener() {
     //crollController.position.isScrollingNotifier.addListener(() { print("called");});
 
-    _scrollController = ScrollController();
+    _scrollController = new ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {
@@ -510,20 +511,20 @@ class _HomeState extends State<SearchHomeByName>
        // backgroundColor: AppColors.bluePrimary,
         body: Stack(
           children: <Widget>[
-            Container(
+            new Container(
               color: Colors.white,
-              child: Column(
+              child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Container(
+                  new Container(
                     height: 50.0,
                   ),
                   getTextField(),
                   Opacity(
                     opacity: 0.7,
-                    child: Container(
+                    child: new Container(
                       height: 0.5,
-                      margin: EdgeInsets.only(top: 16.0),
+                      margin: new EdgeInsets.only(top: 16.0),
                       color: AppColors.dividerColor,
                     ),
                   ),
@@ -536,25 +537,23 @@ class _HomeState extends State<SearchHomeByName>
 
 
             listResult.length == 0 && list.length == 0 ? Container(
-              color: AppColors.whiteGray,
-              margin: EdgeInsets.only(top: 120),
-              child: Center(
-                child: Text(
+              margin: new EdgeInsets.only(top: 120),
+              child: new Center(
+                child: new Text(
                   "No Favors Found",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                  ),
+                  style: new TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0),
                 ),
               ),
             )
-                : Container(color: AppColors.whiteGray),
+                : Container(),
 
 
-            Center(
+            new Center(
               child: Container(
-                margin: EdgeInsets.only(top: 50),
+                margin: new EdgeInsets.only(top: 50),
                 child: getHalfScreenLoader(
                   status: provider.getLoading(),
                   context: context,
@@ -569,7 +568,7 @@ class _HomeState extends State<SearchHomeByName>
 
   Widget getTextField() {
     return Container(
-      margin: EdgeInsets.only(left: 16.0, right: 16.0),
+      margin: new EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: [
           Container(
@@ -578,43 +577,56 @@ class _HomeState extends State<SearchHomeByName>
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Padding(
+              child: new Padding(
                 padding: const EdgeInsets.all(1.0),
-                child: SvgPicture.asset(
+                child: new SvgPicture.asset(
                   AssetStrings.back,
                 ),
               ),
             ),
           ),
-          SizedBox(width: 10.0),
+          new SizedBox(
+            width: 10.0,
+          ),
           Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(3.0),
-              color: AppColors.lightWhite,
-            ),
+            decoration: new BoxDecoration(
+                borderRadius: new BorderRadius.circular(3.0),
+                color: AppColors.lightWhite),
             child: Container(
               width: getScreenSize(context: context).width - 65,
               height: 46.0,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(width: 10.0),
-                  Image.asset(AssetStrings.searches, width: 18.0, height: 18.0),
-                  SizedBox(width: 10.0),
+                  new SizedBox(
+                    width: 10.0,
+                  ),
+                  new Image.asset(
+                    AssetStrings.searches,
+                    width: 18.0,
+                    height: 18.0,
+                  ),
+                  new SizedBox(
+                    width: 10.0,
+                  ),
                   Flexible(
-                    child: TextField(
+                    child: new TextField(
                       controller: _controller,
                       style: TextThemes.blackTextFieldNormal,
                       keyboardType: TextInputType.text,
                       keyboardAppearance: Brightness.light,
                       onSubmitted: (String value) {
-                        if (value.trim().length > 0) {
+                        if (value
+                            .trim()
+                            .length > 0) {
                           isPullToRefresh = false;
                           _loadMore = false;
                           currentPage = 1;
                           text = value;
                           title = value;
+
                           hitSearchApi(title);
+
                         }
                       },
                       onChanged: (String value) {
@@ -623,31 +635,38 @@ class _HomeState extends State<SearchHomeByName>
                         _loadMoreSuggest = false;
 
                         text = value;
-                        if (value.trim().isEmpty) {
+                        if (value
+                            .trim()
+                            .isEmpty) {
                           listResult.clear();
                           list.clear();
                           if (listRecent != null && listRecent.length > 0) {
                             list.addAll(listRecent);
                           }
-                          setState(() {});
+                          setState(() {
+
+                          });
                         }
                         else {
                           hitSearchSuggestApi(value.trim());
                         }
                       },
-                      decoration: InputDecoration(
+                      decoration: new InputDecoration(
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
-                        contentPadding: EdgeInsets.only(bottom: 3.0),
+                        contentPadding: new EdgeInsets.only(bottom: 3.0),
                         hintText: "Search here by name",
                         hintStyle: TextThemes.greyTextNormal,
                       ),
                     ),
                   ),
-                  SizedBox(width: 4.0),
+                  new SizedBox(
+                    width: 4.0,
+                  ),
                   InkWell(
                     onTap: () {
                       _controller.text = "";
+                      ;
                       text = "";
                       currentPageSuggest = 1;
                       _loadMore = false;
@@ -658,20 +677,17 @@ class _HomeState extends State<SearchHomeByName>
                       if (listRecent != null && listRecent.length > 0) {
                         list.addAll(listRecent);
                       }
-                      setState(() {});
+                      setState(() {
+
+                      });
                     },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      child: Image.asset(
-                        AssetStrings.clean,
-                        width: 18.0,
-                        height: 18.0,
-                        color: Color(0xFF5A5959),
-                        colorBlendMode: BlendMode.dstATop,
-                      ),
+                    child: new Image.asset(
+                      AssetStrings.clean,
+                      width: 18.0,
+                      height: 18.0,
                     ),
                   ),
-                  SizedBox(
+                  new SizedBox(
                     width: 10.0,
                   ),
                 ],
@@ -694,9 +710,9 @@ class _HomeState extends State<SearchHomeByName>
             await hitSearchSuggestApi(text);
           },
           child: Container(
-            color: AppColors.whiteGray,
-            child: ListView.builder(
-              padding: EdgeInsets.all(0.0),
+            color: Colors.white,
+            child: new ListView.builder(
+              padding: new EdgeInsets.all(0.0),
               controller: _scrollControllerSuggest,
               physics: const AlwaysScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
@@ -725,11 +741,11 @@ class _HomeState extends State<SearchHomeByName>
       child: Column(
         children: [
           keyword == "Recent Searches" ? Container(
-            margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 30),
+            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 30),
             alignment: Alignment.centerLeft,
-            child: Text(
+            child: new Text(
               "Recent Searches",
-              style: TextStyle(
+              style: new TextStyle(
                   color: Colors.black,
                   fontFamily: AssetStrings.circulerMedium,
                   fontSize: 18.0),
@@ -752,11 +768,11 @@ class _HomeState extends State<SearchHomeByName>
       child: Column(
         children: [
           pos == 0 ? Container(
-            margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
+            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
             alignment: Alignment.centerLeft,
-            child: Text(
+            child: new Text(
               "Suggested Searches",
-              style: TextStyle(
+              style: new TextStyle(
                   color: Colors.black,
                   fontFamily: AssetStrings.circulerMedium,
                   fontSize: 18.0),
@@ -778,22 +794,22 @@ class _HomeState extends State<SearchHomeByName>
 
       },
       child: Container(
-        padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
+        padding: new EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SvgPicture.asset(
+            new SvgPicture.asset(
               AssetStrings.searchSuggest,
             ),
-            SizedBox(
+            new SizedBox(
               width: 14,
             ),
             Expanded(
               child: Container(
 
-                child: Text(
+                child: new Text(
                   datas?.title,
-                  style: TextStyle(
+                  style: new TextStyle(
                     color: Colors.black,
                     fontFamily: AssetStrings.circulerNormal,
                     fontSize: 15,
@@ -807,11 +823,11 @@ class _HomeState extends State<SearchHomeByName>
               ),
             ),
 
-            SizedBox(
+            new SizedBox(
               width: 8,
             ),
 
-            SvgPicture.asset(
+            new SvgPicture.asset(
               AssetStrings.pathSuggest,
             ),
           ],
@@ -831,26 +847,26 @@ class _HomeState extends State<SearchHomeByName>
 
       },
       child: Container(
-        padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
+        padding: new EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
         child: Container(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
 
 
-              SvgPicture.asset(
+              new SvgPicture.asset(
                 AssetStrings.recentSuggest,
               ),
 
-              SizedBox(
+              new SizedBox(
                 width: 14,
               ),
               Expanded(
                 child: Container(
 
-                  child: Text(
+                  child: new Text(
                     keyword ?? "",
-                    style: TextStyle(
+                    style: new TextStyle(
                       color: Colors.black,
                       fontFamily: AssetStrings.circulerNormal,
                       fontSize: 15,
@@ -864,7 +880,7 @@ class _HomeState extends State<SearchHomeByName>
                 ),
               ),
 
-              SizedBox(
+              new SizedBox(
                 width: 8,
               ),
 
@@ -878,7 +894,7 @@ class _HomeState extends State<SearchHomeByName>
                    });
                 },
                 child: Center(
-                  child: SvgPicture.asset(
+                  child: new SvgPicture.asset(
                     AssetStrings.cancelSuggest,
                   ),
                 ),

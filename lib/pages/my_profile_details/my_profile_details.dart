@@ -27,9 +27,6 @@ class MyProfileDetails extends StatefulWidget {
       this.type,
       this.voidcallback});
 
-/*  final String id;
-
-  PostFavorDetails({this.id});*/
 
   @override
   _HomeState createState() => _HomeState();
@@ -41,7 +38,7 @@ class _HomeState extends State<MyProfileDetails>
 
   FirebaseProvider firebaseProvider;
 
-  ScrollController scrollController = ScrollController();
+  ScrollController scrollController = new ScrollController();
 
   AuthProvider provider;
 
@@ -52,19 +49,19 @@ class _HomeState extends State<MyProfileDetails>
   bool offstageLoader = false;
   int type = 1;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  final GlobalKey<ScaffoldState> _scaffoldKeys = GlobalKey<ScaffoldState>();
-  FocusNode _DescriptionField = FocusNode();
+  final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
+  FocusNode _DescriptionField = new FocusNode();
 
   EndedJobFavourResponse hiredUserDetailsResponse;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
+      new GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(SnackBar(content: Text(value)));
+        .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
   @override
@@ -128,25 +125,6 @@ class _HomeState extends State<MyProfileDetails>
 
       return;
     }
-
-    /*  await Future.delayed(Duration(milliseconds: 200));
-    showInSnackBar("Favour applied successfully");
-    await Future.delayed(Duration(milliseconds: 1500));
-    Navigator.pop(context); //back to previous screen
-   // showBottomSheet();*/
-  }
-
-  redirect() async {
-    /*  Navigator.push(
-      context,
-      CupertinoPageRoute(builder: (BuildContext context) {
-        return Material(
-            child: PostFavour(
-          favourDetailsResponse: favoriteResponse,
-          isEdit: true,
-        ));
-      }),
-    );*/
   }
 
   String formatDateString(String dateString) {
@@ -165,12 +143,12 @@ class _HomeState extends State<MyProfileDetails>
       onTap: () {},
       child: Container(
         padding:
-            EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
+            new EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
         color: Colors.white,
-        margin: EdgeInsets.only(top: 4, bottom: 4),
+        margin: new EdgeInsets.only(top: 4, bottom: 4),
         child: Row(
           children: <Widget>[
-            Container(
+            new Container(
               width: 50.0,
               height: 50.0,
               decoration: BoxDecoration(
@@ -179,28 +157,28 @@ class _HomeState extends State<MyProfileDetails>
                       : Color.fromRGBO(255, 107, 102, 0.17),
                   shape: BoxShape.circle),
               alignment: Alignment.center,
-              child: Image.asset(
+              child: new Image.asset(
                 type == 1 ? AssetStrings.checkTick : AssetStrings.combine_shape,
                 height: 18,
                 width: 18,
               ),
             ),
             Expanded(
-              child: Column(
+              child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: Text(
+                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: new Text(
                       first,
                       style: TextThemes.blackCirculerMedium,
                     ),
                   ),
                   Container(
                     margin:
-                        EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
                     child: Container(
-                        child: Text(
+                        child: new Text(
                       type == 1 ? "Owner has ended the favor" : "Hiring Date",
                       style: TextThemes.greyTextFieldNormalNw,
                     )),
@@ -216,18 +194,18 @@ class _HomeState extends State<MyProfileDetails>
 
   Widget buildItem(int type, Rating data) {
     return Container(
-      margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 12),
+      margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Container(
+          new Container(
             width: 32.0,
             height: 32.0,
             alignment: Alignment.center,
-            decoration: BoxDecoration(
+            decoration: new BoxDecoration(
               shape: BoxShape.circle,
             ),
-            child: ClipOval(
+            child: new ClipOval(
               child: getCachedNetworkImageWithurl(
                   url: type == 1
                       ? hiredUserDetailsResponse?.data?.user?.profilePic ?? ""
@@ -239,18 +217,18 @@ class _HomeState extends State<MyProfileDetails>
           ),
           Expanded(
             child: Container(
-              margin: EdgeInsets.only(left: 8.0),
-              child: Column(
+              margin: new EdgeInsets.only(left: 8.0),
+              child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  new Text(
                     type == 1
                         ? hiredUserDetailsResponse?.data?.user?.name ?? ""
                         : hiredUserDetailsResponse?.data?.hiredUser?.name ?? "",
                     style: TextThemes.blackCirculerMedium,
                   ),
                   Container(
-                      child: Text(
+                      child: new Text(
                         type == 1 ? "Post Owner" : "Favor Helper",
                     style: TextThemes.lightGrey,
                   )),
@@ -264,17 +242,17 @@ class _HomeState extends State<MyProfileDetails>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
+                  new Image.asset(
                     AssetStrings.rating,
                     width: 13,
                     height: 13,
                   ),
-                  SizedBox(
+                  new SizedBox(
                     width: 3,
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 1.2),
-                    child: Text(
+                    margin: new EdgeInsets.only(top: 1.2),
+                    child: new Text(
                       data?.rating?.toString() ?? "0",
                       style: TextThemes.blackPreview,
                     ),
@@ -295,13 +273,13 @@ class _HomeState extends State<MyProfileDetails>
         children: <Widget>[
           buildItem(type, data),
           Container(
-            margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 12.0),
+            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 12.0),
             child: ReadMoreText(
               data?.description ?? "",
               trimLines: 8,
               colorClickableText: AppColors.colorDarkCyan,
               trimMode: TrimMode.Line,
-              style: TextStyle(
+              style: new TextStyle(
                 color: AppColors.moreText,
                 fontFamily: AssetStrings.circulerNormal,
                 height: 1.6,
@@ -313,49 +291,17 @@ class _HomeState extends State<MyProfileDetails>
           ),
           Opacity(
             opacity: 0.12,
-            child: Container(
+            child: new Container(
               height: 1.0,
-              margin: EdgeInsets.only(left: 17.0, right: 17.0, top: 11.0),
+              margin: new EdgeInsets.only(left: 17.0, right: 17.0, top: 11.0),
               color: AppColors.dividerColor,
             ),
           ),
-          /* SizedBox(
-            height: 16.0,
-          ),*/
         ],
       ),
     );
   }
 
-/*
-  _buildContestList() {
-    return RefreshIndicator(
-      key: _refreshIndicatorKey,
-      onRefresh: () async {
-        */
-/*  isPullToRefresh = true;
-        _loadMore = false;
-        currentPage = 1;
-
-        await hitSearchApi(title);*/ /*
-
-      },
-      child: Container(
-        color: Colors.white,
-        padding: EdgeInsets.only(top: 10),
-        child: ListView.builder(
-          padding: EdgeInsets.all(0.0),
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) {
-            return buildItemMain(index);
-          },
-          itemCount: 8,
-        ),
-      ),
-    );
-  }
-*/
 
   @override
   Widget build(BuildContext context) {
@@ -368,15 +314,15 @@ class _HomeState extends State<MyProfileDetails>
       backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
-          Container(
+          new Container(
             color: AppColors.whiteGray,
             height: screenSize.height,
             child: hiredUserDetailsResponse != null
                 ? SingleChildScrollView(
-                    child: Column(
+                    child: new Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Container(
+                        new Container(
                           height: 40,
                           width: double.infinity,
                           color: Colors.white,
@@ -386,10 +332,10 @@ class _HomeState extends State<MyProfileDetails>
                           alignment: Alignment.center,
                           child: Stack(
                             children: [
-                              Row(
+                              new Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Container(
+                                  new Container(
                                     height: 96.0,
                                     width: 96.0,
                                     child: ClipOval(
@@ -402,7 +348,7 @@ class _HomeState extends State<MyProfileDetails>
                                       ),
                                     ),
                                   ),
-                                  Container(
+                                  new Container(
                                     height: 96.0,
                                     width: 96.0,
                                     child: ClipOval(
@@ -419,17 +365,17 @@ class _HomeState extends State<MyProfileDetails>
                               ),
                               Align(
                                 alignment: Alignment.center,
-                                child: Container(
-                                    margin: EdgeInsets.only(top: 31),
+                                child: new Container(
+                                    margin: new EdgeInsets.only(top: 31),
                                     child: Stack(
                                       children: [
                                         Container(
                                           child: InkWell(
                                             onTap: () {},
-                                            child: Padding(
+                                            child: new Padding(
                                               padding:
                                                   const EdgeInsets.all(1.5),
-                                              child: Image.asset(
+                                              child: new Image.asset(
                                                 AssetStrings.chatSend,
                                                 width: 32,
                                                 height: 32,
@@ -442,10 +388,10 @@ class _HomeState extends State<MyProfileDetails>
                                           right: 0.0,
                                           child: InkWell(
                                             onTap: () {},
-                                            child: Container(
+                                            child: new Container(
                                               margin:
-                                                  EdgeInsets.only(top: 7.3),
-                                              child: Image.asset(
+                                                  new EdgeInsets.only(top: 7.3),
+                                              child: new Image.asset(
                                                 AssetStrings.combineUser,
                                                 width: 16,
                                                 height: 16,
@@ -456,7 +402,7 @@ class _HomeState extends State<MyProfileDetails>
                                         ),
                                       ],
                                     ),
-                                    decoration: BoxDecoration(
+                                    decoration: new BoxDecoration(
                                         color: Colors.white,
                                         shape: BoxShape.circle),
                                     width: 32,
@@ -465,48 +411,50 @@ class _HomeState extends State<MyProfileDetails>
                             ],
                           ),
                         ),
-                        Container(
+                        new Container(
                           width: double.infinity,
                           alignment: Alignment.center,
-                          padding: EdgeInsets.only(top: 16.0),
+                          padding: new EdgeInsets.only(top: 16.0),
                           color: Colors.white,
-                          child: Text(
+                          child: new Text(
                             hiredUserDetailsResponse?.data?.title ??
                                 "Test Project",
                             style: TextThemes.blackCirculerLarge,
                           ),
                         ),
-                        Container(
+                        new Container(
                           height: 22,
                           color: Colors.white,
                         ),
                         Opacity(
                           opacity: 0.12,
-                          child: Container(
+                          child: new Container(
                             height: 1.0,
                             margin:
-                                EdgeInsets.only(left: 17.0, right: 17.0),
+                                new EdgeInsets.only(left: 17.0, right: 17.0),
                             color: AppColors.dividerColor,
                           ),
                         ),
                         InkWell(
                           onTap: () {
-                            Navigator.of(context, rootNavigator: true).push(
-                              CupertinoPageRoute(builder: (BuildContext context) {
+                            Navigator.push(
+                              context,
+                              new CupertinoPageRoute(
+                                  builder: (BuildContext context) {
                                 return Material(
-                                  child: PostFavorDetails(
+                                    child: new PostFavorDetails(
                                   id: widget?.postId,
                                   isButtonDesabled: true,
                                 ));
                               }),
                             );
                           },
-                          child: Container(
+                          child: new Container(
                             width: double.infinity,
                             alignment: Alignment.center,
-                            padding: EdgeInsets.only(top: 14.0, bottom: 14),
+                            padding: new EdgeInsets.only(top: 14.0, bottom: 14),
                             color: Colors.white,
-                            child: Text(
+                            child: new Text(
                               "View Original Post",
                               style: TextThemes.blueTextFieldMedium,
                             ),
@@ -525,7 +473,7 @@ class _HomeState extends State<MyProfileDetails>
                             ? buildItemMain(
                                 2, hiredUserDetailsResponse?.data?.jobUserRat)
                             : Container(),
-                        SizedBox(
+                        new SizedBox(
                           height: 50.0,
                         ),
                       ],
@@ -535,10 +483,10 @@ class _HomeState extends State<MyProfileDetails>
           ),
           Offstage(
             offstage: true,
-            child: Center(
-              child: Text(
+            child: new Center(
+              child: new Text(
                 "No Favors Found",
-                style: TextStyle(
+                style: new TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0),
@@ -550,12 +498,12 @@ class _HomeState extends State<MyProfileDetails>
               left: 0.0,
               right: 0.0,
               child: Container(
-                margin: EdgeInsets.only(
+                margin: new EdgeInsets.only(
                   top: 30,
                   left: 16,
                   right: 5,
                 ),
-                child: Padding(
+                child: new Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -564,7 +512,7 @@ class _HomeState extends State<MyProfileDetails>
                         child: Container(
                           width: 30.0,
                           height: 30.0,
-                          padding: EdgeInsets.all(4),
+                          padding: new EdgeInsets.all(4),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                           ),
@@ -572,7 +520,7 @@ class _HomeState extends State<MyProfileDetails>
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            child: SvgPicture.asset(
+                            child: new SvgPicture.asset(
                               AssetStrings.back,
                               width: 18.0,
                               height: 18.0,
@@ -586,15 +534,12 @@ class _HomeState extends State<MyProfileDetails>
                   ),
                 ),
               )),
-          Center(
+          new Center(
             child: getHalfScreenLoader(
               status: provider.getLoading(),
               context: context,
             ),
           ),
-          /* Center(
-            child: _getLoader,
-          ),*/
         ],
       ),
     );

@@ -4,9 +4,11 @@ import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:payvor/model/apierror.dart';
+import 'package:payvor/model/make_payment_request.dart';
 import 'package:payvor/model/stripe/stripe_get_users.dart';
-import 'package:payvor/pages/stripe_card_added/add_stripe_card.dart';
+import 'package:payvor/paypalpayment/webviewpayment.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -20,11 +22,13 @@ class StripeCardAddedList extends StatefulWidget {
   final String hiredUserProfilePic;
   final int hiredUserId;
   final String payingAmount;
+  final String postId;
 
   StripeCardAddedList(
       {this.payingAmount = "0",
       this.hiredUserName = "",
       this.hiredUserProfilePic = "",
+      this.postId,
       this.hiredUserId = 0});
 
   @override
@@ -51,7 +55,7 @@ class _HomeState extends State<StripeCardAddedList>
     super.initState();
 
     Future.delayed(const Duration(milliseconds: 300), () {
-      hitStripeApi();
+      //    hitStripeApi();
     });
   }
 
@@ -74,6 +78,30 @@ class _HomeState extends State<StripeCardAddedList>
     if (responses is GetStripeResponse) {
       addedCardList.clear();
       addedCardList.addAll(responses.customer.data);
+    } else {
+      APIError apiError = responses;
+      showInSnackBar(apiError.error);
+    }
+  }
+
+  hitStripePayment(String token, String custId, String postid) async {
+    provider.setLoading();
+    bool gotInternetConnection = await hasInternetConnection(
+      context: context,
+      mounted: mounted,
+      canShowAlert: true,
+      onFail: () {
+        provider.hideLoader();
+      },
+      onSuccess: () {},
+    );
+    if (!gotInternetConnection) {
+      return;
+    }
+    var request=MakePaymentRequest(customer: custId,cardtoken: token,postId: postid);
+    var responses = await provider.hitStripePayments(context,request);
+    if (responses is GetStripeResponse) {
+      Navigator.of(context).pop(true);
     } else {
       APIError apiError = responses;
       showInSnackBar(apiError.error);
@@ -245,15 +273,15 @@ class _HomeState extends State<StripeCardAddedList>
                     Container(
                       margin: new EdgeInsets.only(top: 24, left: 16, right: 16),
                       child: getSetupButtonNewCustom(
-                          callback, "Pay with Apple", 0,
-                          imagePath: AssetStrings.appleNew,
-                          newColor: AppColors.kBlack,
+                          callback, "Pay with Paypal", 0,
+                          imagePath: AssetStrings.paypal,
+                          newColor: AppColors.colorCyanPrimary,
                           textColor: AppColors.kWhite),
                     ),
                     new Container(
                       height: 16,
                     ),
-                    Container(
+                    /*  Container(
                       margin: new EdgeInsets.only(left: 20, right: 20),
                       child: Row(
                         children: [
@@ -293,8 +321,8 @@ class _HomeState extends State<StripeCardAddedList>
                     Container(
                       alignment: Alignment.center,
                       child: buildContestListSearch(),
-                    ),
-                    InkWell(
+                    ),*/
+                    /*  InkWell(
                       onTap: () {
                         Navigator.push(
                           context,
@@ -338,11 +366,11 @@ class _HomeState extends State<StripeCardAddedList>
                               ],
                             ),
                           )),
-                    ),
+                    ),*/
                     new SizedBox(
                       height: 20.0,
                     ),
-                    addedCardList.length > 0
+                    /* addedCardList.length > 0
                         ? Container(
                             margin:
                                 new EdgeInsets.only(left: 20.0, right: 20.0),
@@ -352,7 +380,7 @@ class _HomeState extends State<StripeCardAddedList>
                         : Container(),
                     new SizedBox(
                       height: 40.0,
-                    ),
+                    ),*/
                   ],
                 ),
               ),
@@ -470,23 +498,129 @@ class _HomeState extends State<StripeCardAddedList>
 
   void callbackDone() async {}
 
+  void showBottomSheet(String text, String desc, int type) {
+    showModalBottomSheet<void>(
+        isScrollControlled: true,
+        context: context,
+        isDismissible: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
+        ),
+        builder: (BuildContext bc) {
+          return Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Container(
+                  child: new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 86.0,
+                    height: 86.0,
+                    margin: new EdgeInsets.only(top: 38),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: type == 1
+                          ? AppColors.greenDark
+                          : Color.fromRGBO(255, 107, 102, 1.0),
+                      shape: BoxShape.circle,
+                    ),
+                    child: type == 1
+                        ? new SvgPicture.asset(
+                            AssetStrings.check,
+                            width: 42.0,
+                            height: 42.0,
+                            color: Colors.white,
+                          )
+                        : new SvgPicture.asset(
+                            AssetStrings.cross,
+                            width: 42.0,
+                            height: 42.0,
+                            color: Colors.white,
+                          ),
+                  ),
+                  new Container(
+                    margin: new EdgeInsets.only(top: 40),
+                    child: new Text(
+                      text,
+                      style: new TextStyle(
+                          fontFamily: AssetStrings.circulerMedium,
+                          fontSize: 20,
+                          color: Colors.black),
+                    ),
+                  ),
+                  new Container(
+                    margin: new EdgeInsets.only(top: 10),
+                    child: new Text(
+                      desc,
+                      style: new TextStyle(
+                        fontFamily: AssetStrings.circulerNormal,
+                        fontSize: 16,
+                        color: Color.fromRGBO(114, 117, 112, 1),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: new EdgeInsets.only(top: 60, left: 16, right: 16),
+                    child: getSetupButtonNew(callbackSuccessFailed, "Ok", 0,
+                        newColor: AppColors.colorDarkCyan),
+                  ),
+                  Container(
+                    height: 56,
+                  )
+                ],
+              )));
+        });
+  }
+
   void callback() async {
+    /*  Data data;
     var isChecked = false;
     for (var dataItem in addedCardList) {
       if (dataItem.isCheck) {
+        data = dataItem;
         isChecked = true;
         break;
       }
     }
 
     if (isChecked) {
-      Navigator.of(context).pop(true);
+      if (data?.id != null) {
+        hitStripePayment(data?.id, data?.customer,widget?.postId);
+      }
     } else {
       showInSnackBar("Please select a card for payment");
+    }*/
+
+    var getdata = await Navigator.push(
+      context,
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return Material(
+            child: new WebviewPayment(
+          type: "favour",
+          itemId: widget?.postId,
+        ));
+      }),
+    );
+
+    if (getdata is bool) {
+      if (getdata != null && getdata == true) {
+        Navigator.of(context).pop(true);
+        //showBottomSheet("Successful!", "Payment Successful!.", 1);
+        /*Navigator.pop(context);
+ widget.voidcallback(1);*/
+      } else {
+        Navigator.of(context).pop(false);
+        // showBottomSheet("Failed!", "Payment Failed!.", 0);
+      }
     }
   }
 
-  void callbackReport() async {}
+  void callbackSuccessFailed() async {
+    Navigator.pop(context);
+    Navigator.pop(context);
+    Navigator.pop(context);
+  }
 
   @override
   bool get wantKeepAlive => true;

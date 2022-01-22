@@ -49,6 +49,29 @@ class Status {
   }
 }
 
+class BankAccountRequest {
+  String account_holder_name;
+  String account_number;
+  String country;
+
+  BankAccountRequest(
+      {this.account_holder_name, this.account_number, this.country});
+
+  BankAccountRequest.fromJson(Map<String, dynamic> json) {
+    account_holder_name = json['account_holder_name'];
+    account_number = json['account_number'];
+    country = json['country'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['account_holder_name'] = this.account_holder_name;
+    data['account_number'] = this.account_number;
+    data['country'] = this.country;
+    return data;
+  }
+}
+
 class DataRating {
   int id;
   int userId;

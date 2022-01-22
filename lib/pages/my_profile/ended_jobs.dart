@@ -37,12 +37,7 @@ class _HomeState extends State<MyEndedJobs>
   bool offstagenodata = true;
   bool loader = false;
   String title = "";
-
   List<Data> listResult = List();
-
-  final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
-  TextEditingController _controller = new TextEditingController();
   ScrollController scrollController = new ScrollController();
   bool _loadMore = false;
   FirebaseProvider providerFirebase;
@@ -182,16 +177,7 @@ class _HomeState extends State<MyEndedJobs>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    /* InkWell(
-                      onTap: () {},
-                      child: new SvgPicture.asset(
-                        AssetStrings.nopostnojob,
-                      ),
-                    ),*/
                     InkWell(
-                      onTap: () {
-                        //  providerFirebase.changeScreen(Material(child: new MyProfileDetails(type: 2,postId: "68",)));
-                      },
                       child: Container(
                         child: new Text(
                           "No Jobs Found",
@@ -202,18 +188,6 @@ class _HomeState extends State<MyEndedJobs>
                         ),
                       ),
                     ),
-                    /* Container(
-                      margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
-                      child: new Text(
-                        "You don’t have any job yet.\nOnce you’re hired it will show up here.",
-                        textAlign: TextAlign.center,
-                        style: new TextStyle(
-                            height: 1.5,
-                            color: Color.fromRGBO(103, 99, 99, 1.0),
-                            fontFamily: AssetStrings.circulerNormal,
-                            fontSize: 15.0),
-                      ),
-                    ),*/
                   ],
                 ),
               ),
@@ -227,9 +201,6 @@ class _HomeState extends State<MyEndedJobs>
               ),
             ),
           ),
-          /* new Center(
-            child: _getLoader,
-          ),*/
         ],
       ),
     );
@@ -344,7 +315,6 @@ class _HomeState extends State<MyEndedJobs>
                     margin:
                         new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
                     child: ClipRRect(
-                      // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
                       borderRadius: new BorderRadius.circular(10.0),
 
                       child: getCachedNetworkImageRect(

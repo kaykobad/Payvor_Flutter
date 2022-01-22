@@ -29,7 +29,7 @@ class GuestIntroScreen extends StatefulWidget {
 class FadeIn extends State<GuestIntroScreen> {
   FirebaseProvider firebaseProvider;
   AuthProvider provider;
-  final GlobalKey<ScaffoldState> _scaffoldKeys = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -54,93 +54,28 @@ class FadeIn extends State<GuestIntroScreen> {
           color: Colors.white,
           child: Stack(
             children: <Widget>[
-              //  BackgroundImage(),
-              Column(
-                children: <Widget>[
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.only(top: 100),
-                    child: Image.asset(
-                      AssetStrings.payvorIntro,
-                      width: 100,
-                      height: 80,
-                    ),
+              new Column(children: <Widget>[
+                Container(
+                  alignment: Alignment.center,
+                  margin: new EdgeInsets.only(top: 100),
+                  child: new Image.asset(
+                    AssetStrings.payvorIntro,
+                    width: 100,
+                    height: 80,
                   ),
-                  Container(
-                    child: Text(
-                      "Perimity",
-                      style: TextStyle(
+                ),
+                new Container(
+                  child: new Text(
+                    "Perimity",
+                    style: new TextStyle(
                         color: AppColors.kPrimaryBlue,
                         fontSize: 36,
-                        fontFamily: AssetStrings.circulerBoldStyle,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              Positioned(
-                bottom: 0.0,
-                left: 0.0,
-                right: 0.0,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      child: getSetupButtonBorderNew(
-                        callbackSignin, "Login", 20,
-                        border: Color.fromRGBO(103, 99, 99, 0.19),
-                        newColor: AppColors.colorDarkCyan,
-                        textColor: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 16.0),
-                    Container(
-                      child: getSetupButtonNew(callback, "Create an Account", 20),
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(20, 32, 20, 30),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              height: 1.0,
-                              color: AppColors.colorGray,
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 8, right: 8),
-                            child: Text(
-                              "OR",
-                              style: TextStyle(
-                                color: AppColors.lightGrayNew,
-                                fontSize: 12,
-                                fontFamily: AssetStrings.circulerMedium,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              height: 1.0,
-                              color: AppColors.colorGray,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      child: getSetupButtonBorderNew(
-                        callbackGuest,
-                        "Guest View",
-                        20,
-                        border: AppColors.colorGray,
-                        newColor: AppColors.grayView,
-                        textColor: Colors.black,
-                      ),
-                    ),
-                    SizedBox(height: 60.0),
-                  ],
-                ),
-              ),
-              Center(
+                        fontFamily: AssetStrings.circulerBoldStyle),
+                  ),
+                )
+              ]),
+              bottomView,
+              new Center(
                 child: getFullScreenProviderLoader(
                   status: provider.getLoading(),
                   context: context,
@@ -155,7 +90,6 @@ class FadeIn extends State<GuestIntroScreen> {
 
   hitApi() async {
     provider.setLoading();
-
     var response;
 
     bool gotInternetConnection = await hasInternetConnection(
@@ -172,7 +106,8 @@ class FadeIn extends State<GuestIntroScreen> {
       return;
     }
 
-    LoginRequest loginRequest = LoginRequest(password: "123456", email: "guest@gmail.com");
+    LoginRequest loginRequest =
+        new LoginRequest(password: "123456", email: "guest@gmail.com");
     response = await provider.login(loginRequest, context);
     MemoryManagement.socialMediaStatus("0");
 
@@ -189,78 +124,114 @@ class FadeIn extends State<GuestIntroScreen> {
       try {
         print("email $email");
         //firebase login
-        var firebaseId = await firebaseProvider.signIn(email, Constants.FIREBASE_USER_PASSWORD);
-        //update user info to fire store user collection
-        await firebaseProvider.updateFirebaseUser(
-          getUser(response, firebaseId, email),
-        );
+        var firebaseId = await firebaseProvider.signIn(
+            email, Constants.FIREBASE_USER_PASSWORD);
+
+        await firebaseProvider
+            .updateFirebaseUser(getUser(response, firebaseId, email));
       } catch (ex) {
         print("error ${ex.toString()}");
-        //for old filmshape users
-        //firebase signup for later use in chat
-        var firebaseId = await firebaseProvider.signUp(email, Constants.FIREBASE_USER_PASSWORD);
+
+        var firebaseId = await firebaseProvider.signUp(
+            email, Constants.FIREBASE_USER_PASSWORD);
         //save user info to fire store user collection
         var user = getUser(response, firebaseId, email);
-        user.created = DateTime.now().toIso8601String(); //if user is not registered with firebase
+        user.created = DateTime.now()
+            .toIso8601String(); //if user is not registered with firebase
         await firebaseProvider.createFirebaseUser(user);
       }
-
       provider.hideLoader();
       MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
       Navigator.push(
         context,
-        CupertinoPageRoute(builder: (BuildContext context) {
-          return DashBoardScreen();
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return new DashBoardScreen();
         }),
       );
 
-      /* if (response?.user != null && response?.user.is_password == 0) {
-          Navigator.push(
-            context,
-            CupertinoPageRoute(builder: (BuildContext context) {
-              return ResetPassword();
-            }),
-          );
-
-          return;
-        }
-      else {
-        MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
-
-          Navigator.push(
-            context,
-            CupertinoPageRoute(builder: (BuildContext context) {
-              return DashBoardScreen();
-            }),
-          );
-          return;
-      }*/
 
     } else {
       firebaseProvider.hideLoader();
       APIError apiError = response;
-      // print(apiError.error);
       showInSnackBar(apiError.error ?? Messages.unAuthorizedError);
     }
   }
 
   void showInSnackBar(String value) {
     _scaffoldKeys.currentState
-        .showSnackBar(SnackBar(content: Text(value)));
+        .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
-  PayvorFirebaseUser getUser(LoginSignupResponse signupResponse, String firebaseId, String email) {
-    return PayvorFirebaseUser(
-      fullName: signupResponse.user.name,
-      email: email,
-      location: signupResponse.user.location,
-      updated: DateTime.now().toIso8601String(),
-      created: DateTime.now().toIso8601String(),
-      filmShapeId: signupResponse.user.id,
-      firebaseId: firebaseId,
-      isOnline: true,
-      thumbnailUrl: signupResponse.user.profilePic,
-    );
+  get bottomView => Positioned(
+        bottom: 0.0,
+        left: 0.0,
+        right: 0.0,
+        child: new Column(
+          children: <Widget>[
+            Container(
+              child: getSetupButtonBorderNew(callbackSignin, "Login", 20,
+                  border: Color.fromRGBO(103, 99, 99, 0.19),
+                  newColor: AppColors.colorDarkCyan,
+                  textColor: Colors.white),
+            ),
+            new SizedBox(
+              height: 16.0,
+            ),
+            Container(
+                child: getSetupButtonNew(callback, "Create an Account", 20)),
+            new Container(
+              margin:
+                  new EdgeInsets.only(left: 20, right: 20, top: 32, bottom: 30),
+              child: new Row(
+                children: [
+                  Expanded(
+                    child: new Container(
+                      height: 1.0,
+                      color: AppColors.colorGray,
+                    ),
+                  ),
+                  new Container(
+                    margin: new EdgeInsets.only(left: 8, right: 8),
+                    child: new Text(
+                      "OR",
+                      style: new TextStyle(
+                          color: AppColors.lightGrayNew, fontSize: 12),
+                    ),
+                  ),
+                  Expanded(
+                    child: new Container(
+                      height: 1.0,
+                      color: AppColors.colorGray,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              child: getSetupButtonBorderNew(callbackGuest, "Guest View", 20,
+                  border: AppColors.colorGray,
+                  newColor: AppColors.grayView,
+                  textColor: Colors.black),
+            ),
+            new SizedBox(
+              height: 60.0,
+            ),
+          ],
+        ),
+      );
+
+  PayvorFirebaseUser getUser(
+      LoginSignupResponse signupResponse, String firebaseId, String email) {
+    return new PayvorFirebaseUser(
+        fullName: signupResponse.user.name,
+        email: email,
+        location: signupResponse.user.location,
+        updated: DateTime.now().toIso8601String(),
+        created: DateTime.now().toIso8601String(),
+        filmShapeId: signupResponse.user.id,
+        firebaseId: firebaseId,
+        isOnline: true,
+        thumbnailUrl: signupResponse.user.profilePic);
   }
 
   void callbackGuest() {
@@ -270,8 +241,8 @@ class FadeIn extends State<GuestIntroScreen> {
   void callback() {
     Navigator.push(
       context,
-      CupertinoPageRoute(builder: (BuildContext context) {
-        return JoinCommunityNew();
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return new JoinCommunityNew();
       }),
     );
   }
@@ -279,8 +250,8 @@ class FadeIn extends State<GuestIntroScreen> {
   void callbackSignin() {
     Navigator.push(
       context,
-      CupertinoPageRoute(builder: (BuildContext context) {
-        return LoginScreenNew();
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return new LoginScreenNew();
       }),
     );
   }

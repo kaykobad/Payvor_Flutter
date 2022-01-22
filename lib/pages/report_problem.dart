@@ -38,25 +38,12 @@ class ReportProblems extends StatefulWidget {
 class _HomeState extends State<ReportProblems>
     with AutomaticKeepAliveClientMixin<ReportProblems> {
   var screenSize;
-
   TextEditingController _DescriptionController = new TextEditingController();
   FocusNode _DesField = new FocusNode();
-
   List<DataReport> listRecent = List();
-
   Widget widgets;
-
-  final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
-
   AuthProvider provider;
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  void showInSnackBar(String value) {
-    _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
-  }
 
   @override
   void initState() {
@@ -65,6 +52,45 @@ class _HomeState extends State<ReportProblems>
     });
 
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    screenSize = MediaQuery.of(context).size;
+    provider = Provider.of<AuthProvider>(context);
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: getAppBarNew(context),
+      backgroundColor: AppColors.whiteGray,
+      body: Stack(
+        children: <Widget>[
+          listRecent?.length > 0
+              ? SingleChildScrollView(
+                  child: new Container(
+                    color: AppColors.whiteGray,
+                    child: new Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        topWidget,
+                        new SizedBox(
+                          height: 15.0,
+                        ),
+                        _buildContestListSearch(),
+                        columnWidget
+                      ],
+                    ),
+                  ),
+                )
+              : Container(),
+          loaderItem
+        ],
+      ),
+    );
+  }
+
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState
+        .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
   Widget getTextField(
@@ -166,15 +192,6 @@ class _HomeState extends State<ReportProblems>
                       ),
                       InkWell(
                         onTap: () {
-                          /* Navigator.push(
-                            context,
-                            new CupertinoPageRoute(builder: (BuildContext context) {
-                              return Material(
-                                  child: new ReportProblems(
-                                    id: widget?.id?.toString(),
-                                  ));
-                            }),
-                          );*/
                         },
                         child: Container(
                           alignment: Alignment.center,
@@ -205,171 +222,18 @@ class _HomeState extends State<ReportProblems>
         ));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    screenSize = MediaQuery.of(context).size;
-    provider = Provider.of<AuthProvider>(context);
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: getAppBarNew(context),
-      backgroundColor: AppColors.whiteGray,
-      body: Stack(
-        children: <Widget>[
-          listRecent?.length > 0
-              ? SingleChildScrollView(
-                  child: new Container(
-                    color: AppColors.whiteGray,
-                    child: new Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          margin:
-                              new EdgeInsets.only(left: 20, right: 20, top: 20),
-                          child: Stack(
-                            children: [
-                              Container(
-                                alignment: Alignment.center,
-                                margin: new EdgeInsets.only(top: 30),
-                                height: 170,
-                                decoration: new BoxDecoration(
-                                    border: new Border.all(
-                                        color: AppColors.grayy, width: 1),
-                                    borderRadius:
-                                        new BorderRadius.circular(5.0),
-                                    color: Colors.white),
-                              ),
-                              Column(
-                                children: [
-                                  Container(
-                                    alignment: Alignment.center,
-                                    child: new Container(
-                                      height: 84.0,
-                                      width: 84.0,
-                                      child: ClipOval(
-                                        child: getCachedNetworkImageWithurl(
-                                          url: widget?.image != null
-                                              ? widget?.image
-                                              : "",
-                                          size: 84,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  new Container(
-                                    alignment: Alignment.center,
-                                    margin: new EdgeInsets.only(
-                                        top: 16, left: 10, right: 10),
-                                    child: new Text(
-                                      widget?.name != null ? widget?.name : "",
-                                      style: new TextStyle(
-                                          fontFamily:
-                                              AssetStrings.circulerMedium,
-                                          fontSize: 20,
-                                          color: Colors.black),
-                                    ),
-                                  ),
-                                  new Container(
-                                    alignment: Alignment.center,
-                                    width: 175,
-                                    margin: new EdgeInsets.only(top: 16),
-                                    padding: new EdgeInsets.symmetric(
-                                        vertical: 5, horizontal: 16),
-                                    decoration: new BoxDecoration(
-                                      color:
-                                          AppColors.greenViews.withOpacity(0.1),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        new Icon(Icons.check_circle,
-                                            color: AppColors.greenViews),
-                                        Container(
-                                          margin: new EdgeInsets.only(left: 8),
-                                          constraints:
-                                              new BoxConstraints(maxWidth: 100),
-                                          child: new Text(
-                                            "€ ${widget?.paymentAmount != null ? widget?.paymentAmount : "0"}" ??
-                                                "",
-                                            maxLines: 2,
-                                            style: new TextStyle(
-                                                fontFamily:
-                                                    AssetStrings.circulerMedium,
-                                                fontSize: 20,
-                                                color: AppColors.greenViews),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        new SizedBox(
-                          height: 15.0,
-                        ),
-                        _buildContestListSearch(),
-                        Column(
-                          children: [
-                            Container(
-                              margin: new EdgeInsets.only(
-                                  left: 16.0, right: 16.0, top: 20),
-                              alignment: Alignment.centerLeft,
-                              child: new Text(
-                                "Write your Problem",
-                                style: new TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: AssetStrings.circulerMedium,
-                                    fontSize: 16.0),
-                              ),
-                            ),
-                      new SizedBox(
-                        height: 15.0,
-                      ),
-                      getTextField(
-                          "Write Something here..",
-                                _DescriptionController,
-                                _DesField,
-                                _DesField,
-                                TextInputType.text,
-                                AssetStrings.emailPng),
-                            new SizedBox(
-                              height: 40.0,
-                            ),
-                            Container(
-                                padding:
-                                    new EdgeInsets.only(top: 9, bottom: 28),
-                                child: getSetupButtonColor(
-                                    callback, "End Favor with an issue", 16,
-                                    newColor: AppColors.redLight)),
-                            new SizedBox(
-                              height: 40.0,
-                            ),
-                          ],
-                  ),
-                ],
-              ),
-            ),
-          ) : Container(),
-          new Center(
-            child: Container(
-              child: getHalfScreenLoader(
-                status: provider.getLoading(),
-                context: context,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   void callback() async {
     hitReportApi();
-    // showBottomSheetHire();
   }
+
+  get loaderItem => new Center(
+        child: Container(
+          child: getHalfScreenLoader(
+            status: provider.getLoading(),
+            context: context,
+          ),
+        ),
+      );
 
   void callbackDone() async {
     Navigator.pop(context);
@@ -395,12 +259,6 @@ class _HomeState extends State<ReportProblems>
       showInSnackBar("Please select a reason");
       return;
     }
-
-    /* if (_rating < 1.0) {
-      showInSnackBar("Please give a rating");
-      return;
-    }*/
-
     provider.setLoading();
 
     bool gotInternetConnection = await hasInternetConnection(
@@ -447,12 +305,7 @@ class _HomeState extends State<ReportProblems>
 
 
   getReportReasonApi() async {
-    /* if (_rating < 1.0) {
-      showInSnackBar("Please give a rating");
-      return;
-    }*/
     provider.setLoading();
-
     bool gotInternetConnection = await hasInternetConnection(
       context: context,
       mounted: mounted,
@@ -466,7 +319,6 @@ class _HomeState extends State<ReportProblems>
     if (!gotInternetConnection) {
       return;
     }
-
 
     var response = await provider.getReportReason(context);
 
@@ -520,15 +372,123 @@ class _HomeState extends State<ReportProblems>
               height: 1.0,
               margin:
               new EdgeInsets.only(left: 18.0, right: 18.0, top: 12),
-              color: AppColors.dividerColor,
-            ),
-          ) : Container(
-            height: 12,
-          ),
+                    color: AppColors.dividerColor,
+                  ),
+                )
+              : Container(
+                  height: 12,
+                ),
         ],
       ),
     );
   }
+
+  get columnWidget => Column(
+        children: [
+          Container(
+            margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 20),
+            alignment: Alignment.centerLeft,
+            child: new Text(
+              "Write your Problem",
+              style: new TextStyle(
+                  color: Colors.black,
+                  fontFamily: AssetStrings.circulerMedium,
+                  fontSize: 16.0),
+            ),
+          ),
+          new SizedBox(
+            height: 15.0,
+          ),
+          getTextField("Write Something here..", _DescriptionController,
+              _DesField, _DesField, TextInputType.text, AssetStrings.emailPng),
+          new SizedBox(
+            height: 40.0,
+          ),
+          Container(
+              padding: new EdgeInsets.only(top: 9, bottom: 28),
+              child: getSetupButtonColor(
+                  callback, "End Favor with an issue", 16,
+                  newColor: AppColors.redLight)),
+          new SizedBox(
+            height: 40.0,
+          ),
+        ],
+      );
+
+  get topWidget => Container(
+        margin: new EdgeInsets.only(left: 20, right: 20, top: 20),
+        child: Stack(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              margin: new EdgeInsets.only(top: 30),
+              height: 170,
+              decoration: new BoxDecoration(
+                  border: new Border.all(color: AppColors.grayy, width: 1),
+                  borderRadius: new BorderRadius.circular(5.0),
+                  color: Colors.white),
+            ),
+            Column(
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  child: new Container(
+                    height: 84.0,
+                    width: 84.0,
+                    child: ClipOval(
+                      child: getCachedNetworkImageWithurl(
+                        url: widget?.image != null ? widget?.image : "",
+                        size: 84,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+                new Container(
+                  alignment: Alignment.center,
+                  margin: new EdgeInsets.only(top: 16, left: 10, right: 10),
+                  child: new Text(
+                    widget?.name != null ? widget?.name : "",
+                    style: new TextStyle(
+                        fontFamily: AssetStrings.circulerMedium,
+                        fontSize: 20,
+                        color: Colors.black),
+                  ),
+                ),
+                new Container(
+                  alignment: Alignment.center,
+                  width: 175,
+                  margin: new EdgeInsets.only(top: 16),
+                  padding:
+                      new EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+                  decoration: new BoxDecoration(
+                    color: AppColors.greenViews.withOpacity(0.1),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      new Icon(Icons.check_circle, color: AppColors.greenViews),
+                      Container(
+                        margin: new EdgeInsets.only(left: 8),
+                        constraints: new BoxConstraints(maxWidth: 100),
+                        child: new Text(
+                          "€ ${widget?.paymentAmount != null ? widget?.paymentAmount : "0"}" ??
+                              "",
+                          maxLines: 2,
+                          style: new TextStyle(
+                              fontFamily: AssetStrings.circulerMedium,
+                              fontSize: 20,
+                              color: AppColors.greenViews),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
 
   Widget buildItemRecentSearch(int pos, DataReport repor) {
     return InkWell(
@@ -546,21 +506,6 @@ class _HomeState extends State<ReportProblems>
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              /* new Container(
-                width: 19,
-                height: 19,
-                decoration: new BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: repor?.isSelected ?? false
-                        ? Color.fromRGBO(255, 107, 102, 1)
-                        : Color.fromRGBO(103, 99, 99, 0.3)),
-                child: new Icon(
-                  Icons.check,
-                  color: Colors.white,
-                  size: 14,
-                ),
-              ),
-*/
               Container(
                 decoration: new BoxDecoration(
                   shape: BoxShape.circle,
@@ -636,7 +581,6 @@ class _HomeState extends State<ReportProblems>
                     ),
                     child: GestureDetector(
                         onTapDown: (TapDownDetails details) {
-                          //_showPopupMenu(details.globalPosition);
                         },
                         child: new SvgPicture.asset(
                           AssetStrings.check,
