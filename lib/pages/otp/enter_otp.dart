@@ -8,6 +8,7 @@ import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/otp/otp_forgot_request.dart';
 import 'package:payvor/model/otp/otp_request.dart';
 import 'package:payvor/model/otp/resendotpresponse.dart';
+import 'package:payvor/pages/create_credential/create_credential.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
@@ -55,19 +56,6 @@ class _LoginScreenState extends State<OtoVerification> {
   @override
   void initState() {
     super.initState();
-
-    /*  if (widget.type == 0) {
-      noPhone = widget.phoneNumber != null
-          ? "+" + widget.countryCode + widget.phoneNumber
-          : "";
-      startTimer();
-      Future.delayed(Duration(milliseconds: 300), () {
-        hitResendApi();
-      });
-    } else {
-
-    }*/
-
     noPhone = widget.phoneNumber != null ? widget.phoneNumber : "";
   }
 
@@ -93,8 +81,6 @@ class _LoginScreenState extends State<OtoVerification> {
     sub.onData((duration) {
       setState(() {
         _current = _start - duration.elapsed.inSeconds;
-        // colorResend = Colors.black.withOpacity(0.4);
-        //print(_current);
 
         if (_current == 1) {
           timer();
@@ -103,9 +89,7 @@ class _LoginScreenState extends State<OtoVerification> {
     });
 
     sub.onDone(() {
-      //print(countDownTimer.toString());
       sub.cancel();
-      // colorResend = AppColors.kBlack;
     });
   }
 
@@ -140,6 +124,7 @@ class _LoginScreenState extends State<OtoVerification> {
       MemoryManagement.setAccessToken(accessToken: response.data);
       MemoryManagement.setUserInfo(userInfo: json.encode(response));
       MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
+      MemoryManagement.setGuestUser(type: false);
       Navigator.pushAndRemoveUntil(
         context,
         new CupertinoPageRoute(builder: (BuildContext context) {
@@ -188,15 +173,27 @@ class _LoginScreenState extends State<OtoVerification> {
 
         Navigator.pop(context);
         Navigator.pop(context);
-      } else {
+      } else if (widget?.type?.toString() == "4") {
         MemoryManagement.setGuestUser(type: false);
-
         MemoryManagement.setUserInfo(userInfo: json.encode(response));
         MemoryManagement.setAccessToken(accessToken: response?.data);
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return DashBoardScreen();
+          }),
+          (route) => false,
+        );
+      } else {
+        // MemoryManagement.setGuestUser(type: false);
+
+        //    MemoryManagement.setUserInfo(userInfo: json.encode(response));
+        //   MemoryManagement.setAccessToken(accessToken: response?.data);
         Navigator.push(
           context,
           new CupertinoPageRoute(builder: (BuildContext context) {
-            return Material(child: new DashBoardScreen());
+            return Material(child: new CreateCredential());
           }),
         );
       }
@@ -240,7 +237,7 @@ class _LoginScreenState extends State<OtoVerification> {
   @override
   void dispose() {
     // TODO: implement dispose
-    countDownTimer.cancel();
+    countDownTimer?.cancel();
     super.dispose();
   }
 
@@ -398,12 +395,4 @@ class _LoginScreenState extends State<OtoVerification> {
     );
   }
 
-  void callback() {
-    /*Navigator.push(
-      context,
-      new CupertinoPageRoute(builder: (BuildContext context) {
-        return new LoginScreen();
-      }),
-    );*/
-  }
 }

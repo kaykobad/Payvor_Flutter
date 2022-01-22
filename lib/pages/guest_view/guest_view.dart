@@ -26,53 +26,61 @@ class FadeIn extends State<GuestView> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: AppColors.blue,
-      body: SafeArea(
-        child: Container(
-          width: size.width,
-          color: AppColors.blue,
-          child: Stack(
-            children: <Widget>[
-              //  BackgroundImage(),
-              Column(
-                children: <Widget>[
-                  InkWell(
-                    onTap: () => Navigator.of(context).pop(),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      color: AppColors.blue,
+      home: Scaffold(
+        backgroundColor: AppColors.blue,
+        body: SafeArea(
+          child: Container(
+            width: size.width,
+            color: AppColors.blue,
+            child: Stack(
+              children: <Widget>[
+                //  BackgroundImage(),
+                new Column(children: <Widget>[
+                 /* InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                     child: Container(
                       alignment: Alignment.topLeft,
-                      margin: EdgeInsets.only(top: 20, left: 24),
-                      child: Icon(Icons.clear, color: Colors.white, size: 24),
+                      margin: new EdgeInsets.only(top: 20, left: 24),
+                      child: new Icon(
+                        Icons.clear,
+                        color: Colors.white,
+                        size: 24,
+                      ),
                     ),
-                  ),
+                  ),*/
                   Container(
                     alignment: Alignment.center,
-                    margin: EdgeInsets.only(top: 60),
-                    child: Image.asset(
+                    margin: new EdgeInsets.only(top: 124),
+                    child: new Image.asset(
                       AssetStrings.guestView,
                       width: 168,
                       height: 131,
                     ),
                   ),
-                  Container(
+                  new Container(
                     alignment: Alignment.center,
-                    margin: EdgeInsets.only(top: 34),
-                    child: Text(
+                    margin: new EdgeInsets.only(top: 34),
+                    child: new Text(
                       "You’re on Guest View",
-                      style: TextStyle(
+                      style: new TextStyle(
                         fontFamily: AssetStrings.circulerNormal,
                         fontSize: 20,
                         color: AppColors.kWhite,
                       ),
                     ),
                   ),
-                  Container(
+                  new Container(
                     alignment: Alignment.center,
-                    margin: EdgeInsets.only(top: 6, left: 40, right: 40),
-                    child: Text(
+                    margin: new EdgeInsets.only(top: 6, left: 40, right: 40),
+                    child: new Text(
                       "You need to login or create an account to view this screen",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: new TextStyle(
                         fontFamily: AssetStrings.circulerNormal,
                         fontSize: 16,
                         height: 1.5,
@@ -80,32 +88,35 @@ class FadeIn extends State<GuestView> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 30.0),
-                ],
-              ),
-              Positioned(
-                bottom: 0.0,
-                left: 0.0,
-                right: 0.0,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Container(
-                      child: getSetupButtonNew(callback, "Login", 20, newColor: AppColors.blue),
-                    ),
-                    SizedBox(height: 16.0),
-                    Container(
-                      child: getSetupDecoratorButtonNew(
-                        callbackSignin, "Create an Account", 20,
-                        newColor: AppColors.blue,
-                        textColor: AppColors.kBlack,
+                ]),
+                Positioned(
+                  bottom: 0.0,
+                  left: 0.0,
+                  right: 0.0,
+                  child: new Column(
+                    children: <Widget>[
+                      Container(
+                          child: getSetupButtonNew(callback, "Login", 20,
+                              newColor: AppColors.blue)),
+                      new SizedBox(
+                        height: 16.0,
                       ),
-                    ),
-                    SizedBox(height: 16.0),
-                  ],
+                      Container(
+                          child: getSetupDecoratorButtonNew(
+                              callbackSignin, "Create an Account", 20,
+                              newColor: AppColors.blue,
+                              textColor: AppColors.kBlack)),
+                      new SizedBox(
+                        height: 16.0,
+                      ),
+                      new SizedBox(
+                        height: 90.0,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -114,30 +125,28 @@ class FadeIn extends State<GuestView> {
 
   void callback() {
     if (widget.lauchCallBack != null) {
-      widget.lauchCallBack(Material(child: Material(child: LoginScreenNew())));
+      widget.lauchCallBack(
+          Material(child: Material(child: new LoginScreenNew())));
     } else {
       Navigator.push(
         context,
-        CupertinoPageRoute(
-          builder: (BuildContext context) {
-            return LoginScreenNew();
-          },
-        ),
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return new LoginScreenNew();
+        }),
       );
     }
   }
 
   void callbackSignin() {
     if (widget.lauchCallBack != null) {
-      widget.lauchCallBack(Material(child: Material(child: JoinCommunityNew())));
+      widget.lauchCallBack(
+          Material(child: Material(child: new JoinCommunityNew())));
     } else {
       Navigator.push(
         context,
-        CupertinoPageRoute(
-          builder: (BuildContext context) {
-            return JoinCommunityNew();
-          },
-        ),
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return new JoinCommunityNew();
+        }),
       );
     }
   }

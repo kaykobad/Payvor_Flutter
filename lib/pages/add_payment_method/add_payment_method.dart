@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
@@ -15,24 +14,7 @@ import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:provider/provider.dart';
 
 class AddPaymentMethod extends StatefulWidget {
-/*  final String id;
-  final int type;
-  final String image;
-  final String name;
-  final String userId;
-  final String paymentType;
-  final String paymentAmount;
-  final ValueSetter<int> voidcallback;
 
-  RatingBarNew(
-      {@required this.id,
-        this.type,
-        this.image,
-        this.name,
-        this.userId,
-        this.paymentType,
-        this.paymentAmount,
-        this.voidcallback});*/
 
   @override
   _HomeState createState() => _HomeState();
@@ -42,16 +24,9 @@ class _HomeState extends State<AddPaymentMethod>
     with AutomaticKeepAliveClientMixin<AddPaymentMethod> {
   var screenSize;
 
-  final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
-
   AuthProvider provider;
   FirebaseProvider firebaseProvider;
-
-  bool _switchValue = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  double _rating;
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(
@@ -61,6 +36,36 @@ class _HomeState extends State<AddPaymentMethod>
   @override
   void initState() {
     super.initState();
+  }
+
+  setUpPayment() {
+  /*  StripePayment.paymentRequestWithNativePay(
+      androidPayOptions: AndroidPayPaymentRequest(
+        totalPrice: "1.20",
+        currencyCode: "EUR",
+      ),
+      applePayOptions: ApplePayPaymentOptions(
+        countryCode: 'DE',
+        currencyCode: 'EUR',
+        items: [
+          ApplePayItem(
+            label: 'Test',
+            amount: '13',
+          )
+        ],
+      ),
+    ).then((token) {
+      setState(() {
+        _scaffoldKey.currentState
+            .showSnackBar(SnackBar(content: Text('Received ${token.tokenId}')));
+        // _paymentToken = token;
+      });
+    }).catchError(setError);*/
+  }
+
+  void setError(dynamic error) {
+    provider.hideLoader();
+    showInSnackBar(error.toString());
   }
 
   Widget getAppBarNew(BuildContext context) {
@@ -161,6 +166,7 @@ class _HomeState extends State<AddPaymentMethod>
 
   @override
   bool get wantKeepAlive => true;
+
 
   Widget buildItemRecentSearch(int type, String data, String icon) {
     return InkWell(

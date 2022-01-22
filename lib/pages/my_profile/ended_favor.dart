@@ -141,15 +141,11 @@ class _HomeState extends State<MyEndedFavor>
       provider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
-
-      //  showInSnackBar(apiError.error);
     }
   }
 
   void _setScrollListener() {
-    //scrollController.position.isScrollingNotifier.addListener(() { print("called");});
-
-    scrollController = new ScrollController();
+       scrollController = new ScrollController();
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -210,12 +206,6 @@ class _HomeState extends State<MyEndedFavor>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      /* InkWell(
-                        onTap: () {},
-                        child: new SvgPicture.asset(
-                          AssetStrings.nopostnojob,
-                        ),
-                      ),*/
                       Container(
                         child: new Text(
                           "No Favors Found",
@@ -225,18 +215,6 @@ class _HomeState extends State<MyEndedFavor>
                               fontSize: 17.0),
                         ),
                       ),
-                      /* Container(
-                        margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
-                        child: new Text(
-                          "You don’t have any job yet.\nOnce you’re hired it will show up here.",
-                          textAlign: TextAlign.center,
-                          style: new TextStyle(
-                              height: 1.5,
-                              color: Color.fromRGBO(103, 99, 99, 1.0),
-                              fontFamily: AssetStrings.circulerNormal,
-                              fontSize: 15.0),
-                        ),
-                      ),*/
                     ],
                   ),
                 ),
@@ -250,9 +228,6 @@ class _HomeState extends State<MyEndedFavor>
                 ),
               ),
             ),
-            /* new Center(
-              child: _getLoader,
-            ),*/
           ],
         ),
       ),

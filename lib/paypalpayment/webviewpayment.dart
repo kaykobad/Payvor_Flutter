@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
+import 'package:payvor/networkmodel/APIs.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/memory_management.dart';
 
@@ -38,37 +39,21 @@ class _WebviewState extends State<WebviewPayment> {
     flutterWebviewPlugin.onUrlChanged.listen((state) async {
       print(state);
 
-      /* showdialogPayment("Payment Successful!.", "Back To Home", Colors.green,
-          AssetStrings.paypal, 1);*/
-      //  showBottomSheet("Failed!","Payment Failed!.",0);
-
-      if (state.contains("http://167.172.40.120/sucess")) {
+      if (state.contains("${APIs.apiBaseUrl}sucess")) {
         print("success");
 
         Navigator.of(context).pop(true);
-
-        //  showBottomSheet("Successful!","Payment Successful!.",1);
-        /*showdialogPayment("Payment Successful!.", "Back To Home", Colors.green,
-            AssetStrings.paypal, 1);*/
       } else {
-        if (state.contains("http://167.172.40.120/cancel")) {
+        if (state.contains("${APIs.apiBaseUrl}cancel")) {
           print("failed");
 
           Navigator.of(context).pop(false);
-          //  showBottomSheet("Failed!","Payment Failed!.",0);
         }
       }
     });
 
     super.initState();
   }
-
-/* if (state.type == WebViewState.finishLoad) {
-        print(state.url);
-
-        print("aviiiii");
-
-      }*/
 
   void callback() async {
     Navigator.pop(context);
@@ -156,7 +141,7 @@ class _WebviewState extends State<WebviewPayment> {
     //  var url = "http://68.183.154.186/api/payment?account_id=${widget.gameId}&user_id=$userId";
 
     var url =
-        "http://167.172.40.120/make-payment/${widget.type}/$userId/${widget.itemId}";
+        "${APIs.baseUrlPayment}${widget.type}/$userId/${widget.itemId}";
     print("payment url $url");
     return new WebviewScaffold(
         withJavascript: true,

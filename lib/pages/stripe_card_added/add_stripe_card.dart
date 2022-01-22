@@ -11,7 +11,6 @@ import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
 import 'package:payvor/model/stripe/stripe_add_users.dart';
 import 'package:payvor/model/update_firebase_token/update_token_request.dart';
-import 'package:payvor/pages/post_details/cardformatter.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
@@ -21,7 +20,6 @@ import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 
 class AddStripeCardDetails extends StatefulWidget {
   ValueSetter<int> voidcallback;
@@ -83,29 +81,28 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
   @override
   void initState() {
     // TODO: implement initState
-
-    StripePayment.setOptions(StripeOptions(
-        publishableKey:
-            "pk_test_51IGZpGBWL8vL5RdKb9vByUN7q9V0nv46coA9Ngo7sceVBBIlJM9SFtZ0nPv1VW3XhSoyiecsrcy0u7uS7JDQ4v2500Heb148HL",
-        merchantId: "Test",
-        androidPayMode: 'test'));
+    //
+    /* StripePayment.setOptions(StripeOptions(
+         publishableKey:
+             "pk_test_51IGZpGBWL8vL5RdKb9vByUN7q9V0nv46coA9Ngo7sceVBBIlJM9SFtZ0nPv1VW3XhSoyiecsrcy0u7uS7JDQ4v2500Heb148HL",
+         merchantId: "Test",
+         androidPayMode: 'test'));
 
     listCardNumber.addAll([
-      FilteringTextInputFormatter.digitsOnly,
+      WhitelistingTextInputFormatter.digitsOnly,
       new LengthLimitingTextInputFormatter(16),
       new CardNumberInputFormatter()
     ]);
 
     listExpDate.addAll([
-      FilteringTextInputFormatter.digitsOnly,
+      WhitelistingTextInputFormatter.digitsOnly,
       new LengthLimitingTextInputFormatter(4),
       new CardMonthInputFormatter()
     ]);
     listcvv.addAll([
-      FilteringTextInputFormatter.digitsOnly,
+      WhitelistingTextInputFormatter.digitsOnly,
       new LengthLimitingTextInputFormatter(4)
-    ]);
-
+    ]);*/
 
     super.initState();
   }
@@ -582,12 +579,14 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
 
         provider.setLoading();
 
-        final CreditCard testCard = CreditCard(
+        /*  final CreditCard testCard = CreditCard(
             number: account,
             expMonth: monthCard,
             expYear: yearCard,
             cvc: cvv,
             name: name);
+
+        //StripePayment.paymentRequestWithNativePay(androidPayOptions: androidPayOptions, applePayOptions: applePayOptions)
 
         StripePayment.createTokenWithCard(
           testCard,
@@ -595,7 +594,7 @@ class _PaymentDialogState extends State<AddStripeCardDetails> {
           hitStripeApi(token?.tokenId);
 
           //  _paymentToken = token;
-        }).catchError(setError);
+        }).catchError(setError);*/
 
 /*
           StripePayment.createPaymentMethod(

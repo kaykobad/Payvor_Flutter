@@ -1,11 +1,13 @@
 class ForgotPasswordResponse {
   Status status;
+  String data;
 
-  ForgotPasswordResponse({this.status});
+  ForgotPasswordResponse({this.status, this.data});
 
   ForgotPasswordResponse.fromJson(Map<String, dynamic> json) {
     status =
-        json['status'] != null ? new Status.fromJson(json['status']) : null;
+    json['status'] != null ? new Status.fromJson(json['status']) : null;
+    data = json['data'];
   }
 
   Map<String, dynamic> toJson() {
@@ -13,6 +15,7 @@ class ForgotPasswordResponse {
     if (this.status != null) {
       data['status'] = this.status.toJson();
     }
+    data['data'] = this.data;
     return data;
   }
 }

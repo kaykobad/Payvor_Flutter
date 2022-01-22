@@ -52,7 +52,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   final _profileScreen = GlobalKey<NavigatorState>();
   final _dummyScreen = GlobalKey<NavigatorState>();
 
-  GlobalKey<HomeState> _HomeKey = GlobalKey<HomeState>();
+  GlobalKey<HomeState> _HomeKey = new GlobalKey<HomeState>();
+  GlobalKey<MyProfileScreenState> _profileKey =
+      new GlobalKey<MyProfileScreenState>();
 
   int currentTab = 0;
   bool guestViewMain = false;
@@ -77,6 +79,55 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   String userId = "";
   LocationProvider locationProvider;
   String profile = "";
+
+  @override
+  Widget build(BuildContext context) {
+    _firebaseProvider = Provider.of<FirebaseProvider>(context);
+    authProvider = Provider.of<AuthProvider>(context);
+    locationProvider = Provider.of<LocationProvider>(context);
+    _firebaseProvider.setHomeContext(context);
+    authProvider.setHomeContext(context);
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
+          backgroundColor: AppColors.kAppScreenBackGround,
+          resizeToAvoidBottomInset: false,
+          body: guestViewMain != null && guestViewMain
+              ? guestView()
+              : normalView(),
+          floatingActionButton: Container(
+            margin: const EdgeInsets.only(top: 24),
+            height: Constants.FLOATING_BUTTON_SIZE,
+            width: Constants.FLOATING_BUTTON_SIZE,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.white, width: 4),
+              shape: BoxShape.circle,
+            ),
+            child: FloatingActionButton(
+              elevation: 0.0,
+              child: CustomFloatingButton(),
+              onPressed: () {
+                if (guestViewMain != null && guestViewMain) {
+                  Navigator.push(
+                    context,
+                    new CupertinoPageRoute(builder: (BuildContext context) {
+                      return Material(
+                          child: new GuestView(
+                        lauchCallBack: homeCallBack,
+                      ));
+                    }),
+                  );
+                } else {
+                  redirect();
+                }
+              },
+            ),
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar: bottomNav),
+    );
+  }
 
   Future<bool> _onBackPressed() async {
     bool canPop = false;
@@ -117,30 +168,31 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
     if (!canPop) //check if screen popped or not and showing home tab data
       return showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Exit the app?'),
-            content: Text('Do you want to exit an App'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('NO'),
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-              ),
-              FlatButton(
-                child: Text('YES'),
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                  exit(0); //close app
-                },
-              ),
-            ],
-          );
-        },
-      ) ?? false;
+            context: context,
+            barrierDismissible: false, // user must tap button!
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Exit the app?'),
+                content: Text('Do you want to exit an App'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('NO'),
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('YES'),
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                      exit(0); //close app
+                    },
+                  ),
+                ],
+              );
+            },
+          ) ??
+          false;
   }
 
   redirect() async {
@@ -148,8 +200,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
     var data = await Navigator.push(
       context,
-      CupertinoPageRoute(builder: (BuildContext context) {
-        return Material(child: PostFavour());
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return Material(child: new PostFavour());
       }),
     );
 
@@ -178,7 +230,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
     var value = await Navigator.push(
       context,
-      CupertinoPageRoute(builder: (BuildContext context) {
+      new CupertinoPageRoute(builder: (BuildContext context) {
         return screen;
       }),
     );
@@ -199,8 +251,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
     Navigator.pushAndRemoveUntil(
       context,
-      CupertinoPageRoute(builder: (BuildContext context) {
-        return SplashIntroScreenNew();
+      new CupertinoPageRoute(builder: (BuildContext context) {
+        return new SplashIntroScreenNew();
       }),
       (route) => false,
     );
@@ -211,7 +263,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     MemoryManagement.setScreenType(type: "3");
     _firebaseMessaging = FirebaseMessaging.instance;
 
-    Future.delayed(Duration(microseconds: 2000), () {
+    Future.delayed(new Duration(microseconds: 2000), () {
       setCategory();
       print("call fun");
     });
@@ -248,14 +300,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     String userId,
   ) async {
     AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
+        new AndroidNotificationDetails(
             'your channel id', 'your channel name', 'your channel description');
     IOSNotificationDetails iOSPlatformChannelSpecifics =
-        IOSNotificationDetails();
+        new IOSNotificationDetails();
 
     MacOSNotificationDetails macOSNotificationDetails =
-        MacOSNotificationDetails();
-    NotificationDetails platformChannelSpecifics = NotificationDetails(
+        new MacOSNotificationDetails();
+    NotificationDetails platformChannelSpecifics = new NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics,
         macOS: macOSNotificationDetails);
@@ -272,24 +324,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     });
   }
 
-  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    // If you're going to use other Firebase services in the background, such as Firestore,
-    // make sure you call `initializeApp` before using other Firebase services.
-    print('Handling a background message ${message.messageId}');
-    if (message != null) {
-      _showLocalPush(message.data);
-    }
-  }
 
   void configurePushNotification() async {
     print("config Notification");
-
-    // Set the background messaging handler early on, as a named top-level function
-    // FirebaseMessaging.instance.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-    /// Update the iOS foreground notification presentation options to allow
-    /// heads up notifications.
-    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
@@ -304,111 +343,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A onMessageOpenedApp event was published!');
+      print('A new onMessageOpenedApp event was published!');
       _showLocalPush(message.data);
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print("on message:");
       if (message != null) _showLocalPush(message.data);
     });
-
-    // _firebaseMessaging.configure(
-    //   onMessage: (Map<String, dynamic> message) async {
-    //     print("config Notification onMessage");
-    //     print("onMessage $message");
-    //     if (Platform.isIOS) {
-    //       //move to chat screen
-    //       var type = message['notification']['type'];
-    //       String title = message['notification']['title'];
-    //       String description = message['notification']['body'];
-    //       if (type.toString() == "7") {
-    //         showNotification(title, description, message, type, "0", "0");
-    //       } else {
-    //         String favid = message['notification']['fav_id'];
-    //         String userid = message['notification']['user_id'];
-    //         showNotification(title, description, message, type, favid, userid);
-    //       }
-    //     }
-    //   },
-    //   onReceive: (Map<String, dynamic> message) async {
-    //     print("config Notification onReceive");
-    //     //  print("onResume: ${message}");
-    //     print("onResume: ${message['data']['type']}");
-    //     print("onMessage $message");
-    //     if (Platform.isIOS) {
-    //       var type = message['notification']['type'];
-    //       String title = message['notification']['title'];
-    //       String description = message['notification']['body'];
-    //       if (type.toString() == "7") {
-    //         showNotification(title, description, message, type, "0", "0");
-    //       } else {
-    //         String favid = message['notification']['fav_id'];
-    //         String userid = message['notification']['user_id'];
-    //         showNotification(title, description, message, type, favid, userid);
-    //       }
-    //     }
-    //   },
-    //   onResume: (Map<String, dynamic> message) async {
-    //     print("config Notification onResume");
-    //     //  print("onResume: ${message}");
-    //     print("onResume $message");
-    //
-    //     if (Platform.isIOS) {
-    //       var type = message['notification']['type'];
-    //       String title = message['notification']['title'];
-    //       String description = message['notification']['body'];
-    //       if (type.toString() == "7") {
-    //         showNotification(title, description, message, type, "0", "0");
-    //       } else {
-    //         String favid = message['notification']['fav_id'];
-    //         String userid = message['notification']['user_id'];
-    //         showNotification(title, description, message, type, favid, userid);
-    //       }
-    //     } else {
-    //       var type = message['data']['type'];
-    //       if (type.toString() == "7") {
-    //         _moveToChatScreen();
-    //       } else {
-    //         String favid = message['data']['fav_id'];
-    //         String userid = message['data']['user_id'];
-    //         moveToScreen(int.tryParse(type), favid, userid);
-    //       }
-    //     }
-    //   },
-    //   onLaunch: (Map<String, dynamic> message) async {
-    //     print("config Notification onLaunch");
-    //     print("onLaunch $message");
-    //     if (Platform.isIOS) {
-    //       var type = message['notification']['type'];
-    //       String title = message['notification']['title'];
-    //       String description = message['notification']['body'];
-    //       if (type.toString() == "7") {
-    //         showNotification(title, description, message, type, "0", "0");
-    //       } else {
-    //         String favid = message['notification']['fav_id'];
-    //         String userid = message['notification']['user_id'];
-    //         showNotification(title, description, message, type, favid, userid);
-    //       }
-    //     } else {
-    //       var type = message['data']['type'];
-    //       if (type.toString() == "7") {
-    //         _moveToChatScreen();
-    //       } else {
-    //         String favid = message['data']['fav_id'];
-    //         String userid = message['data']['user_id'];
-    //         moveToScreen(int.tryParse(type), favid, userid);
-    //       }
-    //     }
-    //   },
-    // );
-
-    // _firebaseMessaging.requestNotificationPermissions(
-    //     const IosNotificationSettings(sound: true, badge: true, alert: true));
-    //
-    // _firebaseMessaging.onIosSettingsRegistered
-    //     .listen((IosNotificationSettings settings) {
-    //   print("Settings registered: $settings");
-    // });
 
     _firebaseMessaging.getToken().then((String token) {
       print("DevToken   $token");
@@ -423,6 +365,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     print("config Notification onMessage");
     print("onMessage $message");
 
+    _firebaseProvider.notificationStreamController.sink.add(true);
+
     if (Platform.isIOS) {
       var type = message['notification']['type'];
       String title = message['notification']['title'];
@@ -435,13 +379,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         showNotification(title, description, message, type, favid, userid);
       }
     } else {
+      String title = message['title'];
+      String description = message['body'];
       var type = message['type'];
       if (type.toString() == "7") {
-        _moveToChatScreen();
+      //  _moveToChatScreen();
+        showNotification(title, description, message, type, "0", "0");
       } else {
-        String title = message['title'];
-        String description = message['body'];
-        String favid = message['fav_id'];
+         String favid = message['fav_id'];
         String userid = message['user_id'];
        // moveToScreen(int.tryParse(type), favid, userid);
         showNotification(title, description, message, type, favid, userid);
@@ -452,7 +397,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   void moveToScreen(int type, String favid, String userid) {
     if (type == 1) {
       //"hire to u
-      _firebaseProvider?.changeScreen(PayFeebackDetailsCommon(
+      _firebaseProvider?.changeScreen(new PayFeebackDetailsCommon(
         postId: favid,
         userId: userid,
         giveFeedback: false,
@@ -462,7 +407,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     } else if (type == 2) {
       // hire and paid favor
 
-      _firebaseProvider?.changeScreen(PayFeebackDetails(
+      _firebaseProvider?.changeScreen(new PayFeebackDetails(
         postId: favid,
         userId: userid,
         type: 1,
@@ -472,18 +417,20 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       print("review_post from dashboard screen");
       // for rated user
       _firebaseProvider?.changeScreen(Material(
-          child: ReviewPost(
+          child: new ReviewPost(
         id: favid ?? "",
       )));
     } else if (type == 4) {
       // for applied user
       _firebaseProvider?.changeScreen(Material(
-          child: OriginalPostData(
+          child: new OriginalPostData(
         id: favid,
       )));
     } else {
       // for apploed and refered favor( type 3,4 etc)
-      _firebaseProvider?.changeScreen(PostFavorDetails(id: favid.toString()), rootNavigator: true);
+      _firebaseProvider?.changeScreen(new PostFavorDetails(
+        id: favid.toString(),
+      ));
     }
   }
 
@@ -515,15 +462,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
       var response =
           authProvider.updateTokenRequest(updatetokenrequest, context);
-      // api hit
-      /*var request = DeviceTokenRequest(deviceToken: token);to
-      var response = await _dashBoardBloc.setDeviceToken(
-          context: context, devicetokenRequest: request);
-
-      //logged in successfully
-      if (response != null && (response is ChangePasswordResponse)) {
-        print(response.message);
-      } else {}*/
     }
   }
 
@@ -544,40 +482,38 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     }
   }
 
-  void getDeviceToken() {
-    //  var response=   authProvider.updateTokenRequest( context);
-  }
 
   void _initPushNotification() async {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
-    final IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings(
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('app_icon');
+    final IOSInitializationSettings initializationSettingsIOS =
+        IOSInitializationSettings(
       requestSoundPermission: false,
       requestBadgePermission: false,
       requestAlertPermission: false,
       onDidReceiveLocalNotification: onDidReceiveLocalNotification,
     );
 
-    final MacOSInitializationSettings initializationSettingsMacOS = MacOSInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
-    );
+    final MacOSInitializationSettings initializationSettingsMacOS =
+        MacOSInitializationSettings(
+            requestAlertPermission: false,
+            requestBadgePermission: false,
+            requestSoundPermission: false);
 
-    final InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-      macOS: initializationSettingsMacOS,
-    );
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+            android: initializationSettingsAndroid,
+            iOS: initializationSettingsIOS,
+            macOS: initializationSettingsMacOS);
 
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onSelectNotification: onSelectNotification,
-    );
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
 
     await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
           alert: true,
           badge: true,
@@ -585,7 +521,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         );
 
     await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<MacOSFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            MacOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
           alert: true,
           badge: true,
@@ -593,7 +530,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         );
   }
 
-  Future onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
+  Future onDidReceiveLocalNotification(
+      int id, String title, String body, String payload) async {
     // display a dialog with the notification details, tap ok to go to another page
     showDialog(
       context: context,
@@ -622,13 +560,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       var data = payload.split(",");
       if (data[0] == "7") {
         _moveToChatScreen();
-      } else {}
+      } else {
+        moveToScreen(int.tryParse(data[0]), data[1], data[2]);
+      }
       // moveToScreen(int.tryParse(data[0]), data[1], data[2]);
     }
   }
 
   @override
   void dispose() {
+    // TODO: implement dispose
     super.dispose();
     _firebaseProvider.notificationStreamController.close();
   }
@@ -639,36 +580,41 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       sizing: StackFit.loose,
       children: <Widget>[
         Navigator(
-          key: _homeScreen,
-          onGenerateRoute: (route) => MaterialPageRoute(
-            settings: route,
-            builder: (context) => SearchCompany(
-              callbackmyid: callbackChangePage,
-              userid: userId?.toString(),
-              key: _HomeKey,
-              lauchCallBack: homeCallBack,
-            ),
-          ),
-        ),
+            key: _homeScreen,
+            onGenerateRoute: (route) => MaterialPageRoute(
+                  settings: route,
+                  builder: (context) => SearchCompany(
+                    callbackmyid: callbackChangePage,
+                    userid: userId?.toString(),
+                    key: _HomeKey,
+                    lauchCallBack: homeCallBack,
+                  ),
+                )),
         Navigator(
           key: _chatScreen,
           onGenerateRoute: (route) => MaterialPageRoute(
             settings: route,
-            builder: (context) => PostScreen(lauchCallBack: homeCallBack),
+            builder: (context) => PostScreen(
+              lauchCallBack: homeCallBack,
+            ),
           ),
         ),
         Navigator(
           key: _dummyScreen,
           onGenerateRoute: (route) => MaterialPageRoute(
             settings: route,
-            builder: (context) => Dummy(logoutCallBack: logoutCallBack),
+            builder: (context) => Dummy(
+              logoutCallBack: logoutCallBack,
+            ),
           ),
         ),
         Navigator(
           key: _notificationScreen,
           onGenerateRoute: (route) => MaterialPageRoute(
             settings: route,
-            builder: (context) => ChatScreen(logoutCallBack: logoutCallBack),
+            builder: (context) => ChatScreen(
+              logoutCallBack: logoutCallBack,
+            ),
           ),
         ),
         Navigator(
@@ -681,6 +627,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               hireduserId: userId ?? "",
               image: profile ?? "",
               userButtonMsg: true,
+              key: _profileKey,
             ),
           ),
         ),
@@ -693,12 +640,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       index: currentTab,
       children: <Widget>[
         Navigator(
+            onGenerateRoute: (route) => MaterialPageRoute(
+                  settings: route,
+                  builder: (context) => SearchCompany(
+                    callbackmyid: callbackChangePage,
+                    userid: userId?.toString(),
+                    key: _HomeKey,
+                    lauchCallBack: homeCallBack,
+                  ),
+                )),
+        Navigator(
           onGenerateRoute: (route) => MaterialPageRoute(
             settings: route,
-            builder: (context) => SearchCompany(
-              callbackmyid: callbackChangePage,
-              userid: userId?.toString(),
-              key: _HomeKey,
+            builder: (context) => GuestView(
               lauchCallBack: homeCallBack,
             ),
           ),
@@ -706,160 +660,36 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         Navigator(
           onGenerateRoute: (route) => MaterialPageRoute(
             settings: route,
-            builder: (context) => GuestView(lauchCallBack: homeCallBack),
+            builder: (context) => GuestView(
+              lauchCallBack: homeCallBack,
+            ),
           ),
         ),
         Navigator(
           onGenerateRoute: (route) => MaterialPageRoute(
             settings: route,
-            builder: (context) => GuestView(lauchCallBack: homeCallBack),
+            builder: (context) => GuestView(
+              lauchCallBack: homeCallBack,
+            ),
           ),
         ),
         Navigator(
           onGenerateRoute: (route) => MaterialPageRoute(
             settings: route,
-            builder: (context) => GuestView(lauchCallBack: homeCallBack),
-          ),
-        ),
-        Navigator(
-          onGenerateRoute: (route) => MaterialPageRoute(
-            settings: route,
-            builder: (context) => GuestView(lauchCallBack: homeCallBack),
+            builder: (context) => GuestView(
+              lauchCallBack: homeCallBack,
+            ),
           ),
         ),
       ],
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    _firebaseProvider = Provider.of<FirebaseProvider>(context);
-    authProvider = Provider.of<AuthProvider>(context);
-    locationProvider = Provider.of<LocationProvider>(context);
-    _firebaseProvider.setHomeContext(context);
-    authProvider.setHomeContext(context);
-
-    return WillPopScope(
-      onWillPop: _onBackPressed,
-      child: Scaffold(
-        backgroundColor: AppColors.kAppScreenBackGround,
-        resizeToAvoidBottomInset: false,
-        // body: PageStorage(
-        //   child: screens[currentTab],
-        //   bucket: bucket,
-        // ),
-        body: guestViewMain != null && guestViewMain ? guestView() : normalView(),
-        floatingActionButton: Container(
-          margin: const EdgeInsets.only(top: 24),
-          height: Constants.FLOATING_BUTTON_SIZE,
-          width: Constants.FLOATING_BUTTON_SIZE,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.white, width: 4),
-            shape: BoxShape.circle,
-          ),
-          child: FloatingActionButton(
-            elevation: 0.0,
-            child: CustomFloatingButton(),
-            onPressed: () {
-              if (guestViewMain != null && guestViewMain) {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(builder: (BuildContext context) {
-                    return Material(
-                        child: GuestView(
-                      lauchCallBack: homeCallBack,
-                    ));
-                  }),
-                );
-              } else {
-                redirect();
-              }
-            },
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: Container(
-          //  height: 90,
-          child: BottomNavigationBar(
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.white,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: bottomMenuIconWidget(AssetStrings.home_inactive, 22, 23),
-                activeIcon: bottomMenuIconWidget(AssetStrings.home_active, 22, 23),
-                label: "",
-              ),
-              BottomNavigationBarItem(
-                icon: bottomMenuIconWidget(AssetStrings.job_inactive, 25, 23),
-                activeIcon: bottomMenuIconWidget(AssetStrings.job_active, 25, 23),
-                label: "",
-              ),
-              BottomNavigationBarItem(
-                icon: firstWidget(AppColors.kWhite, AssetStrings.group),
-                activeIcon: firstWidget(AppColors.kWhite, AssetStrings.group),
-                label: "",
-              ),
-              BottomNavigationBarItem(
-                icon: bottomMenuIconWidget(
-                  (_isNewActivityFound)
-                      ? AssetStrings.activity_unselected_with_noti
-                      : AssetStrings.activity_not_selected,
-                  26,
-                  26,
-                ),
-                activeIcon: bottomMenuIconWidget(
-                  (_isNewActivityFound)
-                      ? AssetStrings.activity_selected_with_noti
-                      : AssetStrings.activity_selected,
-                  26,
-                  26,
-                ),
-                label: "",
-              ),
-              BottomNavigationBarItem(
-                icon: bottomMenuIconWidget(AssetStrings.profile_inactive, 19, 24),
-                activeIcon: bottomMenuIconWidget(AssetStrings.profile_active, 19, 24),
-                label: "",
-              ),
-            ],
-            currentIndex: currentTab,
-            onTap: (int index) {
-              if (guestViewMain != null && guestViewMain && index != 0) {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(builder: (BuildContext context) {
-                    return GuestView(lauchCallBack: homeCallBack);
-                  }),
-                );
-              }
-              else {
-                setState(() {
-                  currentTab = index;
-                  if (index == 0) {
-                    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-                    _homeScreen.currentState?.popUntil((route) => route.isFirst);
-                  } else if (index == 2) {
-                    redirect();
-                  } else {
-                    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-                  }
-                });
-              }
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget firstWidget(Color color, String image) {
     return SvgPicture.asset(image,
-      width: Constants.bottomIconSize,
-      height: Constants.bottomIconSize,
-      color: color,
-    );
+        width: Constants.bottomIconSize,
+        height: Constants.bottomIconSize,
+        color: color);
   }
 
   Widget bottomMenuIconWidget(String image, double width, double height) {
@@ -875,30 +705,98 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   void _setupCounterChangeListener() {
     _firebaseProvider.setStreamNotifier(StreamController<bool>());
     _firebaseProvider.notificationStreamController.stream.listen((event) {
-      print("Notification count status $event");
+      print("notificatoion count status $event");
 
       if (event != _isNewActivityFound) {
-        print("update called");
+        //print("update called");
         _isNewActivityFound = event;
         setState(() {});
       }
     });
   }
+
+  get bottomNav => Container(
+        //  height: 90,
+        child: BottomNavigationBar(
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white,
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+                icon: bottomMenuIconWidget(AssetStrings.home_inactive, 22, 23),
+                activeIcon:
+                    bottomMenuIconWidget(AssetStrings.home_active, 22, 23),
+                label: ""),
+            BottomNavigationBarItem(
+                icon: bottomMenuIconWidget(AssetStrings.job_inactive, 25, 23),
+                activeIcon:
+                    bottomMenuIconWidget(AssetStrings.job_active, 25, 23),
+                label: ""),
+            BottomNavigationBarItem(
+                icon: firstWidget(AppColors.kWhite, AssetStrings.group),
+                activeIcon: firstWidget(AppColors.kWhite, AssetStrings.group),
+                label: ""),
+            BottomNavigationBarItem(
+                icon: bottomMenuIconWidget(
+                    (_isNewActivityFound)
+                        ? AssetStrings.activity_unselected_with_noti
+                        : AssetStrings.activity_not_selected,
+                    26,
+                    26),
+                activeIcon: bottomMenuIconWidget(
+                    (_isNewActivityFound)
+                        ? AssetStrings.activity_selected_with_noti
+                        : AssetStrings.activity_selected,
+                    26,
+                    26),
+                label: ""),
+            BottomNavigationBarItem(
+                icon:
+                    bottomMenuIconWidget(AssetStrings.profile_inactive, 19, 24),
+                activeIcon:
+                    bottomMenuIconWidget(AssetStrings.profile_active, 19, 24),
+                label: ""),
+          ],
+          currentIndex: currentTab,
+          onTap: (int index) {
+            setState(() {
+              currentTab = index;
+              if (index == 0) //for home tab
+              {
+                SystemChrome.setSystemUIOverlayStyle(
+                    SystemUiOverlayStyle.light);
+
+                _homeScreen.currentState?.popUntil((route) => route.isFirst);
+              } else if (index == 2) {
+                redirect();
+              } else if (index == 4) {
+                _profileKey.currentState?.tapCallApi();
+              } else if (index == 3) {
+                _firebaseProvider.notificationStreamController.sink.add(false);
+              } else {
+                SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+              }
+            });
+          },
+        ),
+      );
 }
 
 class CustomFloatingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // TODO: implement build
     return Container(
-      width: Constants.FLOATING_BUTTON_SIZE,
-      height: Constants.FLOATING_BUTTON_SIZE,
-      decoration: BoxDecoration(color: AppColors.colorDarkCyan, shape: BoxShape.circle),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Image.asset(
-          AssetStrings.floatingplushome,
-        ),
-      ),
-    );
+        width: Constants.FLOATING_BUTTON_SIZE,
+        height: Constants.FLOATING_BUTTON_SIZE,
+        decoration: BoxDecoration(
+            color: AppColors.colorDarkCyan, shape: BoxShape.circle),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: new Image.asset(
+            AssetStrings.floatingplushome,
+          ),
+        ));
   }
 }

@@ -246,7 +246,7 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
       return false;
     }
 
-    var getdata = await Navigator.push(
+    var response = await Navigator.push(
       context,
       new CupertinoPageRoute(builder: (BuildContext context) {
         return new WebviewPayment(
@@ -255,17 +255,11 @@ class _PaymentDialogState extends State<PaymentDialogPost> {
         );
       }),
     );
-
-    print(getdata);
-
-    if (getdata is bool) {
-      if (getData != null && getdata == true) {
-        showBottomSheet("Successful!", "Payment Successful!.", 1);
-        /*Navigator.pop(context);
-        widget.voidcallback(1);*/
-      } else {
-        showBottomSheet("Failed!", "Payment Failed!.", 0);
-      }
+    print(response);
+    if (response != null && response == true) {
+      showBottomSheet("Successful!", "Payment Successful!.", 1);
+    } else {
+      showBottomSheet("Failed!", "Payment Failed!.", 0);
     }
   }
 

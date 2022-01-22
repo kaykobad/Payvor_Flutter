@@ -136,16 +136,19 @@ class DataNextJob {
 
 class HiredBy {
   String name;
+  String profile_pic;
 
-  HiredBy({this.name});
+  HiredBy({this.name, this.profile_pic});
 
   HiredBy.fromJson(Map<String, dynamic> json) {
     name = json['name'];
+    profile_pic = json['profile_pic'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
+    data['profile_pic'] = this.profile_pic;
     return data;
   }
 }

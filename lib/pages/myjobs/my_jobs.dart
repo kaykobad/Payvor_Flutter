@@ -45,23 +45,19 @@ class _HomeState extends State<MyJobs> {
   int favourapplied = 0;
 
   List<Object> listResult = List();
-
-  final StreamController<bool> _loaderStreamController =
-      StreamController<bool>();
-  TextEditingController _controller = TextEditingController();
-  ScrollController scrollController = ScrollController();
+  ScrollController scrollController = new ScrollController();
   bool _loadMore = false;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
+      new GlobalKey<RefreshIndicatorState>();
 
   Widget widgets;
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(SnackBar(content: Text(value)));
+        .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
   @override
@@ -69,14 +65,6 @@ class _HomeState extends State<MyJobs> {
     Future.delayed(const Duration(milliseconds: 300), () {
       hitJobsPost();
     });
-
-    /*  listResult.add("Hired Favors");
-    listResult.add(1.0);
-    listResult.add(1.0);
-    listResult.add("Posted Favors");
-    listResult.add(1);
-    listResult.add(1);
-    listResult.add(1);*/
 
     _setScrollListener();
     super.initState();
@@ -140,8 +128,6 @@ class _HomeState extends State<MyJobs> {
           offstagenodata = false;
         }
 
-        //  hitCurrentUserHire();
-
         setState(() {});
       }
 
@@ -151,10 +137,6 @@ class _HomeState extends State<MyJobs> {
       provider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
-
-      //hitCurrentUserHire();
-
-      //  showInSnackBar(apiError.error);
     }
   }
 
@@ -172,16 +154,6 @@ class _HomeState extends State<MyJobs> {
     if (!gotInternetConnection) {
       return;
     }
-/*
-    if (!isPullToRefresh) {
-      provider.setLoading();
-    }
-
-    if (_loadMore) {
-      currentPage++;
-    } else {
-      currentPage = 1;
-    }*/
 
     var response = await provider.favourjobapplieduser(context, currentPage);
 
@@ -235,9 +207,8 @@ class _HomeState extends State<MyJobs> {
   }
 
   void _setScrollListener() {
-    //scrollController.position.isScrollingNotifier.addListener(() { print("called");});
 
-    scrollController = ScrollController();
+    scrollController = new ScrollController();
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -255,15 +226,15 @@ class _HomeState extends State<MyJobs> {
       onTap: () {
         widget.lauchCallBack(Material(
             child: Material(
-                child: RecentAppliedFavor(
+                child: new RecentAppliedFavor(
           lauchCallBack: widget?.lauchCallBack,
         ))));
       },
       child: Container(
-        padding: EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
-        margin: EdgeInsets.only(top: 18.0, left: 18, right: 18),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
+        padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
+        margin: new EdgeInsets.only(top: 18.0, left: 18, right: 18),
+        decoration: new BoxDecoration(
+          borderRadius: new BorderRadius.circular(5.0),
           color: Colors.white,
         ),
         child: Row(
@@ -272,16 +243,16 @@ class _HomeState extends State<MyJobs> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Container(
-                    child: Text(
+                  new Container(
+                    child: new Text(
                       "Recent Applied Favors ($favourapplied)",
                       style: TextThemes.blackCirculerMedium,
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 7.0),
+                    margin: new EdgeInsets.only(top: 7.0),
                     child: Container(
-                      child: Text(
+                      child: new Text(
                         "The favors you’ve applied recently but hired",
                         style: TextThemes.grayNormalSmall,
                       ),
@@ -291,8 +262,8 @@ class _HomeState extends State<MyJobs> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(left: 7.0),
-              child: Icon(
+              margin: new EdgeInsets.only(left: 7.0),
+              child: new Icon(
                 Icons.arrow_forward_ios,
                 size: 13,
                 color: Color.fromRGBO(183, 183, 183, 1),
@@ -315,9 +286,9 @@ class _HomeState extends State<MyJobs> {
       backgroundColor: AppColors.whiteGray,
       body: Stack(
         children: <Widget>[
-          Container(
+          new Container(
             color: AppColors.whiteGray,
-            child: Column(
+            child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 favourapplied != null && favourapplied > 0
@@ -331,35 +302,35 @@ class _HomeState extends State<MyJobs> {
             offstage: offstagenodata,
             child: Container(
               height: screenSize.height,
-              padding: EdgeInsets.only(bottom: 40),
-              child: Center(
+              padding: new EdgeInsets.only(bottom: 40),
+              child: new Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     InkWell(
                       onTap: () {},
-                      child: Image.asset(
+                      child: new Image.asset(
                         AssetStrings.noPosts,
                         width: 150,
                         height: 150,
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 10),
-                      child: Text(
+                      margin: new EdgeInsets.only(top: 10),
+                      child: new Text(
                         "No Jobs",
-                        style: TextStyle(
+                        style: new TextStyle(
                             color: Colors.black,
                             fontFamily: AssetStrings.circulerMedium,
                             fontSize: 17.0),
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 9, left: 20, right: 20),
-                      child: Text(
+                      margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
+                      child: new Text(
                         "You don’t have any job yet.\nOnce you’re hired it will show up here.",
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: new TextStyle(
                             height: 1.5,
                             color: Color.fromRGBO(103, 99, 99, 1.0),
                             fontFamily: AssetStrings.circulerNormal,
@@ -372,16 +343,13 @@ class _HomeState extends State<MyJobs> {
             ),
           ),
           Container(
-            child: Center(
+            child: new Center(
               child: getHalfScreenLoader(
                 status: provider.getLoading(),
                 context: context,
               ),
             ),
           ),
-          /* Center(
-            child: _getLoader,
-          ),*/
         ],
       ),
     );
@@ -399,9 +367,9 @@ class _HomeState extends State<MyJobs> {
         await hitJobsPost();
       },
       child: Container(
-        margin: EdgeInsets.only(left: 18, right: 18),
-        child: ListView.builder(
-          padding: EdgeInsets.all(0.0),
+        margin: new EdgeInsets.only(left: 18, right: 18),
+        child: new ListView.builder(
+          padding: new EdgeInsets.all(0.0),
           physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             if (listResult[index] is String) {
@@ -424,11 +392,11 @@ class _HomeState extends State<MyJobs> {
     String data = "";
 
     if (type == 1) {
-      data = " has hired you";
+      data = " hired you";
     } else if (type == 2) {
-      data = " has paid & Ended Favor";
+      data = " ended favor";
     } else if (type == 3) {
-      data = " has paid & Ended Favor";
+      data = " ended favor";
     }
     return data;
   }
@@ -436,43 +404,28 @@ class _HomeState extends State<MyJobs> {
   Widget buildItem(int index, Datas data) {
     return InkWell(
       onTap: () {
-        providerFirebase?.changeScreen(PostFavorDetails(
+        providerFirebase?.changeScreen(new PostFavorDetails(
           id: data?.favourId?.toString(),
           isButtonDesabled: true,
-        ), rootNavigator: true);
+        ));
       },
       child: Container(
-        padding: EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
-        margin: EdgeInsets.only(top: 8.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
+        padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
+        margin: new EdgeInsets.only(top: 8.0),
+        decoration: new BoxDecoration(
+          borderRadius: new BorderRadius.circular(5.0),
           color: Colors.white,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            /*  Container(
-              margin: EdgeInsets.only(top: 10.0),
-              child: Text(
-                data?.favour?.title ?? "",
-                style: TextThemes.blackCirculerMedium,
-              ),
-            ),
-            Opacity(
-              opacity: 0.12,
-              child: Container(
-                margin: EdgeInsets.only(top: 30.0),
-                height: 1.0,
-                color: AppColors.dividerColor,
-              ),
-            ),*/
             Container(
-              child: Row(
+              child: new Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: Container(
-                      child: Text(
+                      child: new Text(
                         data?.favour?.title ?? "",
                         style: TextThemes.blackCirculerMedium,
                         maxLines: 3,
@@ -481,8 +434,8 @@ class _HomeState extends State<MyJobs> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 7.0),
-                    child: Icon(
+                    margin: new EdgeInsets.only(left: 7.0),
+                    child: new Icon(
                       Icons.arrow_forward_ios,
                       size: 13,
                       color: Color.fromRGBO(183, 183, 183, 1),
@@ -499,7 +452,7 @@ class _HomeState extends State<MyJobs> {
 
   Widget buildItemHeader(String text) {
     return Container(
-      padding: EdgeInsets.only(top: 16, bottom: 2),
+      padding: new EdgeInsets.only(top: 16, bottom: 2),
       child: Text(text, style: TextThemes.darkBlackMedium),
     );
   }
@@ -525,10 +478,10 @@ class _HomeState extends State<MyJobs> {
   Widget buildItemMain(int index, DataNextJob data) {
     return InkWell(
       onTap: () {
-        if (data?.status != 3) {
+        if (data?.status == 1) {
           widget.lauchCallBack(Material(
               child: Material(
-                  child: PayFeebackDetailsCommon(
+                  child: new PayFeebackDetailsCommon(
             lauchCallBack: widget?.lauchCallBack,
             userId: data?.hiredUserId?.toString(),
             postId: data?.id?.toString(),
@@ -538,7 +491,7 @@ class _HomeState extends State<MyJobs> {
             paidUnpaid: 1,
           ))));
         } else {
-          widget.lauchCallBack(PayFeebackDetails(
+          widget.lauchCallBack(new PayFeebackDetails(
             userId: data?.hiredUserId?.toString(),
             postId: data?.id?.toString(),
             type: 1,
@@ -546,24 +499,13 @@ class _HomeState extends State<MyJobs> {
             userType: Constants.HELPER,
             paidUnpaid: 1,
           ));
-
-          /*
-          widget.lauchCallBack(Material(
-              child: Material(
-                  child: ChatMessageDetails(
-                    id: data.userId.toString(),
-                    name: data.title,
-                    hireduserId: data?.hiredUserId?.toString(),
-                    image: data?.image,
-                    userButtonMsg: true,
-                  ))));*/
         }
       },
       child: Container(
-        padding: EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
-        margin: EdgeInsets.only(top: 18.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
+        padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
+        margin: new EdgeInsets.only(top: 18.0),
+        decoration: new BoxDecoration(
+          borderRadius: new BorderRadius.circular(5.0),
           color: Colors.white,
         ),
         child: Column(
@@ -571,40 +513,40 @@ class _HomeState extends State<MyJobs> {
           children: <Widget>[
             Row(
               children: [
-                Container(
+                new Container(
                     width: 49.0,
                     height: 49.0,
-                    decoration: BoxDecoration(
+                    decoration: new BoxDecoration(
                       color: Colors.grey,
-                      border: Border.all(color: Colors.white, width: 0.3),
+                      border: new Border.all(color: Colors.white, width: 0.3),
                       shape: BoxShape.circle,
                     ),
                     child: ClipOval(
                       child: getCachedNetworkImageWithurl(
-                          url: data?.image ?? "", size: 49),
+                          url: data?.hiredBy?.profile_pic ?? "", size: 49),
                     )),
                 Expanded(
                   child: Container(
-                    margin: EdgeInsets.only(left: 10),
+                    margin: new EdgeInsets.only(left: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Container(
-                          child: Text(
+                        new Container(
+                          child: new Text(
                             data?.title ?? "",
                             style: TextThemes.blackCirculerMedium,
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(top: 10.0),
-                          child: Row(
+                          margin: new EdgeInsets.only(top: 10.0),
+                          child: new Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               InkWell(
                                 onTap: () {
                                   widget.lauchCallBack(Material(
                                       child: Material(
-                                          child: ChatMessageDetails(
+                                          child: new ChatMessageDetails(
                                     id: data.userId.toString(),
                                     name: data.hiredBy.name,
                                     hireduserId: data?.userId?.toString(),
@@ -613,7 +555,7 @@ class _HomeState extends State<MyJobs> {
                                   ))));
                                 },
                                 child: Container(
-                                  child: Text(
+                                  child: new Text(
                                     data?.hiredBy?.name ?? "someone",
                                     style: TextThemes.cyanTextSmallMedium,
                                   ),
@@ -621,12 +563,12 @@ class _HomeState extends State<MyJobs> {
                               ),
                               Expanded(
                                 child: Container(
-                                  margin: EdgeInsets.only(left: 1.0),
+                                  margin: new EdgeInsets.only(left: 1.0),
                                   child: InkWell(
                                     onTap: () {},
                                     child: Container(
-                                      margin: EdgeInsets.only(left: 1.0),
-                                      child: Text(
+                                      margin: new EdgeInsets.only(left: 1.0),
+                                      child: new Text(
                                         getStatus(data?.status),
                                         style: TextThemes.grayNormalSmall,
                                       ),
@@ -634,14 +576,6 @@ class _HomeState extends State<MyJobs> {
                                   ),
                                 ),
                               ),
-                              /*   Container(
-                                margin: EdgeInsets.only(left: 7.0),
-                                child: Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 13,
-                                  color: Color.fromRGBO(183, 183, 183, 1),
-                                ),
-                              )*/
                             ],
                           ),
                         ),
@@ -653,42 +587,42 @@ class _HomeState extends State<MyJobs> {
             ),
             Opacity(
               opacity: 0.12,
-              child: Container(
-                margin: EdgeInsets.only(top: 16.0),
+              child: new Container(
+                margin: new EdgeInsets.only(top: 16.0),
                 height: 1.0,
                 color: AppColors.dividerColor,
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 10),
+              margin: new EdgeInsets.only(top: 10),
               child: InkWell(
                 onTap: () {},
                 child: Row(
                   children: [
-                    Text(
+                    new Text(
                       "€ ${data?.price ?? ""}",
-                      style: TextStyle(
+                      style: new TextStyle(
                           color: AppColors.kBlack.withOpacity(0.7),
                           fontSize: 16,
                           fontFamily: AssetStrings.circulerNormal),
                     ),
                     Expanded(
-                      child: Container(),
+                      child: new Container(),
                     ),
-                    Container(
+                    new Container(
                       width: 8,
                       height: 8,
-                      decoration: BoxDecoration(
+                      decoration: new BoxDecoration(
                           shape: BoxShape.circle,
                           color: data?.status == 1
                               ? AppColors.statusYellow
                               : AppColors.statusGreen),
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 5),
-                      child: Text(
+                      margin: new EdgeInsets.only(left: 5),
+                      child: new Text(
                         data?.status == 1 ? "Not Paid" : "Paid",
-                        style: TextStyle(
+                        style: new TextStyle(
                             color: AppColors.kBlack.withOpacity(0.7),
                             fontSize: 16,
                             fontFamily: AssetStrings.circulerNormal),

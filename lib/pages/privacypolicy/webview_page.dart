@@ -10,8 +10,10 @@ import 'package:webview_flutter/webview_flutter.dart';
 class WebViewPages extends StatefulWidget {
   final String heading;
   final String url;
+  final bool isVerifyUser;
 
-  WebViewPages({@required this.heading, @required this.url});
+  WebViewPages(
+      {@required this.heading, @required this.url, this.isVerifyUser = false});
 
   @override
   _WebViewPagesState createState() => _WebViewPagesState();
@@ -88,14 +90,21 @@ class _WebViewPagesState extends State<WebViewPages> {
                       _showLoader = false;
                     });
                     print('Page finished loading: $url');
+                    // If user verification is done move user to previous screen and refresh itt
+                    if (url.contains("bank-success")) {
+                      Navigator.pop(context, true);
+                    }
                   },
                   gestureNavigationEnabled: true,
                 ),
               ),
               Visibility(
                   visible: _showLoader,
-                  child: Center(
-                    child: CircularProgressIndicator(),
+                  child: Container(
+                    margin: new EdgeInsets.only(bottom: 50),
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ))
             ],
           )),

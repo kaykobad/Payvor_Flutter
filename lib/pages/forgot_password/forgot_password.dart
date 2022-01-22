@@ -12,6 +12,7 @@ import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
 import 'package:payvor/utils/ValidatorFunctions.dart';
 import 'package:payvor/utils/constants.dart';
+import 'package:payvor/utils/memory_management.dart';
 import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
@@ -25,19 +26,23 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<ForgotPassword> {
-  TextEditingController _EmailController = TextEditingController();
+  TextEditingController _EmailController = new TextEditingController();
 
-  final GlobalKey<ScaffoldState> _scaffoldKeys = GlobalKey<ScaffoldState>();
-  FocusNode _EmailField = FocusNode();
+  final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
+  FocusNode _EmailField = new FocusNode();
 
   AuthProvider provider;
 
   bool isVerified = false;
 
-  Widget space() => SizedBox(height: 30.0);
+  Widget space() {
+    return new SizedBox(
+      height: 30.0,
+    );
+  }
 
   Widget getView() {
-    return Container(
+    return new Container(
       height: 1.0,
       color: Colors.grey.withOpacity(0.7),
     );
@@ -60,31 +65,26 @@ class _LoginScreenState extends State<ForgotPassword> {
       return;
     }
 
-    ForgotPasswordRequest forgotrequest = ForgotPasswordRequest(email: _EmailController.text);
+    ForgotPasswordRequest forgotrequest =
+        new ForgotPasswordRequest(email: _EmailController.text);
     var response = await provider.forgotPassword(forgotrequest, context);
 
     if (response is ForgotPasswordResponse) {
-      try {
-        showInSnackBar(response.status.message);
-
-        Navigator.push(
-          context,
-          CupertinoPageRoute(builder: (BuildContext context) {
-            return OtoVerification(
-              phoneNumber: _EmailController.text,
-              type: widget?.type ?? 1,
-              countryCode: "",
-            );
-          }),
-        );
-      } catch (ex) {}
-
-      provider.hideLoader();
+      showInSnackBar(response.status.message);
+      MemoryManagement.setAccessToken(accessToken: response.data);
+      Navigator.push(
+        context,
+        new CupertinoPageRoute(builder: (BuildContext context) {
+          return new OtoVerification(
+            phoneNumber: _EmailController.text,
+            type: widget?.type ?? 1,
+            countryCode: "",
+          );
+        }),
+      );
     } else {
-      provider.hideLoader();
       APIError apiError = response;
       print(apiError.error);
-
       showInSnackBar(apiError.error);
     }
   }
@@ -96,11 +96,11 @@ class _LoginScreenState extends State<ForgotPassword> {
       FocusNode focusNodeNext,
       TextInputType textInputType,
       String svgPicture,
-      {bool obsectextType=false}) {
+      {bool obsectextType}) {
     return Container(
-      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+      margin: new EdgeInsets.only(left: 20.0, right: 20.0),
       height: Constants.textFieldHeight,
-      child: TextField(
+      child: new TextField(
         controller: controller,
         keyboardType: textInputType,
         style: TextThemes.blackTextFieldNormal,
@@ -117,25 +117,30 @@ class _LoginScreenState extends State<ForgotPassword> {
 
           setState(() {});
         },
-        decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
-            borderRadius: BorderRadius.circular(4),
+        decoration: new InputDecoration(
+          enabledBorder: new OutlineInputBorder(
+              borderSide: new BorderSide(
+                color: Colors.grey.withOpacity(0.5),
+              ),
+              borderRadius: new BorderRadius.circular(8)),
+          focusedBorder: new OutlineInputBorder(
+              borderSide: new BorderSide(
+                color: AppColors.colorCyanPrimary,
+              ),
+              borderRadius: new BorderRadius.circular(8)
+
+
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: AppColors.colorCyanPrimary),
-            borderRadius: BorderRadius.circular(4)
-          ),
-          contentPadding: EdgeInsets.only(top: 10.0),
+          contentPadding: new EdgeInsets.only(top: 10.0),
           prefixIcon: Padding(
             padding: const EdgeInsets.all(14.0),
-            child: Image.asset(
+            child: new Image.asset(
               svgPicture,
               width: 20.0,
               height: 20.0,
             ),
           ),
-          suffixIcon: Container(width: 1),
+          suffixIcon: new Container(width: 1,),
           hintText: labelText,
           hintStyle: TextThemes.greyTextFieldHintNormal,
         ),
@@ -145,7 +150,7 @@ class _LoginScreenState extends State<ForgotPassword> {
 
   void showInSnackBar(String value) {
     _scaffoldKeys.currentState
-        .showSnackBar(SnackBar(content: Text(value)));
+        .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
   @override
@@ -162,54 +167,58 @@ class _LoginScreenState extends State<ForgotPassword> {
               key: _scaffoldKeys,
               appBar: getAppBarNew(context),
               backgroundColor: Colors.white,
-              body: SingleChildScrollView(
+              body: new SingleChildScrollView(
                 child: Container(
                   color: Colors.white,
                   width: screensize.width,
-                  child: Column(
+                  child: new Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(height: Constants.backIconsSpace),
-                      Container(
-                        margin: EdgeInsets.only(left: 20.0),
-                        child: Text(
-                          ResString().get('forgot_password'),
-                          style: TextThemes.extraBold,
-                        ),
+                      new SizedBox(
+                        height: Constants.backIconsSpace,
                       ),
                       Container(
+                          margin: new EdgeInsets.only(left: 20.0),
+                          child: new Text(
+                            ResString().get('forgot_password'),
+                            style: TextThemes.extraBold,
+                          )),
+                      Container(
                         margin:
-                        EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
-                        child: Text(
-                          "Please enter your email to get a password",
+                        new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                        child: new Text(
+                           "Please enter your email to get a new password",
                           style: TextThemes.grayNormal,
                         ),
                       ),
-                      SizedBox(height: 26.0),
+                      new SizedBox(
+                        height: 26.0,
+                      ),
                       getTextField(
-                        ResString().get('email_address'),
-                        _EmailController,
-                        _EmailField,
-                        _EmailField,
-                        TextInputType.emailAddress,
-                        AssetStrings.emailPng,
+                          ResString().get('email_address'),
+                          _EmailController,
+                          _EmailField,
+                          _EmailField,
+                          TextInputType.emailAddress,
+                          AssetStrings.emailPng),
+                      new SizedBox(
+                        height: 30.0,
                       ),
-                      SizedBox(height: 36.0),
                       Container(
-                        child: getSetupButtonColor(
-                          callback, "Send reset link", 20,
-                          newColor: isVerified
-                              ? AppColors.kPrimaryBlue
-                              : AppColors.grayDark,
-                        ),
+                          child: getSetupButtonColor(
+                              callback, "Send reset link", 20,
+                              newColor: isVerified
+                                  ? AppColors.kPrimaryBlue
+                                  : AppColors.grayDark)),
+                      new SizedBox(
+                        height: 20.0,
                       ),
-                      SizedBox(height: 20.0),
                     ],
                   ),
                 ),
               ),
             ),
-            Center(
+            new Center(
               child: getFullScreenProviderLoader(
                 status: provider.getLoading(),
                 context: context,
@@ -223,15 +232,6 @@ class _LoginScreenState extends State<ForgotPassword> {
 
   void callback() {
     if (isVerified) {
-      /*var email = _EmailController.text;
-      if (_EmailController.text.isEmpty ||
-          _EmailController.text.trim().length == 0) {
-        showInSnackBar(ResString().get('enter_email'));
-        return;
-      } else if (!isEmailFormatValid(email.trim())) {
-        showInSnackBar(ResString().get('enter_valid_email'));
-        return;
-      }*/
 
       hitApi();
     }

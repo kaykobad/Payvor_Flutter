@@ -16,8 +16,9 @@ import 'package:provider/provider.dart';
 
 class RecentPostedFavor extends StatefulWidget {
   final ValueChanged<Widget> lauchCallBack;
+  ValueSetter<int> voidcallback;
 
-  RecentPostedFavor({@required this.lauchCallBack});
+  RecentPostedFavor({@required this.lauchCallBack, this.voidcallback});
 
   @override
   _HomeState createState() => _HomeState();
@@ -34,20 +35,12 @@ class _HomeState extends State<RecentPostedFavor>
   bool offstagenodata = true;
   bool loader = false;
   String title = "";
-
   List<Object> listResult = List();
-
-  final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
-  TextEditingController _controller = new TextEditingController();
   ScrollController scrollController = new ScrollController();
   bool _loadMore = false;
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
-
   Widget widgets;
 
   void showInSnackBar(String value) {
@@ -60,17 +53,33 @@ class _HomeState extends State<RecentPostedFavor>
     Future.delayed(const Duration(milliseconds: 300), () {
       hitPostedApi();
     });
-
-    /* listResult.add("Hired Favors");
-    listResult.add(1.0);
-    listResult.add(1.0);
-    listResult.add("Posted Favors");
-    listResult.add(1);
-    listResult.add(1);
-    listResult.add(1);*/
-
     _setScrollListener();
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    screenSize = MediaQuery.of(context).size;
+    provider = Provider.of<AuthProvider>(context);
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: new AppBar(
+        elevation: 1,
+        title: new Text(
+          "Recent Posted Favors",
+          style: new TextStyle(color: Colors.black, fontSize: 18),
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.black, //change your color here
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+      ),
+      backgroundColor: AppColors.whiteGray,
+      body: Stack(
+        children: <Widget>[listData, emptyData, loaderView],
+      ),
+    );
   }
 
   hitPostedApi() async {
@@ -141,59 +150,7 @@ class _HomeState extends State<RecentPostedFavor>
     }
   }
 
-  /* hitHireJobApi() async {
-    var response = await provider.favourpostedbyuser(context, currentPage);
-
-    provider.hideLoader();
-
-    if (response is FavourPostedByUserResponse) {
-      print("res $response");
-      isPullToRefresh = false;
-
-      if (response != null && response.data != null) {
-        if (currentPage == 1) {
-          if (response?.data?.length > 0) {
-            listResult.add("Posted Favors");
-          }
-        }
-
-        listResult.addAll(response?.data);
-
-        if (!_loadMore) {
-          if (response != null &&
-              response.data != null &&
-              response.data?.length < Constants.PAGINATION_SIZE) {
-            _loadMore = false;
-          } else {
-            _loadMore = true;
-          }
-        }
-
-        if (!offstagenodata) {
-          if (listResult.length > 0) {
-            offstagenodata = true;
-          } else {
-            offstagenodata = false;
-          }
-        }
-
-        setState(() {});
-      }
-
-      print(response);
-      try {} catch (ex) {}
-    } else {
-      provider.hideLoader();
-      APIError apiError = response;
-      print(apiError.error);
-
-      showInSnackBar(apiError.error);
-    }
-  }*/
-
   void _setScrollListener() {
-    //scrollController.position.isScrollingNotifier.addListener(() { print("called");});
-
     scrollController = new ScrollController();
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
@@ -207,97 +164,61 @@ class _HomeState extends State<RecentPostedFavor>
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    screenSize = MediaQuery.of(context).size;
-    provider = Provider.of<AuthProvider>(context);
-
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: new AppBar(
-        elevation: 1,
-        title: new Text(
-          "Recent Posted Favors",
-          style: new TextStyle(color: Colors.black, fontSize: 18),
-        ),
-        iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-      ),
-      backgroundColor: AppColors.whiteGray,
-      body: Stack(
-        children: <Widget>[
-          new Container(
-            color: AppColors.whiteGray,
-            height: getScreenSize(context: context).height,
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildContestList(),
+  get emptyData => Offstage(
+        offstage: offstagenodata,
+        child: Container(
+          height: screenSize.height,
+          padding: new EdgeInsets.only(bottom: 40),
+          child: new Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () {},
+                  child: new Image.asset(
+                    AssetStrings.noPosts,
+                    width: 150,
+                    height: 150,
+                  ),
+                ),
+                Container(
+                  margin: new EdgeInsets.only(top: 20),
+                  child: new Text(
+                    "No Favors",
+                    style: new TextStyle(
+                        color: Colors.black,
+                        fontFamily: AssetStrings.circulerMedium,
+                        fontSize: 17.0),
+                  ),
+                ),
+                Container(
+                  margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
+                  child: new Text(
+                    "You haven’t asked for any favors yet.\nOnce you create a favor it will show up here.",
+                    textAlign: TextAlign.center,
+                    style: new TextStyle(
+                        height: 1.5,
+                        color: Color.fromRGBO(103, 99, 99, 1.0),
+                        fontFamily: AssetStrings.circulerNormal,
+                        fontSize: 15.0),
+                  ),
+                ),
               ],
             ),
           ),
-          Offstage(
-            offstage: offstagenodata,
-            child: Container(
-              height: screenSize.height,
-              padding: new EdgeInsets.only(bottom: 40),
-              child: new Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: new Image.asset(
-                        AssetStrings.noPosts,
-                        width: 150,
-                        height: 150,
-                      ),
-                    ),
-                    Container(
-                      margin: new EdgeInsets.only(top: 20),
-                      child: new Text(
-                        "No Favors",
-                        style: new TextStyle(
-                            color: Colors.black,
-                            fontFamily: AssetStrings.circulerMedium,
-                            fontSize: 17.0),
-                      ),
-                    ),
-                    Container(
-                      margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
-                      child: new Text(
-                        "You haven’t asked for any favors yet.\nOnce you create a favor it will show up here.",
-                        textAlign: TextAlign.center,
-                        style: new TextStyle(
-                            height: 1.5,
-                            color: Color.fromRGBO(103, 99, 99, 1.0),
-                            fontFamily: AssetStrings.circulerNormal,
-                            fontSize: 15.0),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Container(
-            child: new Center(
-              child: getHalfScreenLoader(
-                status: provider.getLoading(),
-                context: context,
-              ),
-            ),
-          ),
-          /* new Center(
-            child: _getLoader,
-          ),*/
-        ],
-      ),
-    );
-  }
+        ),
+      );
+
+  get listData => new Container(
+        color: AppColors.whiteGray,
+        height: getScreenSize(context: context).height,
+        child: new Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _buildContestList(),
+          ],
+        ),
+      );
 
   _buildContestList() {
     return Expanded(
@@ -330,11 +251,23 @@ class _HomeState extends State<RecentPostedFavor>
     ));
   }
 
+  get loaderView => Container(
+        child: new Center(
+          child: getHalfScreenLoader(
+            status: provider.getLoading(),
+            context: context,
+          ),
+        ),
+      );
+
   ValueSetter<int> callback(int type) {
     currentPage = 1;
     isPullToRefresh = true;
     _loadMore = false;
     hitPostedApi();
+    if (widget?.voidcallback != null) {
+      widget?.voidcallback(1);
+    }
   }
 
   Widget buildItem(DataFavour data) {

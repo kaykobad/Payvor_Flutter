@@ -46,10 +46,7 @@ class OriginalPostData extends StatefulWidget {
 class _HomeState extends State<OriginalPostData>
     with AutomaticKeepAliveClientMixin<OriginalPostData> {
   var screenSize;
-
-  final StreamController<bool> _loaderStreamController =
-      StreamController<bool>();
-  ScrollController scrollController = ScrollController();
+  ScrollController scrollController = new ScrollController();
 
   List<String> listOption = ["Report", "Share"];
 
@@ -65,19 +62,16 @@ class _HomeState extends State<OriginalPostData>
 
   bool offstageLoader = false;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  final GlobalKey<ScaffoldState> _scaffoldKeys = GlobalKey<ScaffoldState>();
-  FocusNode _DescriptionField = FocusNode();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   FavourDetailsResponse favoriteResponse;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
+      new GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(SnackBar(content: Text(value??"Favour deleted")));
+        .showSnackBar(new SnackBar(content: new Text(value??"Favour deleted")));
   }
 
   String hireUserid = "";
@@ -165,7 +159,7 @@ class _HomeState extends State<OriginalPostData>
     if (!gotInternetConnection) {
       return;
     }
-    var reportrequest = ReportPostRequest(
+    var reportrequest = new ReportPostRequest(
         favour_id: favoriteResponse?.data?.id?.toString());
 
     var response = await provider.reportUser(reportrequest, context);
@@ -208,7 +202,7 @@ class _HomeState extends State<OriginalPostData>
     if (!gotInternetConnection) {
       return;
     }
-    //  var reportrequest=ReportPostRequest(favour_id: favoriteResponse?.data?.id?.toString());
+    //  var reportrequest=new ReportPostRequest(favour_id: favoriteResponse?.data?.id?.toString());
 
     var response = await provider.userHireList(
         favoriteResponse?.data?.id?.toString(), context);
@@ -255,8 +249,6 @@ class _HomeState extends State<OriginalPostData>
     if (!gotInternetConnection) {
       return;
     }
-    //  var reportrequest=ReportPostRequest(favour_id: favoriteResponse?.data?.id?.toString());
-
     var response = await provider.userHire(
         favoriteResponse?.data?.id?.toString(), id, context);
 
@@ -266,8 +258,6 @@ class _HomeState extends State<OriginalPostData>
       if (response != null && response.status.code == 200) {
         widget?.voidcallback(1);
         showBottomSheet();
-
-        //    list.removeAt(pos);
 
       }
 
@@ -338,12 +328,6 @@ class _HomeState extends State<OriginalPostData>
     Navigator.pop(context);
 
     print("cc");
-/*
-    await Future.delayed(Duration(milliseconds: 200));
-    showInSnackBar("Favour applied successfully");
-    await Future.delayed(Duration(milliseconds: 1500));
-    Navigator.pop(context); //back to previous screen
-    // showBottomSheet();*/
   }
 
   void callbackAllow() async {
@@ -361,33 +345,33 @@ class _HomeState extends State<OriginalPostData>
     return Container(
       color: Colors.white,
       padding:
-          EdgeInsets.only(left: 16.0, right: 16.0, top: 16, bottom: 16),
+          new EdgeInsets.only(left: 16.0, right: 16.0, top: 16, bottom: 16),
       child: Row(
         children: <Widget>[
           Expanded(
-            child: Column(
+            child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  child: Text(
+                  child: new Text(
                     favoriteResponse?.data?.title ?? "",
                     style: TextThemes.blackCirculerMedium,
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 4),
+                  margin: new EdgeInsets.only(top: 4),
                   child: Row(
                     children: [
-                      Image.asset(
+                      new Image.asset(
                         AssetStrings.locationHome,
                         width: 11,
                         height: 14,
                       ),
-                      SizedBox(
+                      new SizedBox(
                         width: 6,
                       ),
                       Container(
-                          child: Text(
+                          child: new Text(
                         favoriteResponse?.data?.location ?? "",
                         style: TextThemes.greyDarkTextHomeLocation,
                       )),
@@ -399,7 +383,7 @@ class _HomeState extends State<OriginalPostData>
           ),
           Align(
               alignment: Alignment.center,
-              child: Text(
+              child: new Text(
                 "€${favoriteResponse?.data?.price ?? ""}",
                 style: TextThemes.blackDarkHeaderSub,
               )),
@@ -411,9 +395,9 @@ class _HomeState extends State<OriginalPostData>
   redirect() async {
     Navigator.push(
       context,
-      CupertinoPageRoute(builder: (BuildContext context) {
+      new CupertinoPageRoute(builder: (BuildContext context) {
         return Material(
-            child: PostFavour(
+            child: new PostFavour(
           favourDetailsResponse: favoriteResponse,
           isEdit: true,
         ));
@@ -445,18 +429,18 @@ class _HomeState extends State<OriginalPostData>
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: SvgPicture.asset(
+                child: new SvgPicture.asset(
                   icon,
                   width: size,
                   height: size,
                 ),
               ),
             ),
-            SizedBox(
+            new SizedBox(
               width: 20.0,
             ),
             Container(
-              child: Text(
+              child: new Text(
                 text,
                 style: text == "Delete Post"
                     ? TextThemes.darkRedMedium
@@ -482,39 +466,39 @@ class _HomeState extends State<OriginalPostData>
           return Padding(
               padding: MediaQuery.of(context).viewInsets,
               child: Container(
-                  child: Column(
+                  child: new Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                      margin: EdgeInsets.only(top: 43, left: 27),
+                      margin: new EdgeInsets.only(top: 43, left: 27),
                       child:
                           getBottomText(AssetStrings.share, "Share Post", 22)),
                   Container(
-                      margin: EdgeInsets.only(top: 35, left: 27),
+                      margin: new EdgeInsets.only(top: 35, left: 27),
                       child:
                           getBottomText(AssetStrings.slash, "Report Post", 22)),
                   isCurrentUser
                       ? Container(
-                          margin: EdgeInsets.only(top: 35, left: 27),
+                          margin: new EdgeInsets.only(top: 35, left: 27),
                           child:
                               getBottomText(AssetStrings.edit, "Edit Post", 22))
                       : Container(),
                   isCurrentUser
                       ? Container(
-                          margin: EdgeInsets.only(top: 35, left: 27),
+                          margin: new EdgeInsets.only(top: 35, left: 27),
                           child: getBottomText(
                               AssetStrings.delete, "Delete Post", 22))
                       : Container(),
                   Opacity(
                     opacity: 0.12,
-                    child: Container(
+                    child: new Container(
                       height: 1.0,
-                      margin: EdgeInsets.only(top: 35, left: 27, right: 27),
+                      margin: new EdgeInsets.only(top: 35, left: 27, right: 27),
                       color: AppColors.dividerColor,
                     ),
                   ),
                   Container(
-                      margin: EdgeInsets.only(top: 35, left: 24),
+                      margin: new EdgeInsets.only(top: 35, left: 24),
                       child: getBottomText(AssetStrings.cross, " Cancel", 18)),
                   Container(
                     height: 56,
@@ -539,13 +523,13 @@ class _HomeState extends State<OriginalPostData>
                   .of(context)
                   .viewInsets,
               child: Container(
-                  child: Column(
+                  child: new Column(
                     mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     width: 86.0,
                     height: 86.0,
-                    margin: EdgeInsets.only(top: 38),
+                    margin: new EdgeInsets.only(top: 38),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: AppColors.greenDark,
@@ -556,28 +540,28 @@ class _HomeState extends State<OriginalPostData>
                           //_showPopupMenu(details.globalPosition);
                           //showBottomSheet();
                         },
-                        child: SvgPicture.asset(
+                        child: new SvgPicture.asset(
                           AssetStrings.check,
                           width: 42.0,
                           height: 42.0,
                           color: Colors.white,
                         )),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 40),
-                    child: Text(
+                  new Container(
+                    margin: new EdgeInsets.only(top: 40),
+                    child: new Text(
                       "Successful!",
-                      style: TextStyle(
+                      style: new TextStyle(
                           fontFamily: AssetStrings.circulerMedium,
                           fontSize: 20,
                           color: Colors.black),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 10),
-                    child: Text(
+                  new Container(
+                    margin: new EdgeInsets.only(top: 10),
+                    child: new Text(
                       "Your Hiring Process is successfully completed!",
-                      style: TextStyle(
+                      style: new TextStyle(
                         fontFamily: AssetStrings.circulerNormal,
                         fontSize: 16,
                         color: Color.fromRGBO(114, 117, 112, 1),
@@ -585,7 +569,7 @@ class _HomeState extends State<OriginalPostData>
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 60, left: 16, right: 16),
+                    margin: new EdgeInsets.only(top: 60, left: 16, right: 16),
                     child: getSetupButtonNew(
                         callbackFavourPage, "Go to Contract Page", 0,
                         newColor: AppColors.colorDarkCyan),
@@ -646,8 +630,8 @@ class _HomeState extends State<OriginalPostData>
   _redirect({@required String heading, @required String url}) async {
     Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => WebViewPages(
+        new MaterialPageRoute(
+            builder: (context) => new WebViewPages(
                   heading: heading,
                   url: url,
                 )));
@@ -668,51 +652,51 @@ class _HomeState extends State<OriginalPostData>
           return Padding(
               padding: MediaQuery.of(context).viewInsets,
               child: Container(
-                  child: Column(
+                  child: new Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(top: 50),
+                    margin: new EdgeInsets.only(top: 50),
                     child: Image.asset(
                       AssetStrings.agreement,
                       height: 80,
                       width: 80,
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 33),
-                    child: Text(
+                  new Container(
+                    margin: new EdgeInsets.only(top: 33),
+                    child: new Text(
                       "Are you sure to Hire?",
-                      style: TextStyle(
+                      style: new TextStyle(
                           fontFamily: AssetStrings.circulerMedium,
                           fontSize: 20,
                           color: Colors.black),
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 7, left: 35, right: 35),
-                    child: RichText(
+                    margin: new EdgeInsets.only(top: 7, left: 35, right: 35),
+                    child: new RichText(
                       textAlign: TextAlign.center,
-                      text: TextSpan(
+                      text: new TextSpan(
                         text:
                             "Once you have allocated the favor you are agreeing to pay the person on completion of the task respecting our",
-                        style: TextStyle(
+                        style: new TextStyle(
                           fontFamily: AssetStrings.circulerNormal,
                           fontSize: 16,
                           height: 1.5,
                           color: Color.fromRGBO(114, 117, 112, 1),
                         ),
                         children: <TextSpan>[
-                          TextSpan(
+                          new TextSpan(
                               text: " Terms of Use.",
-                              recognizer: TapGestureRecognizer()
+                              recognizer: new TapGestureRecognizer()
                                 ..onTap = () {
                                   print("called");
                                   _redirect(
                                       heading: ResString().get('term_of_uses'),
                                       url: Constants.TermOfUses);
                                 },
-                              style: TextStyle(
+                              style: new TextStyle(
                                   fontFamily: AssetStrings.circulerNormal,
                                   color: Color.fromRGBO(9, 165, 255, 1))),
                         ],
@@ -720,7 +704,7 @@ class _HomeState extends State<OriginalPostData>
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 60, left: 16, right: 16),
+                    margin: new EdgeInsets.only(top: 60, left: 16, right: 16),
                     child: Row(
                       children: [
                         Expanded(
@@ -731,7 +715,7 @@ class _HomeState extends State<OriginalPostData>
                                 textColor: Colors.black),
                           ),
                         ),
-                        SizedBox(
+                        new SizedBox(
                           width: 10,
                         ),
                         Expanded(
@@ -752,86 +736,13 @@ class _HomeState extends State<OriginalPostData>
         });
   }
 
-  /*void showBottomSheetHire(String id, int posi) {
-    hireUserid = id;
-    pos = posi;
-    showModalBottomSheet<void>(
-        isScrollControlled: true,
-        context: context,
-        isDismissible: false,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
-        ),
-        builder: (BuildContext bc) {
-          return Padding(
-              padding: MediaQuery
-                  .of(context)
-                  .viewInsets,
-              child: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 50),
-                    child: Text(
-                      "Are you sure to Hire?",
-                      style: TextStyle(
-                          fontFamily: AssetStrings.circulerMedium,
-                          fontSize: 20,
-                          color: Colors.black),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 7, left: 35, right: 35),
-                    child: RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        text:
-                            "Once you have allocated the favor you are agreeing to pay the person on completion of the task respecting our",
-                        style: TextStyle(
-                          fontFamily: AssetStrings.circulerNormal,
-                          fontSize: 16,
-                          height: 1.5,
-                          color: Color.fromRGBO(114, 117, 112, 1),
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: "Terms of Use.",
-                              style: TextStyle(
-                                  fontFamily: AssetStrings.circulerNormal,
-                                  color: Color.fromRGBO(9, 165, 255, 1))),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 60, left: 16, right: 16),
-                    child: getSetupButtonNew(callbackAllow, "Confirm", 0,
-                        newColor: AppColors.colorDarkCyan),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 15, left: 16, right: 16),
-                    child: getSetupButtonBorderNew(callback, "Cancel", 0,
-                        border: Color.fromRGBO(103, 99, 99, 0.25),
-                        newColor: Colors.transparent,
-                        textColor: Colors.black),
-                  ),
-                  Container(
-                    height: 56,
-                  )
-                ],
-              )));
-        });
-  }*/
-
   void goToUser(String name, String userid, String image) {
     Navigator.push(
       context,
-      CupertinoPageRoute(builder: (BuildContext context) {
+      new CupertinoPageRoute(builder: (BuildContext context) {
         return Material(
             child: Material(
-                child: ChatMessageDetails(
+                child: new ChatMessageDetails(
           id: "",
           name: name,
           image: image,
@@ -844,7 +755,7 @@ class _HomeState extends State<OriginalPostData>
   Widget buildItemNew(DatasUser user, int pos) {
     var type = false;
     return Container(
-      margin: EdgeInsets.only(left: 16.0, right: 16.0),
+      margin: new EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: <Widget>[
           InkWell(
@@ -852,13 +763,13 @@ class _HomeState extends State<OriginalPostData>
               goToUser(user?.user?.profilePic, user?.user?.id?.toString(),
                   user?.user?.name);
             },
-            child: Container(
+            child: new Container(
               width: 40.0,
               height: 40.0,
               alignment: Alignment.center,
               decoration: BoxDecoration(shape: BoxShape.circle),
               child: ClipOval(
-                // margin: EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
                 child: getCachedNetworkImageWithurl(
                     url: user?.user?.profilePic ?? "",
@@ -873,45 +784,45 @@ class _HomeState extends State<OriginalPostData>
                 goToUser(user?.user?.profilePic, user?.user?.id?.toString(),
                     user?.user?.name);
               },
-              child: Column(
+              child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                    child: Text(
+                    margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: new Text(
                       user?.user?.name ?? "",
                       style: TextThemes.greyTextFielMedium,
                     ),
                   ),
                   Container(
                     margin:
-                        EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                        new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
                     child: Row(
                       children: [
-                        Image.asset(
+                        new Image.asset(
                           AssetStrings.rating,
                           width: 13,
                           height: 13,
                         ),
-                        SizedBox(
+                        new SizedBox(
                           width: 3,
                         ),
                         Container(
-                            child: Text(
+                            child: new Text(
                           user?.user?.ratingAvg.toString() ?? "",
                           style: TextThemes.greyTextFieldNormal,
                         )),
                         Container(
                           width: 5,
                           height: 5,
-                          margin: EdgeInsets.only(left: 4, right: 4),
+                          margin: new EdgeInsets.only(left: 4, right: 4),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: AppColors.darkgrey,
                           ),
                         ),
                         Container(
-                            child: Text(
+                            child: new Text(
                           "${user?.user?.ratingCount.toString() ?? "0"} Reviews",
                           style: TextThemes.greyTextFieldNormal,
                         )),
@@ -952,7 +863,7 @@ class _HomeState extends State<OriginalPostData>
 
                   Navigator.push(
                     context,
-                    CupertinoPageRoute(builder: (BuildContext context) {
+                    new CupertinoPageRoute(builder: (BuildContext context) {
                       return Material(child: screen);
                     }),
                   );
@@ -962,13 +873,13 @@ class _HomeState extends State<OriginalPostData>
                   height: 25,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.0),
-                      border: Border.all(
+                      borderRadius: new BorderRadius.circular(12.0),
+                      border: new Border.all(
                           color: Color.fromRGBO(103, 99, 99, 0.19)),
                       color: Color.fromRGBO(248, 248, 250, 1.0)),
-                  child: Text(
+                  child: new Text(
                     "Chat",
-                    style: TextStyle(
+                    style: new TextStyle(
                       color: Colors.black,
                       fontFamily: AssetStrings.circulerNormal,
                       fontSize: 13,
@@ -977,7 +888,7 @@ class _HomeState extends State<OriginalPostData>
                   ),
                 ),
               )),
-          SizedBox(
+          new SizedBox(
             width: 4,
           ),
           Align(
@@ -992,11 +903,11 @@ class _HomeState extends State<OriginalPostData>
                         height: 25,
                         alignment: Alignment.center,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.0),
+                      borderRadius: new BorderRadius.circular(12.0),
                             color: AppColors.colorDarkCyan),
-                        child: Text(
+                        child: new Text(
                           "Hire",
-                          style: TextStyle(
+                          style: new TextStyle(
                             color: Colors.white,
                             fontFamily: AssetStrings.circulerNormal,
                             fontSize: 13,
@@ -1014,11 +925,11 @@ class _HomeState extends State<OriginalPostData>
                         height: 25,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.0),
+                            borderRadius: new BorderRadius.circular(12.0),
                             color: AppColors.lightReferred),
-                        child: Text(
+                        child: new Text(
                           "Hired",
-                          style: TextStyle(
+                          style: new TextStyle(
                             color: AppColors.colorCyanPrimary,
                             fontFamily: AssetStrings.circulerNormal,
                             fontSize: 13,
@@ -1036,17 +947,12 @@ class _HomeState extends State<OriginalPostData>
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: () async {
-        /*  isPullToRefresh = true;
-        _loadMore = false;
-        currentPage = 1;
-
-        await hitSearchApi(title);*/
       },
       child: Container(
         color: Colors.white,
-        padding: EdgeInsets.only(top: 10),
-        child: ListView.builder(
-          padding: EdgeInsets.all(0.0),
+        padding: new EdgeInsets.only(top: 10),
+        child: new ListView.builder(
+          padding: new EdgeInsets.all(0.0),
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
@@ -1062,15 +968,15 @@ class _HomeState extends State<OriginalPostData>
     return Container(
       child: Column(
         children: <Widget>[
-          SizedBox(
+          new SizedBox(
             height: 12.0,
           ),
           buildItemNew(user, pos),
           Opacity(
             opacity: 0.3,
-            child: Container(
+            child: new Container(
               height: 0.5,
-              margin: EdgeInsets.only(left: 17.0, right: 17.0, top: 16.0),
+              margin: new EdgeInsets.only(left: 17.0, right: 17.0, top: 16.0),
               color: AppColors.dividerColor,
             ),
           ),
@@ -1087,20 +993,20 @@ class _HomeState extends State<OriginalPostData>
       key: _scaffoldKey,
       body: Stack(
         children: <Widget>[
-          Container(
+          new Container(
             color: AppColors.whiteGray,
             height: screenSize.height,
             child: favoriteResponse != null && favoriteResponse.data != null
                 ? SingleChildScrollView(
-                    child: Column(
+                    child: new Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Container(
+                        new Container(
                           height: 214,
                           width: double.infinity,
                           child: ClipRRect(
-                            // margin: EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                            borderRadius: BorderRadius.circular(0.0),
+                            // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                            borderRadius: new BorderRadius.circular(0.0),
 
                             child: getCachedNetworkImageRect(
                               url: favoriteResponse?.data?.image,
@@ -1112,24 +1018,24 @@ class _HomeState extends State<OriginalPostData>
                         buildItem(),
                         Opacity(
                           opacity: 0.12,
-                          child: Container(
+                          child: new Container(
                             height: 1.0,
                             margin:
-                                EdgeInsets.only(left: 17.0, right: 17.0),
+                                new EdgeInsets.only(left: 17.0, right: 17.0),
                             color: AppColors.dividerColor,
                           ),
                         ),
                         Container(
                             color: Colors.white,
-                            padding: EdgeInsets.only(
+                            padding: new EdgeInsets.only(
                                 left: 16.0, right: 16.0, top: 16.0),
                             alignment: Alignment.centerLeft,
-                            child: Text(
+                            child: new Text(
                               ResString().get('description'),
                               style: TextThemes.blackCirculerMediumHeight,
                             )),
                         Container(
-                          padding: EdgeInsets.only(
+                          padding: new EdgeInsets.only(
                               left: 16.0, right: 16.0, top: 10.0, bottom: 18),
                           color: Colors.white,
                           width: double.infinity,
@@ -1138,7 +1044,7 @@ class _HomeState extends State<OriginalPostData>
                             trimLines: 4,
                             colorClickableText: AppColors.colorDarkCyan,
                             trimMode: TrimMode.Line,
-                            style: TextStyle(
+                            style: new TextStyle(
                               color: AppColors.moreText,
                               fontFamily: AssetStrings.circulerNormal,
                               fontSize: 14.0,
@@ -1149,11 +1055,11 @@ class _HomeState extends State<OriginalPostData>
                         ),
                         Opacity(
                           opacity: 0.12,
-                          child: Container(
+                          child: new Container(
                             height: 1.0,
-                            padding: EdgeInsets.only(top: 14),
+                            padding: new EdgeInsets.only(top: 14),
                             margin:
-                                EdgeInsets.only(left: 17.0, right: 17.0),
+                                new EdgeInsets.only(left: 17.0, right: 17.0),
                             color: AppColors.dividerColor,
                           ),
                         ),
@@ -1161,16 +1067,16 @@ class _HomeState extends State<OriginalPostData>
                           onTap: () {
                             widget.lauchCallBack(Material(
                                 child: Material(
-                                    child: PostFavorDetails(
+                                    child: new PostFavorDetails(
                               id: widget.id,
                             ))));
                           },
-                          child: Container(
+                          child: new Container(
                             width: double.infinity,
                             alignment: Alignment.center,
-                            padding: EdgeInsets.only(top: 18.0, bottom: 17),
+                            padding: new EdgeInsets.only(top: 18.0, bottom: 17),
                             color: Colors.white,
-                            child: Text(
+                            child: new Text(
                               "View Original Post",
                               style: TextThemes.blueTextFieldMedium,
                             ),
@@ -1178,26 +1084,26 @@ class _HomeState extends State<OriginalPostData>
                         ),
                         Container(
                             color: Colors.white,
-                            margin: EdgeInsets.only(top: 6),
-                            padding: EdgeInsets.only(
+                            margin: new EdgeInsets.only(top: 6),
+                            padding: new EdgeInsets.only(
                                 left: 16.0, right: 16.0, top: 16.0),
                             alignment: Alignment.centerLeft,
-                            child: Text(
+                            child: new Text(
                               "All Applicants",
                               style: TextThemes.blackCirculerMediumHeight,
                             )),
                         _buildContestList(),
-                        SizedBox(
+                        new SizedBox(
                           height: 10,
                         ),
                         Offstage(
                           offstage: !offstageApplicant,
-                          child: Container(
+                          child: new Container(
                             alignment: Alignment.center,
-                            margin: EdgeInsets.only(top: 80),
-                            child: Text(
+                            margin: new EdgeInsets.only(top: 80),
+                            child: new Text(
                               "No Applicant Found",
-                              style: TextStyle(
+                              style: new TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16.0),
@@ -1214,12 +1120,12 @@ class _HomeState extends State<OriginalPostData>
               left: 0.0,
               right: 0.0,
               child: Container(
-                margin: EdgeInsets.only(
+                margin: new EdgeInsets.only(
                   top: 30,
                   left: 16,
                   right: 5,
                 ),
-                child: Padding(
+                child: new Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1228,7 +1134,7 @@ class _HomeState extends State<OriginalPostData>
                         child: Container(
                           width: 30.0,
                           height: 30.0,
-                          padding: EdgeInsets.all(8),
+                          padding: new EdgeInsets.all(8),
                           decoration: BoxDecoration(
                               color: AppColors.greyProfile.withOpacity(0.4),
                               shape: BoxShape.circle,
@@ -1242,7 +1148,7 @@ class _HomeState extends State<OriginalPostData>
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            child: SvgPicture.asset(
+                            child: new SvgPicture.asset(
                               AssetStrings.back,
                               width: 21.0,
                               height: 18.0,
@@ -1268,7 +1174,7 @@ class _HomeState extends State<OriginalPostData>
                             onTapDown: (TapDownDetails details) {
                               showBottomSheets();
                             },
-                            child: Icon(
+                            child: new Icon(
                               Icons.more_vert,
                               color: Colors.white,
                             )),
@@ -1277,16 +1183,13 @@ class _HomeState extends State<OriginalPostData>
                   ),
                 ),
               )),
-          Center(
+          new Center(
             child: getHalfScreenLoader(
               status: offstageLoader,
               context: context,
             ),
           ),
           Visibility(visible: provider.getLoading(), child: ShimmerDetails())
-          /* Center(
-            child: _getLoader,
-          ),*/
         ],
       ),
     );

@@ -80,24 +80,6 @@ class _HomeState extends State<EditProfile>
 
   @override
   void initState() {
-    /*if (widget.favourDetailsResponse != null) {
-      _EmailController.text = widget?.favourDetailsResponse?.data?.title ?? "";
-      _PhoneController.text = widget?.favourDetailsResponse?.data?.price ?? "";
-      _OldPasswordController.text =
-          widget?.favourDetailsResponse?.data?.description ?? "";
-      _LocationController.text =
-          widget?.favourDetailsResponse?.data?.location ?? "";
-      profile = widget?.favourDetailsResponse?.data?.image ?? "";
-
-
-      _LatLongController.text = widget?.favourDetailsResponse?.data?.lat + "," +
-          widget?.favourDetailsResponse?.data?.long;
-
-      */ /*  print("lat ${widget?.favourDetailsResponse?.data?.lat}");
-      print("long ${widget?.favourDetailsResponse?.data?.long}");
-      print("latlong ${ _LatLongController.text}");*/ /*
-    }*/
-
     var infoData = jsonDecode(MemoryManagement.getUserInfo());
     userinfo = LoginSignupResponse.fromJson(infoData);
     _EmailController.text = userinfo?.user?.email ?? "";
@@ -106,11 +88,161 @@ class _HomeState extends State<EditProfile>
     profile = userinfo?.user?.profilePic ?? "";
     print("profile");
     _LocationController.text = userinfo?.user?.location ?? "";
-    _LatLongController.text = "${userinfo?.user?.lat??0.0},${userinfo?.user?.long??0.0}";
+    _LatLongController.text =
+    "${userinfo?.user?.lat ?? 0.0},${userinfo?.user?.long ?? 0.0}";
 
     _setScrollListener();
 
     super.initState();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    screenSize = MediaQuery
+        .of(context)
+        .size;
+    provider = Provider.of<AuthProvider>(context);
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: getAppBarNew(context),
+      body: Stack(
+        children: <Widget>[
+          new Container(
+            color: AppColors.whiteGray,
+            height: screenSize.height,
+            child: SingleChildScrollView(
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Opacity(
+                    opacity: 0.12,
+                    child: new Container(
+                      height: 1.0,
+                      color: AppColors.dividerColor,
+                    ),
+                  ),
+                  new Container(
+                    width: double.infinity,
+                    child: Container(
+                      margin: new EdgeInsets.only(top: 14),
+                      alignment: Alignment.center,
+                      decoration: new BoxDecoration(
+                          shape: BoxShape.circle,
+                          border:
+                          new Border.all(width: 2, color: Colors.white)),
+                      child: ClipOval(
+                        // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+
+                        child: _image != null
+                            ? Image.file(
+                          _image,
+                          width: 89,
+                          height: 89,
+                          fit: BoxFit.cover,
+                        )
+                            : getCachedNetworkImageWithurl(
+                          url: userinfo?.user?.profilePic ?? "",
+                          size: 89,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _crupitinoActionSheet();
+                    },
+                    child: Container(
+                      padding: new EdgeInsets.only(top: 14),
+                      alignment: Alignment.center,
+                      child: new Text(
+                        "Change Profile Photo",
+                        style: new TextStyle(
+                            fontFamily: AssetStrings.circulerMedium,
+                            color: AppColors.colorDarkCyan,
+                            fontSize: 14),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  new SizedBox(
+                    height: 23.0,
+                  ),
+                  getTextField("Name", _NameController, _NameField, _TitleField,
+                      TextInputType.text, 1),
+                  new SizedBox(
+                    height: 4.0,
+                  ),
+                  getTextField("Email", _EmailController, _TitleField,
+                      _PriceField, TextInputType.emailAddress, 1),
+                  new SizedBox(
+                    height: 4.0,
+                  ),
+                  new Container(
+                    padding: new EdgeInsets.only(left: 16, right: 5.0, top: 17),
+                    color: Colors.white,
+                    width: double.infinity,
+                    child: new Text(
+                      "Change Password",
+                      style: TextThemes.darkBlackMedium,
+                    ),
+                  ),
+                  getTextField(
+                      "Old Password",
+                      _OldPasswordController,
+                      _OldPasswordField,
+                      _NewPasswordField,
+                      TextInputType.text,
+                      1),
+                  Opacity(
+                    opacity: 0.12,
+                    child: new Container(
+                      height: 1.0,
+                      color: AppColors.dividerColor,
+                    ),
+                  ),
+                  getTextField(
+                      "New Password",
+                      _NewPasswordController,
+                      _NewPasswordField,
+                      _NewPasswordField,
+                      TextInputType.text,
+                      1),
+                  new SizedBox(
+                    height: 24.0,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      showDeleteAccount();
+                    },
+                    child: new Container(
+                      padding: new EdgeInsets.only(
+                          left: 16, right: 5.0, top: 26, bottom: 26),
+                      color: Colors.white,
+                      width: double.infinity,
+                      child: new Text(
+                        "Delete Account",
+                        style: TextThemes.darkRedMediumNewS,
+                      ),
+                    ),
+                  ),
+                  new SizedBox(
+                    height: 50.0,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          new Center(
+            child: getFullScreenProviderLoader(
+              status: provider.getLoading(),
+              context: context,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -209,16 +341,6 @@ class _HomeState extends State<EditProfile>
       ));
     }
 
-/*
-    PayvorCreateRequest loginRequest = new PayvorCreateRequest(
-        title: _EmailController.text,
-        location: _LocationController.text,
-        description: _OldPasswordController.text,
-        price: _PhoneController.text,
-        lat: lat,
-        long: long);
-    var response = await provider.createPayvor(loginRequest, context);*/
-
     print(request.fields);
 
     http.StreamedResponse response = await request.send();
@@ -247,24 +369,6 @@ class _HomeState extends State<EditProfile>
 
       showInSnackBar(stringdata);
     }
-
-/*
-    if (response is FavourCreateResponse) {
-      provider.hideLoader();
-
-      print(response);
-      try {
-        showInSnackBar(response.success);
-        */ /*   Navigator.pop(context);
-        Navigator.pop(context);*/ /*
-      } catch (ex) {}
-    } else {
-      provider.hideLoader();
-      APIError apiError = response;
-      print(apiError.error);
-
-      showInSnackBar(apiError.error);
-    }*/
   }
 
   void containerForSheet<T>({BuildContext context, Widget child}) {
@@ -411,11 +515,6 @@ class _HomeState extends State<EditProfile>
                     ? false
                     : true,
             onSubmitted: (String value) {
-              /* if (focusNodeCurrent == _DescriptionField) {
-                _DescriptionField.unfocus();
-              } else {
-                FocusScope.of(context).autofocus(focusNodeNext);
-              }*/
             },
             decoration: new InputDecoration(
               enabledBorder: InputBorder.none,
@@ -424,10 +523,6 @@ class _HomeState extends State<EditProfile>
               hintText: labelText,
 
               contentPadding: new EdgeInsets.only(right: 50.0),
-//              prefix: new Text(
-//                  focusNodeCurrent == _PriceField&&_PriceField.hasFocus
-//                      ? "€ "
-//                      : ""),
               hintStyle: controller.text.length == 0
                   ? TextThemes.greyTextFieldHintNormal
                   : TextThemes.greyTextFieldHintNormal,
@@ -666,213 +761,5 @@ class _HomeState extends State<EditProfile>
         false;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    screenSize = MediaQuery.of(context).size;
-    provider = Provider.of<AuthProvider>(context);
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: getAppBarNew(context),
-      body: Stack(
-        children: <Widget>[
-          new Container(
-            color: AppColors.whiteGray,
-            height: screenSize.height,
-            child: SingleChildScrollView(
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Opacity(
-                    opacity: 0.12,
-                    child: new Container(
-                      height: 1.0,
-                      color: AppColors.dividerColor,
-                    ),
-                  ),
-                  new Container(
-                    width: double.infinity,
-                    child: Container(
-                      margin: new EdgeInsets.only(top: 14),
-                      alignment: Alignment.center,
-                      decoration: new BoxDecoration(
-                          shape: BoxShape.circle,
-                          border:
-                              new Border.all(width: 2, color: Colors.white)),
-                      child: ClipOval(
-                        // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
-                        child: _image != null
-                            ? Image.file(
-                                _image,
-                                width: 89,
-                                height: 89,
-                                fit: BoxFit.cover,
-                              )
-                            : getCachedNetworkImageWithurl(
-                          url: userinfo?.user?.profilePic ?? "",
-                          size: 89,
-                          fit: BoxFit.cover,
-                              ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      _crupitinoActionSheet();
-                    },
-                    child: Container(
-                      padding: new EdgeInsets.only(top: 14),
-                      alignment: Alignment.center,
-                      child: new Text(
-                        "Change Profile Photo",
-                        style: new TextStyle(
-                            fontFamily: AssetStrings.circulerMedium,
-                            color: AppColors.colorDarkCyan,
-                            fontSize: 14),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                  new SizedBox(
-                    height: 23.0,
-                  ),
-                  getTextField("Name", _NameController, _NameField, _TitleField,
-                      TextInputType.text, 1),
-                  new SizedBox(
-                    height: 4.0,
-                  ),
-                  getTextField("Email", _EmailController, _TitleField,
-                      _PriceField, TextInputType.emailAddress, 1),
-                  new SizedBox(
-                    height: 4.0,
-                  ),
-                  /* Opacity(
-                    opacity: 0.12,
-                    child: new Container(
-                      height: 1.0,
-                      color: AppColors.dividerColor,
-                    ),
-                  ),*/
-                  /*    getTextField("Phone Number", _PhoneController, _PriceField,
-                      _LocationField, TextInputType.number, 1),
-
-                  new SizedBox(
-                    height: 4.0,
-                  ),*/
-
-                  /* new Container(
-                    color: Colors.white,
-                    height: 64.0,
-                    margin: new EdgeInsets.only(top: 6.0),
-                    padding: new EdgeInsets.only(right: 16),
-                    child: new Row(
-                      children: [
-                        */ /*   new Text(
-                          ResString().get('location'),
-                          style: new TextStyle(
-                              fontFamily: AssetStrings.circulerNormal,
-                              color: AppColors.lightGrey,
-                              fontSize: 16),
-                          textAlign: TextAlign.center,
-                        ),
-*/ /*
-                        Expanded(
-                          child: Container(
-                            padding: new EdgeInsets.only(left: 16, right: 5.0),
-                            alignment: Alignment.centerLeft,
-                            child: getLocation(
-                                _LocationController,
-                                context,
-                                _streamControllerShowLoader,
-                                true,
-                                _LatLongController,
-                                iconData: AssetStrings.location,
-                                colorAlert: isValid),
-                          ),
-                        ),
-                        new SizedBox(
-                          width: 15,
-                        ),
-                        */ /* new Text(
-                          ">",
-                          style: new TextStyle(
-                              fontFamily: AssetStrings.circulerNormal,
-                              color: AppColors.lightGrey,
-                              fontSize: 16),
-                          textAlign: TextAlign.center,
-                        ),*/ /*
-                      ],
-                    ),
-                  ),
-                  new SizedBox(
-                    height: 24,
-                  ),*/
-                  new Container(
-                    padding: new EdgeInsets.only(left: 16, right: 5.0, top: 17),
-                    color: Colors.white,
-                    width: double.infinity,
-                    child: new Text(
-                      "Change Password",
-                      style: TextThemes.darkBlackMedium,
-                    ),
-                  ),
-                  getTextField(
-                      "Old Password",
-                      _OldPasswordController,
-                      _OldPasswordField,
-                      _NewPasswordField,
-                      TextInputType.text,
-                      1),
-                  Opacity(
-                    opacity: 0.12,
-                    child: new Container(
-                      height: 1.0,
-                      color: AppColors.dividerColor,
-                    ),
-                  ),
-                  getTextField(
-                      "New Password",
-                      _NewPasswordController,
-                      _NewPasswordField,
-                      _NewPasswordField,
-                      TextInputType.text,
-                      1),
-                  new SizedBox(
-                    height: 24.0,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      showDeleteAccount();
-                    },
-                    child: new Container(
-                      padding: new EdgeInsets.only(
-                          left: 16, right: 5.0, top: 26, bottom: 26),
-                      color: Colors.white,
-                      width: double.infinity,
-                      child: new Text(
-                        "Delete Account",
-                        style: TextThemes.darkRedMediumNewS,
-                      ),
-                    ),
-                  ),
-                  new SizedBox(
-                    height: 50.0,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          new Center(
-            child: getFullScreenProviderLoader(
-              status: provider.getLoading(),
-              context: context,
-            ),
-          ),
-          /* new Center(
-            child: _getLoader,
-          ),*/
-        ],
-      ),
-    );
-  }
 }

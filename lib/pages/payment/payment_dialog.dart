@@ -8,7 +8,6 @@ import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/constants.dart';
 import 'package:payvor/utils/themes_styles.dart';
-//import 'package:stripe_payment/stripe_payment.dart';
 
 class PaymentDialog extends StatefulWidget {
   ValueSetter<int> voidcallback;
@@ -72,18 +71,18 @@ class _PaymentDialogState extends State<PaymentDialog> {
         androidPayMode: 'test'));*/
 
     listCardNumber.addAll([
-      FilteringTextInputFormatter.digitsOnly,
+      WhitelistingTextInputFormatter.digitsOnly,
       new LengthLimitingTextInputFormatter(16),
       new CardNumberInputFormatter()
     ]);
 
     listExpDate.addAll([
-      FilteringTextInputFormatter.digitsOnly,
+      WhitelistingTextInputFormatter.digitsOnly,
       new LengthLimitingTextInputFormatter(4),
       new CardMonthInputFormatter()
     ]);
     listcvv.addAll([
-      FilteringTextInputFormatter.digitsOnly,
+      WhitelistingTextInputFormatter.digitsOnly,
       new LengthLimitingTextInputFormatter(4)
     ]);
 

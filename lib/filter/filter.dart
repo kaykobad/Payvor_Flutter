@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/filter/data.dart';
 import 'package:payvor/filter/filter_request.dart';
@@ -17,8 +20,8 @@ import 'package:payvor/utils/themes_styles.dart';
 import 'package:provider/provider.dart';
 
 class Filter extends StatefulWidget {
-  final ValueSetter<FilterRequest> voidcallback;
-  final FilterRequest filterRequest;
+  ValueSetter<FilterRequest> voidcallback;
+  FilterRequest filterRequest;
 
   Filter({this.voidcallback, this.filterRequest});
 
@@ -26,52 +29,62 @@ class Filter extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter> {
+class _HomeState extends State<Filter>
+    with AutomaticKeepAliveClientMixin<Filter> {
   var screenSize;
-  ScrollController scrollController = ScrollController();
-  List<DataCategory> categoryList = [];
-  String text = "";
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
-  // final StreamController<bool> _loaderStreamController = StreamController<bool>();
-  // final StreamController<bool> _streamControllerShowLoader = StreamController<bool>();
+  final StreamController<bool> _loaderStreamController =
+      new StreamController<bool>();
+  ScrollController scrollController = new ScrollController();
+
+  List<DataCategory> categoryList = [];
+
+  String text = "";
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(SnackBar(content: Text(value)));
+        .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
   var _currentSliderValue = 0.0;
+
   var _paymentMin = 0;
   var _paymentMax = 100;
   AuthProvider authProvider;
-  var list = [];
+
+  final StreamController<bool> _streamControllerShowLoader =
+      StreamController<bool>();
+
+  var list = List<DataModel>();
+
   RangeValues _currentRangeValues = RangeValues(0, 100);
 
   @override
   void initState() {
     _setScrollListener();
 
-    var data = DataModel(name: "Most Recent", isSelect: false, sendTitle: "most_recent", id: 1);
+    var data = DataModel(
+        name: "Most Recent", isSelect: false, sendTitle: "most_recent", id: 1);
     var data1 = DataModel(
-      name: "Nearest to me",
-      isSelect: false,
-      sendTitle: "nearest_location",
-      id: 2,
-    );
+        name: "Nearest to me",
+        isSelect: false,
+        sendTitle: "nearest_location",
+        id: 2);
     var data2 = DataModel(
-      name: "Cheapest",
-      isSelect: false,
-      sendTitle: "price_low_to_high",
-      id: 3,
-    );
+        name: "Cheapest",
+        isSelect: false,
+        sendTitle: "price_low_to_high",
+        id: 3);
     var data3 = DataModel(
-      name: "Most Expensive",
-      isSelect: false,
-      sendTitle: "price_high_to_low",
-      id: 4,
-    );
+        name: "Most Expensive",
+        isSelect: false,
+        sendTitle: "price_high_to_low",
+        id: 4);
     list.add(data);
     list.add(data1);
     list.add(data2);
@@ -84,18 +97,19 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
       }
 
       for (var data in list) {
-        if (data?.isSelect != null && data.isSelect) {
+        if (data?.isSelect != null && data?.isSelect) {
           text = data?.name;
         }
       }
 
       _paymentMin = widget.filterRequest.minprice ?? 0;
       _paymentMax = widget.filterRequest.maxprice ?? 100;
-      _currentRangeValues = RangeValues(_paymentMin?.toDouble(), _paymentMax?.toDouble());
+      _currentRangeValues =
+          RangeValues(_paymentMin?.toDouble(), _paymentMax?.toDouble());
       _currentSliderValue = widget.filterRequest.distance?.toDouble() ?? 0.0;
     }
 
-    Future.delayed(Duration(microseconds: 2000), () {
+    Future.delayed(new Duration(microseconds: 2000), () {
       getCategory();
       print("call fun");
     });
@@ -110,7 +124,7 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
 
   void getCategory() {
     var data = MemoryManagement.getCategory() ?? "";
-    if (data?.isNotEmpty ?? false) {
+    if (data?.isNotEmpty) {
       var infoData = jsonDecode(data);
       var catData = CategoryResponse.fromJson(infoData);
       categoryList?.addAll(catData?.data);
@@ -164,66 +178,61 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
   Iterable<Widget> get categoryWidget sync* {
     for (DataCategory data in categoryList) {
       yield InkWell(
-        onTap: () {
-          if (data.isSelect == null) {
-            data.isSelect = false;
-          }
-          data.isSelect = !data.isSelect;
+          onTap: () {
+            if (data.isSelect == null) {
+              data.isSelect = false;
+            }
+            data.isSelect = !data.isSelect;
 
-          setState(() {});
-        },
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
-            border: Border.all(color: AppColors.desabledGray),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 18,
-                height: 18,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: data?.isSelect != null && data.isSelect
-                      ? AppColors.colorDarkCyan
-                      : Colors.transparent,
-                  border: Border.all(
-                    color: data?.isSelect != null && data.isSelect
-                        ? Colors.transparent
-                        : AppColors.desabledGray,
+            setState(() {});
+          },
+          child: Container(
+            margin: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 4.0),
+            padding: new EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+            decoration: new BoxDecoration(
+                borderRadius: new BorderRadius.circular(20.0),
+                border: new Border.all(color: AppColors.desabledGray)),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                new Container(
+                  width: 18,
+                  height: 18,
+                  decoration: new BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: data?.isSelect != null && data?.isSelect
+                          ? AppColors.colorDarkCyan
+                          : Colors.transparent,
+                      border: new Border.all(
+                          color: data?.isSelect != null && data?.isSelect
+                              ? Colors.transparent
+                              : AppColors.desabledGray)),
+                  child: new Icon(
+                    Icons.check,
+                    color: AppColors.kWhite,
+                    size: 12,
                   ),
                 ),
-                child: Icon(
-                  Icons.check,
-                  color: AppColors.kWhite,
-                  size: 12,
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 5),
-                child: Text(
-                  data.name,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontFamily: AssetStrings.circulerNormal,
+                Container(
+                  margin: new EdgeInsets.only(left: 5),
+                  child: Text(
+                    data.name,
+                    textAlign: TextAlign.center,
+                    style: new TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontFamily: AssetStrings.circulerNormal),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      );
+              ],
+            ),
+          ));
     }
   }
 
   buildContestListSearch(StateSetter setState) {
     return Container(
-      child: ListView.builder(
+      child: new ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
@@ -234,7 +243,8 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
     );
   }
 
-  Widget buildItemRecentSearch(int index, DataModel data, StateSetter setStateMain) {
+  Widget buildItemRecentSearch(
+      int index, DataModel data, StateSetter setStateMain) {
     return InkWell(
       onTap: () {
         for (var localData in list) {
@@ -242,47 +252,49 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
         }
         data?.isSelect = true;
         text = data?.name;
+
         setStateMain(() {});
+
         setState(() {});
+
         Navigator.pop(context);
       },
-      child: Container(
-        padding: EdgeInsets.only(top: 15, left: 20, right: 20),
+      child: new Container(
+        padding: new EdgeInsets.only(top: 15, left: 20, right: 20),
         child: Column(
           children: [
-            Row(
+            new Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  margin: EdgeInsets.only(left: 5),
+                  margin: new EdgeInsets.only(left: 5),
                   child: Text(
                     data.name,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: AssetStrings.circulerNormal,
-                    ),
+                    style: new TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontFamily: AssetStrings.circulerNormal),
                   ),
                 ),
-                Container(
-                  child: (data?.isSelect ?? false)
-                      ? Icon(
+                new Container(
+                  child: data?.isSelect
+                      ? new Icon(
                           Icons.radio_button_checked,
                           color: AppColors.colorDarkCyan,
                         )
-                      : Icon(
+                      : new Icon(
                           Icons.radio_button_unchecked,
                           color: AppColors.kBlack.withOpacity(0.2),
                         ),
-                ),
+                )
               ],
             ),
             Opacity(
               opacity: 0.12,
-              child: Container(
+              child: new Container(
                 height: 1.0,
-                margin: EdgeInsets.only(top: 15),
+                margin: new EdgeInsets.only(top: 15),
                 color: AppColors.dividerColor,
               ),
             ),
@@ -304,11 +316,11 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
           return Padding(
               padding: MediaQuery.of(context).viewInsets,
               child: Container(
-                  child: Column(
+                  child: new Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
 
-                      SizedBox(
+                      new SizedBox(
                         height: 10,
                       ),
                       buildContestListSearch()
@@ -318,51 +330,54 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
 */
 
     showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(26.0),
-          topRight: Radius.circular(26.0),
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(26.0), topRight: Radius.circular(26.0)),
         ),
-      ),
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setStateMain) {
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setStateMain) {
             return Padding(
-              padding: MediaQuery.of(context).viewInsets,
-              child: Container(
-                child: Column(
+                padding: MediaQuery.of(context).viewInsets,
+                child: Container(
+                    child: new Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(height: 10),
-                    buildContestListSearch(setStateMain),
+                    new SizedBox(
+                      height: 10,
+                    ),
+                    buildContestListSearch(setStateMain)
                   ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
+                )));
+          });
+        });
   }
 
   void callback() {
-    List<String> dataList = [];
+    var dataList = List<String>();
+
+    print("calllll");
+
     for (var data in categoryList) {
       print("isSelect ${data?.isSelect}");
-      if (data?.isSelect != null && data.isSelect) {
-        dataList.add(data?.id?.toString() ?? '');
+
+      if (data?.isSelect != null && data?.isSelect) {
+        dataList?.add(data?.id?.toString());
       }
     }
 
     var filter = FilterRequest(
-      minprice: _paymentMin,
-      maxprice: _paymentMax,
-      distance: _currentSliderValue?.toInt(),
-      list: list,
-      listCategory: dataList,
-    );
+        minprice: _paymentMin,
+        maxprice: _paymentMax,
+        distance: _currentSliderValue?.toInt(),
+        list: list,
+        listCategory: dataList);
+
+    print("calllllss");
+
     widget.voidcallback(filter);
+
     Navigator.pop(context);
   }
 
@@ -374,17 +389,21 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
       key: _scaffoldKey,
       body: Stack(
         children: <Widget>[
-          Container(
+          new Container(
             color: AppColors.kWhite,
             height: screenSize.height,
             child: SingleChildScrollView(
-              child: Column(
+              child: new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Container(color: Colors.white, height: 20.0),
+                  new Container(
+                    color: Colors.white,
+                    height: 20.0,
+                  ),
                   Container(
                     color: Colors.white,
-                    padding: EdgeInsets.only(top: 36.0, left: 17.0, right: 17),
+                    padding:
+                        new EdgeInsets.only(top: 36.0, left: 17.0, right: 17),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -395,14 +414,16 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            child: Padding(
+                            child: new Padding(
                               padding: const EdgeInsets.all(1.0),
-                              child: SvgPicture.asset(AssetStrings.cross),
+                              child: new SvgPicture.asset(
+                                AssetStrings.cross,
+                              ),
                             ),
                           ),
                         ),
                         Container(
-                          child: Text(
+                          child: new Text(
                             ResString().get('filters'),
                             style: TextThemes.darkBlackMedium,
                             textAlign: TextAlign.center,
@@ -417,21 +438,23 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
                             for (DataModel data in list) {
                               data.isSelect = false;
                             }
+
                             for (DataCategory data in categoryList) {
                               data.isSelect = false;
                             }
+
                             text = "";
+
                             setState(() {});
                           },
                           child: Container(
                             height: 20,
-                            child: Text(
+                            child: new Text(
                               ResString().get('reset'),
-                              style: TextStyle(
-                                fontFamily: AssetStrings.circulerMedium,
-                                color: AppColors.redLight,
-                                fontSize: 14,
-                              ),
+                              style: new TextStyle(
+                                  fontFamily: AssetStrings.circulerMedium,
+                                  color: AppColors.redLight,
+                                  fontSize: 14),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -440,21 +463,27 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
                     ),
                   ),
 
-                  Container(color: Colors.white, height: 20.0),
+                  new Container(
+                    color: Colors.white,
+                    height: 20.0,
+                  ),
                   Opacity(
                     opacity: 0.12,
-                    child: Container(height: 1.0, color: AppColors.dividerColor),
+                    child: new Container(
+                      height: 1.0,
+                      color: AppColors.dividerColor,
+                    ),
                   ),
-                  /* Container(
+                  /* new Container(
                     color: Colors.white,
                     height: 64.0,
-                    margin: EdgeInsets.only(top: 9.0),
-                    padding: EdgeInsets.only(right: 16),
-                    child: Row(
+                    margin: new EdgeInsets.only(top: 9.0),
+                    padding: new EdgeInsets.only(right: 16),
+                    child: new Row(
                       children: [
-                        */ /*   Text(
+                        */ /*   new Text(
                           ResString().get('location'),
-                          style: TextStyle(
+                          style: new TextStyle(
                               fontFamily: AssetStrings.circulerNormal,
                               color: AppColors.lightGrey,
                               fontSize: 16),
@@ -463,7 +492,7 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
 */ /*
                         Expanded(
                           child: Container(
-                            padding: EdgeInsets.only(left: 16, right: 5.0),
+                            padding: new EdgeInsets.only(left: 16, right: 5.0),
                             alignment: Alignment.centerLeft,
                             child: getLocation(_LocationController, context,
                                 _streamControllerShowLoader,
@@ -473,12 +502,12 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
                             ),
                           ),
                         ),
-                        SizedBox(
+                        new SizedBox(
                           width: 15,
                         ),
-                        */ /*  Text(
+                        */ /*  new Text(
                           ">",
-                          style: TextStyle(
+                          style: new TextStyle(
                               fontFamily: AssetStrings.circulerNormal,
                               color: AppColors.lightGrey,
                               fontSize: 16),
@@ -487,28 +516,24 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
                       ],
                     ),
                   ),*/
-                  Container(
+                  new Container(
                     color: Colors.white,
-                    padding: EdgeInsets.only(left: 16, right: 16, top: 20),
-                    child: Row(
+                    padding: new EdgeInsets.only(left: 16, right: 16, top: 20),
+                    child: new Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        new Text(
                           ResString().get('distance'),
-                          style: TextStyle(
-                            fontFamily: AssetStrings.circulerMedium,
-                            color: Colors.black,
-                            fontSize: 18,
-                          ),
+                          style: new TextStyle(
+                              fontFamily: AssetStrings.circulerMedium,
+                              color: Colors.black,
+                              fontSize: 16),
                           textAlign: TextAlign.center,
                         ),
-                        Text(
+                        new Text(
                           _currentSliderValue.toInt().toString() + " km",
-                          style: TextStyle(
-                            fontFamily: AssetStrings.circulerMedium,
-                            color: Colors.black,
-                            fontSize: 15,
-                          ),
+                          style: new TextStyle(
+                              color: Colors.black, fontSize: 14),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -516,62 +541,49 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
                   ),
                   Container(
                     color: Colors.white,
-                    padding: EdgeInsets.only(top: 24, bottom: 16),
-                    child: SliderTheme(
-                      data: SliderTheme.of(context).copyWith(
-                        trackHeight: 2.0,
-                        thumbShape: RoundSliderThumbShape(
-                          enabledThumbRadius: 12.0,
-                          pressedElevation: 8.0,
-                        ),
-                      ),
-                      child: Slider(
-                        value: _currentSliderValue,
-                        min: 0,
-                        max: 100,
-                        activeColor: AppColors.colorDarkCyan,
-                        inactiveColor: Color.fromRGBO(143, 146, 161, 0.2),
-                        label: _currentSliderValue.round().toString(),
-                        onChanged: (double value) {
-                          setState(() {
-                            _currentSliderValue = value;
-                            print(_currentSliderValue);
-                          });
-                        },
-                      ),
+                    padding: new EdgeInsets.only(top: 24, bottom: 16),
+                    child: Slider(
+                      value: _currentSliderValue,
+                      min: 0,
+                      max: 100,
+                      activeColor: AppColors.colorDarkCyan,
+                      inactiveColor: Color.fromRGBO(143, 146, 161, 0.2),
+                      label: _currentSliderValue.round().toString(),
+                      onChanged: (double value) {
+                        setState(() {
+                          _currentSliderValue = value;
+                          print(_currentSliderValue);
+                        });
+                      },
                     ),
                   ),
                   Opacity(
                     opacity: 0.12,
-                    child: Container(
+                    child: new Container(
                       height: 1.0,
-                      margin: EdgeInsets.only(left: 16, right: 16),
+                      margin: new EdgeInsets.only(left: 16, right: 16),
                       color: AppColors.dividerColor,
                     ),
                   ),
-                  Container(
+                  new Container(
                     color: Colors.white,
-                    margin: EdgeInsets.only(top: 9.0),
-                    padding: EdgeInsets.only(left: 16, right: 16, top: 10),
-                    child: Row(
+                    margin: new EdgeInsets.only(top: 9.0),
+                    padding: new EdgeInsets.only(left: 16, right: 16, top: 10),
+                    child: new Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        new Text(
                           ResString().get('payment'),
-                          style: TextStyle(
-                            fontFamily: AssetStrings.circulerMedium,
-                            color: Colors.black,
-                            fontSize: 18,
-                          ),
+                          style: new TextStyle(
+                              fontFamily: AssetStrings.circulerMedium,
+                              color: Colors.black,
+                              fontSize: 16),
                           textAlign: TextAlign.center,
                         ),
-                        Text(
+                        new Text(
                           "€$_paymentMin" + "-" "€$_paymentMax",
-                          style: TextStyle(
-                            fontFamily: AssetStrings.circulerMedium,
-                            color: Colors.black,
-                            fontSize: 15,
-                          ),
+                          style: new TextStyle(
+                              color: Colors.black, fontSize: 14),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -579,99 +591,89 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
                   ),
                   Container(
                     color: Colors.white,
-                    padding: EdgeInsets.only(top: 24, bottom: 16),
-                    child: SliderTheme(
-                      data: SliderTheme.of(context).copyWith(
-                        trackHeight: 2.0,
-                        rangeThumbShape: RoundRangeSliderThumbShape(
-                          enabledThumbRadius: 12.0,
-                          pressedElevation: 8.0,
-                        ),
+                    padding: new EdgeInsets.only(top: 24, bottom: 16),
+                    child: RangeSlider(
+                      values: _currentRangeValues,
+                      min: 0,
+                      max: 100,
+                      activeColor: AppColors.colorDarkCyan,
+                      inactiveColor: Color.fromRGBO(143, 146, 161, 0.2),
+                      labels: RangeLabels(
+                        _currentRangeValues.start.round().toString(),
+                        _currentRangeValues.end.round().toString(),
                       ),
-                      child: RangeSlider(
-                        values: _currentRangeValues,
-                        min: 0,
-                        max: 100,
-                        activeColor: AppColors.colorDarkCyan,
-                        inactiveColor: Color.fromRGBO(143, 146, 161, 0.2),
-                        labels: RangeLabels(
-                          _currentRangeValues.start.round().toString(),
-                          _currentRangeValues.end.round().toString(),
-                        ),
-                        onChanged: (RangeValues values) {
-                          setState(() {
-                            _currentRangeValues = values;
-                            _paymentMin = _currentRangeValues.start.round();
-                            _paymentMax = _currentRangeValues.end.round();
-                          });
-                        },
-                      ),
+                      onChanged: (RangeValues values) {
+                        setState(() {
+                          _currentRangeValues = values;
+                          _paymentMin = _currentRangeValues.start.round();
+                          _paymentMax = _currentRangeValues.end.round();
+                          ;
+                        });
+                      },
                     ),
                   ),
                   Opacity(
                     opacity: 0.12,
-                    child: Container(
+                    child: new Container(
                       height: 1.0,
-                      margin: EdgeInsets.only(left: 16, right: 16),
+                      margin: new EdgeInsets.only(left: 16, right: 16),
                       color: AppColors.dividerColor,
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 16, top: 25, right: 16),
+                    margin: new EdgeInsets.only(left: 16, top: 25, right: 16),
                     width: getScreenSize(context: context).width,
                     color: Colors.white,
-                    child: InkWell(
-                      onTap: () {
-                        showBottomSheets();
-                      },
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              color: Colors.white,
-                              child: Text(
-                                "Sort Type",
-                                style: TextStyle(
-                                  fontFamily: AssetStrings.circulerMedium,
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                          Container(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
                             alignment: Alignment.centerLeft,
                             color: Colors.white,
-                            child: Text(
-                              text != null && text.isNotEmpty ? text : "None",
-                              style: TextStyle(
-                                fontFamily: AssetStrings.circulerMedium,
-                                color: Colors.black,
-                                fontSize: 15,
-                              ),
+                            child: new Text(
+                              "Sort By",
+                              style: new TextStyle(
+                                  fontFamily: AssetStrings.circulerMedium,
+                                  color: Colors.black,
+                                  fontSize: 16),
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(left: 2),
-                            child: Icon(
-                              Icons.arrow_forward_ios,
-                              size: 15,
-                              color: AppColors.colorDarkCyan,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            showBottomSheets();
+                          },
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            color: Colors.white,
+                            child: new Text(
+                              text != null && text?.isNotEmpty ? text : "None",
+                              style: new TextStyle(
+                                  fontFamily: AssetStrings.circulerNormal,
+                                  color: Colors.black,
+                                  fontSize: 14),
+                              textAlign: TextAlign.center,
                             ),
-                          )
-                        ],
-                      ),
+                          ),
+                        ),
+                        Container(
+                          margin: new EdgeInsets.only(left: 2),
+                          child: new Icon(
+                            Icons.arrow_forward_ios,
+                            size: 15,
+                            color: AppColors.colorDarkCyan,
+                          ),
+                        )
+                      ],
                     ),
                   ),
                   /* Container(
                       color: Colors.white,
                       padding:
-                          EdgeInsets.only(left: 12, top: 16, bottom: 16.0),
+                          new EdgeInsets.only(left: 12, top: 16, bottom: 16.0),
                       width: getScreenSize(context: context).width,
-                      child: Wrap(
+                      child: new Wrap(
                         runSpacing: 2.0,
                         spacing: 2.0,
                         children: actorWidgets.toList(),
@@ -679,52 +681,52 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
 
                   Opacity(
                     opacity: 0.12,
-                    child: Container(
+                    child: new Container(
                       height: 1.0,
-                      margin: EdgeInsets.only(left: 16, right: 16, top: 25),
+                      margin: new EdgeInsets.only(left: 16, right: 16, top: 25),
                       color: AppColors.dividerColor,
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(left: 16, top: 20),
+                    padding: new EdgeInsets.only(left: 16, top: 20),
                     width: getScreenSize(context: context).width,
                     alignment: Alignment.centerLeft,
                     color: Colors.white,
-                    child: Text(
+                    child: new Text(
                       "Category",
-                      style: TextStyle(
-                        fontFamily: AssetStrings.circulerMedium,
-                        color: Colors.black,
-                        fontSize: 18,
-                      ),
+                      style: new TextStyle(
+                          fontFamily: AssetStrings.circulerMedium,
+                          color: Colors.black,
+                          fontSize: 16),
                       textAlign: TextAlign.center,
                     ),
                   ),
                   Container(
-                    color: Colors.white,
-                    padding: EdgeInsets.only(left: 12, top: 16, bottom: 16.0),
-                    width: getScreenSize(context: context).width,
-                    child: Wrap(
-                      runSpacing: 2.0,
-                      spacing: 2.0,
-                      children: categoryWidget.toList(),
-                    ),
+                      color: Colors.white,
+                      padding:
+                          new EdgeInsets.only(left: 12, top: 16, bottom: 16.0),
+                      width: getScreenSize(context: context).width,
+                      child: new Wrap(
+                        runSpacing: 2.0,
+                        spacing: 2.0,
+                        children: categoryWidget.toList(),
+                      )),
+                  new SizedBox(
+                    height: 100.0,
                   ),
-                  SizedBox(height: 100.0),
                 ],
               ),
             ),
           ),
           Offstage(
             offstage: true,
-            child: Center(
-              child: Text(
+            child: new Center(
+              child: new Text(
                 "No Favors Found",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                ),
+                style: new TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0),
               ),
             ),
           ),
@@ -735,16 +737,14 @@ class _HomeState extends State<Filter> with AutomaticKeepAliveClientMixin<Filter
             child: Material(
               elevation: 18.0,
               child: Container(
-                color: Colors.white,
-                padding: EdgeInsets.only(top: 10.0, bottom: 24.0),
-                child: getSetupButtonNew(
-                  callback, ResString().get('apply_filters'), 16,
-                  newColor: AppColors.colorDarkCyan,
-                ),
-              ),
+                  color: Colors.white,
+                  padding: new EdgeInsets.only(top: 9, bottom: 28),
+                  child: getSetupButtonNew(
+                      callback, ResString().get('apply_filters'), 16,
+                      newColor: AppColors.colorDarkCyan)),
             ),
           ),
-          /* Center(
+          /* new Center(
             child: _getLoader,
           ),*/
         ],

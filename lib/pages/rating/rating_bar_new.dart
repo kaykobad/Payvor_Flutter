@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:core';
 
 import 'package:flutter/cupertino.dart';
@@ -29,6 +28,7 @@ class RatingBarNewBar extends StatefulWidget {
   final String paymentType;
   final String paymentAmount;
   final ValueSetter<int> voidcallback;
+  final int fromPost;
 
   RatingBarNewBar(
       {@required this.id,
@@ -38,7 +38,8 @@ class RatingBarNewBar extends StatefulWidget {
       this.userId,
       this.paymentType,
       this.paymentAmount,
-      this.voidcallback});
+      this.voidcallback,
+      this.fromPost});
 
   @override
   _HomeState createState() => _HomeState();
@@ -54,9 +55,6 @@ class _HomeState extends State<RatingBarNewBar>
   List<DataModelReport> listRecent = List();
 
   Widget widgets;
-
-  final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
 
   AuthProvider provider;
   IconData _selectedIcon;
@@ -447,7 +445,10 @@ class _HomeState extends State<RatingBarNewBar>
       widget.voidcallback(1);
     }
 
-    Navigator.pop(context);
+    if (widget?.fromPost == null) {
+      Navigator.pop(context);
+    }
+
     Navigator.pop(context);
     Navigator.pop(context);
   }

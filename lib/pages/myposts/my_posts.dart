@@ -12,6 +12,7 @@ import 'package:payvor/pages/original_post/original_post_data.dart';
 import 'package:payvor/pages/pay_feedback/pay_feedback_common.dart';
 import 'package:payvor/pages/pay_feedback/pay_give_feedback.dart';
 import 'package:payvor/pages/post/recent_posted_favor.dart';
+import 'package:payvor/pages/rating/rating_bar_new.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
@@ -68,14 +69,6 @@ class _HomeState extends State<MyPosts> {
     Future.delayed(const Duration(milliseconds: 300), () {
       hitPostedApi();
     });
-
-    /* listResult.add("Hired Favors");
-    listResult.add(1.0);
-    listResult.add(1.0);
-    listResult.add("Posted Favors");
-    listResult.add(1);
-    listResult.add(1);
-    listResult.add(1);*/
 
     _setScrollListener();
     super.initState();
@@ -203,7 +196,6 @@ class _HomeState extends State<MyPosts> {
   }
 
   void _setScrollListener() {
-    //scrollController.position.isScrollingNotifier.addListener(() { print("called");});
 
     scrollController = new ScrollController();
     scrollController.addListener(() {
@@ -234,9 +226,6 @@ class _HomeState extends State<MyPosts> {
             child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                /* new Container(
-                  child: ,
-                )*/
                 myFavorCount != null && myFavorCount > 0
                     ? buildItemNew()
                     : Container(),
@@ -410,16 +399,16 @@ class _HomeState extends State<MyPosts> {
     );
   }
 
+  ValueSetter<int> callbackMain(int type) {
+    currentPage = 1;
+    isPullToRefresh = true;
+    _loadMore = false;
+    hitPostedApi();
+  }
+
   Widget buildItemNew() {
     return InkWell(
       onTap: () {
-        /*  widget.lauchCallBack(Material(
-            child: Material(
-                child: new OriginalPostData(
-                  id: data.id.toString(),
-                  lauchCallBack: widget.lauchCallBack,
-                  voidcallback: callback,
-                ))));*/
       },
       child: InkWell(
         onTap: () {
@@ -427,7 +416,7 @@ class _HomeState extends State<MyPosts> {
               child: Material(
                   child: new RecentPostedFavor(
             lauchCallBack: widget?.lauchCallBack,
-          ))));
+                      voidcallback: callbackMain))));
         },
         child: Container(
           padding:
@@ -495,7 +484,7 @@ class _HomeState extends State<MyPosts> {
   }
 
   hitEndedFavours(DataNextPost data) {
-    print("clicked_data_status ${data.status}");
+   // print("clicked_data_status ${data.status}");
     if (data?.status != 3) {
       if (data?.status == 1) {
         providerFirebase.changeScreen(new PayFeebackDetails(
@@ -506,16 +495,29 @@ class _HomeState extends State<MyPosts> {
           userType: Constants.HELPER,
         ));
       } else {
+        // providerFirebase.changeScreen(Material(
+        //     child: Material(
+        //         child: new PayFeebackDetailsCommon(
+        //   lauchCallBack: widget?.lauchCallBack,
+        //   userId: data?.hiredUserId?.toString(),
+        //   postId: data?.id?.toString(),
+        //   giveFeedback: false,
+        //   voidcallback: callback,
+        //   userType: Constants.HELPER,
+        // ))));
         providerFirebase.changeScreen(Material(
             child: Material(
-                child: new PayFeebackDetailsCommon(
-          lauchCallBack: widget?.lauchCallBack,
-          userId: data?.hiredUserId?.toString(),
-          postId: data?.id?.toString(),
-          giveFeedback: false,
-          voidcallback: callback,
-          userType: Constants.HELPER,
-        ))));
+                child: new RatingBarNewBar(
+                  id: data?.id?.toString(),
+                  type: 1,
+                  image: data?.hired?.profile_pic ?? "",
+                  name: data?.hired?.name ?? "",
+                  userId: data?.hiredUserId?.toString(),
+                  paymentAmount: data?.price?.toString() ?? "",
+                  paymentType: "Card",
+                  voidcallback: callback,
+                  fromPost: 1,
+                ))));
       }
     } else {
       providerFirebase.changeScreen(new PayFeebackDetails(
@@ -526,52 +528,13 @@ class _HomeState extends State<MyPosts> {
         userType: 1,
       ));
     }
-    // provider.setLoading();
-    //
-    // bool gotInternetConnection = await hasInternetConnection(
-    //   context: context,
-    //   mounted: mounted,
-    //   canShowAlert: true,
-    //   onFail: () {
-    //     provider.hideLoader();
-    //   },
-    //   onSuccess: () {},
-    // );
-    //
-    // if (!gotInternetConnection) {
-    //   return;
-    // }
-    //
-    // var responses = await provider.endedFavours(context, data?.id?.toString());
-    //
-    // if (responses is GetStripeResponse) {
-    //   provider.hideLoader();
-    //
-    //   //listResult?.remove(data);
-    //
-    //   widget.lauchCallBack(Material(
-    //       child: Material(
-    //           child: new PayFeebackDetails(
-    //     lauchCallBack: widget?.lauchCallBack,
-    //     userId: data?.hiredUserId?.toString(),
-    //     postId: data?.id?.toString(),
-    //     type: 1,
-    //     voidcallback: callback,
-    //   ))));
-    //
-    //   setState(() {});
-    // } else {
-    //   provider.hideLoader();
-    //   APIError apiError = responses;
-    //   showInSnackBar(apiError.error);
-    // }
   }
 
   Widget buildItemMainNew(DataNextPost data, int index) {
     print(index);
     return InkWell(
       onTap: () {
-        print("data status ${data?.status}");
+       // print("data status ${data?.status}");
         if (data?.status != 3) {
           if (data?.status == 1) {
             widget.lauchCallBack(Material(
@@ -585,8 +548,7 @@ class _HomeState extends State<MyPosts> {
               userType: Constants.HELPER,
             ))));
           } else {
-            // status=3 favour is ended give feedback now
-            widget.lauchCallBack(Material(
+              widget.lauchCallBack(Material(
                 child: Material(
                     child: new PayFeebackDetailsCommon(
               lauchCallBack: widget?.lauchCallBack,
@@ -596,13 +558,27 @@ class _HomeState extends State<MyPosts> {
               voidcallback: callback,
               userType: Constants.HELPER,
             ))));
+
+            // widget.lauchCallBack(Material(
+            //     child: Material(
+            //         child: new RatingBarNewBar(
+            //   id: data?.id?.toString(),
+            //   type: 1,
+            //   image: data?.hired?.profile_pic ?? "",
+            //   name: data?.hired?.name ?? "",
+            //   userId: data?.hiredUserId?.toString(),
+            //   paymentAmount: data?.price?.toString() ?? "",
+            //   paymentType: "Card",
+            //   voidcallback: callback,
+            //   fromPost: 1,
+            // ))));
           }
         } else {
           widget.lauchCallBack(new PayFeebackDetailsCommon(
             lauchCallBack: widget?.lauchCallBack,
             userId: data?.hiredUserId?.toString(),
             postId: data?.id?.toString(),
-            giveFeedback: true,
+            giveFeedback: false,
             voidcallback: callback,
             userType: Constants.HELPER,
           ));
@@ -633,7 +609,7 @@ class _HomeState extends State<MyPosts> {
                         ),
                         child: ClipOval(
                           child: getCachedNetworkImageWithurl(
-                              url: data?.image ?? "", size: 49),
+                              url: data?.hired?.profile_pic ?? "", size: 49),
                         )),
                     Expanded(
                       child: Container(
@@ -654,9 +630,11 @@ class _HomeState extends State<MyPosts> {
                                 children: [
                                   Container(
                                     child: new Text(
-                                      data?.status == 3
-                                          ? "You’ve ended job of "
-                                          : "You have hired ",
+                                      (data?.status == 2)
+                                          ? "You have paid "
+                                          : (data?.status == 3
+                                              ? "You’ve ended job of "
+                                              : "You have hired "),
                                       style: TextThemes.grayNormalSmall,
                                     ),
                                   ),
@@ -683,14 +661,6 @@ class _HomeState extends State<MyPosts> {
                                       ),
                                     ),
                                   ),
-                                  /*   Container(
-                                    margin: new EdgeInsets.only(left: 7.0),
-                                    child: new Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 13,
-                                      color: Color.fromRGBO(183, 183, 183, 1),
-                                    ),
-                                  )*/
                                 ],
                               ),
                             ),
@@ -708,19 +678,18 @@ class _HomeState extends State<MyPosts> {
                     color: AppColors.dividerColor,
                   ),
                 ),
-                data?.status == 1
-                    ? Container(
-                        height: 40,
-                        width: double.infinity,
-                        child: InkWell(
-                          onTap: () {
-                            hitEndedFavours(data);
-                          },
-                          child: Center(
-                            child: new Text(
-                              "END FAVOR",
-                              style: new TextStyle(
-                                  color: AppColors.redLight,
+                Container(
+                  height: 40,
+                  width: double.infinity,
+                  child: InkWell(
+                    onTap: () {
+                      hitEndedFavours(data);
+                    },
+                    child: Center(
+                      child: new Text(
+                        "END FAVOR",
+                        style: new TextStyle(
+                            color: AppColors.redLight,
                                   fontSize: 14,
                                   fontFamily: AssetStrings.circulerNormal),
                               textAlign: TextAlign.center,
@@ -728,7 +697,6 @@ class _HomeState extends State<MyPosts> {
                           ),
                         ),
                       )
-                    : Container(),
               ],
             ),
           ),

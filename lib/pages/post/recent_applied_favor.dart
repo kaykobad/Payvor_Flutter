@@ -27,7 +27,6 @@ class RecentAppliedFavor extends StatefulWidget {
 class _HomeState extends State<RecentAppliedFavor>
     with AutomaticKeepAliveClientMixin<RecentAppliedFavor> {
   var screenSize;
-
   String searchkey = null;
   AuthProvider provider;
   FirebaseProvider providerFirebase;
@@ -36,25 +35,17 @@ class _HomeState extends State<RecentAppliedFavor>
   bool offstagenodata = true;
   bool loader = false;
   String title = "";
-
   List<Object> listResult = List();
-
-  final StreamController<bool> _loaderStreamController =
-      StreamController<bool>();
-  TextEditingController _controller = TextEditingController();
-  ScrollController scrollController = ScrollController();
+  ScrollController scrollController = new ScrollController();
   bool _loadMore = false;
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
-
+      new GlobalKey<RefreshIndicatorState>();
   Widget widgets;
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(SnackBar(content: Text(value)));
+        .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
   @override
@@ -62,17 +53,34 @@ class _HomeState extends State<RecentAppliedFavor>
     Future.delayed(const Duration(milliseconds: 300), () {
       hitPostedApi();
     });
-
-    /* listResult.add("Hired Favors");
-    listResult.add(1.0);
-    listResult.add(1.0);
-    listResult.add("Posted Favors");
-    listResult.add(1);
-    listResult.add(1);
-    listResult.add(1);*/
-
     _setScrollListener();
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    screenSize = MediaQuery.of(context).size;
+    provider = Provider.of<AuthProvider>(context);
+    providerFirebase = Provider.of<FirebaseProvider>(context);
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: new AppBar(
+        elevation: 1,
+        title: new Text(
+          "Recent Applied Favors",
+          style: new TextStyle(color: Colors.black, fontSize: 18),
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.black, //change your color here
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+      ),
+      backgroundColor: AppColors.whiteGray,
+      body: Stack(
+        children: <Widget>[listWidget, noJobs, loaderWidget],
+      ),
+    );
   }
 
   hitPostedApi() async {
@@ -112,9 +120,7 @@ class _HomeState extends State<RecentAppliedFavor>
         if (currentPage == 1) {
           listResult.clear();
         }
-
         listResult.addAll(response?.data?.data);
-
         if (response != null &&
             response.data != null &&
             response?.data?.data.length < Constants.PAGINATION_SIZE) {
@@ -143,60 +149,8 @@ class _HomeState extends State<RecentAppliedFavor>
     }
   }
 
-  /* hitHireJobApi() async {
-    var response = await provider.favourpostedbyuser(context, currentPage);
-
-    provider.hideLoader();
-
-    if (response is FavourPostedByUserResponse) {
-      print("res $response");
-      isPullToRefresh = false;
-
-      if (response != null && response.data != null) {
-        if (currentPage == 1) {
-          if (response?.data?.length > 0) {
-            listResult.add("Posted Favors");
-          }
-        }
-
-        listResult.addAll(response?.data);
-
-        if (!_loadMore) {
-          if (response != null &&
-              response.data != null &&
-              response.data?.length < Constants.PAGINATION_SIZE) {
-            _loadMore = false;
-          } else {
-            _loadMore = true;
-          }
-        }
-
-        if (!offstagenodata) {
-          if (listResult.length > 0) {
-            offstagenodata = true;
-          } else {
-            offstagenodata = false;
-          }
-        }
-
-        setState(() {});
-      }
-
-      print(response);
-      try {} catch (ex) {}
-    } else {
-      provider.hideLoader();
-      APIError apiError = response;
-      print(apiError.error);
-
-      showInSnackBar(apiError.error);
-    }
-  }*/
-
   void _setScrollListener() {
-    //scrollController.position.isScrollingNotifier.addListener(() { print("called");});
-
-    scrollController = ScrollController();
+    scrollController = new ScrollController();
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
@@ -209,46 +163,96 @@ class _HomeState extends State<RecentAppliedFavor>
     });
   }
 
+  get loaderWidget => Container(
+        child: new Center(
+          child: getHalfScreenLoader(
+            status: provider.getLoading(),
+            context: context,
+          ),
+        ),
+      );
+
+  get listWidget => new Container(
+        color: AppColors.whiteGray,
+        height: getScreenSize(context: context).height,
+        child: new Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _buildContestList(),
+          ],
+        ),
+      );
+
+  get noJobs => Offstage(
+        offstage: offstagenodata,
+        child: Container(
+          height: screenSize.height,
+          padding: new EdgeInsets.only(bottom: 40),
+          child: new Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () {},
+                  child: new Image.asset(
+                    AssetStrings.noPosts,
+                    width: 150,
+                    height: 150,
+                  ),
+                ),
+                Container(
+                  margin: new EdgeInsets.only(top: 10),
+                  child: new Text(
+                    "No Jobs",
+                    style: new TextStyle(
+                        color: Colors.black,
+                        fontFamily: AssetStrings.circulerMedium,
+                        fontSize: 17.0),
+                  ),
+                ),
+                Container(
+                  margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
+                  child: new Text(
+                    "You don’t have any job yet.\nOnce you’re hired it will show up here.",
+                    textAlign: TextAlign.center,
+                    style: new TextStyle(
+                        height: 1.5,
+                        color: Color.fromRGBO(103, 99, 99, 1.0),
+                        fontFamily: AssetStrings.circulerNormal,
+                        fontSize: 15.0),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
   Widget buildItem(int index, Datas data) {
     return InkWell(
       onTap: () {
-        providerFirebase?.changeScreen(PostFavorDetails(
+        providerFirebase?.changeScreen(new PostFavorDetails(
           id: data?.favourId?.toString(),
           isButtonDesabled: true,
-        ), rootNavigator: true);
+        ));
       },
       child: Container(
-        padding: EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
-        margin: EdgeInsets.only(top: 8.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
+        padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
+        margin: new EdgeInsets.only(top: 8.0),
+        decoration: new BoxDecoration(
+          borderRadius: new BorderRadius.circular(5.0),
           color: Colors.white,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            /*  Container(
-              margin: EdgeInsets.only(top: 10.0),
-              child: Text(
-                data?.favour?.title ?? "",
-                style: TextThemes.blackCirculerMedium,
-              ),
-            ),
-            Opacity(
-              opacity: 0.12,
-              child: Container(
-                margin: EdgeInsets.only(top: 30.0),
-                height: 1.0,
-                color: AppColors.dividerColor,
-              ),
-            ),*/
             Container(
-              child: Row(
+              child: new Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: Container(
-                      child: Text(
+                      child: new Text(
                         data?.favour?.title ?? "",
                         style: TextThemes.blackCirculerMedium,
                         maxLines: 3,
@@ -257,8 +261,8 @@ class _HomeState extends State<RecentAppliedFavor>
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 7.0),
-                    child: Icon(
+                    margin: new EdgeInsets.only(left: 7.0),
+                    child: new Icon(
                       Icons.arrow_forward_ios,
                       size: 13,
                       color: Color.fromRGBO(183, 183, 183, 1),
@@ -269,99 +273,6 @@ class _HomeState extends State<RecentAppliedFavor>
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    screenSize = MediaQuery.of(context).size;
-    provider = Provider.of<AuthProvider>(context);
-    providerFirebase = Provider.of<FirebaseProvider>(context);
-
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        elevation: 1,
-        title: Text(
-          "Recent Applied Favors",
-          style: TextStyle(color: Colors.black, fontSize: 18),
-        ),
-        iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-      ),
-      backgroundColor: AppColors.whiteGray,
-      body: Stack(
-        children: <Widget>[
-          Container(
-            color: AppColors.whiteGray,
-            height: getScreenSize(context: context).height,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildContestList(),
-              ],
-            ),
-          ),
-          Offstage(
-            offstage: offstagenodata,
-            child: Container(
-              height: screenSize.height,
-              padding: EdgeInsets.only(bottom: 40),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: Image.asset(
-                        AssetStrings.noPosts,
-                        width: 150,
-                        height: 150,
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 10),
-                      child: Text(
-                        "No Jobs",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: AssetStrings.circulerMedium,
-                            fontSize: 17.0),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 9, left: 20, right: 20),
-                      child: Text(
-                        "You don’t have any job yet.\nOnce you’re hired it will show up here.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            height: 1.5,
-                            color: Color.fromRGBO(103, 99, 99, 1.0),
-                            fontFamily: AssetStrings.circulerNormal,
-                            fontSize: 15.0),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Container(
-            child: Center(
-              child: getHalfScreenLoader(
-                status: provider.getLoading(),
-                context: context,
-              ),
-            ),
-          ),
-          /* Center(
-            child: _getLoader,
-          ),*/
-        ],
       ),
     );
   }
@@ -378,9 +289,9 @@ class _HomeState extends State<RecentAppliedFavor>
         await hitPostedApi();
       },
       child: Container(
-        margin: EdgeInsets.only(left: 16, right: 16),
-        child: ListView.builder(
-          padding: EdgeInsets.all(0.0),
+        margin: new EdgeInsets.only(left: 16, right: 16),
+        child: new ListView.builder(
+          padding: new EdgeInsets.all(0.0),
           physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             if (listResult[index] is Datas) {

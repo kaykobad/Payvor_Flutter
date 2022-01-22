@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +101,8 @@ class APIHandler {
       headers.addAll(defaultHeaders);
       headers.addAll(additionalHeaders);
 
-      if (MemoryManagement.getAccessToken() != null) {
+      if (MemoryManagement.getAccessToken() != null &&
+          MemoryManagement.getAccessToken().isNotEmpty) {
         headers["Authorization"] =
             "Bearer " + MemoryManagement.getAccessToken();
 
