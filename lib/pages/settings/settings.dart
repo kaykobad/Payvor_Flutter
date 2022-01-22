@@ -9,7 +9,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:payvor/model/post_details/report_post_response.dart';
-import 'package:payvor/pages/add_bank_details/add_bank_details.dart';
 import 'package:payvor/pages/add_payment_method_first/add_payment.dart';
 import 'package:payvor/pages/edit_profile/edit_user_profile.dart';
 import 'package:payvor/pages/guest_view/guest_intro_screen.dart';
