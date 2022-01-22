@@ -39,10 +39,9 @@ class FirebaseProvider with ChangeNotifier {
     _homeContext = context;
   }
 
-  void changeScreen(Widget screen) {
-    Navigator.push(
-      _homeContext,
-      new CupertinoPageRoute(builder: (BuildContext context) {
+  void changeScreen(Widget screen, {bool rootNavigator=false}) {
+    Navigator.of(_homeContext, rootNavigator: rootNavigator).push(
+      CupertinoPageRoute(builder: (BuildContext context) {
         return Material(child: screen);
       }),
     );

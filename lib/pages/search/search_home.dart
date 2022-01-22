@@ -43,12 +43,12 @@ class HomeState extends State<SearchCompany>
 
   String searchkey = null;
 
-  List<Datas> list = List<Datas>();
+  List<Datas> list = [];
 
   GlobalKey<HomeState> myKey = GlobalKey();
 
-  TextEditingController _controller = new TextEditingController();
-  ScrollController _scrollController = new ScrollController();
+  TextEditingController _controller =  TextEditingController();
+  ScrollController _scrollController =  ScrollController();
   AuthProvider provider;
   LocationProvider locationProvider;
   FirebaseProvider providerFirebase;
@@ -59,14 +59,14 @@ class HomeState extends State<SearchCompany>
   bool _isFilterApplied = false;
   String location = "";
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey =  GlobalKey<ScaffoldState>();
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+       GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+        .showSnackBar( SnackBar(content:  Text(value)));
   }
 
   @override
@@ -80,7 +80,7 @@ class HomeState extends State<SearchCompany>
       filterRequest?.latlongData = latlong;
     } else {
       locationStreamGet();
-      Future.delayed(new Duration(microseconds: 5000), () {
+      Future.delayed( Duration(microseconds: 5000), () {
         currentPosition(0, context, locationProvider);
       });
     }
@@ -95,7 +95,7 @@ class HomeState extends State<SearchCompany>
 
   Widget buildItem(Datas data) {
     return Container(
-      margin: new EdgeInsets.only(left: 16.0, right: 16.0),
+      margin:  EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: <Widget>[
           InkWell(
@@ -106,7 +106,7 @@ class HomeState extends State<SearchCompany>
                 widget.callbackmyid(4);
               } else {
                 print("flase");
-                providerFirebase.changeScreen(new ChatMessageDetails(
+                providerFirebase.changeScreen( ChatMessageDetails(
                   id: data?.id?.toString(),
                   name: data?.user?.name,
                   image: data?.user?.profilePic,
@@ -114,13 +114,13 @@ class HomeState extends State<SearchCompany>
                 ));
               }
             },
-            child: new Container(
+            child:  Container(
               width: 40.0,
               height: 40.0,
               decoration: BoxDecoration(shape: BoxShape.circle),
               alignment: Alignment.center,
               child: ClipOval(
-                // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                // margin:  EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
                 child: getCachedNetworkImageWithurl(
                     url: data.user?.profilePic ?? "",
@@ -130,7 +130,7 @@ class HomeState extends State<SearchCompany>
             ),
           ),
           Expanded(
-            child: new Column(
+            child:  Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 InkWell(
@@ -141,7 +141,7 @@ class HomeState extends State<SearchCompany>
                       widget.callbackmyid(4);
                     } else {
                       print("flase");
-                      providerFirebase.changeScreen(new ChatMessageDetails(
+                      providerFirebase.changeScreen( ChatMessageDetails(
                         id: data?.id?.toString(),
                         name: data?.user?.name,
                         image: data?.user?.profilePic,
@@ -150,18 +150,18 @@ class HomeState extends State<SearchCompany>
                     }
                   },
                   child: Container(
-                      margin: new EdgeInsets.only(left: 10.0, right: 10.0),
+                      margin:  EdgeInsets.only(left: 10.0, right: 10.0),
                       child: Row(
                         children: [
-                          new Text(
+                           Text(
                             data?.user?.name ?? "",
                             style: TextThemes.blackCirculerMedium,
                           ),
-                          new SizedBox(
+                           SizedBox(
                             width: 8,
                           ),
                           data?.user?.perc == 100
-                              ? new Image.asset(
+                              ?  Image.asset(
                                   AssetStrings.verify,
                                   width: 16,
                                   height: 16,
@@ -171,21 +171,21 @@ class HomeState extends State<SearchCompany>
                       )),
                 ),
                 Container(
-                  margin: new EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                  margin:  EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
                   child: Row(
                     children: [
-                      new Image.asset(
+                       Image.asset(
                         AssetStrings.locationHome,
                         width: 11,
                         height: 14,
                       ),
-                      new SizedBox(
+                       SizedBox(
                         width: 6,
                       ),
                       Expanded(
                         child: Container(
                           child: Container(
-                            child: new Text(
+                            child:  Text(
                               data?.location + " - " + data?.distance ?? "",
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
@@ -202,7 +202,7 @@ class HomeState extends State<SearchCompany>
           ),
           Align(
               alignment: Alignment.center,
-              child: new Text(
+              child:  Text(
                 "€${data.price ?? "0"}",
                 style: TextThemes.blackDarkHeaderSub,
               )),
@@ -269,7 +269,7 @@ class HomeState extends State<SearchCompany>
   void _setScrollListener() {
     //crollController.position.isScrollingNotifier.addListener(() { print("called");});
 
-    _scrollController = new ScrollController();
+    _scrollController =  ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {
@@ -300,7 +300,7 @@ class HomeState extends State<SearchCompany>
   }
 
   Widget _verticalSpace(double value) {
-    return new SizedBox(
+    return  SizedBox(
       height: value,
     );
   }
@@ -315,15 +315,15 @@ class HomeState extends State<SearchCompany>
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: AppColors.bluePrimary,
-      body: new Container(
+      body:  Container(
         color: AppColors.bluePrimary,
-        child: new Column(
+        child:  Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             _verticalSpace(50.0),
             _topLocationWidget,
             _getSearchedField,
-            _verticalSpace(16.0),
+            _verticalSpace(8.0),
             Visibility(visible: list.isNotEmpty, child: _buildContestList()),
             (provider.getLoading())
                 ? Expanded(
@@ -342,57 +342,59 @@ class HomeState extends State<SearchCompany>
 
   get _topLocationWidget => InkWell(
         onTap: () {
-          providerFirebase.changeScreen(new SearchLocation(
-            provider: locationProvider,
-          ));
+          Navigator.of(context, rootNavigator: true).push(
+            CupertinoPageRoute(builder: (BuildContext context) {
+              return SearchLocation(provider: locationProvider);
+            }),
+          );
         },
         child: Container(
-          padding: new EdgeInsets.only(left: 16.0, right: 16.0),
+          padding:  EdgeInsets.only(left: 16.0, right: 16.0),
           child: Row(
             children: [
-              new Container(
-                width: 38,
-                height: 38,
-                padding: new EdgeInsets.all(12),
-                decoration: new BoxDecoration(
+               Container(
+                width: 36,
+                height: 36,
+                padding:  EdgeInsets.all(12),
+                decoration:  BoxDecoration(
                     color: Color.fromRGBO(255, 255, 255, 0.1),
                     shape: BoxShape.circle),
-                child: new Image.asset(
+                child:  Image.asset(
                   AssetStrings.locations,
                   width: 18,
                   height: 18,
                 ),
               ),
               Container(
-                margin: new EdgeInsets.only(left: 8),
+                margin:  EdgeInsets.only(left: 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                        child: new Text(
+                        child:  Text(
                       "Location",
-                      style: new TextStyle(
+                      style:  TextStyle(
                           color: Colors.white,
                           fontSize: 15,
-                          fontFamily: AssetStrings.circulerNormal),
+                          fontFamily: AssetStrings.circulerMedium),
                     )),
                     Row(
                       children: [
                         Container(
-                            constraints: new BoxConstraints(maxWidth: 280),
-                            child: new Text(
+                            constraints:  BoxConstraints(maxWidth: 280),
+                            child:  Text(
                               location.isNotEmpty
                                   ? location
                                   : "Select Location",
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: new TextStyle(
+                              style:  TextStyle(
                                   color: Colors.white.withOpacity(0.8),
-                                  fontSize: 14,
+                                  fontSize: 15,
                                   fontFamily: AssetStrings.circulerNormal),
                             )),
                         Container(
-                            child: new Icon(Icons.arrow_drop_down,
+                            child:  Icon(Icons.arrow_drop_down,
                                 color: AppColors.redLight)),
                       ],
                     ),
@@ -407,12 +409,12 @@ class HomeState extends State<SearchCompany>
   get _emptyFavours => Visibility(
         visible: list.isEmpty && (!provider.getLoading()),
         child: Container(
-          margin: new EdgeInsets.only(top: 170),
-          child: new Center(
-            child: new Text(
+          margin:  EdgeInsets.only(top: 170),
+          child:  Center(
+            child:  Text(
               ResString().get("no_favours"),
               textAlign: TextAlign.center,
-              style: new TextStyle(
+              style:  TextStyle(
                   color: Colors.grey,
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0),
@@ -424,19 +426,19 @@ class HomeState extends State<SearchCompany>
   get _getSearchedField => Stack(
         children: [
           getTextField(),
-          new Positioned(
+           Positioned(
             right: 0.0,
             top: 0.0,
             child: Offstage(
               offstage: !_isFilterApplied,
-              child: new Container(
+              child:  Container(
                 width: 13,
                 height: 13,
-                margin: new EdgeInsets.only(right: 14.0, top: 14),
-                decoration: new BoxDecoration(
+                margin:  EdgeInsets.only(right: 14.0, top: 14),
+                decoration:  BoxDecoration(
                     color: Colors.red,
                     shape: BoxShape.circle,
-                    border: new Border.all(
+                    border:  Border.all(
                         color: AppColors.bluePrimary, width: 2.5)),
               ),
             ),
@@ -446,14 +448,14 @@ class HomeState extends State<SearchCompany>
 
   Widget getTextField() {
     return Container(
-      margin: new EdgeInsets.only(top: 16),
-      padding: new EdgeInsets.only(left: 16.0, right: 16.0),
+      margin:  EdgeInsets.only(top: 10),
+      padding:  EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: [
           Expanded(
             child: Container(
               height: 46,
-              child: new TextField(
+              child:  TextField(
                 controller: _controller,
                 style: TextThemes.blackTextFieldNormal,
                 keyboardType: TextInputType.text,
@@ -461,19 +463,19 @@ class HomeState extends State<SearchCompany>
                 autofocus: false,
                 readOnly: true,
                 onTap: () {
-                  providerFirebase.changeScreen(new SearchHomeByName());
+                  providerFirebase.changeScreen( SearchHomeByName());
                 },
-                decoration: new InputDecoration(
-                  enabledBorder: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(3)),
+                decoration:  InputDecoration(
+                  enabledBorder:  OutlineInputBorder(
+                      borderRadius:  BorderRadius.circular(3)),
                   fillColor: AppColors.whiteGray,
                   filled: true,
-                  focusedBorder: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(3)),
-                  contentPadding: new EdgeInsets.only(top: 10.0, left: 0),
+                  focusedBorder:  OutlineInputBorder(
+                      borderRadius:  BorderRadius.circular(3)),
+                  contentPadding:  EdgeInsets.only(top: 10.0, left: 0),
                   prefixIcon: Padding(
                     padding: const EdgeInsets.all(14),
-                    child: new Image.asset(
+                    child:  Image.asset(
                       AssetStrings.searches,
                       width: 18.0,
                       height: 15.0,
@@ -490,20 +492,20 @@ class HomeState extends State<SearchCompany>
           ),
           InkWell(
             onTap: () {
-              providerFirebase.changeScreen(new Filter(
+              providerFirebase.changeScreen( Filter(
                   voidcallback: voidCallBacks, filterRequest: filterRequest));
             },
-            child: new Container(
+            child:  Container(
               width: 55,
-              padding: new EdgeInsets.only(top: 12.0, bottom: 12.0),
-              decoration: new BoxDecoration(
-                borderRadius: new BorderRadius.circular(3.0),
+              padding:  EdgeInsets.only(top: 12.0, bottom: 12.0),
+              decoration:  BoxDecoration(
+                borderRadius:  BorderRadius.circular(3.0),
                 color: AppColors.colorDarkCyan,
               ),
-              child: new Container(
+              child:  Container(
                 width: 20,
                 height: 20,
-                child: new Image.asset(
+                child:  Image.asset(
                   AssetStrings.filters,
                   width: 20,
                   height: 20,
@@ -554,8 +556,8 @@ class HomeState extends State<SearchCompany>
             },
             child: Container(
               color: AppColors.kAppScreenBackGround,
-              child: new ListView.builder(
-                padding: new EdgeInsets.all(0.0),
+              child:  ListView.builder(
+                padding:  EdgeInsets.all(0.0),
                 controller: _scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
@@ -581,11 +583,18 @@ class HomeState extends State<SearchCompany>
   bool get wantKeepAlive => true;
 
   gotoPostDetails(int pos, Datas data) async {
-    providerFirebase.changeScreen(new PostFavorDetails(
-      id: data.id.toString(),
-      voidcallback: callback,
-      distance: data?.distance,
-    ));
+    var sss = await Navigator.of(context, rootNavigator: true).push(
+      CupertinoPageRoute(
+        builder: (BuildContext context) {
+          return PostFavorDetails(
+            id: data.id.toString(),
+            voidcallback: callback,
+            distance: data?.distance,
+          );
+        },
+        maintainState: true,
+      ),
+    );
     print("callll");
   }
 
@@ -598,31 +607,31 @@ class HomeState extends State<SearchCompany>
         color: Colors.white,
         child: Column(
           children: <Widget>[
-            new Container(
+             Container(
               height: 8.0,
               color: AppColors.whiteGray,
             ),
-            new SizedBox(
+             SizedBox(
               height: 16.0,
             ),
             buildItem(data),
             Opacity(
               opacity: 0.12,
-              child: new Container(
+              child:  Container(
                 height: 1.0,
-                margin: new EdgeInsets.only(left: 17.0, right: 17.0, top: 16.0),
+                margin:  EdgeInsets.only(left: 17.0, right: 17.0, top: 16.0),
                 color: AppColors.dividerColor,
               ),
             ),
             data?.image != null && data.image.isNotEmpty
-                ? new Container(
+                ?  Container(
                     height: 147,
                     width: double.infinity,
                     margin:
-                        new EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
+                         EdgeInsets.only(left: 16.0, right: 16.0, top: 11.0),
                     child: ClipRRect(
-                      // margin: new EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
-                      borderRadius: new BorderRadius.circular(10.0),
+                      // margin:  EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
+                      borderRadius:  BorderRadius.circular(10.0),
 
                       child: getCachedNetworkImageRect(
                         url: data?.image,
@@ -634,14 +643,14 @@ class HomeState extends State<SearchCompany>
             Container(
                 width: double.infinity,
                 color: Colors.white,
-                margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+                margin:  EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
                 alignment: Alignment.centerLeft,
-                child: new Text(
+                child:  Text(
                   data?.title ?? "",
                   style: TextThemes.blackCirculerMediumHeight,
                 )),
             Container(
-              margin: new EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
+              margin:  EdgeInsets.only(left: 16.0, right: 16.0, top: 7.0),
               width: double.infinity,
               color: Colors.white,
               child: ReadMoreText(
@@ -649,7 +658,7 @@ class HomeState extends State<SearchCompany>
                 trimLines: 4,
                 colorClickableText: AppColors.colorDarkCyan,
                 trimMode: TrimMode.Line,
-                style: new TextStyle(
+                style:  TextStyle(
                   color: AppColors.moreText,
                   fontFamily: AssetStrings.circulerNormal,
                   fontSize: 14.0,
@@ -659,7 +668,7 @@ class HomeState extends State<SearchCompany>
                 trimExpandedText: ' less',
               ),
             ),
-            new SizedBox(
+             SizedBox(
               height: 15.0,
             )
           ],

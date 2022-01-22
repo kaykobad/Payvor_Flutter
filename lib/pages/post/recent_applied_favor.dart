@@ -234,7 +234,7 @@ class _HomeState extends State<RecentAppliedFavor>
         providerFirebase?.changeScreen(new PostFavorDetails(
           id: data?.favourId?.toString(),
           isButtonDesabled: true,
-        ));
+        ), rootNavigator: true);
       },
       child: Container(
         padding: new EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),

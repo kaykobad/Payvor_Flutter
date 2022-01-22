@@ -24,16 +24,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.0
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_launcher_icons: "^0.8.0"
   shared_preferences:
   dio: ^3.0.10
   provider: ^4.0.5
@@ -44,40 +34,51 @@ dev_dependencies:
   country_pickers: ^2.0.0
   pin_view: ^1.0.1
   lottie: ^0.6.0
-  visibility_detector: ^0.1.5
+  visibility_detector: ^0.2.2
   flutter_facebook_login: ^3.0.0
   twitter_login: ^2.1.0
   flutter_webview_plugin: ^0.3.11
   quiver: ^2.1.5
-  #  uni_links: ^0.4.0
   flutter_xlider: ^3.3.1
-#  flutter_twitter: ^1.1.3
   image_picker: ^0.6.3+4
   image_cropper: ^1.2.1
-  sqflite:
-  google_maps_flutter:
+  sqflite: ^2.0.1
+  google_maps_flutter: ^1.2.0
   share: ^0.6.5+4
   flutter_html: ^0.11.1
   curved_navigation_bar: ^0.3.1
   flutter_slidable: ^0.5.7
-  flutter_linkify: ^2.1.0
+  flutter_linkify: ^5.0.2
   flutter_rating_bar: ^3.2.0+1
   cloud_firestore: ^0.16.0+1
-  firebase_storage:
-  firebase_messaging:
+  firebase_storage: ^7.0.0
+  firebase_messaging: ^8.0.0-dev.15
   firebase_auth: ^0.20.1
-  firebase_core:
-  url_launcher:
+  firebase_core: ^0.7.0
+  url_launcher: ^5.7.10
   flutter_switch: ^0.2.2
-  geolocator:
+  geolocator: ^6.2.1
   flutter_local_notifications:
   flutter_email_sender: ^5.0.0
   sign_in_with_apple: ^3.0.0
-  launch_review:
-#  geocoder:
-  intl:
+  launch_review: ^3.0.1
+  stripe_payment: ^1.1.4
+  intl: ^0.16.1
   geocoding: ^1.0.5
   awesome_dialog:
+  #  uni_links: ^0.4.0
+  #  geocoder:
+  #  flutter_twitter: ^1.1.3
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.8.1
+
 
 
 

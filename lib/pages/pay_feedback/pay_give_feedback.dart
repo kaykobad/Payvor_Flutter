@@ -771,14 +771,13 @@ class _HomeState extends State<PayFeebackDetails>
           ),
           InkWell(
             onTap: () {
-              Navigator.push(
-                context,
-                new CupertinoPageRoute(builder: (BuildContext context) {
+              Navigator.of(context, rootNavigator: true).push(
+                CupertinoPageRoute(builder: (BuildContext context) {
                   return Material(
-                      child: new PostFavorDetails(
-                    id: widget?.postId,
-                    isButtonDesabled: true,
-                  ));
+                      child: PostFavorDetails(
+                        id: widget?.postId,
+                        isButtonDesabled: true,
+                      ));
                 }),
               );
             },

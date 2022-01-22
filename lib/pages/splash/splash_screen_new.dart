@@ -40,9 +40,9 @@ class FadeIn extends State<SplashScreen> {
       home: Scaffold(
         backgroundColor: AppColors.kPrimaryBlue,
         body: Container(
-          margin: new EdgeInsets.only(top: 80.0),
+          margin:  EdgeInsets.only(top: 80.0),
           alignment: Alignment.center,
-          child: new Column(children: <Widget>[
+          child:  Column(children: <Widget>[
             Image.asset(
               AssetStrings.splashLogo,
               height: 240,
@@ -60,19 +60,19 @@ class FadeIn extends State<SplashScreen> {
     var status = MemoryManagement.getUserLoggedIn() ?? false;
 
     var screenType = MemoryManagement.getScreenType();
-    Timer _timer = new Timer(const Duration(seconds: 3), () {
+    Timer _timer =  Timer(const Duration(seconds: 3), () {
       if (screenType == "1") {
         Navigator.pushAndRemoveUntil(
           context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
-            return (status) ? new DashBoardScreen() : new GuestIntroScreen();
+           CupertinoPageRoute(builder: (BuildContext context) {
+            return (status) ?  DashBoardScreen() :  GuestIntroScreen();
           }),
           (route) => false,
         );
       } else if (screenType == "2") {
         Navigator.pushAndRemoveUntil(
           context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
+           CupertinoPageRoute(builder: (BuildContext context) {
             return CreateCredential(
               type: true,
             );
@@ -82,8 +82,8 @@ class FadeIn extends State<SplashScreen> {
       } else {
         Navigator.pushAndRemoveUntil(
           context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
-            return (status) ? new DashBoardScreen() : new GuestIntroScreen();
+           CupertinoPageRoute(builder: (BuildContext context) {
+            return (status) ?  DashBoardScreen() :  GuestIntroScreen();
           }),
           (route) => false,
         );

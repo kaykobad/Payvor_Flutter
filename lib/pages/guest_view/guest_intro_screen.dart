@@ -29,7 +29,7 @@ class GuestIntroScreen extends StatefulWidget {
 class FadeIn extends State<GuestIntroScreen> {
   FirebaseProvider firebaseProvider;
   AuthProvider provider;
-  final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKeys = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -54,20 +54,20 @@ class FadeIn extends State<GuestIntroScreen> {
           color: Colors.white,
           child: Stack(
             children: <Widget>[
-              new Column(children: <Widget>[
+              Column(children: <Widget>[
                 Container(
                   alignment: Alignment.center,
-                  margin: new EdgeInsets.only(top: 100),
-                  child: new Image.asset(
+                  margin: EdgeInsets.only(top: 100),
+                  child: Image.asset(
                     AssetStrings.payvorIntro,
                     width: 100,
                     height: 80,
                   ),
                 ),
-                new Container(
-                  child: new Text(
+                Container(
+                  child: Text(
                     "Perimity",
-                    style: new TextStyle(
+                    style: TextStyle(
                         color: AppColors.kPrimaryBlue,
                         fontSize: 36,
                         fontFamily: AssetStrings.circulerBoldStyle),
@@ -75,7 +75,7 @@ class FadeIn extends State<GuestIntroScreen> {
                 )
               ]),
               bottomView,
-              new Center(
+              Center(
                 child: getFullScreenProviderLoader(
                   status: provider.getLoading(),
                   context: context,
@@ -107,7 +107,7 @@ class FadeIn extends State<GuestIntroScreen> {
     }
 
     LoginRequest loginRequest =
-        new LoginRequest(password: "123456", email: "guest@gmail.com");
+        LoginRequest(password: "123456", email: "guest@gmail.com");
     response = await provider.login(loginRequest, context);
     MemoryManagement.socialMediaStatus("0");
 
@@ -144,8 +144,8 @@ class FadeIn extends State<GuestIntroScreen> {
       MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
       Navigator.push(
         context,
-        new CupertinoPageRoute(builder: (BuildContext context) {
-          return new DashBoardScreen();
+        CupertinoPageRoute(builder: (BuildContext context) {
+          return DashBoardScreen();
         }),
       );
 
@@ -158,15 +158,14 @@ class FadeIn extends State<GuestIntroScreen> {
   }
 
   void showInSnackBar(String value) {
-    _scaffoldKeys.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+    _scaffoldKeys.currentState.showSnackBar(SnackBar(content: Text(value)));
   }
 
   get bottomView => Positioned(
         bottom: 0.0,
         left: 0.0,
         right: 0.0,
-        child: new Column(
+    child: Column(
           children: <Widget>[
             Container(
               child: getSetupButtonBorderNew(callbackSignin, "Login", 20,
@@ -174,32 +173,34 @@ class FadeIn extends State<GuestIntroScreen> {
                   newColor: AppColors.colorDarkCyan,
                   textColor: Colors.white),
             ),
-            new SizedBox(
+            SizedBox(
               height: 16.0,
             ),
             Container(
                 child: getSetupButtonNew(callback, "Create an Account", 20)),
-            new Container(
-              margin:
-                  new EdgeInsets.only(left: 20, right: 20, top: 32, bottom: 30),
-              child: new Row(
+        Container(
+              margin: EdgeInsets.only(left: 20, right: 20, top: 32, bottom: 30),
+              child: Row(
                 children: [
                   Expanded(
-                    child: new Container(
+                    child: Container(
                       height: 1.0,
                       color: AppColors.colorGray,
                     ),
                   ),
-                  new Container(
-                    margin: new EdgeInsets.only(left: 8, right: 8),
-                    child: new Text(
+                  Container(
+                    margin: EdgeInsets.only(left: 8, right: 8),
+                    child: Text(
                       "OR",
-                      style: new TextStyle(
-                          color: AppColors.lightGrayNew, fontSize: 12),
+                      style: TextStyle(
+                        color: AppColors.lightGrayNew,
+                        fontSize: 12,
+                        fontFamily: AssetStrings.circulerMedium,
+                      ),
                     ),
                   ),
                   Expanded(
-                    child: new Container(
+                    child: Container(
                       height: 1.0,
                       color: AppColors.colorGray,
                     ),
@@ -213,7 +214,7 @@ class FadeIn extends State<GuestIntroScreen> {
                   newColor: AppColors.grayView,
                   textColor: Colors.black),
             ),
-            new SizedBox(
+        SizedBox(
               height: 60.0,
             ),
           ],
@@ -222,7 +223,7 @@ class FadeIn extends State<GuestIntroScreen> {
 
   PayvorFirebaseUser getUser(
       LoginSignupResponse signupResponse, String firebaseId, String email) {
-    return new PayvorFirebaseUser(
+    return PayvorFirebaseUser(
         fullName: signupResponse.user.name,
         email: email,
         location: signupResponse.user.location,
@@ -241,8 +242,8 @@ class FadeIn extends State<GuestIntroScreen> {
   void callback() {
     Navigator.push(
       context,
-      new CupertinoPageRoute(builder: (BuildContext context) {
-        return new JoinCommunityNew();
+      CupertinoPageRoute(builder: (BuildContext context) {
+        return JoinCommunityNew();
       }),
     );
   }
@@ -250,8 +251,8 @@ class FadeIn extends State<GuestIntroScreen> {
   void callbackSignin() {
     Navigator.push(
       context,
-      new CupertinoPageRoute(builder: (BuildContext context) {
-        return new LoginScreenNew();
+      CupertinoPageRoute(builder: (BuildContext context) {
+        return LoginScreenNew();
       }),
     );
   }
