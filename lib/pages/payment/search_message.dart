@@ -148,7 +148,6 @@ class SearchMessageState extends State<SearchMessage>
         _chatUserList.add(newChatUser);
       }
       sortList();
-      setState(() {});
     } else {
       _chatUserList.add(newChatUser);
       setState(() {});
