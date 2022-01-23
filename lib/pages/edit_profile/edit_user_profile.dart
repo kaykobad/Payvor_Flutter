@@ -16,6 +16,7 @@ import 'package:payvor/model/update_profile/update_profile_request.dart';
 import 'package:payvor/networkmodel/APIs.dart';
 import 'package:payvor/pages/intro_screen/splash_intro_new.dart';
 import 'package:payvor/provider/auth_provider.dart';
+import 'package:payvor/provider/firebase_provider.dart';
 import 'package:payvor/utils/AppColors.dart';
 import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
@@ -67,16 +68,18 @@ class _HomeState extends State<EditProfile>
   LoginSignupResponse userinfo;
 
   final StreamController<bool> _streamControllerShowLoader =
-  StreamController<bool>();
+      StreamController<bool>();
 
   AuthProvider provider;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-  new GlobalKey<RefreshIndicatorState>();
+      new GlobalKey<RefreshIndicatorState>();
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
         .showSnackBar(new SnackBar(content: new Text(value)));
   }
+
+  FirebaseProvider firebaseProvider;
 
   @override
   void initState() {
@@ -99,9 +102,9 @@ class _HomeState extends State<EditProfile>
 
   @override
   Widget build(BuildContext context) {
-    screenSize = MediaQuery
-        .of(context)
-        .size;
+    super.build(context);
+    firebaseProvider = Provider.of<FirebaseProvider>(context);
+    screenSize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
     return Scaffold(
       key: _scaffoldKey,
@@ -354,7 +357,9 @@ class _HomeState extends State<EditProfile>
       LoginSignupResponse dataResponse = new LoginSignupResponse.fromJson(data);
 
       MemoryManagement.setUserInfo(userInfo: json.encode(dataResponse));
-
+      //update user profile pic
+      firebaseProvider.updateUserProfilePic(
+          profilePic: dataResponse.user.profilePic);
       _OldPasswordController.text = "";
       _NewPasswordController.text = "";
 

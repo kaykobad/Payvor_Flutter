@@ -214,6 +214,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
       provider.setLoading();
 
       LoginSignupResponse loginSignupResponse = response;
+      print("login_response ${loginSignupResponse.toJson()}");
       MemoryManagement.setAccessToken(accessToken: loginSignupResponse.data);
       MemoryManagement.setUserInfo(userInfo: json.encode(response));
 
@@ -326,8 +327,8 @@ class _LoginScreenState extends State<LoginScreenNew> {
   Widget build(BuildContext context) {
     provider = Provider.of<AuthProvider>(context);
     firebaseProvider = Provider.of<FirebaseProvider>(context);
-
     var screensize = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: getAppBarNew(context),
       backgroundColor: Colors.white,

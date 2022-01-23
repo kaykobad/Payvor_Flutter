@@ -83,6 +83,7 @@ class _HomeState extends State<PayFeebackDetails>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     provider = Provider.of<AuthProvider>(context);
     firebaseProvider = Provider.of<FirebaseProvider>(context);
 

@@ -48,8 +48,6 @@ class MyProfileScreenState extends State<MyProfile>
   var screenSize;
   TabController tabBarController;
   int _tabIndex = 0;
-  final StreamController<bool> _loaderStreamController =
-      new StreamController<bool>();
 
   List<String> listOption = ["Report", "Share"];
 

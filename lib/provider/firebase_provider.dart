@@ -120,7 +120,8 @@ class FirebaseProvider with ChangeNotifier {
     List<ChatUser> chatUserList=[];
     var querySnapshots = await firestore.get();
     for (var document in querySnapshots.docs) {
-      chatUserList.add(ChatUser.fromMap(document.data()));
+      var chatUser = ChatUser.fromMap(document.data());
+      chatUserList.add(chatUser);
     }
 
     return chatUserList;
@@ -171,38 +172,25 @@ class FirebaseProvider with ChangeNotifier {
 //    return myFriendsIdList;
 //  }
 
-//  Stream<List<PayvorFirebaseUser>> getActiveFriends(
-//      {@required List<int> userIds}) {
-////    if(userIds.length==0)
-////      userIds.add(0);//to avoid error
-//    print("friendlist ${userIds.join(",")}");
-//    var firestore = Firestore.instance
-//        .collection(USERS)
-//        .where("is_online", isEqualTo: true)
-//        .where("filmshape_id", whereIn: userIds)
-////        .document(userId)
-////        .collection("friends")
-////        .orderBy('lastMessageTime', descending: true)
-//        .snapshots();
-//
-//    var controller = new StreamController<List<PayvorFirebaseUser>>();
-//
-//    //get the data and convert to list
-//    firestore.listen((QuerySnapshot snapshot) {
-//      final List<PayvorFirebaseUser> activeUsers =
-//      snapshot.documents.map((documentSnapshot) {
-//        return PayvorFirebaseUser.fromJson(documentSnapshot.data);
-//      }).toList();
-//
-//      //saving quick access at some other screen
-//      for (var user in activeUsers) {
-//        firebaseUserList[user.filmShapeId.toString()] = user;
-//      }
-//      controller.add(activeUsers);
-//    });
-//
-//    return controller.stream;
-//  }
+  Future<List<PayvorFirebaseUser>> getFriendsProfile(
+      {@required List<int> userIds}) async {
+    print("friendlist ${userIds.join(",")}");
+    var firestore = FirebaseFirestore.instance
+        .collection(USERS)
+        .where("filmshape_id", whereIn: userIds);
+
+    //get the data and convert to list
+    List<PayvorFirebaseUser> userList = [];
+    var querySnapshots = await firestore.get();
+    for (var document in querySnapshots.docs) {
+      var firebaseUser = PayvorFirebaseUser.fromJson(document.data());
+      userList.add(firebaseUser);
+      print("payvouruser ${firebaseUser.toJson()}");
+
+    }
+
+    return userList;
+  }
 
 //  Future<List<PayvorFirebaseUser>> getGroupFriends(
 //      {@required List<int> userIds, @required String groupId}) async {
@@ -522,29 +510,51 @@ class FirebaseProvider with ChangeNotifier {
   Future<void> updateFirebaseUser(PayvorFirebaseUser PayvorFirebaseUser) async {
     var firebaseUser = await getCurrentUser();
     var document =
-    FirebaseFirestore.instance.collection(USERS).doc(firebaseUser.uid);
+        FirebaseFirestore.instance.collection(USERS).doc(firebaseUser.uid);
 
     await document.update(PayvorFirebaseUser.toJson());
   }
 
+  Future<DocumentSnapshot> getFirebaseUser(String userId) async {
+    // var firebaseUser = await getCurrentUser();
+    var document = FirebaseFirestore.instance
+        .collection(USERS)
+        .where("filmshape_id", isEqualTo: userId);
+    await document.get();
+  }
+
   Future<void> updateUserOnlineOfflineStatus({@required bool status}) async {
     var firebaseUser = await getCurrentUser();
-    var document =
-    FirebaseFirestore.instance.collection(CHATFRIENDS).doc(firebaseUser.uid);
+    var document = FirebaseFirestore.instance
+        .collection(CHATFRIENDS)
+        .doc(firebaseUser.uid);
     var payvorFirebaseUser = PayvorFirebaseUser(isOnline: status);
     return await document.update(payvorFirebaseUser.toJson());
   }
 
-  Future<void> deleteFriend({@required String userId,@required String friendId}) async {
-    var document =
-    FirebaseFirestore.instance.collection(CHATFRIENDS).doc(userId).collection(FRIENDS).doc(friendId);
+  Future<void> updateUserProfilePic({@required String profilePic}) async {
+    var firebaseUser = await getCurrentUser();
+    var document = FirebaseFirestore.instance
+        .collection(USERS)
+        .doc(firebaseUser.uid);
+   // print("userfirebaseid ${firebaseUser.uid}");
+    var payvorFirebaseUser = PayvorFirebaseUser(thumbnailUrl: profilePic);
+    return await document.update(payvorFirebaseUser.toJson());
+  }
+
+  Future<void> deleteFriend(
+      {@required String userId, @required String friendId}) async {
+    var document = FirebaseFirestore.instance
+        .collection(CHATFRIENDS)
+        .doc(userId)
+        .collection(FRIENDS)
+        .doc(friendId);
     print("path ${document.path}");
     return await document.delete();
   }
 
-
-  Future<bool> privateChatLikedUnliked(bool status, String chatId,
-      String commentId, int userId) async {
+  Future<bool> privateChatLikedUnliked(
+      bool status, String chatId, String commentId, int userId) async {
     var firestore = FirebaseFirestore.instance
         .collection(MESSAGES)
         .doc(chatId)

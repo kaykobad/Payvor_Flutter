@@ -53,9 +53,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   final _dummyScreen = GlobalKey<NavigatorState>();
 
   GlobalKey<HomeState> _HomeKey = new GlobalKey<HomeState>();
+  //var _chatScreenKey = new GlobalKey<ChatScreenState>();
+
   GlobalKey<MyProfileScreenState> _profileKey =
       new GlobalKey<MyProfileScreenState>();
-
+  
   int currentTab = 0;
   bool guestViewMain = false;
 

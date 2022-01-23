@@ -18,11 +18,13 @@ import 'package:payvor/utils/timeago.dart';
 import 'package:provider/provider.dart';
 
 class SearchMessage extends StatefulWidget {
+  SearchMessage(Key key) : super(key: key);
+
   @override
-  _HomeState createState() => _HomeState();
+  SearchMessageState createState() => SearchMessageState();
 }
 
-class _HomeState extends State<SearchMessage>
+class SearchMessageState extends State<SearchMessage>
     with AutomaticKeepAliveClientMixin<SearchMessage> {
   var screenSize;
 
@@ -66,30 +68,43 @@ class _HomeState extends State<SearchMessage>
     super.initState();
   }
 
-
   void _hitApi() async {
     _chatUserList = await firebaseProvider.getChatFriendsList(userId: userId);
     _chatUserListBackList
         .addAll(_chatUserList); //create a chat user backup list
     _checkUnreadMessageCount();
+    _getUserFriendsProfile();
   }
 
-  void sortList()
-  {
-    _chatUserList.sort((a,b) => b.lastMessageTime.compareTo(a.lastMessageTime));
-    setState(() {
+  void _getUserFriendsProfile() async {
+    List<int> userIds = [];
+    for (var user in _chatUserList) {
+      userIds.add(int.parse(user.userId));
+    }
+    var userList = await firebaseProvider.getFriendsProfile(userIds: userIds);
+    for (var chatUser in _chatUserList) {
+      for (var userProfile in userList) {
+        if (chatUser.userId == userProfile.filmShapeId.toString()) {
+          chatUser.profilePic = userProfile.thumbnailUrl;
+          break;
+        }
+      }
+    }
+    sortList();
+  }
 
-    });
+  void sortList() {
+    _chatUserList
+        .sort((a, b) => b.lastMessageTime.compareTo(a.lastMessageTime));
+    setState(() {});
   }
 
   void _checkUnreadMessageCount() {
     var unreadMessageCount = 0;
     for (var chatUser in _chatUserList) {
-      unreadMessageCount =
-          unreadMessageCount + chatUser.unreadMessageCount;
+      unreadMessageCount = unreadMessageCount + chatUser.unreadMessageCount;
     }
-    firebaseProvider.notificationStreamController
-        .add(unreadMessageCount > 0);
+    firebaseProvider.notificationStreamController.add(unreadMessageCount > 0);
   }
 
 //
@@ -386,8 +401,8 @@ class _HomeState extends State<SearchMessage>
               alignment: Alignment.center,
               decoration: BoxDecoration(shape: BoxShape.circle),
               child: ClipOval(
-                 child: getCachedNetworkImageWithurl(
-                    url: "", fit: BoxFit.fill, size: 49),
+                child: getCachedNetworkImageWithurl(
+                    url: chatUser.profilePic ?? "", fit: BoxFit.fill, size: 49),
               ),
             ),
             Expanded(

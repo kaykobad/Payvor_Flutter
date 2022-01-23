@@ -11,7 +11,7 @@ import 'package:payvor/utils/AssetStrings.dart';
 class ChatScreen extends StatefulWidget {
   final VoidCallback logoutCallBack;
 
-  ChatScreen({@required this.logoutCallBack});
+  ChatScreen({@required this.logoutCallBack,Key key}): super(key: key);
 
   @override
   ChatScreenState createState() => ChatScreenState();
@@ -28,9 +28,13 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   final StreamController<int> _streamControllerProjects =
       StreamController<int>();
+  GlobalKey<SearchMessageState> _searchMessgaeKey =
+  new GlobalKey<SearchMessageState>();
+
 
   @override
   void initState() {
+    super.initState();
     print("chat");
     tabBarController =
         new TabController(initialIndex: _tabIndex, length: 2, vsync: this);
@@ -107,7 +111,7 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     controller: tabBarController,
                     physics: NeverScrollableScrollPhysics(),
                     children: <Widget>[
-                      new SearchMessage(),
+                      new SearchMessage(_searchMessgaeKey),
                       new Notifications()
                     ],
                   ),

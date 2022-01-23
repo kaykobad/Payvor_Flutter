@@ -496,7 +496,7 @@ class _HomeState extends State<MyJobs> {
             postId: data?.id?.toString(),
             type: 1,
             voidcallback: callback,
-            userType: Constants.HELPER,
+            userType: Constants.EMPLOYER,
             paidUnpaid: 1,
           ));
         }
