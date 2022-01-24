@@ -50,15 +50,15 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) to click camera while create a post.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>The App requires access to the devices location to provide better search results and favors around you.</string>
 	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
-    	<dict>
-    		<key>TemporaryPreciseAccuracy</key>
-    		<string>The App requires temporary access to the devices precise location.</string>
-    	</dict>
-    	<key>NSLocationWhenInUseUsageDescription</key>
-    	<string>The App requires access to the devices location to provide better search results and favors around you.</string>
-    	<key>NSLocationAlwaysUsageDescription</key>
-      <string>The App requires access to the devices location to provide better search results and favors around you.</string>
+	<dict>
+		<key>TemporaryPreciseAccuracy</key>
+		<string>The App requires temporary access to the devices precise location.</string>
+	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>The App requires access to the devices location to provide better search results and favors around you.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) picking photos from gallery while creating post.</string>
 	<key>Perimity</key>
