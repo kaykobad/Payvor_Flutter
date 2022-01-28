@@ -71,9 +71,9 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                             decoration: BoxDecoration(
                                 border: Border(
                                   bottom: BorderSide(
-                                      width: 1.0,
-                                      color:
-                                          Color.fromRGBO(151, 151, 151, 0.2)),
+                                    width: 1.0,
+                                    color: Color.fromRGBO(151, 151, 151, 0.2),
+                                  ),
                                 ),
                                 color: Colors.transparent),
                             tabBar: new TabBar(
@@ -97,7 +97,8 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                   new Tab(
                                     text: "Notifications",
                                   ),
-                                ]),
+                                ],
+                            ),
                           ),
                         ),
                       ),

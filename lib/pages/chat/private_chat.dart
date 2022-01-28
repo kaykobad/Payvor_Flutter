@@ -771,19 +771,19 @@ class PrivateChatScreenState extends State<PrivateChat> {
                       child: getBottomText(
                           AssetStrings.view_profile, "View Profile", 14)),
                   Container(
-                      margin: new EdgeInsets.only(top: 35, left: 27),
+                      margin: new EdgeInsets.only(top: 32, left: 27),
                       child: getBottomText(
                           AssetStrings.slash, "Report Profile", 22)),
                   Opacity(
                     opacity: 0.12,
                     child: new Container(
                       height: 1.0,
-                      margin: new EdgeInsets.only(top: 35, left: 27, right: 27),
+                      margin: new EdgeInsets.only(top: 28, left: 27, right: 27),
                       color: AppColors.dividerColor,
                     ),
                   ),
                   Container(
-                      margin: new EdgeInsets.only(top: 35, left: 24),
+                      margin: new EdgeInsets.only(top: 28, left: 24),
                       child: getBottomText(AssetStrings.cross, " Cancel", 18)),
                   Container(
                     height: 56,
@@ -1079,18 +1079,26 @@ class PrivateChatScreenState extends State<PrivateChat> {
             Expanded(
               child: new Container(
                 height: 0.3,
-                color: AppColors.kBlack.withOpacity(0.7),
+                color: AppColors.lightGrayNew,
               ),
             ),
             Container(
                 margin: new EdgeInsets.only(left: 14, right: 14),
                 child: Center(
-                    child: Text(text.toUpperCase(),
-                        style: TextThemes.chatSectionItemTheme))),
+                    child: Text(
+                      text.toUpperCase(),
+                      style: TextStyle(
+                        color: AppColors.lightGrayNew,
+                        fontSize: 12,
+                        fontFamily: AssetStrings.circulerMedium,
+                      ),
+                    ),
+                ),
+            ),
             Expanded(
               child: new Container(
                 height: 0.3,
-                color: AppColors.kBlack.withOpacity(0.7),
+                color: AppColors.lightGrayNew,
               ),
             ),
           ],

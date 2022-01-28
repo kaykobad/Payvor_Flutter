@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:html/dom.dart' as dom;
+import 'package:flutter_html/rich_text_parser.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/notifications/notification_response.dart';
 import 'package:payvor/pages/original_post/original_post_data.dart';
@@ -194,7 +196,7 @@ class _HomeState extends State<Notifications>
                     Container(
                       margin: EdgeInsets.only(top: 9, left: 20, right: 20),
                       child: Text(
-                        "You didn’t recieve any notifications yet",
+                        "You didn't receive any notifications yet",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Color.fromRGBO(103, 99, 99, 1.0),
@@ -249,6 +251,20 @@ class _HomeState extends State<Notifications>
         ));
   }
 
+  Color _getIconColor(int type) {
+    if (type == 1) {
+      return Color(0xFF32C5FF);
+    } else if (type == 2) {
+      return Color(0xFFFFAB00);
+    } else if (type == 3) {
+      return Color(0xFF18CD6A);
+    } else if (type == 4) {
+      return Color(0xFF7057FE);
+    } else {
+      return Color(0xFF637FB9);
+    }
+  }
+
   Widget buildItem(Data data) {
     String image = AssetStrings.bag;
 
@@ -259,7 +275,7 @@ class _HomeState extends State<Notifications>
       //paid user
     } else if (data?.type == 3) {
       //rated user
-      image = AssetStrings.thumbLeft;
+      image = AssetStrings.thumbRight;
     } else if (data?.type == 4) {
       image = AssetStrings.person;
     } else {
@@ -290,7 +306,9 @@ class _HomeState extends State<Notifications>
             height: 49.0,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                shape: BoxShape.circle, color: AppColors.notiBackground),
+              shape: BoxShape.circle,
+              color: _getIconColor(data.type),
+            ),
             child: Container(
               // margin: EdgeInsets.only(right: 20.0,top: 20.0,bottom: 60.0),
 
@@ -298,6 +316,7 @@ class _HomeState extends State<Notifications>
                 image,
                 width: 22,
                 height: 22,
+                color: AppColors.whiteGray,
               ),
             ),
           ),
@@ -327,10 +346,34 @@ class _HomeState extends State<Notifications>
                   ),
                 )
                     : Container(
-                    margin: const EdgeInsets.only(left: 14),
-                    alignment: Alignment.centerLeft,
-                    child: Html(
-                        shrinkToFit: true, data: "${data?.description}")),
+                        margin: const EdgeInsets.only(left: 14),
+                        alignment: Alignment.centerLeft,
+                        child: Html(
+                          shrinkToFit: true,
+                          data: "${data?.description}",
+                          defaultTextStyle: DefaultTextStyle.of(context).style.copyWith(
+                            fontSize: 16,
+                            fontFamily: AssetStrings.circulerNormal,
+                            color: Color(0xFF676363),
+                          ),
+                          customTextStyle: (dom.Node node, children) {
+                            if(node is dom.Element) {
+                              if(node.localName == "b") {
+                                return DefaultTextStyle.of(context).style.copyWith(
+                                  fontSize: 16,
+                                  fontFamily: AssetStrings.circulerBoldStyle,
+                                  color: Color(0xFF171717),
+                                );
+                              }
+                            }
+                            return DefaultTextStyle.of(context).style.copyWith(
+                              fontSize: 16,
+                              fontFamily: AssetStrings.circulerNormal,
+                              color: Color(0xFF676363),
+                            );
+                          },
+                        ),
+                      ),
                 Container(
                   margin: EdgeInsets.only(left: 14.0),
                   child: Text("\"${data?.favour?.title ?? ""}\" ",

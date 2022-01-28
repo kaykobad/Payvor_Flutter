@@ -2,12 +2,11 @@ import 'package:intl/intl.dart';
 
 class TimeAgo {
   static String timeAgoSinceDate(num timeStamp, {bool numericDates = true}) {
-    DateTime notificationDate =
-        new DateTime.fromMicrosecondsSinceEpoch(timeStamp * 1000);
-    ;
+    DateTime notificationDate = new DateTime.fromMicrosecondsSinceEpoch(timeStamp * 1000);
+
     final currentDate = DateTime.now();
     final difference = currentDate.difference(notificationDate);
-    String dateString = DateFormat('dd-MM-yyyy h:mma').format(currentDate);
+    String dateString = DateFormat('dd MMM').format(currentDate);
     if (difference.inDays > 8) {
       return dateString;
     } else if ((difference.inDays / 7).floor() >= 1) {
@@ -47,7 +46,7 @@ class TimeAgo {
     } else if (aDate == yesterday) {
       return "Yesterday";
     } else {
-      return DateFormat('dd-MM-yyyy').format(dateToCheck);
+      return DateFormat('dd MMMM').format(dateToCheck);
     }
   }
 }

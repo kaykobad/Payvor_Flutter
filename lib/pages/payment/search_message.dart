@@ -266,7 +266,7 @@ class SearchMessageState extends State<SearchMessage>
             child: new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                getTextField(),
+                // getTextField(),
                 _buildContestList(),
               ],
             ),

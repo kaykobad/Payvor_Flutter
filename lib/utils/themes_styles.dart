@@ -184,12 +184,12 @@ class TextThemes {
 
   static final TextStyle darkBlackMedium = TextStyle(
     fontFamily: AssetStrings.circulerMedium,
-    fontSize: 18,
+    fontSize: 16,
     color: Colors.black,
   );
   static final TextStyle darkRedMedium = TextStyle(
       fontFamily: AssetStrings.circulerMedium,
-      fontSize: 18,
+      fontSize: 16,
       color: Color.fromRGBO(255, 107, 102, 1.0));
 
   static final TextStyle darkRedMediumNew = TextStyle(
