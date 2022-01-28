@@ -110,62 +110,81 @@ class _HomeState extends State<Settings>
     }
   }
 
-  Widget getAppBarNew(BuildContext context) {
-    return PreferredSize(
-        preferredSize: Size.fromHeight(53.0),
-        child: Container(
-          color: Colors.white,
-          child: Column(
-            children: [
-              new SizedBox(
-                height: 20,
-              ),
-              Material(
-                color: Colors.white,
-                child: Container(
-                  margin: new EdgeInsets.only(top: 15),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        alignment: Alignment.topLeft,
-                        margin: new EdgeInsets.only(left: 17.0, top: 10),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: new Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            child: new SvgPicture.asset(
-                              AssetStrings.back,
-                              width: 16.0,
-                              height: 16.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          margin: new EdgeInsets.only(right: 25.0, top: 10),
-                          width: getScreenSize(context: context).width,
-                          child: new Text(
-                            "Settings",
-                            style: new TextStyle(
-                                fontFamily: AssetStrings.circulerMedium,
-                                fontSize: 19,
-                                color: Colors.black),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ));
+  _getAppbar() {
+    return new AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0.5,
+      iconTheme: IconThemeData(
+        color: Colors.black, //change your color here
+      ),
+      title: Text(
+        "Settings",
+        style: TextStyle(
+          fontSize: 18,
+          fontFamily: AssetStrings.circulerMedium,
+          color: Colors.black,
+        ),
+      ),
+      centerTitle: true,
+    );
   }
+
+  // Widget getAppBarNew(BuildContext context) {
+  //   return PreferredSize(
+  //       preferredSize: Size.fromHeight(53.0),
+  //       child: Container(
+  //         color: Colors.white,
+  //         child: Column(
+  //           children: [
+  //             new SizedBox(
+  //               height: 20,
+  //             ),
+  //             Material(
+  //               color: Colors.white,
+  //               child: Container(
+  //                 margin: new EdgeInsets.only(top: 15),
+  //                 child: Row(
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Container(
+  //                       alignment: Alignment.topLeft,
+  //                       margin: new EdgeInsets.only(left: 17.0, top: 10),
+  //                       child: InkWell(
+  //                         onTap: () {
+  //                           Navigator.pop(context);
+  //                         },
+  //                         child: new Padding(
+  //                           padding: const EdgeInsets.all(3.0),
+  //                           child: new SvgPicture.asset(
+  //                             AssetStrings.back,
+  //                             width: 16.0,
+  //                             height: 16.0,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     Expanded(
+  //                       child: Container(
+  //                         alignment: Alignment.center,
+  //                         margin: new EdgeInsets.only(right: 25.0, top: 10),
+  //                         width: getScreenSize(context: context).width,
+  //                         child: new Text(
+  //                           "Settings",
+  //                           style: new TextStyle(
+  //                               fontFamily: AssetStrings.circulerMedium,
+  //                               fontSize: 19,
+  //                               color: Colors.black),
+  //                         ),
+  //                       ),
+  //                     )
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ));
+  // }
 
   _launchURL(String url) async {
     if (await canLaunch(url)) {
@@ -182,7 +201,7 @@ class _HomeState extends State<Settings>
     firebaseProvider = Provider.of<FirebaseProvider>(context);
     return Scaffold(
       key: _scaffoldKey,
-      appBar: getAppBarNew(context),
+      appBar: _getAppbar(),
       backgroundColor: AppColors.whiteGray,
       body: Stack(
         children: <Widget>[
@@ -197,6 +216,9 @@ class _HomeState extends State<Settings>
                   ),
                   buildItemRecentSearch(
                       0, "Receiving Payment AC", AssetStrings.receiveData),
+                  new Container(
+                    height: 8,
+                  ),
                   buildItemRecentSearch(
                       1, "Edit Account", AssetStrings.settingEdit),
                   buildItemRecentSearch(

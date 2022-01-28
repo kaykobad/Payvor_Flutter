@@ -520,7 +520,7 @@ class _HomeState extends State<ChatMessageDetails>
                                 alignment: Alignment.centerLeft,
                                 child:  Text(
                                   "All Posts",
-                                  style: TextThemes.blackCirculerMediumHeight,
+                                  style: TextThemes.blackCirculerMediumHeight.copyWith(fontSize: 18),
                                 ))
                             : Container(
                                 margin:  EdgeInsets.only(top: 100),
@@ -570,7 +570,7 @@ class _HomeState extends State<ChatMessageDetails>
   }
 
   get bottomView => Positioned(
-      top: 0.0,
+      top: 12.0,
       left: 0.0,
       right: 0.0,
       child: Container(

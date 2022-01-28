@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/my_profile_job_hire/my_profile_response.dart';
@@ -477,16 +475,16 @@ class MyProfileScreenState extends State<MyProfile>
                                   userResponse?.user?.name ?? "",
                                   style: TextThemes.darkBlackMedium,
                                 )),
-                                new SizedBox(
-                                  width: 2,
-                                ),
-                                userResponse?.user?.perc == 100
-                                    ? Container(
-                                        child: Image.asset(AssetStrings.verify),
-                                        width: 20,
-                                        height: 20,
-                                      )
-                                    : Container()
+                                // new SizedBox(
+                                //   width: 2,
+                                // ),
+                                // userResponse?.user?.perc == 100
+                                //     ? Container(
+                                //         child: Image.asset(AssetStrings.verify),
+                                //         width: 20,
+                                //         height: 20,
+                                //       )
+                                //     : Container()
                               ],
                             ),
                           ),
@@ -562,9 +560,10 @@ class MyProfileScreenState extends State<MyProfile>
                             child: new Text(
                               "History",
                               style: new TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                  fontFamily: AssetStrings.circulerNormal),
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontFamily: AssetStrings.circulerBoldStyle,
+                              ),
                             ),
                           ),
                           Container(
@@ -630,7 +629,7 @@ class MyProfileScreenState extends State<MyProfile>
       );
 
   get profileView => Positioned(
-      top: 0.0,
+      top: 12.0,
       left: 0.0,
       right: 0.0,
       child: Container(

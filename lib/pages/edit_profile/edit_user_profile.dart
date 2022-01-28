@@ -108,7 +108,7 @@ class _HomeState extends State<EditProfile>
     provider = Provider.of<AuthProvider>(context);
     return Scaffold(
       key: _scaffoldKey,
-      appBar: getAppBarNew(context),
+      appBar: _getAppbar(),
       body: Stack(
         children: <Widget>[
           new Container(
@@ -684,58 +684,91 @@ class _HomeState extends State<EditProfile>
     hitApi(1);
   }
 
-  Widget getAppBarNew(BuildContext context) {
-    return PreferredSize(
-        preferredSize: Size.fromHeight(53.0),
-        child: Container(
-          color: Colors.white,
-          child: Container(
-            color: Colors.white,
-            alignment: Alignment.center,
-            padding: new EdgeInsets.only(top: 45.0, left: 17, right: 17),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: new Padding(
-                      padding: const EdgeInsets.all(1.0),
-                      child: new SvgPicture.asset(
-                        AssetStrings.back,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: new Text(
-                    "Edit Profile",
-                    style: TextThemes.darkBlackMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                InkWell(
-                  onTap: callbackMain,
-                  child: Container(
-                    child: new Text(
-                      "Save",
-                      style: new TextStyle(
-                          fontFamily: AssetStrings.circulerMedium,
-                          color: AppColors.colorDarkCyan,
-                          fontSize: 16),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ],
+  _getAppbar() {
+    return new AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0.5,
+      iconTheme: IconThemeData(
+        color: Colors.black, //change your color here
+      ),
+      title: Text(
+        "Edit Profile",
+        style: TextStyle(
+          fontSize: 18,
+          fontFamily: AssetStrings.circulerMedium,
+          color: Colors.black,
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: callbackMain,
+          child: Text(
+            "Save",
+            style: new TextStyle(
+              fontFamily: AssetStrings.circulerMedium,
+              color: AppColors.colorDarkCyan,
+              fontSize: 16,
             ),
+            textAlign: TextAlign.center,
           ),
-        ));
+        ),
+      ],
+      centerTitle: true,
+    );
   }
+
+  // Widget getAppBarNew(BuildContext context) {
+  //   return PreferredSize(
+  //       preferredSize: Size.fromHeight(53.0),
+  //       child: Container(
+  //         color: Colors.white,
+  //         child: Container(
+  //           color: Colors.white,
+  //           alignment: Alignment.center,
+  //           padding: new EdgeInsets.only(top: 45.0, left: 17, right: 17),
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Container(
+  //                 alignment: Alignment.topLeft,
+  //                 child: InkWell(
+  //                   onTap: () {
+  //                     Navigator.pop(context);
+  //                   },
+  //                   child: new Padding(
+  //                     padding: const EdgeInsets.all(1.0),
+  //                     child: new SvgPicture.asset(
+  //                       AssetStrings.back,
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //               Container(
+  //                 child: new Text(
+  //                   "Edit Profile",
+  //                   style: TextThemes.darkBlackMedium,
+  //                   textAlign: TextAlign.center,
+  //                 ),
+  //               ),
+  //               InkWell(
+  //                 onTap: callbackMain,
+  //                 child: Container(
+  //                   child: new Text(
+  //                     "Save",
+  //                     style: new TextStyle(
+  //                         fontFamily: AssetStrings.circulerMedium,
+  //                         color: AppColors.colorDarkCyan,
+  //                         fontSize: 16),
+  //                     textAlign: TextAlign.center,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ));
+  // }
 
   Future<bool> showDeleteAccount() async {
     return showDialog<void>(
