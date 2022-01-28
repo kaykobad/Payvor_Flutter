@@ -762,24 +762,31 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           ],
           currentIndex: currentTab,
           onTap: (int index) {
-            setState(() {
-              currentTab = index;
-              if (index == 0) //for home tab
-              {
-                SystemChrome.setSystemUIOverlayStyle(
-                    SystemUiOverlayStyle.light);
-
-                _homeScreen.currentState?.popUntil((route) => route.isFirst);
-              } else if (index == 2) {
-                redirect();
-              } else if (index == 4) {
-                _profileKey.currentState?.tapCallApi();
-              } else if (index == 3) {
-                _firebaseProvider.notificationStreamController.sink.add(false);
-              } else {
-                SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-              }
-            });
+            if (guestViewMain != null && guestViewMain && index != 0) {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(builder: (BuildContext context) {
+                  return GuestView(lauchCallBack: homeCallBack);
+                }),
+              );
+            }
+            else {
+              setState(() {
+                currentTab = index;
+                if (index == 0) {
+                  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+                  _homeScreen.currentState?.popUntil((route) => route.isFirst);
+                } else if (index == 2) {
+                  redirect();
+                } else if (index == 4) {
+                  _profileKey.currentState?.tapCallApi();
+                } else if (index == 3) {
+                  _firebaseProvider.notificationStreamController.sink.add(false);
+                } else {
+                  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+                }
+              });
+            }
           },
         ),
       );
