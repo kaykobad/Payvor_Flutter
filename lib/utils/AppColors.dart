@@ -47,6 +47,7 @@ class AppColors {
   static const Color greyProfile = const Color(0xFFEDEDED);
   static const Color leftChat = const Color(0xFFf0f0f1);
   static const Color redLight = const Color(0xFFFF6B66); //255,107,102
+  static const Color orange = const Color(0xFFFF5853); //255,107,102
   static const Color blue = const Color(0xFF23137D);
   static const Color grayLight = const Color(0xFF72757A);
   static const Color grayView = const Color(0xFFF6F6F6);
