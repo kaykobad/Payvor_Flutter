@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreenNew> {
         controller: controller,
         keyboardType: textInputType,
         style: TextThemes.blackTextFieldNormal,
-        obscureText: obsectextType,
+        obscureText: obsectextType ? obsecureText : false,
         focusNode: focusNodeCurrent,
         onChanged: (value) {
           if(_PasswordController.text.trim().length > 0 && _EmailController.text.trim().length > 0) {

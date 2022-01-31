@@ -599,8 +599,7 @@ class _HomeStateNew extends State<PostFavorDetails>
         }
       },
       child: Container(
-        padding:
-             EdgeInsets.only(left: 16.0, right: 16.0, top: 10, bottom: 10),
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
         color: Colors.white,
         margin:  EdgeInsets.only(top: 4),
         child: Row(
@@ -609,8 +608,9 @@ class _HomeStateNew extends State<PostFavorDetails>
               width: 50.0,
               height: 50.0,
               decoration: BoxDecoration(
-                  color: Color.fromRGBO(255, 107, 102, 0.17),
-                  shape: BoxShape.circle),
+                color: Color.fromRGBO(255, 107, 102, 0.17),
+                shape: BoxShape.circle,
+              ),
               alignment: Alignment.center,
               child:  SvgPicture.asset(
                 type == 1 ? AssetStrings.shape : AssetStrings.referIcon,
@@ -623,35 +623,28 @@ class _HomeStateNew extends State<PostFavorDetails>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin:  EdgeInsets.only(left: 10.0, right: 10.0),
-                    child:  Text(
-                      first,
-                      style: TextThemes.blackCirculerMedium,
-                    ),
-                  ),
-                  Container(
-                    margin:
-                         EdgeInsets.only(left: 10.0, right: 10.0, top: 4),
+                    margin: EdgeInsets.only(left: 10.0, right: 10.0),
                     child: type == 1
                         ? Row(
                             children: [
                                Image.asset(
                                 AssetStrings.rating,
-                                width: 13,
-                                height: 13,
+                                width: 14,
+                                height: 14,
                               ),
-                               SizedBox(
-                                width: 3,
-                              ),
+                               SizedBox(width: 4),
                               Container(
-                                  child:  Text(
-                                favoriteResponse?.data?.ratingAvg.toString() ??
-                                    "",
-                                style: TextThemes.greyTextFieldNormalNw,
+                                child:  Text(
+                                favoriteResponse?.data?.ratingAvg.toString() ?? "",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: AssetStrings.circulerMedium,
+                                  fontSize: 16,
+                                ),
                               )),
                               Container(
-                                width: 3,
-                                height: 3,
+                                width: 4,
+                                height: 4,
                                 margin:  EdgeInsets.only(left: 5, right: 5),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
@@ -659,9 +652,13 @@ class _HomeStateNew extends State<PostFavorDetails>
                                 ),
                               ),
                               Container(
-                                  child:  Text(
+                                child:  Text(
                                 "${favoriteResponse?.data?.ratingCount.toString() ?? "0"} Reviews",
-                                style: TextThemes.greyTextFieldNormalNw,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: AssetStrings.circulerMedium,
+                                  fontSize: 16,
+                                ),
                               )),
                             ],
                           )
@@ -670,7 +667,19 @@ class _HomeStateNew extends State<PostFavorDetails>
                             "Refer someone who is good fit for the job",
                             style: TextThemes.greyTextFieldNormalNw,
                           )),
-                  )
+                  ),
+                  SizedBox(height: 6),
+                  Container(
+                    margin:  EdgeInsets.only(left: 10.0, right: 10.0),
+                    child:  Text(
+                      "Post Owner Reviews",
+                      style: TextStyle(
+                        color: Color(0xFF72757A),
+                        fontFamily: AssetStrings.circulerNormal,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -1131,9 +1140,9 @@ class _HomeStateNew extends State<PostFavorDetails>
                     !isCurrentUser
                         ? buildItemRating(1, "User Ratings")
                         : Container(),
-                    !isCurrentUser
-                        ? buildItemRating(2, "Refer Others")
-                        : Container(),
+                    // !isCurrentUser
+                    //     ? buildItemRating(2, "Refer Others")
+                    //     : Container(),
                     Container(
                         color: Colors.white,
                         padding:  EdgeInsets.only(
