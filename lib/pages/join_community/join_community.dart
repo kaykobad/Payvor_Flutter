@@ -48,6 +48,7 @@ class _LoginScreenState extends State<JoinCommunityNew> {
   FocusNode __FullNameField = FocusNode();
   FocusNode _PasswordField = FocusNode();
   bool obsecureText = true;
+  bool _isButtonActive = false;
 
   String name = "";
   String email = "";
@@ -58,6 +59,12 @@ class _LoginScreenState extends State<JoinCommunityNew> {
 
   AuthProvider provider;
   FirebaseProvider firebaseProvider;
+
+  @override
+  initState() {
+    super.initState();
+    __FullNameField.requestFocus();
+  }
 
   Widget space() {
     return SizedBox(
@@ -131,8 +138,16 @@ class _LoginScreenState extends State<JoinCommunityNew> {
         controller: controller,
         keyboardType: textInputType,
         style: TextThemes.blackTextFieldNormal,
-        obscureText: obsectextType,
+        obscureText: obsectextType ? obsecureText : false,
         focusNode: focusNodeCurrent,
+        onChanged: (value) {
+          if(_PasswordController.text.trim().length > 0 && _EmailController.text.trim().length > 0 && _FullNameController.text.trim().length > 0) {
+            _isButtonActive = true;
+          } else {
+            _isButtonActive = false;
+          }
+          setState(() {});
+        },
         onSubmitted: (String value) {
           if (focusNodeCurrent == _PasswordField) {
             _PasswordField.unfocus();
@@ -200,7 +215,11 @@ class _LoginScreenState extends State<JoinCommunityNew> {
       child: Stack(
         children: [
           Scaffold(
-            appBar: getAppBarNew(context),
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              elevation: 0,
+              foregroundColor: Colors.black,
+            ),
             backgroundColor: Colors.white,
             key: _scaffoldKeys,
             body: SingleChildScrollView(
@@ -212,9 +231,9 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(
-                        height: Constants.backIconsSpace,
-                      ),
+                      // SizedBox(
+                      //   height: Constants.backIconsSpace,
+                      // ),
                       Container(
                         margin: EdgeInsets.only(left: 20.0),
                         child: Text(
@@ -299,7 +318,12 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                       ),
                       termAndConditionView,
                       Container(
-                        child: getSetupButtonNew(callback, "Create an Account", 20),
+                        child: getSetupButtonColor(
+                          _isButtonActive ? callback : () {},
+                          "Create an Account",
+                          20,
+                          newColor: _isButtonActive ? AppColors.kPrimaryBlue : AppColors.grayDark,
+                        ),
                       ),
 
                       // Social Signup Starts Here
@@ -431,15 +455,19 @@ class _LoginScreenState extends State<JoinCommunityNew> {
 
   Widget privacyPolicyLinkAndTermsOfService() {
     return Container(
-      child: Text.rich(TextSpan(
-          text: 'By continuing, you agree to Payvor’s ',
+      child: Text.rich(
+        TextSpan(
+          text: 'By continuing, you agree to Perimity’s ',
           style: TextStyle(
-              fontSize: 13, color: AppColors.lightGrayNew, height: 1.4),
+            fontSize: 14,
+            color: AppColors.lightGrayNew,
+            height: 1.4,
+          ),
           children: <TextSpan>[
             TextSpan(
                 text: 'Terms of Use',
                 style: TextStyle(
-                  fontSize: 13.2,
+                  fontSize: 14,
                   color: AppColors.colorDarkCyan,
                 ),
                 recognizer: TapGestureRecognizer()
@@ -449,13 +477,13 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                         url: Constants.TermOfUses);
                   }),
             TextSpan(
-                text: ' and confirm that you have read the ',
-                style: TextStyle(fontSize: 13, color: AppColors.lightGrayNew),
+                text: ' and ',
+                style: TextStyle(fontSize: 14, color: AppColors.lightGrayNew),
                 children: <TextSpan>[
                   TextSpan(
                       text: 'Privacy Policy',
                       style: TextStyle(
-                          fontSize: 13.2, color: AppColors.colorDarkCyan),
+                          fontSize: 14, color: AppColors.colorDarkCyan),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           _redirect(
@@ -463,7 +491,10 @@ class _LoginScreenState extends State<JoinCommunityNew> {
                               url: Constants.privacyPolicy);
                         })
                 ])
-          ])),
+          ],
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 

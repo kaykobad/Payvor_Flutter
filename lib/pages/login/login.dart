@@ -330,283 +330,284 @@ class _LoginScreenState extends State<LoginScreenNew> {
     var screensize = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: getAppBarNew(context),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        foregroundColor: Colors.black,
+      ),
       backgroundColor: Colors.white,
       key: _scaffoldKeys,
       body: Stack(
         children: [
-          Container(
-            color: Colors.white,
-            child: SingleChildScrollView(
-              child: Container(
-                color: Colors.white,
-                width: screensize.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(height: Constants.backIconsSpace),
-                    Container(
-                      margin: EdgeInsets.only(left: 20.0),
-                      child: Text("Welcome Back", style: TextThemes.extraBold),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
-                      alignment: Alignment.centerLeft,
-                      child: RichText(
-                        textAlign: TextAlign.left,
-                        text: TextSpan(
-                          text: ResString().get('dont_have_account'),
-                          style: TextStyle(
-                            fontFamily: AssetStrings.circulerNormal,
-                            fontSize: 16,
-                            color: AppColors.darkgrey,
-                          ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: ResString().get('create_account_button'),
-                              style: TextStyle(
-                                fontFamily: AssetStrings.circulerBoldStyle,
-                                fontSize: 14,
-                                color: AppColors.redLight,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  Navigator.push(
-                                    context,
-                                    CupertinoPageRoute(
-                                      builder: (BuildContext context) {
-                                        return JoinCommunityNew();
-                                      },
-                                    ),
-                                  );
-                                },
-                            ),
-                          ],
+          SingleChildScrollView(
+            child: Container(
+              color: Colors.white,
+              width: screensize.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  // SizedBox(height: Constants.backIconsSpace),
+                  Container(
+                    margin: EdgeInsets.only(left: 20.0),
+                    child: Text("Welcome Back", style: TextThemes.extraBold),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                    alignment: Alignment.centerLeft,
+                    child: RichText(
+                      textAlign: TextAlign.left,
+                      text: TextSpan(
+                        text: ResString().get('dont_have_account'),
+                        style: TextStyle(
+                          fontFamily: AssetStrings.circulerNormal,
+                          fontSize: 16,
+                          color: AppColors.darkgrey,
                         ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: ResString().get('create_account_button'),
+                            style: TextStyle(
+                              fontFamily: AssetStrings.circulerBoldStyle,
+                              fontSize: 14,
+                              color: AppColors.redLight,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (BuildContext context) {
+                                      return JoinCommunityNew();
+                                    },
+                                  ),
+                                );
+                              },
+                          ),
+                        ],
                       ),
                     ),
-                    // Container(
-                    //   margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
-                    //   child: Text(
-                    //     ResString().get('to_continuew_plz'),
-                    //     style: TextThemes.grayNormal,
-                    //   ),
-                    // ),
-                    space(),
-                    SizedBox(height: 15.0),
-                    getTextField(
-                      ResString().get('email_address'),
-                      _EmailController,
-                      _EmailField,
-                      _PasswordField,
-                      TextInputType.emailAddress,
-                      AssetStrings.emailPng,
-                      obsectextType: false,
-                    ),
-                    SizedBox(height: 18.0),
-                    getTextField(
-                      ResString().get('password'),
-                      _PasswordController,
-                      _PasswordField,
-                      _PasswordField,
-                      TextInputType.text,
-                      AssetStrings.passPng,
-                      obsectextType: true,
-                    ),
-                    SizedBox(height: 24.0),
-                    Container(
-                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                      child: Row(
-                        children: <Widget>[
-                          /* InkWell(
+                  ),
+                  // Container(
+                  //   margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
+                  //   child: Text(
+                  //     ResString().get('to_continuew_plz'),
+                  //     style: TextThemes.grayNormal,
+                  //   ),
+                  // ),
+                  space(),
+                  SizedBox(height: 15.0),
+                  getTextField(
+                    ResString().get('email_address'),
+                    _EmailController,
+                    _EmailField,
+                    _PasswordField,
+                    TextInputType.emailAddress,
+                    AssetStrings.emailPng,
+                    obsectextType: false,
+                  ),
+                  SizedBox(height: 18.0),
+                  getTextField(
+                    ResString().get('password'),
+                    _PasswordController,
+                    _PasswordField,
+                    _PasswordField,
+                    TextInputType.text,
+                    AssetStrings.passPng,
+                    obsectextType: true,
+                  ),
+                  SizedBox(height: 24.0),
+                  Container(
+                    margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                    child: Row(
+                      children: <Widget>[
+                        /* InkWell(
+                          onTap: () {
+                            boolCheckBox = !boolCheckBox;
+                            setState(() {});
+                          },
+                          child: Container(
+                            child: Padding(
+                              padding: const EdgeInsets.all(1.0),
+                              child: boolCheckBox
+                                  ? Icon(
+                                Icons.check_box,
+                                size: 22.0,
+                                color: Colors.lightBlueAccent,
+                              )
+                                  : Icon(
+                                Icons.check_box_outline_blank,
+                                size: 22.0,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ),*/
+
+                        Container(
+                          child: InkWell(
                             onTap: () {
                               boolCheckBox = !boolCheckBox;
                               setState(() {});
                             },
                             child: Container(
                               child: Padding(
-                                padding: const EdgeInsets.all(1.0),
+                                padding: const EdgeInsets.all(4.0),
                                 child: boolCheckBox
-                                    ? Icon(
-                                  Icons.check_box,
-                                  size: 22.0,
-                                  color: Colors.lightBlueAccent,
-                                )
-                                    : Icon(
-                                  Icons.check_box_outline_blank,
-                                  size: 22.0,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                          ),*/
-
-                          Container(
-                            child: InkWell(
-                              onTap: () {
-                                boolCheckBox = !boolCheckBox;
-                                setState(() {});
-                              },
-                              child: Container(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: boolCheckBox
-                                      ? SvgPicture.asset(AssetStrings.tick)
-                                      : Container(),
-                                ),
-                              ),
-                            ),
-                            decoration: boolCheckBox
-                                ? BoxDecoration(
-                                borderRadius: BorderRadius.circular(4.0),
-                                color: AppColors.colorCyanPrimary)
-                                : BoxDecoration(
-                                borderRadius: BorderRadius.circular(4.0),
-                                border: Border.all(
-                                  color: Colors.grey.withOpacity(0.6),
-                                  width: 1.6,
-                                )),
-                            width: 20,
-                            height: 20,
-                          ),
-                          SizedBox(width: 8.0),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                boolCheckBox = !boolCheckBox;
-                                setState(() {});
-                              },
-                              child: Text(
-                                ResString().get('remember_me'),
-                                style: TextThemes.blackTextSmallMedium,
+                                    ? SvgPicture.asset(AssetStrings.tick)
+                                    : Container(),
                               ),
                             ),
                           ),
-                          InkWell(
+                          decoration: boolCheckBox
+                              ? BoxDecoration(
+                              borderRadius: BorderRadius.circular(4.0),
+                              color: AppColors.colorCyanPrimary)
+                              : BoxDecoration(
+                              borderRadius: BorderRadius.circular(4.0),
+                              border: Border.all(
+                                color: Colors.grey.withOpacity(0.6),
+                                width: 1.6,
+                              )),
+                          width: 20,
+                          height: 20,
+                        ),
+                        SizedBox(width: 8.0),
+                        Expanded(
+                          child: InkWell(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (BuildContext context) {
-                                    return ForgotPassword(type: 1);
-                                  },
-                                ),
-                              );
+                              boolCheckBox = !boolCheckBox;
+                              setState(() {});
                             },
                             child: Text(
-                              ResString().get('forgot_pass'),
-                              style: TextThemes.redTextSmallMedium,
+                              ResString().get('remember_me'),
+                              style: TextThemes.blackTextSmallMedium,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (BuildContext context) {
+                                  return ForgotPassword(type: 1);
+                                },
+                              ),
+                            );
+                          },
+                          child: Text(
+                            ResString().get('forgot_pass'),
+                            style: TextThemes.redTextSmallMedium,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 60.0),
-                    Container(
-                      child: getSetupButtonColor(
-                        callback, ResString().get('login'), 20,
-                        newColor: _isButtonActive ? AppColors.kPrimaryBlue : AppColors.grayDark,
-                      ),
+                  ),
+                  SizedBox(height: 60.0),
+                  Container(
+                    child: getSetupButtonColor(
+                      callback, ResString().get('login'), 20,
+                      newColor: _isButtonActive ? AppColors.kPrimaryBlue : AppColors.grayDark,
                     ),
+                  ),
 
-                    // Social Login Starts here
-                    // Container(
-                    //   margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 32),
-                    //   child: Row(
-                    //     children: [
-                    //       Expanded(
-                    //         child: Container(
-                    //           height: 1.0,
-                    //           color: AppColors.colorGray,
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //         margin: EdgeInsets.only(left: 8, right: 8),
-                    //         child: Text(
-                    //           "OR LOGIN WITH",
-                    //           style: TextStyle(
-                    //               color: AppColors.lightGrayNew, fontSize: 12),
-                    //         ),
-                    //       ),
-                    //       Expanded(
-                    //         child: Container(
-                    //           height: 1.0,
-                    //           color: AppColors.colorGray,
-                    //         ),
-                    //       )
-                    //     ],
-                    //   ),
-                    // ),
-                    // space(),
-                    // Container(
-                    //   alignment: Alignment.center,
-                    //   margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.center,
-                    //     children: <Widget>[
-                    //       (Platform.isIOS)
-                    //           ? InkWell(
-                    //               onTap: () {
-                    //                 _doAppleLogin();
-                    //               },
-                    //               child: SvgPicture.asset(
-                    //                 AssetStrings.appleLogin,
-                    //                 height: 48,
-                    //                 width: 48,
-                    //               ),
-                    //             )
-                    //           : Container(),
-                    //       (Platform.isIOS)
-                    //           ? SizedBox(
-                    //               width: 16.0,
-                    //             )
-                    //           : Container(),
-                    //       InkWell(
-                    //         onTap: () {
-                    //           getFacebookUserInfo();
-                    //         },
-                    //         child: SvgPicture.asset(
-                    //           AssetStrings.facebook,
-                    //           height: 48,
-                    //           width: 48,
-                    //         ),
-                    //       ),
-                    //       SizedBox(
-                    //         width: 16.0,
-                    //       ),
-                    //       InkWell(
-                    //         onTap: () {
-                    //           getTwitterInfo();
-                    //         },
-                    //         child: SvgPicture.asset(
-                    //           AssetStrings.twitter,
-                    //           height: 48,
-                    //           width: 48,
-                    //         ),
-                    //       ),
-                    //       SizedBox(
-                    //         width: 16.0,
-                    //       ),
-                    //       InkWell(
-                    //         onTap: () {
-                    //           getInstaUserInfo();
-                    //         },
-                    //         child: Image.asset(
-                    //           AssetStrings.insta,
-                    //           height: 48,
-                    //           width: 48,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // space(),
-                    // SizedBox(
-                    //   height: 40.0,
-                    // ),
-                    SizedBox(height: 17.0),
-                  ],
-                ),
+                  // Social Login Starts here
+                  // Container(
+                  //   margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 32),
+                  //   child: Row(
+                  //     children: [
+                  //       Expanded(
+                  //         child: Container(
+                  //           height: 1.0,
+                  //           color: AppColors.colorGray,
+                  //         ),
+                  //       ),
+                  //       Container(
+                  //         margin: EdgeInsets.only(left: 8, right: 8),
+                  //         child: Text(
+                  //           "OR LOGIN WITH",
+                  //           style: TextStyle(
+                  //               color: AppColors.lightGrayNew, fontSize: 12),
+                  //         ),
+                  //       ),
+                  //       Expanded(
+                  //         child: Container(
+                  //           height: 1.0,
+                  //           color: AppColors.colorGray,
+                  //         ),
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
+                  // space(),
+                  // Container(
+                  //   alignment: Alignment.center,
+                  //   margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: <Widget>[
+                  //       (Platform.isIOS)
+                  //           ? InkWell(
+                  //               onTap: () {
+                  //                 _doAppleLogin();
+                  //               },
+                  //               child: SvgPicture.asset(
+                  //                 AssetStrings.appleLogin,
+                  //                 height: 48,
+                  //                 width: 48,
+                  //               ),
+                  //             )
+                  //           : Container(),
+                  //       (Platform.isIOS)
+                  //           ? SizedBox(
+                  //               width: 16.0,
+                  //             )
+                  //           : Container(),
+                  //       InkWell(
+                  //         onTap: () {
+                  //           getFacebookUserInfo();
+                  //         },
+                  //         child: SvgPicture.asset(
+                  //           AssetStrings.facebook,
+                  //           height: 48,
+                  //           width: 48,
+                  //         ),
+                  //       ),
+                  //       SizedBox(
+                  //         width: 16.0,
+                  //       ),
+                  //       InkWell(
+                  //         onTap: () {
+                  //           getTwitterInfo();
+                  //         },
+                  //         child: SvgPicture.asset(
+                  //           AssetStrings.twitter,
+                  //           height: 48,
+                  //           width: 48,
+                  //         ),
+                  //       ),
+                  //       SizedBox(
+                  //         width: 16.0,
+                  //       ),
+                  //       InkWell(
+                  //         onTap: () {
+                  //           getInstaUserInfo();
+                  //         },
+                  //         child: Image.asset(
+                  //           AssetStrings.insta,
+                  //           height: 48,
+                  //           width: 48,
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  // space(),
+                  // SizedBox(
+                  //   height: 40.0,
+                  // ),
+                  SizedBox(height: 17.0),
+                ],
               ),
             ),
           ),
