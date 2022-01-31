@@ -45,9 +45,9 @@ class FadeIn extends State<GuestView> {
                       child: Icon(Icons.clear, color: Colors.white, size: 24),
                     ),
                   ),
+                  Spacer(flex: 2),
                   Container(
                     alignment: Alignment.center,
-                    margin: EdgeInsets.only(top: 60),
                     child: Image.asset(
                       AssetStrings.guestView,
                       width: 168,
@@ -60,7 +60,7 @@ class FadeIn extends State<GuestView> {
                     child: Text(
                       "You’re on Guest View",
                       style: TextStyle(
-                        fontFamily: AssetStrings.circulerNormal,
+                        fontFamily: AssetStrings.circulerMedium,
                         fontSize: 20,
                         color: AppColors.kWhite,
                       ),
@@ -80,7 +80,8 @@ class FadeIn extends State<GuestView> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 30.0),
+                  Spacer(flex: 3),
+                  SizedBox(height: 160),
                 ],
               ),
               Positioned(

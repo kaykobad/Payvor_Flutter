@@ -562,7 +562,7 @@ Widget getSetupDecoratorButtonNew(
             child: Text(
               text,
               style: TextStyle(
-                fontFamily: AssetStrings.circulerNormal,
+                fontFamily: AssetStrings.circulerMedium,
                 fontSize: 16,
                 color: textColor,
               ),
