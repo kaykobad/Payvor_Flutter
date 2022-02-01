@@ -746,6 +746,8 @@ class _LoginScreenState extends State<JoinCommunityNew> {
             return OtoVerification(
               phoneNumber: email,
               type: 4,
+              isSignup: true,
+              name: name,
             );
           }),
               (route) => false,

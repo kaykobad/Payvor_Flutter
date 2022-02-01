@@ -60,7 +60,7 @@ class FadeIn extends State<SplashScreen> {
     var status = MemoryManagement.getUserLoggedIn() ?? false;
 
     var screenType = MemoryManagement.getScreenType();
-    Timer _timer =  Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 3), () {
       if (screenType == "1") {
         Navigator.pushAndRemoveUntil(
           context,

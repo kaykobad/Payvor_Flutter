@@ -10,8 +10,10 @@ import 'package:payvor/model/otp/otp_request.dart';
 import 'package:payvor/model/otp/resendotpresponse.dart';
 import 'package:payvor/pages/create_credential/create_credential.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
+import 'package:payvor/pages/otp/add_profile_picture.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';
+import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/Messages.dart';
 import 'package:payvor/utils/ReusableWidgets.dart';
 import 'package:payvor/utils/UniversalFunctions.dart';
@@ -26,16 +28,16 @@ class OtoVerification extends StatefulWidget {
   final String phoneNumber;
   final int type;
   final String countryCode;
+  final bool isSignup;
+  final String name;
 
-  OtoVerification({this.phoneNumber, this.type, this.countryCode});
+  OtoVerification({this.phoneNumber, this.type, this.countryCode, this.isSignup=false, this.name=""});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<OtoVerification> {
-  TextEditingController _PasswordController = new TextEditingController();
-
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
 
   AuthProvider provider;
@@ -125,13 +127,23 @@ class _LoginScreenState extends State<OtoVerification> {
       MemoryManagement.setUserInfo(userInfo: json.encode(response));
       MemoryManagement.setUserLoggedIn(isUserLoggedin: true);
       MemoryManagement.setGuestUser(type: false);
-      Navigator.pushAndRemoveUntil(
-        context,
-        new CupertinoPageRoute(builder: (BuildContext context) {
-          return DashBoardScreen();
-        }),
-        (route) => false,
-      );
+      if (widget.isSignup) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return AddProfilePicture(name: widget.name);
+          }),
+          (route) => false,
+        );
+      } else {
+        Navigator.pushAndRemoveUntil(
+          context,
+          new CupertinoPageRoute(builder: (BuildContext context) {
+            return DashBoardScreen();
+          }),
+          (route) => false,
+        );
+      }
     } else {
       APIError apiError = response;
       //print(apiError.error);
@@ -178,13 +190,23 @@ class _LoginScreenState extends State<OtoVerification> {
         MemoryManagement.setUserInfo(userInfo: json.encode(response));
         MemoryManagement.setAccessToken(accessToken: response?.data);
 
-        Navigator.pushAndRemoveUntil(
-          context,
-          new CupertinoPageRoute(builder: (BuildContext context) {
-            return DashBoardScreen();
-          }),
-          (route) => false,
-        );
+        if (widget.isSignup) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return AddProfilePicture(name: widget.name);
+            }),
+                (route) => false,
+          );
+        } else {
+          Navigator.pushAndRemoveUntil(
+            context,
+            new CupertinoPageRoute(builder: (BuildContext context) {
+              return DashBoardScreen();
+            }),
+            (route) => false,
+          );
+        }
       } else {
         // MemoryManagement.setGuestUser(type: false);
 
@@ -257,7 +279,11 @@ class _LoginScreenState extends State<OtoVerification> {
         child: Stack(
           children: [
             Scaffold(
-              appBar: getAppBarNew(context),
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                elevation: 0,
+                foregroundColor: Colors.black,
+              ),
               key: _scaffoldKeys,
               backgroundColor: Colors.white,
               body: new SingleChildScrollView(
@@ -276,7 +302,11 @@ class _LoginScreenState extends State<OtoVerification> {
                             widget.type == 0
                                 ? ResString().get('verify_number')
                                 : ResString().get('verify_email'),
-                            style: TextThemes.extraBold,
+                            style: TextStyle(
+                              fontFamily: AssetStrings.circulerBoldStyle,
+                              fontSize: 24,
+                              color: Colors.black,
+                            ),
                           )),
                       Container(
                         margin: new EdgeInsets.only(
@@ -327,8 +357,7 @@ class _LoginScreenState extends State<OtoVerification> {
                             submit: (String pin) {
                               // when all the fields are filled
                               // submit function runs with the pin
-                              FocusScope.of(context)
-                                  .requestFocus(new FocusNode());
+                              FocusScope.of(context).requestFocus(new FocusNode());
                               pinText = pin;
                               //print(pin);
 
