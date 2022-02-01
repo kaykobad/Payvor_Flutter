@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:payvor/filter/data.dart';
 import 'package:payvor/filter/filter_request.dart';
@@ -32,37 +29,21 @@ class Filter extends StatefulWidget {
 class _HomeState extends State<Filter>
     with AutomaticKeepAliveClientMixin<Filter> {
   var screenSize;
-
-  final StreamController<bool> _loaderStreamController =
-  new StreamController<bool>();
   ScrollController scrollController = new ScrollController();
-
   List<DataCategory> categoryList = [];
-
   String text = "";
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-  new GlobalKey<RefreshIndicatorState>();
+  var _currentSliderValue = 0.0;
+  var _paymentMin = 0;
+  var _paymentMax = 100;
+  AuthProvider authProvider;
+  List<DataModel> list = [];
+  RangeValues _currentRangeValues = RangeValues(0, 100);
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
         .showSnackBar(new SnackBar(content: new Text(value)));
   }
-
-  var _currentSliderValue = 0.0;
-
-  var _paymentMin = 0;
-  var _paymentMax = 100;
-  AuthProvider authProvider;
-
-  final StreamController<bool> _streamControllerShowLoader =
-  StreamController<bool>();
-
-  var list = List<DataModel>();
-
-  RangeValues _currentRangeValues = RangeValues(0, 100);
 
   @override
   void initState() {
@@ -187,17 +168,17 @@ class _HomeState extends State<Filter>
             setState(() {});
           },
           child: Container(
-            margin: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 4.0),
-            padding: new EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+            margin: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+            padding: new EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
             decoration: new BoxDecoration(
-                borderRadius: new BorderRadius.circular(20.0),
+                borderRadius: new BorderRadius.circular(26.0),
                 border: new Border.all(color: AppColors.desabledGray)),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 new Container(
-                  width: 18,
-                  height: 18,
+                  width: 24,
+                  height: 24,
                   decoration: new BoxDecoration(
                       shape: BoxShape.circle,
                       color: data?.isSelect != null && data?.isSelect
@@ -210,7 +191,7 @@ class _HomeState extends State<Filter>
                   child: new Icon(
                     Icons.check,
                     color: AppColors.kWhite,
-                    size: 12,
+                    size: 16,
                   ),
                 ),
                 Container(
@@ -372,7 +353,8 @@ class _HomeState extends State<Filter>
         maxprice: _paymentMax,
         distance: _currentSliderValue?.toInt(),
         list: list,
-        listCategory: dataList);
+        listCategory: dataList,
+    );
 
     print("calllllss");
 
@@ -425,7 +407,11 @@ class _HomeState extends State<Filter>
                         Container(
                           child: new Text(
                             ResString().get('filters'),
-                            style: TextThemes.darkBlackMedium,
+                            style: TextStyle(
+                              fontFamily: AssetStrings.circulerMedium,
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -452,9 +438,10 @@ class _HomeState extends State<Filter>
                             child: new Text(
                               ResString().get('reset'),
                               style: new TextStyle(
-                                  fontFamily: AssetStrings.circulerMedium,
-                                  color: AppColors.redLight,
-                                  fontSize: 14),
+                                fontFamily: AssetStrings.circulerMedium,
+                                color: AppColors.redLight,
+                                fontSize: 14,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -527,13 +514,17 @@ class _HomeState extends State<Filter>
                           style: new TextStyle(
                               fontFamily: AssetStrings.circulerMedium,
                               color: Colors.black,
-                              fontSize: 16),
+                              fontSize: 18,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         new Text(
                           _currentSliderValue.toInt().toString() + " km",
                           style: new TextStyle(
-                              color: Colors.black, fontSize: 14),
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontFamily: AssetStrings.circulerMedium,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -542,19 +533,28 @@ class _HomeState extends State<Filter>
                   Container(
                     color: Colors.white,
                     padding: new EdgeInsets.only(top: 24, bottom: 16),
-                    child: Slider(
-                      value: _currentSliderValue,
-                      min: 0,
-                      max: 100,
-                      activeColor: AppColors.colorDarkCyan,
-                      inactiveColor: Color.fromRGBO(143, 146, 161, 0.2),
-                      label: _currentSliderValue.round().toString(),
-                      onChanged: (double value) {
-                        setState(() {
-                          _currentSliderValue = value;
-                          print(_currentSliderValue);
-                        });
-                      },
+                    child: SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        trackHeight: 2.0,
+                        thumbShape: RoundSliderThumbShape(
+                          enabledThumbRadius: 14.0,
+                          pressedElevation: 8.0,
+                        ),
+                      ),
+                      child: Slider(
+                        value: _currentSliderValue,
+                        min: 0,
+                        max: 100,
+                        activeColor: AppColors.colorDarkCyan,
+                        inactiveColor: Color.fromRGBO(143, 146, 161, 0.2),
+                        label: _currentSliderValue.round().toString(),
+                        onChanged: (double value) {
+                          setState(() {
+                            _currentSliderValue = value;
+                            print(_currentSliderValue);
+                          });
+                        },
+                      ),
                     ),
                   ),
                   Opacity(
@@ -577,13 +577,17 @@ class _HomeState extends State<Filter>
                           style: new TextStyle(
                               fontFamily: AssetStrings.circulerMedium,
                               color: Colors.black,
-                              fontSize: 16),
+                              fontSize: 18,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         new Text(
                           "€$_paymentMin" + "-" "€$_paymentMax",
                           style: new TextStyle(
-                              color: Colors.black, fontSize: 14),
+                            color: Colors.black,
+                            fontFamily: AssetStrings.circulerMedium,
+                            fontSize: 15,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -592,24 +596,32 @@ class _HomeState extends State<Filter>
                   Container(
                     color: Colors.white,
                     padding: new EdgeInsets.only(top: 24, bottom: 16),
-                    child: RangeSlider(
-                      values: _currentRangeValues,
-                      min: 0,
-                      max: 100,
-                      activeColor: AppColors.colorDarkCyan,
-                      inactiveColor: Color.fromRGBO(143, 146, 161, 0.2),
-                      labels: RangeLabels(
-                        _currentRangeValues.start.round().toString(),
-                        _currentRangeValues.end.round().toString(),
+                    child: SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        trackHeight: 2.0,
+                        rangeThumbShape: RoundRangeSliderThumbShape(
+                          enabledThumbRadius: 14.0,
+                          pressedElevation: 8.0,
+                        ),
                       ),
-                      onChanged: (RangeValues values) {
-                        setState(() {
-                          _currentRangeValues = values;
-                          _paymentMin = _currentRangeValues.start.round();
-                          _paymentMax = _currentRangeValues.end.round();
-                          ;
-                        });
-                      },
+                      child: RangeSlider(
+                        values: _currentRangeValues,
+                        min: 0,
+                        max: 100,
+                        activeColor: AppColors.colorDarkCyan,
+                        inactiveColor: Color.fromRGBO(143, 146, 161, 0.2),
+                        labels: RangeLabels(
+                          _currentRangeValues.start.round().toString(),
+                          _currentRangeValues.end.round().toString(),
+                        ),
+                        onChanged: (RangeValues values) {
+                          setState(() {
+                            _currentRangeValues = values;
+                            _paymentMin = _currentRangeValues.start.round();
+                            _paymentMax = _currentRangeValues.end.round();
+                          });
+                        },
+                      ),
                     ),
                   ),
                   Opacity(
@@ -631,11 +643,12 @@ class _HomeState extends State<Filter>
                             alignment: Alignment.centerLeft,
                             color: Colors.white,
                             child: new Text(
-                              "Sort By",
+                              "Sort Type",
                               style: new TextStyle(
-                                  fontFamily: AssetStrings.circulerMedium,
-                                  color: Colors.black,
-                                  fontSize: 16),
+                                fontFamily: AssetStrings.circulerMedium,
+                                color: Colors.black,
+                                fontSize: 18,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -650,9 +663,10 @@ class _HomeState extends State<Filter>
                             child: new Text(
                               text != null && text?.isNotEmpty ? text : "None",
                               style: new TextStyle(
-                                  fontFamily: AssetStrings.circulerNormal,
-                                  color: Colors.black,
-                                  fontSize: 14),
+                                color: Colors.black,
+                                fontFamily: AssetStrings.circulerMedium,
+                                fontSize: 15,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -697,7 +711,8 @@ class _HomeState extends State<Filter>
                       style: new TextStyle(
                           fontFamily: AssetStrings.circulerMedium,
                           color: Colors.black,
-                          fontSize: 16),
+                          fontSize: 18,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
