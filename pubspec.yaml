@@ -60,7 +60,7 @@ dependencies:
   geolocator: ^6.2.1
   flutter_local_notifications:
   flutter_email_sender: ^5.0.0
-  sign_in_with_apple: ^3.0.0
+#  sign_in_with_apple: ^3.0.0
   launch_review: ^3.0.1
   stripe_payment: ^1.1.4
   intl: ^0.16.1
