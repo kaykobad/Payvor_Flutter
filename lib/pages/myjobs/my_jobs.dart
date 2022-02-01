@@ -253,7 +253,7 @@ class _HomeState extends State<MyJobs> {
                     margin:  EdgeInsets.only(top: 7.0),
                     child: Container(
                       child:  Text(
-                        "The favors you’ve applied recently but hired",
+                        "The favors you’ve applied recently but not hired",
                         style: TextThemes.grayNormalSmall,
                       ),
                     ),
@@ -539,45 +539,55 @@ class _HomeState extends State<MyJobs> {
                         ),
                         Container(
                           margin:  EdgeInsets.only(top: 10.0),
-                          child:  Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  widget.lauchCallBack(Material(
-                                      child: Material(
-                                          child:  ChatMessageDetails(
-                                    id: data.userId.toString(),
-                                    name: data.hiredBy.name,
-                                    hireduserId: data?.userId?.toString(),
-                                    image: data?.image,
-                                    userButtonMsg: true,
-                                  ))));
-                                },
-                                child: Container(
-                                  child:  Text(
-                                    data?.hiredBy?.name ?? "someone",
-                                    style: TextThemes.cyanTextSmallMedium,
-                                  ),
-                                ),
+                          child: Container(
+                            child:  Text(
+                              data?.hiredBy?.name ?? "someone",
+                              style: TextStyle(
+                                fontFamily: AssetStrings.circulerNormal,
+                                fontSize: 14,
+                                color: Color(0xFF676363),
                               ),
-                              Expanded(
-                                child: Container(
-                                  margin:  EdgeInsets.only(left: 1.0),
-                                  child: InkWell(
-                                    onTap: () {},
-                                    child: Container(
-                                      margin:  EdgeInsets.only(left: 1.0),
-                                      child:  Text(
-                                        getStatus(data?.status),
-                                        style: TextThemes.grayNormalSmall,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
+                          // child:  Row(
+                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: [
+                          //     InkWell(
+                          //       onTap: () {
+                          //         widget.lauchCallBack(Material(
+                          //             child: Material(
+                          //                 child:  ChatMessageDetails(
+                          //           id: data.userId.toString(),
+                          //           name: data.hiredBy.name,
+                          //           hireduserId: data?.userId?.toString(),
+                          //           image: data?.image,
+                          //           userButtonMsg: true,
+                          //         ))));
+                          //       },
+                          //       child: Container(
+                          //         child:  Text(
+                          //           data?.hiredBy?.name ?? "someone",
+                          //           style: TextThemes.cyanTextSmallMedium,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     Expanded(
+                          //       child: Container(
+                          //         margin:  EdgeInsets.only(left: 1.0),
+                          //         child: InkWell(
+                          //           onTap: () {},
+                          //           child: Container(
+                          //             margin:  EdgeInsets.only(left: 1.0),
+                          //             child:  Text(
+                          //               getStatus(data?.status),
+                          //               style: TextThemes.grayNormalSmall,
+                          //             ),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
                         ),
                       ],
                     ),
@@ -602,30 +612,27 @@ class _HomeState extends State<MyJobs> {
                      Text(
                       "€ ${data?.price ?? ""}",
                       style:  TextStyle(
-                          color: AppColors.kBlack.withOpacity(0.7),
-                          fontSize: 16,
-                          fontFamily: AssetStrings.circulerNormal),
+                        color: AppColors.kBlack.withOpacity(0.7),
+                        fontSize: 16,
+                        fontFamily: AssetStrings.circulerNormal,
+                      ),
                     ),
                     Expanded(
                       child:  Container(),
                     ),
-                     Container(
-                      width: 8,
-                      height: 8,
-                      decoration:  BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: data?.status == 1
-                              ? AppColors.statusYellow
-                              : AppColors.statusGreen),
-                    ),
                     Container(
-                      margin:  EdgeInsets.only(left: 5),
-                      child:  Text(
-                        data?.status == 1 ? "Not Paid" : "Paid",
-                        style:  TextStyle(
-                            color: AppColors.kBlack.withOpacity(0.7),
-                            fontSize: 16,
-                            fontFamily: AssetStrings.circulerNormal),
+                      height: 24,
+                      width: 74,
+                      color: data?.status == 1 ? Color(0x1AFFAB00) : Color(0x1A28D175),
+                      child:  Center(
+                        child: Text(
+                          data?.status == 1 ? "Not Paid" : "Paid",
+                          style:  TextStyle(
+                            fontFamily: AssetStrings.circulerMedium,
+                            fontSize: 14,
+                            color: data?.status == 1 ? Color(0xFFFFAB00) : Color(0xFF28D175),
+                          ),
+                        ),
                       ),
                     ),
                   ],

@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:payvor/model/apierror.dart';
@@ -256,7 +255,7 @@ class _HomeState extends State<PayFeebackDetails>
               padding: new EdgeInsets.only(top: 9, bottom: 28),
               child: getSetupButtonNew(
                   callback,
-                  widget.type == 0 ? "Pay and Give Feedback" : "Give Feedback",
+                  widget.type == 0 ? "Pay Now" : "Give Feedback",
                   16,
                   newColor: AppColors.colorDarkCyan)),
         ),
@@ -1036,13 +1035,13 @@ class _HomeState extends State<PayFeebackDetails>
                     children: [
                       Container(
                         alignment: Alignment.topLeft,
-                        margin: new EdgeInsets.only(left: 17.0, top: 10),
+                        margin: new EdgeInsets.only(left: 7.0, top: 0),
                         child: InkWell(
                           onTap: () {
                             Navigator.pop(context);
                           },
                           child: new Padding(
-                            padding: const EdgeInsets.all(3.0),
+                            padding: const EdgeInsets.all(10.0),
                             child: new SvgPicture.asset(
                               AssetStrings.back,
                               width: 16.0,

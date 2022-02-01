@@ -63,9 +63,6 @@ class MyProfileScreenState extends State<MyProfile>
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
-  FocusNode _DescriptionField = new FocusNode();
-
   bool isPullToRefresh = false;
   bool offstagenodata = true;
 
