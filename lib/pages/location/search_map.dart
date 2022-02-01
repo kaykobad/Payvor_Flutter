@@ -179,6 +179,7 @@ class _HomeState extends State<SearchMapView> with AutomaticKeepAliveClientMixin
 
   @override
   void initState() {
+    hitLocation();
     center = LatLng(lat, long);
 
     var latlong = MemoryManagement.getGeo();

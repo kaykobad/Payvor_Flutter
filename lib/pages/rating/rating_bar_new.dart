@@ -154,7 +154,7 @@ class _HomeState extends State<RatingBarNewBar>
 
   Widget getAppBarNew(BuildContext context) {
     return PreferredSize(
-        preferredSize: Size.fromHeight(51.0),
+        preferredSize: Size.fromHeight(34.0),
         child: Container(
           color: Colors.white,
           child: Column(
@@ -169,13 +169,13 @@ class _HomeState extends State<RatingBarNewBar>
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        alignment: Alignment.topLeft,
-                        margin: new EdgeInsets.only(left: 17.0, top: 10),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          margin: new EdgeInsets.only(left: 17.0, top: 10),
                           child: new Padding(
                             padding: const EdgeInsets.all(3.0),
                             child: new SvgPicture.asset(
@@ -194,9 +194,10 @@ class _HomeState extends State<RatingBarNewBar>
                           child: new Text(
                             "Feedback",
                             style: new TextStyle(
-                                fontFamily: AssetStrings.circulerMedium,
-                                fontSize: 17,
-                                color: Colors.black),
+                              fontFamily: AssetStrings.circulerMedium,
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       ),
@@ -207,7 +208,7 @@ class _HomeState extends State<RatingBarNewBar>
                             new CupertinoPageRoute(
                                 builder: (BuildContext context) {
                               return Material(
-                                  child: new ReportProblems(
+                                child: new ReportProblems(
                                 id: widget?.id?.toString(),
                                 name: widget?.name,
                                 image: widget?.image,
@@ -224,7 +225,8 @@ class _HomeState extends State<RatingBarNewBar>
                             style: new TextStyle(
                                 fontFamily: AssetStrings.circulerNormal,
                                 fontSize: 17,
-                                color: AppColors.redLight),
+                                color: AppColors.redLight,
+                            ),
                           ),
                         ),
                       )
@@ -563,7 +565,7 @@ class _HomeState extends State<RatingBarNewBar>
                   Container(
                     width: 86.0,
                     height: 86.0,
-                    margin: new EdgeInsets.only(top: 38),
+                    margin: new EdgeInsets.only(top: 36),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: AppColors.greenDark,
@@ -581,17 +583,18 @@ class _HomeState extends State<RatingBarNewBar>
                         )),
                   ),
                   new Container(
-                    margin: new EdgeInsets.only(top: 40),
+                    margin: new EdgeInsets.only(top: 24),
                     child: new Text(
                       "Favor Ended!",
                       style: new TextStyle(
                           fontFamily: AssetStrings.circulerMedium,
                           fontSize: 20,
-                          color: Colors.black),
+                          color: Colors.black,
+                      ),
                     ),
                   ),
                   new Container(
-                    margin: new EdgeInsets.only(top: 10, left: 35, right: 35),
+                    margin: new EdgeInsets.only(top: 8, left: 35, right: 35),
                     alignment: Alignment.center,
                     child: new Text(
                       "You have ended the Favor.",
@@ -605,12 +608,12 @@ class _HomeState extends State<RatingBarNewBar>
                     ),
                   ),
                   Container(
-                    margin: new EdgeInsets.only(top: 60, left: 16, right: 16),
+                    margin: new EdgeInsets.only(top: 48, left: 16, right: 16),
                     child: getSetupButtonNew(callbackDone, "Take me Home", 0,
                         newColor: AppColors.colorDarkCyan),
                   ),
                   Container(
-                    height: 56,
+                    height: 36,
                   )
                 ],
               )));

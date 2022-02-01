@@ -440,7 +440,7 @@ class _HomeState extends State<Filter>
                               style: new TextStyle(
                                 fontFamily: AssetStrings.circulerMedium,
                                 color: AppColors.redLight,
-                                fontSize: 14,
+                                fontSize: 16,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -522,7 +522,7 @@ class _HomeState extends State<Filter>
                           _currentSliderValue.toInt().toString() + " km",
                           style: new TextStyle(
                             color: Colors.black,
-                            fontSize: 15,
+                            fontSize: 16,
                             fontFamily: AssetStrings.circulerMedium,
                           ),
                           textAlign: TextAlign.center,
@@ -586,7 +586,7 @@ class _HomeState extends State<Filter>
                           style: new TextStyle(
                             color: Colors.black,
                             fontFamily: AssetStrings.circulerMedium,
-                            fontSize: 15,
+                            fontSize: 16,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -665,7 +665,7 @@ class _HomeState extends State<Filter>
                               style: new TextStyle(
                                 color: Colors.black,
                                 fontFamily: AssetStrings.circulerMedium,
-                                fontSize: 15,
+                                fontSize: 16,
                               ),
                               textAlign: TextAlign.center,
                             ),

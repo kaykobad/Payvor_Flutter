@@ -397,11 +397,11 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                               color: AppColors.lightGrey.withOpacity(0.5),
                               width: 1),
                           shape: BoxShape.circle),
-                      padding:  EdgeInsets.all(5),
-                      child: Icon(
-                        Icons.chat_outlined,
-                        color: AppColors.kTinderSwipeLikeDislikeTextColor,
-                        size: 18,
+                      padding: EdgeInsets.all(8),
+                      child: Image.asset(
+                        "assets/png/chat_icon.png",
+                        height: 24,
+                        width: 24,
                       ),
                     ),
                   ),
@@ -563,9 +563,11 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                     : Container(
                         child:  Text(
                           hiredUserDetailsResponse?.data?.status == 1
-                              ? "Active"
-                              : "Inactive",
-                          style: TextThemes.readAlert,
+                              ? "Not Paid"
+                              : "Paid",
+                          style: hiredUserDetailsResponse?.data?.status == 1
+                              ? TextThemes.readAlert.copyWith(color: Color(0xFFFFAB00))
+                              : TextThemes.readAlert.copyWith(color: Color(0xFF28D175)),
                         ),
                       ),
               ],

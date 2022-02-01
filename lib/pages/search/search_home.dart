@@ -355,14 +355,14 @@ class HomeState extends State<SearchCompany>
                Container(
                 width: 36,
                 height: 36,
-                padding:  EdgeInsets.all(12),
+                padding:  EdgeInsets.all(10),
                 decoration:  BoxDecoration(
                     color: Color.fromRGBO(255, 255, 255, 0.1),
                     shape: BoxShape.circle),
                 child:  Image.asset(
                   AssetStrings.locations,
-                  width: 18,
-                  height: 18,
+                  width: 22,
+                  height: 22,
                 ),
               ),
               Container(
@@ -434,7 +434,7 @@ class HomeState extends State<SearchCompany>
               child:  Container(
                 width: 13,
                 height: 13,
-                margin:  EdgeInsets.only(right: 14.0, top: 14),
+                margin:  EdgeInsets.only(right: 14.0, top: 8),
                 decoration:  BoxDecoration(
                     color: Colors.red,
                     shape: BoxShape.circle,

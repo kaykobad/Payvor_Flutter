@@ -266,7 +266,7 @@ class _HomeState extends State<Notifications>
   }
 
   Widget buildItem(Data data) {
-    String image = AssetStrings.bag;
+    String image = AssetStrings.card;
 
     if (data?.type == 1) {
       //hire user

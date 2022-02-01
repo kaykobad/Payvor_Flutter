@@ -538,13 +538,13 @@ class _HomeState extends State<MyJobs> {
                           ),
                         ),
                         Container(
-                          margin:  EdgeInsets.only(top: 10.0),
+                          margin:  EdgeInsets.only(top: 6.0),
                           child: Container(
                             child:  Text(
                               data?.hiredBy?.name ?? "someone",
                               style: TextStyle(
                                 fontFamily: AssetStrings.circulerNormal,
-                                fontSize: 14,
+                                fontSize: 15,
                                 color: Color(0xFF676363),
                               ),
                             ),
@@ -612,9 +612,9 @@ class _HomeState extends State<MyJobs> {
                      Text(
                       "€ ${data?.price ?? ""}",
                       style:  TextStyle(
-                        color: AppColors.kBlack.withOpacity(0.7),
+                        color: AppColors.bluePrimary,
                         fontSize: 16,
-                        fontFamily: AssetStrings.circulerNormal,
+                        fontFamily: AssetStrings.circulerBoldStyle,
                       ),
                     ),
                     Expanded(
@@ -623,7 +623,10 @@ class _HomeState extends State<MyJobs> {
                     Container(
                       height: 24,
                       width: 74,
-                      color: data?.status == 1 ? Color(0x1AFFAB00) : Color(0x1A28D175),
+                      decoration: BoxDecoration(
+                        color: data?.status == 1 ? Color(0x1AFFAB00) : Color(0x1A28D175),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                       child:  Center(
                         child: Text(
                           data?.status == 1 ? "Not Paid" : "Paid",

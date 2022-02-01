@@ -281,9 +281,8 @@ class _HomeStateNew extends State<PostFavorDetails>
       if (apiError.status == 400) {
         addPayment = true;
       }
-
-      awesomeErrorDialog("Please add a receiver payment account", context,
-          callback: callbackError);
+      showBottomPaymentMethod();
+      // awesomeErrorDialog("Please add a receiver payment account", context, callback: callbackError);
     }
 
     setState(() {});
@@ -904,7 +903,7 @@ class _HomeStateNew extends State<PostFavorDetails>
                     ),
                   ),
                    Container(
-                    margin:  EdgeInsets.only(top: 6, left: 24, right: 24),
+                    margin:  EdgeInsets.only(top: 6, left: 36, right: 36),
                     alignment: Alignment.center,
                     child:  Text(
                       "To apply for a favor your Receiving Account should be added.",

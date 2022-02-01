@@ -203,14 +203,12 @@ class _HomeState extends State<AddPaymentMethodFirst> with AutomaticKeepAliveCli
       ),
       child: Scaffold(
         backgroundColor: Color(0xFFE5E5E5),
-        body: SafeArea(
-          child: Stack(
-            children: [
-              _background(),
-              _backButton(),
-              _body(),
-            ],
-          ),
+        body: Stack(
+          children: [
+            _background(),
+            _body(),
+            _backButton(),
+          ],
         ),
       )
     );
@@ -578,11 +576,14 @@ class _HomeState extends State<AddPaymentMethodFirst> with AutomaticKeepAliveCli
 
   Widget _backButton() {
     return Positioned(
-      top: 8,
-      left: 4,
-      child: IconButton(
-        onPressed: () => Navigator.of(context).pop(),
-        icon: Icon(Icons.arrow_back, color: Colors.white),
+      top: MediaQuery.of(context).viewPadding.top,
+      left: 0,
+      child: InkWell(
+        onTap: () => Navigator.of(context).pop(),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
+          child: Center(child: Icon(Icons.arrow_back, color: Colors.white)),
+        ),
       ),
     );
   }
@@ -593,7 +594,7 @@ class _HomeState extends State<AddPaymentMethodFirst> with AutomaticKeepAliveCli
     Size _size = MediaQuery.of(context).size;
     double _keyBoardHeight = MediaQuery.of(context).viewInsets.bottom;
     double _visibleHeight = _size.height - _keyBoardHeight;
-    double _externalContainerHeight = 330.0 + 40.0;
+    double _externalContainerHeight = 336.0 + 50.0;
     if (_keyBoardHeight == 0) {
       _externalContainerHeight += (_size.height/2 - 70);
     } else {
@@ -604,7 +605,7 @@ class _HomeState extends State<AddPaymentMethodFirst> with AutomaticKeepAliveCli
       child: Container(
         color: Colors.transparent,
         height: _externalContainerHeight,
-        padding: EdgeInsets.only(bottom: 25.0, top: (_externalContainerHeight - 330.0 - 40.0)),
+        padding: EdgeInsets.only(bottom: 25.0, top: (_externalContainerHeight - 336.0 - 50.0)),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -620,9 +621,9 @@ class _HomeState extends State<AddPaymentMethodFirst> with AutomaticKeepAliveCli
               _cardSubHeaderText((dataList?.length == 0) ? "We’ll keep your payment details safe" : "You’ll receive all payments in this account"),
               Container(color: Color(0xFFD8D8D8), height: 1, width: double.maxFinite),
               SizedBox(height: 24.0),
-              if (dataList?.length == 0) _inputField(_emailController1),
+              if (dataList?.length == 0) _inputField(_emailController1, "Enter PayPal email"),
               if (dataList?.length == 0) SizedBox(height: 16.0),
-              if (dataList?.length == 0) _inputField(_emailController2),
+              if (dataList?.length == 0) _inputField(_emailController2, "Re-enter PayPal email"),
               if ((dataList?.length ?? 0) > 0) _emailBox(),
               SizedBox(height: 27.0),
               Container(
@@ -677,7 +678,7 @@ class _HomeState extends State<AddPaymentMethodFirst> with AutomaticKeepAliveCli
     );
   }
 
-  Widget _inputField(TextEditingController controller) {
+  Widget _inputField(TextEditingController controller, String hint) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: TextField(
@@ -701,7 +702,7 @@ class _HomeState extends State<AddPaymentMethodFirst> with AutomaticKeepAliveCli
           focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Color(0xFFE7E7E7)),
           ),
-          hintText: 'Enter a search term',
+          hintText: hint,
           hintStyle: TextStyle(
             fontFamily: AssetStrings.circulerNormal,
             fontSize: 16,

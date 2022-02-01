@@ -100,7 +100,8 @@
             android:value="2" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBdNn8Y-hUbhPXA0L1-tTgxnySEhCVw_aM" />
+            android:value="AIzaSyDYkqk9oyoiRqLpupcXOuwvokvonNgdA1M" />
+<!--            android:value="AIzaSyBdNn8Y-hUbhPXA0L1-tTgxnySEhCVw_aM" />-->
 
 
     </application>

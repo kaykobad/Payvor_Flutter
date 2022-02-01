@@ -617,7 +617,7 @@ class _HomeState extends State<MyPosts> {
                               ),
                             ),
                             Container(
-                              margin: new EdgeInsets.only(top: 10.0),
+                              margin: new EdgeInsets.only(top: 6.0),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -625,14 +625,17 @@ class _HomeState extends State<MyPosts> {
                                     data?.hired?.name ?? "",
                                     style: TextStyle(
                                       fontFamily: AssetStrings.circulerNormal,
-                                      fontSize: 14,
+                                      fontSize: 15,
                                       color: Color(0xFF676363),
                                     ),
                                   ),
                                   Container(
                                     height: 24,
                                     width: 74,
-                                    color: data?.status == 1 ? Color(0x1AFFAB00) : Color(0x1A28D175),
+                                    decoration: BoxDecoration(
+                                      color: data?.status == 1 ? Color(0x1AFFAB00) : Color(0x1A28D175),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
                                     child: Center(
                                       child: new Text(
                                         data?.status == 1 ? "Not Paid" : "Paid",
