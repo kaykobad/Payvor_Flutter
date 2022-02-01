@@ -737,9 +737,7 @@ class _HomeState extends State<PostFavour>
 
   @override
   Widget build(BuildContext context) {
-    screenSize = MediaQuery
-        .of(context)
-        .size;
+    screenSize = MediaQuery.of(context).size;
     provider = Provider.of<AuthProvider>(context);
     return Scaffold(
       key: _scaffoldKey,
@@ -782,7 +780,11 @@ class _HomeState extends State<PostFavour>
                             widget.isEdit != null && widget.isEdit
                                 ? "Edit Favor"
                                 : ResString().get('post_favour'),
-                            style: TextThemes.darkBlackMedium,
+                            style: TextStyle(
+                              fontFamily: AssetStrings.circulerMedium,
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -872,10 +874,10 @@ class _HomeState extends State<PostFavour>
                                       child: Text(
                                         ResString().get('upload_photo'),
                                         style: TextStyle(
-                                            fontFamily:
-                                                AssetStrings.circulerMedium,
-                                            color: AppColors.bluePrimary,
-                                            fontSize: 16),
+                                          fontFamily: AssetStrings.circulerMedium,
+                                          color: AppColors.bluePrimary,
+                                          fontSize: 16,
+                                        ),
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -883,9 +885,10 @@ class _HomeState extends State<PostFavour>
                                   Text(
                                     ResString().get('photo_not_mandetry'),
                                     style: TextStyle(
-                                        fontFamily: AssetStrings.circulerNormal,
-                                        color: AppColors.lightGrey,
-                                        fontSize: 16),
+                                      fontFamily: AssetStrings.circulerNormal,
+                                      color: AppColors.lightGrey,
+                                      fontSize: 14,
+                                    ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ],
@@ -893,16 +896,16 @@ class _HomeState extends State<PostFavour>
                   ) : Stack(
                     children: [
                                 Container(
-                                    width: double.infinity,
-                                    padding:
-                                        EdgeInsets.only(left: 16, right: 16),
-                                    height: 147.0,
-                                    child: ClipRect(
-                                      child: Image.file(
-                                        _image,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )),
+                                  width: double.infinity,
+                                  padding: EdgeInsets.only(left: 16, right: 16),
+                                  height: 147.0,
+                                  child: ClipRect(
+                                    child: Image.file(
+                                      _image,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
                                 Positioned.fill(
                                   child: Align(
                                     alignment: Alignment.center,
