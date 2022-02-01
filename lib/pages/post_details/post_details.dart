@@ -484,7 +484,7 @@ class _HomeStateNew extends State<PostFavorDetails>
           return Padding(
               padding: MediaQuery.of(context).viewInsets,
               child: Container(
-                  child:  Column(
+                child:  Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
@@ -885,25 +885,29 @@ class _HomeStateNew extends State<PostFavorDetails>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    margin:  EdgeInsets.only(top: 22),
-                    child:  Image.asset(AssetStrings.artworkPayment,
-                        width: 120.0, height: 105.0),
-                  ),
-                   Container(
-                    margin:  EdgeInsets.only(top: 40),
-                    child:  Text(
-                      "Add Payment Method",
-                      style:  TextStyle(
-                          fontFamily: AssetStrings.circulerMedium,
-                          fontSize: 20,
-                          color: Colors.black),
+                    margin:  EdgeInsets.only(top: 28),
+                    child:  Image.asset(
+                      AssetStrings.paypalPayment,
+                      width: 86.0,
+                      height: 86.0,
                     ),
                   ),
                    Container(
-                    margin:  EdgeInsets.only(top: 10, left: 35, right: 35),
+                    margin:  EdgeInsets.only(top: 28),
+                    child:  Text(
+                      "Setup PayPal",
+                      style:  TextStyle(
+                        fontFamily: AssetStrings.circulerMedium,
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                   Container(
+                    margin:  EdgeInsets.only(top: 6, left: 24, right: 24),
                     alignment: Alignment.center,
                     child:  Text(
-                      "You’ve to add a account to apply for the favors. You’ll be paid to the account you are going to add ",
+                      "To apply for a favor your Receiving Account should be added.",
                       textAlign: TextAlign.center,
                       style:  TextStyle(
                         fontFamily: AssetStrings.circulerNormal,
@@ -920,8 +924,8 @@ class _HomeStateNew extends State<PostFavorDetails>
                         newColor: AppColors.colorDarkCyan),
                   ),
                   Container(
-                    height: 41,
-                  )
+                    height: 36,
+                  ),
                 ],
               )));
         });
@@ -946,7 +950,7 @@ class _HomeStateNew extends State<PostFavorDetails>
                   Container(
                     width: 86.0,
                     height: 86.0,
-                    margin:  EdgeInsets.only(top: 38),
+                    margin:  EdgeInsets.only(top: 34),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: AppColors.greenDark,
@@ -975,7 +979,7 @@ class _HomeStateNew extends State<PostFavorDetails>
                     ),
                   ),
                    Container(
-                    margin:  EdgeInsets.only(top: 10, left: 35, right: 35),
+                    margin:  EdgeInsets.only(top: 6, left: 35, right: 35),
                     alignment: Alignment.center,
                     child:  Text(
                       description,
@@ -989,7 +993,7 @@ class _HomeStateNew extends State<PostFavorDetails>
                     ),
                   ),
                   Container(
-                    margin:  EdgeInsets.only(top: 60, left: 16, right: 16),
+                    margin:  EdgeInsets.only(top: 40, left: 16, right: 16),
                     child: getSetupButtonNew(
                         type == 1
                             ? callbackPaymentSuccess
@@ -999,8 +1003,8 @@ class _HomeStateNew extends State<PostFavorDetails>
                         newColor: AppColors.colorDarkCyan),
                   ),
                   Container(
-                    height: 56,
-                  )
+                    height: 34,
+                  ),
                 ],
               )));
         });

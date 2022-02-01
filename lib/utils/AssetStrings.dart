@@ -29,6 +29,7 @@ class AssetStrings {
   static const String settingEdit = 'assets/png/setting_edit.png';
   static const String sendMsg = 'assets/png/send_msg.png';
   static const String artworkPayment = 'assets/png/artwork_payment.png';
+  static const String paypalPayment = 'assets/png/paypal_bottom.png';
   static const String settingNoti = 'assets/png/setting_noti.png';
   static const String settingHelp = 'assets/png/setting_help.png';
   static const String payvorIntro = 'assets/png/payvor_new.png';

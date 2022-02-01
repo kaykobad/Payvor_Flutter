@@ -574,7 +574,7 @@ class _HomeState extends State<PostFavour>
                   Container(
                     width: 86.0,
                     height: 86.0,
-                    margin: EdgeInsets.only(top: 38),
+                    margin: EdgeInsets.only(top: 32),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: AppColors.greenDark,
@@ -588,17 +588,18 @@ class _HomeState extends State<PostFavour>
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 40),
+                    margin: EdgeInsets.only(top: 24),
                     child: Text(
-                      "Successful!",
+                      "Post Successful!",
                       style: TextStyle(
                           fontFamily: AssetStrings.circulerMedium,
                           fontSize: 20,
-                          color: Colors.black),
+                          color: Colors.black,
+                      ),
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 10),
+                    margin: EdgeInsets.only(top: 6),
                     child: Text(
                       widget?.isEdit ?? false
                           ? "You have updated favor successfully."
@@ -611,17 +612,17 @@ class _HomeState extends State<PostFavour>
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 60, left: 16, right: 16),
+                    margin: EdgeInsets.only(top: 45, left: 16, right: 16),
                     child: getSetupButtonNew(
                         callbackFavourPage,
                         widget?.isEdit ?? false
-                            ? "Go to Home Page"
-                            : "Go to Favor Page",
+                            ? "Done"
+                            : "Done",
                         0,
                         newColor: AppColors.colorDarkCyan),
                   ),
                   Container(
-                    height: 56,
+                    height: 36,
                   )
                 ],
               )));
@@ -756,7 +757,7 @@ class _HomeState extends State<PostFavour>
                   ),
                   Container(
                     color: Colors.white,
-                    padding: EdgeInsets.only(top: 14.0, left: 17, right: 17),
+                    padding: EdgeInsets.only(top: 2.0, left: 5, right: 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -768,7 +769,7 @@ class _HomeState extends State<PostFavour>
                               Navigator.pop(context);
                             },
                             child: Padding(
-                              padding: const EdgeInsets.all(1.0),
+                              padding: const EdgeInsets.all(12.0),
                               child: SvgPicture.asset(
                                 AssetStrings.cross,
                               ),
