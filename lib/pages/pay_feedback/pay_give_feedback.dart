@@ -135,9 +135,9 @@ class _HomeState extends State<PayFeebackDetails>
                         getRowsPayment(
                             widget?.type == 1
                                 ? ResString().get('payvor_service_fee') +
-                                    "(${hiredUserDetailsResponse?.data?.servicePerc?.toString()}%)"
+                                    " (${hiredUserDetailsResponse?.data?.servicePerc?.toString()}%)"
                                 : ResString().get('payvor_service_fee') +
-                                    "(0%)",
+                                    " (0%)",
                             widget?.type == 0
                                 ? "-€0"
                                 : "-€${hiredUserDetailsResponse?.data?.serviceFee}",
@@ -158,7 +158,7 @@ class _HomeState extends State<PayFeebackDetails>
                         paymentStatus,
                         widget?.type == 1
                             ? buildItemRating(
-                                1, /* "Favor Ended"*/ "Congratz! You’re paid.")
+                                1, /* "Favor Ended"*/ "The task owner has paid and ended the job")
                             : Container(),
                         new SizedBox(
                           height: 150.0,
@@ -571,8 +571,8 @@ class _HomeState extends State<PayFeebackDetails>
                     child: Container(
                         child: new Text(
                           type == 1
-                          ? "Favor Owner has paid & ended the job. You can give a feedback in return."
-                          : "Hiring Date",
+                          ? "You can provide feedback in return."
+                          : "Date Hired",
                       style: TextThemes.greyTextFieldNormalNw,
                     )),
                   )

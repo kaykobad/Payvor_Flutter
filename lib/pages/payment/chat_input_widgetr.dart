@@ -93,8 +93,8 @@ class ChatInputWidget extends StatelessWidget {
                     padding: const EdgeInsets.all(3.0),
                     child: new Image.asset(
                       AssetStrings.chatSend,
-                      width: 48,
-                      height: 48,
+                      width: 40,
+                      height: 40,
                     ),
                   ),
                 ),
@@ -108,11 +108,11 @@ class ChatInputWidget extends StatelessWidget {
                     callBack(1);
                   },
                   child: new Container(
-                    margin: const EdgeInsets.only(top: 14, left: 10),
+                    margin: const EdgeInsets.only(top: 12, left: 10),
                     child: new Image.asset(
                       AssetStrings.chatSendButton,
-                      width: 27,
-                      height: 27,
+                      width: 24,
+                      height: 24,
                       color: Colors.white,
                     ),
                   ),

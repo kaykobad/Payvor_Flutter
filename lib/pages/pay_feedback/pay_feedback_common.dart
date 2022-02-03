@@ -464,15 +464,16 @@ class _HomeState extends State<PayFeebackDetailsCommon>
               children: [
                 Container(
                   child: Container(
-                      child:  Text(
-                    "Posted Date",
-                    style: TextThemes.greyTextFieldNormalNw,
-                  )),
+                    child:  Text(
+                      "Date Posted",
+                      style: TextThemes.greyTextFieldNormalNw,
+                    ),
+                  ),
                 ),
                 Container(
                   child: Container(
-                      child:  Text(
-                    "Hiring Date",
+                    child:  Text(
+                    "Date Hired",
                     style: TextThemes.greyTextFieldNormalNw,
                   )),
                 )
@@ -627,8 +628,8 @@ class _HomeState extends State<PayFeebackDetailsCommon>
                           width: getScreenSize(context: context).width,
                           child:  Text(
                             widget?.userType == 0
-                                ? "Hired Favors"
-                                : "Next Jobs",
+                                ? "Hired Helpers"
+                                : "My Jobs",
                             style:  TextStyle(
                                 fontFamily: AssetStrings.circulerMedium,
                                 fontSize: 19,

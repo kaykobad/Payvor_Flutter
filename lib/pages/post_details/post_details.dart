@@ -781,7 +781,7 @@ class _HomeStateNew extends State<PostFavorDetails>
                       children: [
                         Container(
                             child:  Text(
-                          "Favor Post Owner",
+                          "Task Owner",
                           style: TextThemes.greyTextFieldNormalNw,
                         )),
                         favoriteResponse?.data?.user?.perc == 100
@@ -1161,8 +1161,8 @@ class _HomeStateNew extends State<PostFavorDetails>
                     getRowsPayment(
                         !isCurrentUser
                             ? ResString().get('payvor_service_fee') +
-                                "(${favoriteResponse?.data?.service_perc?.toString()}%)"
-                            : ResString().get('payvor_service_fee') + "(0%)",
+                                " (${favoriteResponse?.data?.service_perc?.toString()}%)"
+                            : ResString().get('payvor_service_fee') + " (0%)",
                         isCurrentUser
                             ? "-€0"
                             : "-€${favoriteResponse?.data?.service_fee}",

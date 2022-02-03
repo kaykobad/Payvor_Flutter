@@ -602,8 +602,8 @@ class _HomeState extends State<PostFavour>
                     margin: EdgeInsets.only(top: 6),
                     child: Text(
                       widget?.isEdit ?? false
-                          ? "You have updated favor successfully."
-                          : "You have created a favor successfully.",
+                          ? "You have updated task successfully."
+                          : "You have created a task successfully.",
                       style: TextStyle(
                         fontFamily: AssetStrings.circulerNormal,
                         fontSize: 16,
@@ -779,7 +779,7 @@ class _HomeState extends State<PostFavour>
                         Container(
                           child: Text(
                             widget.isEdit != null && widget.isEdit
-                                ? "Edit Favor"
+                                ? "Edit Task"
                                 : ResString().get('post_favour'),
                             style: TextStyle(
                               fontFamily: AssetStrings.circulerMedium,
@@ -1015,7 +1015,7 @@ class _HomeState extends State<PostFavour>
             offstage: true,
             child: Center(
               child: Text(
-                "No Favors Found",
+                "No Tasks Found",
                 style: TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
@@ -1112,7 +1112,7 @@ class _HomeState extends State<PostFavour>
                             ? callBackUpdateFavour
                             : callBackCreateFavour,
                         widget.isEdit != null && widget.isEdit
-                            ? "Update Favor"
+                            ? "Update Task"
                             : ResString().get('post_favor'),
                         0,
                         newColor: AppColors.colorDarkCyan),

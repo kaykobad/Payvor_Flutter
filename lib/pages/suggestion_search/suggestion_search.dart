@@ -540,7 +540,7 @@ class _HomeState extends State<SearchHomeByName>
               margin: new EdgeInsets.only(top: 120),
               child: new Center(
                 child: new Text(
-                  "No Favors Found",
+                  "No Tasks Found",
                   style: new TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.bold,
@@ -655,7 +655,7 @@ class _HomeState extends State<SearchHomeByName>
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
                         contentPadding: new EdgeInsets.only(bottom: 3.0),
-                        hintText: "Search here by name",
+                        hintText: "Search for Tasks",
                         hintStyle: TextThemes.greyTextNormal,
                       ),
                     ),

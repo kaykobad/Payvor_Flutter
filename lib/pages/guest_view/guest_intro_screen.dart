@@ -57,22 +57,12 @@ class FadeIn extends State<GuestIntroScreen> {
               Column(children: <Widget>[
                 Container(
                   alignment: Alignment.center,
-                  margin: EdgeInsets.only(top: 100),
+                  margin: EdgeInsets.only(top: 160),
                   child: Image.asset(
-                    AssetStrings.payvorIntro,
-                    width: 100,
-                    height: 80,
+                    "assets/logo_dark.png",
+                    height: 52,
                   ),
                 ),
-                Container(
-                  child: Text(
-                    "Perimity",
-                    style: TextStyle(
-                        color: AppColors.kPrimaryBlue,
-                        fontSize: 36,
-                        fontFamily: AssetStrings.circulerBoldStyle),
-                  ),
-                )
               ]),
               bottomView,
               Center(

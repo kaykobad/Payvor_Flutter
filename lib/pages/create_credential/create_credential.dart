@@ -1,14 +1,9 @@
-import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:payvor/model/apierror.dart';
 import 'package:payvor/model/common_response/common_success_response.dart';
-import 'package:payvor/model/login/loginsignupreponse.dart';
 import 'package:payvor/model/update_profile/update_profile_request.dart';
-import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/privacypolicy/webview_page.dart';
 import 'package:payvor/provider/auth_provider.dart';
 import 'package:payvor/resources/class%20ResString.dart';

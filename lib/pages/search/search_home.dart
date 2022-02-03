@@ -481,7 +481,7 @@ class HomeState extends State<SearchCompany>
                       height: 15.0,
                     ),
                   ),
-                  hintText: "Search favors here",
+                  hintText: "Search for Tasks",
                   hintStyle: TextThemes.greyTextNormal,
                 ),
               ),

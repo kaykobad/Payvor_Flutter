@@ -558,7 +558,7 @@ class _HomeState extends State<AddPaymentMethodFirst> with AutomaticKeepAliveCli
               ),
               SizedBox(height: 8),
               Text(
-                "You need to add paypal to receive the payment paid by the post owner",
+                "You need to add your PayPal account to receive your funds after completing a Task.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFFD5D5D5),
@@ -618,7 +618,7 @@ class _HomeState extends State<AddPaymentMethodFirst> with AutomaticKeepAliveCli
             mainAxisSize: MainAxisSize.min,
             children: [
               _cardHeaderText(),
-              _cardSubHeaderText((dataList?.length == 0) ? "We’ll keep your payment details safe" : "You’ll receive all payments in this account"),
+              _cardSubHeaderText((dataList?.length == 0) ? "We’ll keep your payment details safe" : "You’ll receive all your payments in this account"),
               Container(color: Color(0xFFD8D8D8), height: 1, width: double.maxFinite),
               SizedBox(height: 24.0),
               if (dataList?.length == 0) _inputField(_emailController1, "Enter PayPal email"),
@@ -654,7 +654,7 @@ class _HomeState extends State<AddPaymentMethodFirst> with AutomaticKeepAliveCli
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
       child: Text(
-        "Setup PayPal",
+        "Set-up PayPal",
         style: TextStyle(
           color: Colors.black,
           fontSize: 20,

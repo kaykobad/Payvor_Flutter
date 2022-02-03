@@ -7,7 +7,6 @@ import 'package:payvor/pages/create_credential/create_credential.dart';
 import 'package:payvor/pages/dashboard/dashboard.dart';
 import 'package:payvor/pages/guest_view/guest_intro_screen.dart';
 import 'package:payvor/utils/AppColors.dart';
-import 'package:payvor/utils/AssetStrings.dart';
 import 'package:payvor/utils/memory_management.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -40,14 +39,13 @@ class FadeIn extends State<SplashScreen> {
       home: Scaffold(
         backgroundColor: AppColors.kPrimaryBlue,
         body: Container(
-          margin:  EdgeInsets.only(top: 80.0),
+          margin:  EdgeInsets.only(top: 180.0),
           alignment: Alignment.center,
           child:  Column(children: <Widget>[
             Image.asset(
-              AssetStrings.splashLogo,
-              height: 240,
-              width: 240,
-            )
+              "assets/logo_white.png",
+              height: 52,
+            ),
           ]),
         ),
       ),

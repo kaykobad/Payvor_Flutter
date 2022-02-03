@@ -104,7 +104,7 @@ class _HomeState extends State<MyPosts> {
           listResult.clear();
 
           if (response?.data?.length > 0) {
-            listResult.add("Hired Favors");
+            listResult.add("Hired Helpers");
           }
         }
 
@@ -428,7 +428,7 @@ class _HomeState extends State<MyPosts> {
                   children: <Widget>[
                     new Container(
                       child: new Text(
-                        "Recent Posted Favors ($myFavorCount)",
+                        "Recently Posted Tasks ($myFavorCount)",
                         style: TextThemes.blackCirculerMedium,
                       ),
                     ),
@@ -436,7 +436,7 @@ class _HomeState extends State<MyPosts> {
                       margin: new EdgeInsets.only(top: 7.0),
                       child: Container(
                         child: new Text(
-                          "The favors you haven’t hired people yet",
+                          "The tasks you haven’t hired people for",
                           style: TextThemes.grayNormalSmall,
                         ),
                       ),
@@ -669,7 +669,7 @@ class _HomeState extends State<MyPosts> {
                   width: double.infinity,
                   child: Center(
                     child: new Text(
-                      data?.status == 1 ? "PAY NOW" : "END FAVOR",
+                      data?.status == 1 ? "PAY NOW" : "END TASK",
                       style: new TextStyle(
                             color: AppColors.redLight,
                             fontSize: 14,

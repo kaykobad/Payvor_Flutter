@@ -624,7 +624,7 @@ class PrivateChatScreenState extends State<PrivateChat> {
                 child: new TextField(
                   autofocus: true,
                   decoration: new InputDecoration(
-                      labelText: 'Report Message:',
+                      labelText: 'What would you like to report?',
                       hintText: 'Enter your message'),
                 ),
               )

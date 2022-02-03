@@ -66,8 +66,12 @@ class _HomeState extends State<RecentPostedFavor>
       appBar: new AppBar(
         elevation: 1,
         title: new Text(
-          "Recent Posted Favors",
-          style: new TextStyle(color: Colors.black, fontSize: 18),
+          "Recently Posted Tasks",
+          style: new TextStyle(
+            color: Colors.black,
+            fontSize: 18,
+            fontFamily: AssetStrings.circulerMedium,
+          ),
         ),
         iconTheme: IconThemeData(
           color: Colors.black, //change your color here
@@ -313,7 +317,7 @@ class _HomeState extends State<RecentPostedFavor>
                   Expanded(
                     child: Container(
                       child: new Text(
-                        "${data?.applied_count.toString() ?? "0"} People applied",
+                        "${data?.applied_count.toString() ?? "0"} Helper Applied",
                         style: TextThemes.grayNormalSmall,
                       ),
                     ),
