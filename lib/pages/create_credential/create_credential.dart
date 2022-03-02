@@ -304,7 +304,7 @@ class _LoginScreenState extends State<CreateCredential> {
                       margin:
                           new EdgeInsets.only(left: 20.0, right: 20.0, top: 6),
                       child: new Text(
-                        "Enter the new Password and confirm with Repeat Password field",
+                        "Enter the new Password and confirm in the Repeat Password field",
                         style: TextThemes.grayNormal,
                       ),
                     ),

@@ -293,7 +293,7 @@ class _HomeState extends State<PostFavour>
         source: ImageSource.gallery,
         maxWidth: Constants.maxWidth,
         maxHeight: Constants.maxHeight);
-    var imageFile = await ImageCropper.cropImage(
+    var imageFile = await ImageCropper().cropImage(
         sourcePath: imageFileSelect.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
@@ -322,7 +322,7 @@ class _HomeState extends State<PostFavour>
         maxWidth: Constants.maxWidth,
         maxHeight: Constants.maxHeight);
 
-    var imageFile = await ImageCropper.cropImage(
+    var imageFile = await ImageCropper().cropImage(
         sourcePath: imageFileSelect.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
@@ -590,7 +590,7 @@ class _HomeState extends State<PostFavour>
                   Container(
                     margin: EdgeInsets.only(top: 24),
                     child: Text(
-                      "Post Successful!",
+                      "Posted successfully!",
                       style: TextStyle(
                           fontFamily: AssetStrings.circulerMedium,
                           fontSize: 20,
@@ -603,7 +603,7 @@ class _HomeState extends State<PostFavour>
                     child: Text(
                       widget?.isEdit ?? false
                           ? "You have updated task successfully."
-                          : "You have created a task successfully.",
+                          : "You have created a Task.",
                       style: TextStyle(
                         fontFamily: AssetStrings.circulerNormal,
                         fontSize: 16,
@@ -931,7 +931,7 @@ class _HomeState extends State<PostFavour>
                     height: 8.0,
                   ),
                   getTextField(ResString().get('title'), _TitleController,
-                      _TitleField, _PriceField, TextInputType.emailAddress, 1),
+                      _TitleField, _PriceField, TextInputType.multiline, 1),
                   Opacity(
                     opacity: 0.12,
                     child: Container(
@@ -958,7 +958,7 @@ class _HomeState extends State<PostFavour>
                       _DescriptionController,
                       _DescriptionField,
                       _DescriptionField,
-                      TextInputType.text,
+                      TextInputType.multiline,
                       8),
                   SizedBox(
                     height: 1.0,

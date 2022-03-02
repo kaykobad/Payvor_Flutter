@@ -238,7 +238,7 @@ class SearchMessageState extends State<SearchMessage>
             Container(
               margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
               child: new Text(
-                "You don’t have any conversation yet",
+                "No conversations yet",
                 textAlign: TextAlign.center,
                 style: new TextStyle(
                     color: Color.fromRGBO(103, 99, 99, 1.0),

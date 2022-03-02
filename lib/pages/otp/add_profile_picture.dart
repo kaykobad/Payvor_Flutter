@@ -192,7 +192,7 @@ class _AddProfilePictureState extends State<AddProfilePicture> {
         maxWidth: Constants.maxWidth,
         maxHeight: Constants.maxHeight);
 
-    var imageFile = await ImageCropper.cropImage(
+    var imageFile = await ImageCropper().cropImage(
         sourcePath: imageFileSelect.path,
         cropStyle: CropStyle.circle,
         aspectRatioPresets: [
@@ -221,7 +221,7 @@ class _AddProfilePictureState extends State<AddProfilePicture> {
         source: ImageSource.gallery,
         maxWidth: Constants.maxWidth,
         maxHeight: Constants.maxHeight);
-    var imageFile = await ImageCropper.cropImage(
+    var imageFile = await ImageCropper().cropImage(
         sourcePath: imageFileSelect.path,
         cropStyle: CropStyle.circle,
         aspectRatioPresets: [

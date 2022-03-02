@@ -387,7 +387,7 @@ class _HomeState extends State<EditProfile>
         source: ImageSource.gallery,
         maxWidth: Constants.maxWidth,
         maxHeight: Constants.maxHeight);
-    var imageFile = await ImageCropper.cropImage(
+    var imageFile = await ImageCropper().cropImage(
         sourcePath: imageFileSelect.path,
         cropStyle: CropStyle.circle,
         aspectRatioPresets: [
@@ -417,7 +417,7 @@ class _HomeState extends State<EditProfile>
         maxWidth: Constants.maxWidth,
         maxHeight: Constants.maxHeight);
 
-    var imageFile = await ImageCropper.cropImage(
+    var imageFile = await ImageCropper().cropImage(
         sourcePath: imageFileSelect.path,
         cropStyle: CropStyle.circle,
         aspectRatioPresets: [

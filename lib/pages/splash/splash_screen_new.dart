@@ -39,12 +39,13 @@ class FadeIn extends State<SplashScreen> {
       home: Scaffold(
         backgroundColor: AppColors.kPrimaryBlue,
         body: Container(
-          margin:  EdgeInsets.only(top: 180.0),
+          margin:  EdgeInsets.only(top: 80.0),
           alignment: Alignment.center,
           child:  Column(children: <Widget>[
             Image.asset(
-              "assets/logo_white.png",
-              height: 52,
+              "assets/payvor_1.gif",
+              height: 240,
+              width: 240,
             ),
           ]),
         ),

@@ -248,7 +248,7 @@ class _HomeState extends State<MyPosts> {
                     Container(
                       margin: new EdgeInsets.only(top: 20),
                       child: new Text(
-                        "No Favors",
+                        "No Posts",
                         style: new TextStyle(
                             color: Colors.black,
                             fontFamily: AssetStrings.circulerMedium,
@@ -258,7 +258,7 @@ class _HomeState extends State<MyPosts> {
                     Container(
                       margin: new EdgeInsets.only(top: 9, left: 20, right: 20),
                       child: new Text(
-                        "You haven’t asked for any favors yet.\nOnce you create a favor it will show up here.",
+                        "You haven’t posted any tasks.\nOnce you post a Task it will show up here.",
                         textAlign: TextAlign.center,
                         style: new TextStyle(
                             height: 1.5,

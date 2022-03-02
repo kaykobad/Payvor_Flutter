@@ -328,7 +328,7 @@ class _HomeState extends State<MyJobs> {
                     Container(
                       margin:  EdgeInsets.only(top: 9, left: 20, right: 20),
                       child:  Text(
-                        "You don’t have any job yet.\nOnce you’re hired it will show up here.",
+                        "You don’t have an assigned job yet.\nOnce you’re hired it will show up here.",
                         textAlign: TextAlign.center,
                         style:  TextStyle(
                             height: 1.5,

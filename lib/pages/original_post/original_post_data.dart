@@ -679,7 +679,7 @@ class _HomeState extends State<OriginalPostData>
                       textAlign: TextAlign.center,
                       text:  TextSpan(
                         text:
-                            "Once you have allocated the favor you are agreeing to pay the person on completion of the task respecting our",
+                            "Once you have allocated the task you are agreeing to pay the person on completion respecting our",
                         style:  TextStyle(
                           fontFamily: AssetStrings.circulerNormal,
                           fontSize: 16,
