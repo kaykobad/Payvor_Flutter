@@ -175,6 +175,8 @@ class FirebaseProvider with ChangeNotifier {
   Future<List<PayvorFirebaseUser>> getFriendsProfile(
       {@required List<int> userIds}) async {
     print("friendlist ${userIds.join(",")}");
+    if (userIds.isEmpty) return [];
+
     var firestore = FirebaseFirestore.instance
         .collection(USERS)
         .where("filmshape_id", whereIn: userIds);

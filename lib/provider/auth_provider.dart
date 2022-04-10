@@ -736,7 +736,7 @@ class AuthProvider with ChangeNotifier {
 
     if (filterRequest != null) {
       var isFilter = false;
-      if (filterRequest.latlongData.isNotEmpty) {
+      if (filterRequest.latlongData != null && filterRequest.latlongData.isNotEmpty) {
         if (filterRequest.latlongData.length > 0) {
           var datas = filterRequest.latlongData.trim().toString().split(",");
 
